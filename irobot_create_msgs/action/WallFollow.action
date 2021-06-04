@@ -1,0 +1,12 @@
+# Request
+int8 FOLLOW_RIGHT = -1
+int8 FOLLOW_LEFT = 1
+
+int8 follow_side
+builtin_interfaces/Duration max_runtime
+---
+# Result
+builtin_interfaces/Duration runtime
+---
+# Feedback
+bool engaged
