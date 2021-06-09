@@ -50,7 +50,7 @@
       <visual>
         <origin xyz="0 0 ${body_z_offset}" rpy="0 0 ${-pi*3.0/2.0}"/>
         <geometry>
-          <mesh filename="model://meshes/create3_body_simplified_model.stl" scale="0.001 0.001 0.001"/>
+          <mesh filename="file://meshes/create3_body_simplified_model.stl" scale="0.001 0.001 0.001"/>
         </geometry>
       </visual>
       <collision name = "create3_base_collision">
@@ -65,8 +65,8 @@
     </link>
 
     <!-- Bumper configuration  -->
-    <xacro:property name="bumper_visual_mesh" value="model://meshes/bumper.stl"/>
-    <xacro:property name="bumper_collision_mesh" value="model://meshes/bumper_collision.stl"/>
+    <xacro:property name="bumper_visual_mesh" value="file://meshes/bumper.stl"/>
+    <xacro:property name="bumper_collision_mesh" value="file://meshes/bumper_collision.stl"/>
 
     <xacro:simple_bumper
         parent_link="base_link"
