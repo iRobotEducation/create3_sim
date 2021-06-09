@@ -1,0 +1,41 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://ros.org/wiki/xacro">
+
+<xacro:macro name="wheel" params="name parent_link *origin">
+
+  <xacro:property name="wheel_mass" value="0.2" /> <!-- [kg] -->
+  <xacro:property name="wheel_radius" value="0.03575" /> <!-- [m] -->
+  <xacro:property name="wheel_width" value="0.015" /> <!-- [m] -->
+
+  <joint name="wheel_${name}_joint" type="continuous">
+    <parent link="${parent_link}"/>
+    <child link="wheel_${name}_link"/>
+    <xacro:insert_block name="origin"/>
+    <axis xyz="0 0 1"/>
+  </joint>
+
+  <link name="wheel_${name}_link">
+    <visual>
+      <geometry>
+          <cylinder length="${wheel_width}" radius="${wheel_radius}"/>
+      </geometry>
+    </visual>
+    <collision>
+      <geometry>
+        <cylinder length="${wheel_width}" radius="${wheel_radius}"/>
+      </geometry>
+    </collision>
+    <xacro:inertial_cilinder mass="${wheel_mass}" radius="${wheel_radius}" length="${wheel_width}" />
+  </link>
+
+  <gazebo reference="wheel_${name}_link">
+    <mu1>1.0</mu1>
+    <mu2>1.0</mu2>
+    <kp>1000000.0</kp>
+    <kd>100.0</kd>
+    <minDepth>0.0001</minDepth>
+    <maxVel>1.0</maxVel>
+  </gazebo>
+
+</xacro:macro>
+</robot>

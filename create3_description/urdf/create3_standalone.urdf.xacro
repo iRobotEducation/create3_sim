@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+<robot name="create3_standalone"
+       xmlns:sensor="http://playerstage.sourceforge.net/gazebo/xmlschema/#sensor"
+       xmlns:controller="http://playerstage.sourceforge.net/gazebo/xmlschema/#controller"
+       xmlns:interface="http://playerstage.sourceforge.net/gazebo/xmlschema/#interface"
+       xmlns:xacro="http://ros.org/wiki/xacro">
+
+  <!-- Defines the Create3 component tag. -->
+  <xacro:include filename="$(find create3_description)/urdf/create3.urdf.xacro" />
+  <xacro:create3/>
+</robot>

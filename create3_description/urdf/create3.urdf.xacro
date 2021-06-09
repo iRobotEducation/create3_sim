@@ -1,0 +1,140 @@
+<?xml version="1.0" ?>
+<!--
+  This is not a standalone urdf for Create 3. It simply defines the 'create3' tag that can
+  be added by other urdf files (e.g. turtlebot).
+ -->
+<robot name="create3" xmlns:xacro="http://ros.org/wiki/xacro">
+  <xacro:include filename="$(find create3_description)/urdf/common_properties.urdf.xacro"/>
+  <xacro:include filename="$(find create3_description)/urdf/simple_bumper.xacro" />
+  <xacro:include filename="$(find create3_description)/urdf/wheel.xacro" />
+
+  <!-- MECHANICAL PROPERTIES -->
+  <xacro:property name="body_z_offset" value="-0.025" /><!-- z offset from ground [m] -->
+  <xacro:property name="body_mass" value="2.300" />
+  <xacro:property name="body_radius" value="0.16" />
+  <xacro:property name="body_length" value="0.048" />
+
+  <xacro:property name="bumper_mass" value="0.1" /> <!-- [kg] -->
+  <xacro:property name="bumper_offset_z" value="-0.025" /><!-- [m] -->
+
+  <xacro:property name="wheel_height" value="-0.0275" /><!-- z [m] -->
+  <xacro:property name="distance_between_wheels" value="0.233" /><!-- y [m] -->
+
+  <xacro:property name="caster_mass" value="0.1" /> <!-- [kg] -->
+  <xacro:property name="caster_radius" value="0.01" /> <!-- [m] -->
+  <xacro:property name="caster_width" value="0.018" /> <!-- [m] -->
+  <xacro:property name="caster_position_x" value="0.125" /><!-- x [m] -->
+  <xacro:property name="caster_position_y" value="0" /><!-- y [m] -->
+  <xacro:property name="caster_position_z" value="-0.054" /><!-- z [m] -->
+
+  <xacro:property name="battery_mass_kg" value="1"/>
+  <xacro:property name="battery_pos_x"   value="0.1"/>
+  <xacro:property name="battery_pos_z"   value="-0.01"/>
+  <xacro:property name="battery_x_in"    value="2.2"/>
+  <xacro:property name="battery_y_in"    value="5.7"/>
+  <xacro:property name="battery_z_in"    value="2.5"/>
+
+  <xacro:property name="robot_type" value="create3" />
+  <xacro:arg name="use_mechanical_wheeldrop" default="false" />
+
+  <!-- Create 3 base definitions-->
+  <xacro:macro name="create3">
+    <link name="base_footprint"/>
+
+    <joint name="base_footprint_joint" type="fixed">
+      <parent link="base_footprint"/>
+      <child link="base_link" />
+    </joint>
+
+    <link name="base_link">
+      <visual>
+        <origin xyz="0 0 ${body_z_offset}" rpy="0 0 ${-pi*3.0/2.0}"/>
+        <geometry>
+          <mesh filename="model://meshes/create3_body_simplified_model.stl" scale="0.001 0.001 0.001"/>
+        </geometry>
+      </visual>
+      <collision name = "create3_base_collision">
+        <origin xyz="-0.005 0 ${(body_z_offset/2.) + 0.01}"/>
+        <geometry>
+          <cylinder length="${body_length}" radius="${body_radius}"/>
+        </geometry>
+      </collision>
+      <xacro:inertial_cilinder_with_pose mass="${body_mass}" radius="${body_radius}" length="${body_length}">
+        <origin xyz="0 0 ${body_z_offset - 0.02}"/>
+      </xacro:inertial_cilinder_with_pose>
+    </link>
+
+    <!-- Bumper configuration  -->
+    <xacro:property name="bumper_visual_mesh" value="model://meshes/bumper.stl"/>
+    <xacro:property name="bumper_collision_mesh" value="model://meshes/bumper_collision.stl"/>
+
+    <xacro:simple_bumper
+        parent_link="base_link"
+        robot_type="${robot_type}"
+        visual_mesh="${bumper_visual_mesh}"
+        collision_mesh="${bumper_collision_mesh}">
+      <origin xyz="0 0 ${bumper_offset_z}"/>
+      <inertial>
+        <origin xyz="0.08 0 ${bumper_offset_z + 0.01}"/>
+        <mass value="${bumper_mass}"/>
+        <inertia ixx="0.0013483753405" ixy="0.0000000454352" ixz="0.0000014434849" iyy="0.0002521736852" iyz="-0.0000000006721" izz="0.0015442525386"/>
+      </inertial>
+    </xacro:simple_bumper>
+
+    <!-- Wheel configuration -->
+    <!-- Default wheel with mechanical wheel drop -->
+    <xacro:if value="$(arg use_mechanical_wheeldrop)">
+      <xacro:wheel_with_wheeldrop name="left" parent_link="base_link">
+        <origin xyz="0 ${distance_between_wheels/2} ${wheel_height}" rpy="${-pi/2} 0 0"/>
+      </xacro:wheel_with_wheeldrop>
+
+      <xacro:wheel_with_wheeldrop name="right" parent_link="base_link">
+        <origin xyz="0 ${-distance_between_wheels/2} ${wheel_height}" rpy="${-pi/2} 0 0"/>
+      </xacro:wheel_with_wheeldrop>
+    </xacro:if>
+
+    <!-- Default wheel without mechanical wheel drop -->
+    <xacro:unless value="$(arg use_mechanical_wheeldrop)">
+      <!-- Left wheel -->
+      <xacro:wheel name="left" parent_link="base_link">
+        <origin xyz="0 ${distance_between_wheels/2} ${wheel_height}" rpy="${-pi/2} 0 0"/>
+      </xacro:wheel>
+      <!-- Right wheel -->
+      <xacro:wheel name="right" parent_link="base_link">
+        <origin xyz="0 ${-distance_between_wheels/2} ${wheel_height}" rpy="${-pi/2} 0 0"/>
+      </xacro:wheel>
+    </xacro:unless>
+
+    <joint name="caster_front_joint" type="fixed">
+      <parent link="base_link"/>
+      <child link="caster_front_link"/>
+      <origin xyz="${caster_position_x} ${caster_position_y} ${caster_position_z}" rpy="${-pi/2} 0 0"/>
+    </joint>
+    <link name="caster_front_link">
+      <visual>
+        <geometry>
+          <sphere radius="${caster_radius}"/>
+        </geometry>
+      </visual>
+      <collision>
+        <geometry>
+          <sphere radius="${caster_radius}"/>
+        </geometry>
+      </collision>
+    </link>
+
+    <!-- Battery -->
+    <joint name="battery_joint" type="fixed">
+      <origin xyz="${battery_pos_x} 0 ${battery_pos_z}"/>
+      <parent link="base_link"/>
+      <child link="battery_link"/>
+    </joint>
+    <link name="battery_link">
+      <xacro:inertial_cuboid mass="${battery_mass_kg}"
+                             x_length="${battery_x_in*in2m}"
+                             y_length="${battery_y_in*in2m}"
+                             z_length="${battery_z_in*in2m}"/>
+    </link>
+
+  </xacro:macro>
+</robot>
