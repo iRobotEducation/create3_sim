@@ -1,0 +1,127 @@
+<?xml version="1.0" ?>
+<!--
+  Various useful properties such as constants and materials
+ -->
+<robot name="xacro_properties" xmlns:xacro="http://ros.org/wiki/xacro">
+  <xacro:property name="M_PI" value="3.1415926535897931" />
+  <xacro:property name="material_white">
+    <material name="white">
+      <color rgba="1 1 1 1"/>
+    </material>
+  </xacro:property>
+  <xacro:property name="material_grey">
+    <material name="grey">
+      <color rgba="0.5 0.5 0.5 1"/>
+    </material>
+  </xacro:property>
+  <xacro:property name="material_light_grey">
+    <material name="light_grey">
+      <color rgba="0.6 0.6 0.6 1"/>
+    </material>
+  </xacro:property>
+  <xacro:property name="material_dark_grey">
+    <material name="dark_grey">
+      <color rgba="0.3 0.3 0.3 1"/>
+    </material>
+  </xacro:property>
+  <xacro:property name="material_black">
+    <material name="black">
+      <color rgba="0.1 0.1 0.1 1"/>
+    </material>
+  </xacro:property>
+  <xacro:property name="material_red">
+    <material name="red">
+      <color rgba="1 0 0 1"/>
+    </material>
+  </xacro:property>
+  <xacro:property name="material_green">
+    <material name="green">
+      <color rgba="0.0 0.8 0.0 1"/>
+    </material>
+  </xacro:property>
+  <xacro:property name="material_blue">
+    <material name="blue">
+      <color rgba="0.0 0.0 1.0 1"/>
+    </material>
+  </xacro:property>
+  <xacro:property name="material_grey_blue">
+    <material name="grey_blue">
+      <color rgba="0.4 0.4 1.0 1"/>
+    </material>
+  </xacro:property>
+  <xacro:property name="material_orange">
+    <material name="orange">
+      <color rgba="1.0 0.7 0.0 1"/>
+    </material>
+  </xacro:property>
+
+  <xacro:macro name="inertial_cuboid" params="mass x_length y_length z_length">
+    <inertial>
+      <mass value="${mass}" />
+      <origin xyz="0 0 0" />
+      <inertia ixx="${(1/12) * mass * (y_length*y_length + z_length*z_length)}" ixy="0.0" ixz="0.0"
+	iyy="${(1/12) * mass * (x_length*x_length + z_length*z_length)}" iyz="0.0"
+	izz="${(1/12) * mass * (x_length*x_length + y_length*y_length)}" />
+    </inertial>
+  </xacro:macro>
+
+  <xacro:macro name="inertial_cuboid_with_pose" params="mass x_length y_length z_length *origin">
+    <inertial>
+      <xacro:insert_block name="origin"/>
+      <mass value="${mass}" />
+      <inertia ixx="${(1/12) * mass * (y_length*y_length + z_length*z_length)}" ixy="0.0" ixz="0.0"
+	iyy="${(1/12) * mass * (x_length*x_length + z_length*z_length)}" iyz="0.0"
+	izz="${(1/12) * mass * (x_length*x_length + y_length*y_length)}" />
+    </inertial>
+  </xacro:macro>
+
+  <xacro:macro name="inertial_cilinder" params="mass radius length">
+    <inertial>
+      <mass value="${mass}"/>
+      <origin xyz="0 0 0" />
+      <inertia ixx="${(1/12) * mass * (3*radius*radius + length*length)}" ixy="0.0" ixz="0.0"
+	iyy="${(1/12) * mass * (3*radius*radius + length*length)}" iyz="0.0"
+	izz="${(1/2) * mass * (radius*radius)}" />
+    </inertial>
+  </xacro:macro>
+
+  <xacro:macro name="inertial_cilinder_with_pose" params="mass radius length *origin">
+    <inertial>
+      <xacro:insert_block name="origin"/>
+      <mass value="${mass}" />
+      <inertia ixx="${(1/12) * mass * (3*radius*radius + length*length)}" ixy="0.0" ixz="0.0"
+	iyy="${(1/12) * mass * (3*radius*radius + length*length)}" iyz="0.0"
+	izz="${(1/2) * mass * (radius*radius)}" />
+    </inertial>
+  </xacro:macro>
+
+  <xacro:macro name="inertial_sphere" params="mass diameter">
+    <inertial>
+      <mass value="${mass}" />
+      <origin xyz="0 0 0" />
+      <inertia ixx="${(2/5) * mass * ( (diameter*0.5) * (diameter*0.5) )}" ixy="0.0" ixz="0.0"
+	iyy="${(2/5) * mass * ( (diameter*0.5) * (diameter*0.5) )}" iyz="0.0"
+	izz="${(2/5) * mass * ( (diameter*0.5) * (diameter*0.5) )}" />
+    </inertial>
+  </xacro:macro>
+
+  <xacro:macro name="inertial_sphere_with_pose" params="mass diameter *origin">
+    <inertial>
+      <xacro:insert_block name="origin"/>
+      <mass value="${mass}" />
+      <inertia ixx="${(2/5) * mass * ( (diameter*0.5) * (diameter*0.5) )}" ixy="0.0" ixz="0.0"
+	iyy="${(2/5) * mass * ( (diameter*0.5) * (diameter*0.5) )}" iyz="0.0"
+	izz="${(2/5) * mass * ( (diameter*0.5) * (diameter*0.5) )}" />
+    </inertial>
+  </xacro:macro>
+
+  <xacro:macro name="inertial_dummy">
+    <xacro:inertial_cuboid mass="0.01" x_length="0.01" y_length="0.01" z_length="0.01" />
+  </xacro:macro>
+
+  <xacro:property name="deg2rad" value="${pi/180.0}"/>
+  <xacro:property name="mm2m"    value="${1/1000.0}"/>
+  <xacro:property name="cm2m"    value="${1/100.0}"/>
+  <xacro:property name="in2m"    value="0.0254"/>
+  <xacro:property name="lbs2kg"  value="0.453592"/>
+</robot>
