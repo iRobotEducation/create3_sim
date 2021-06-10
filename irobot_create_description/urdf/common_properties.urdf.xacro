@@ -1,4 +1,5 @@
 <?xml version="1.0" ?>
+<<<<<<< HEAD
 <!-- Various useful macros -->
 <robot name="xacro_properties" xmlns:xacro="http://ros.org/wiki/xacro">
 
@@ -9,6 +10,20 @@
       <inertia ixx="${(1/12) * mass * (y*y + z*z)}" ixy="0.0" ixz="0.0"
         iyy="${(1/12) * mass * (x*x + z*z)}" iyz="0.0"
         izz="${(1/12) * mass * (x*x + y*y)}" />
+=======
+<!--
+  Various useful macros
+ -->
+<robot name="xacro_properties" xmlns:xacro="http://ros.org/wiki/xacro">
+
+  <xacro:macro name="inertial_cuboid" params="mass x_length y_length z_length">
+    <inertial>
+      <mass value="${mass}" />
+      <origin xyz="0 0 0" />
+      <inertia ixx="${(1/12) * mass * (y_length*y_length + z_length*z_length)}" ixy="0.0" ixz="0.0"
+	iyy="${(1/12) * mass * (x_length*x_length + z_length*z_length)}" iyz="0.0"
+	izz="${(1/12) * mass * (x_length*x_length + y_length*y_length)}" />
+>>>>>>> Address PR comments
     </inertial>
   </xacro:macro>
 
@@ -17,8 +32,13 @@
       <mass value="${mass}"/>
       <origin xyz="0 0 0" />
       <inertia ixx="${(1/12) * mass * (3*radius*radius + length*length)}" ixy="0.0" ixz="0.0"
+<<<<<<< HEAD
         iyy="${(1/12) * mass * (3*radius*radius + length*length)}" iyz="0.0"
         izz="${(1/2) * mass * (radius*radius)}" />
+=======
+	iyy="${(1/12) * mass * (3*radius*radius + length*length)}" iyz="0.0"
+	izz="${(1/2) * mass * (radius*radius)}" />
+>>>>>>> Address PR comments
     </inertial>
   </xacro:macro>
 
@@ -27,6 +47,7 @@
       <xacro:insert_block name="origin"/>
       <mass value="${mass}" />
       <inertia ixx="${(1/12) * mass * (3*radius*radius + length*length)}" ixy="0.0" ixz="0.0"
+<<<<<<< HEAD
         iyy="${(1/12) * mass * (3*radius*radius + length*length)}" iyz="0.0"
         izz="${(1/2) * mass * (radius*radius)}" />
     </inertial>
@@ -36,4 +57,11 @@
   <xacro:property name="cm2m" value="${1/100.0}"/>
   <xacro:property name="mm2m" value="${1/1000.0}"/>
 
+=======
+	iyy="${(1/12) * mass * (3*radius*radius + length*length)}" iyz="0.0"
+	izz="${(1/2) * mass * (radius*radius)}" />
+    </inertial>
+  </xacro:macro>
+
+>>>>>>> Address PR comments
 </robot>

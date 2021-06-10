@@ -6,7 +6,7 @@
   <description>Provides the model description for the iRobot Create 3 platform</description>
   <maintainer email="ekumen@irbt.onmicrosoft.com">Ekumen</maintainer>
   <license>Apache-2.0</license>
-  
+
   <author>iRobot</author>
 
   <buildtool_depend>ament_cmake</buildtool_depend>

@@ -1,4 +1,4 @@
-"""Launch Gazebo with a world that has Create3."""
+"""Launch Gazebo with a world that has a Create3."""
 
 import os
 import launch
@@ -9,10 +9,10 @@ from launch_ros.actions import Node
 
 def generate_launch_description():
     pkg_gazebo_ros = get_package_share_directory('gazebo_ros')
-    pkg_create3_description = get_package_share_directory('create3_description')
+    pkg_create3_description = get_package_share_directory('irobot_create_description')
 
     urdf_dir = os.path.join(pkg_create3_description, 'urdf')
-    xacro_file = os.path.join(urdf_dir, 'create3_standalone.urdf.xacro')
+    xacro_file = os.path.join(urdf_dir, 'create3.urdf.xacro')
 
     # Rviz
     rviz_config_dir = os.path.join(
