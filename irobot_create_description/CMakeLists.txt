@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.5)
 
-project(create3_description)
+project(irobot_create_description)
 
 # Default to C++14
 if(NOT CMAKE_CXX_STANDARD)

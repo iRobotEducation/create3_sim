@@ -1,0 +1,97 @@
+<?xml version="1.0" ?>
+<robot name="create3" xmlns:xacro="http://ros.org/wiki/xacro">
+  <xacro:include filename="$(find irobot_create_description)/urdf/common_properties.urdf.xacro"/>
+  <xacro:include filename="$(find irobot_create_description)/urdf/bumper.xacro" />
+  <xacro:include filename="$(find irobot_create_description)/urdf/wheel.xacro" />
+  <xacro:include filename="$(find irobot_create_description)/urdf/wheel_with_wheeldrop.xacro" />
+
+  <!-- MECHANICAL PROPERTIES -->
+  <xacro:property name="body_z_offset" value="-0.025" /><!-- z offset from ground [m] -->
+  <xacro:property name="body_mass" value="2.300" />
+  <xacro:property name="body_radius" value="0.16" />
+  <xacro:property name="body_length" value="0.048" />
+
+  <xacro:property name="bumper_mass" value="0.1" /> <!-- [kg] -->
+  <xacro:property name="bumper_offset_z" value="-0.025" /><!-- [m] -->
+
+  <xacro:property name="wheel_height" value="-0.0275" /><!-- z [m] -->
+  <xacro:property name="distance_between_wheels" value="0.233" /><!-- y [m] -->
+
+  <xacro:property name="caster_mass" value="0.1" /> <!-- [kg] -->
+  <xacro:property name="caster_radius" value="0.01" /> <!-- [m] -->
+  <xacro:property name="caster_width" value="0.018" /> <!-- [m] -->
+  <xacro:property name="caster_position_x" value="0.125" /><!-- x [m] -->
+  <xacro:property name="caster_position_y" value="0" /><!-- y [m] -->
+  <xacro:property name="caster_position_z" value="-0.054" /><!-- z [m] -->
+
+  <xacro:property name="robot_type" value="create3" />
+
+  <!-- Create 3 base definitions-->
+  <link name="base_footprint"/>
+
+  <joint name="base_footprint_joint" type="fixed">
+    <parent link="base_footprint"/>
+    <child link="base_link" />
+  </joint>
+
+  <link name="base_link">
+    <visual>
+      <origin xyz="0 0 ${body_z_offset}" rpy="0 0 ${-pi*3.0/2.0}"/>
+      <geometry>
+        <mesh filename="file://meshes/body_collision.stl" scale="0.001 0.001 0.001"/>
+      </geometry>
+    </visual>
+    <collision name = "create3_base_collision">
+      <origin xyz="-0.005 0 ${(body_z_offset/2.) + 0.01}"/>
+      <geometry>
+        <cylinder length="${body_length}" radius="${body_radius}"/>
+      </geometry>
+    </collision>
+    <xacro:inertial_cylinder_with_pose mass="${body_mass}" radius="${body_radius}" length="${body_length}">
+      <origin xyz="0 0 ${body_z_offset - 0.02}"/>
+    </xacro:inertial_cylinder_with_pose>
+  </link>
+
+  <!-- Bumper -->
+  <xacro:bumper
+      parent_link="base_link"
+      robot_type="${robot_type}"
+      visual_mesh="file://meshes/bumper_collision.stl"
+      collision_mesh="file://meshes/bumper_collision.stl">
+    <origin xyz="0 0 ${bumper_offset_z}"/>
+    <inertial>
+      <origin xyz="0.08 0 ${bumper_offset_z + 0.01}"/>
+      <mass value="${bumper_mass}"/>
+      <inertia ixx="0.0013483753405" ixy="0.0000000454352" ixz="0.0000014434849" iyy="0.0002521736852" iyz="-0.0000000006721" izz="0.0015442525386"/>
+    </inertial>
+  </xacro:bumper>
+
+  <!-- Wheel configuration -->
+  <!-- Wheel with mechanical wheel drop -->
+  <xacro:wheel_with_wheeldrop name="left" parent_link="base_link">
+    <origin xyz="0 ${distance_between_wheels/2} ${wheel_height}" rpy="${-pi/2} 0 0"/>
+  </xacro:wheel_with_wheeldrop>
+
+  <xacro:wheel_with_wheeldrop name="right" parent_link="base_link">
+    <origin xyz="0 ${-distance_between_wheels/2} ${wheel_height}" rpy="${-pi/2} 0 0"/>
+  </xacro:wheel_with_wheeldrop>
+
+  <joint name="caster_joint" type="fixed">
+    <parent link="base_link"/>
+    <child link="caster_link"/>
+    <origin xyz="${caster_position_x} ${caster_position_y} ${caster_position_z}" rpy="${-pi/2} 0 0"/>
+  </joint>
+  <link name="caster_link">
+    <visual>
+      <geometry>
+        <sphere radius="${caster_radius}"/>
+      </geometry>
+    </visual>
+    <collision>
+      <geometry>
+        <sphere radius="${caster_radius}"/>
+      </geometry>
+    </collision>
+  </link>
+
+</robot>

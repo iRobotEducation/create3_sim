@@ -1,10 +1,10 @@
 <?xml version="1.0"?>
 <robot xmlns:xacro="http://ros.org/wiki/xacro">
 
-<xacro:macro name="simple_bumper" params="name:=bumper parent_link robot_type visual_mesh collision_mesh
+<xacro:macro name="bumper" params="name:=bumper parent_link robot_type visual_mesh collision_mesh
                                           *origin *inertial">
 
-  <joint name="${name}_joint" type="prismatic">
+  <joint name="${name}_joint" type="fixed">
     <parent link="${parent_link}"/>
     <child link="${name}_link"/>
     <axis xyz="0 1 0"/>
@@ -25,20 +25,17 @@
     <xacro:insert_block name="inertial"/>
   </link>
 
-  <gazebo reference="bumper_link" >
+  <gazebo reference="${name}_link" >
     <mu1>0.1</mu1>
     <mu2>0.1</mu2>
     <maxVel>0.01</maxVel>
     <minDepth>0.001</minDepth>
     <maxContacts>10</maxContacts>
     <material>Gazebo/Green</material>
-    <sensor name='${name}_contact_sensor' type='contact'>
-      <always_on>true</always_on>
-      <update_rate>40</update_rate>
-      <contact>
-        <collision>${name}_link_collision</collision>
-      </contact>
-    </sensor>
+  </gazebo>
+
+  <gazebo reference="${name}_joint">
+    <preserveFixedJoint>true</preserveFixedJoint>
   </gazebo>
 
 </xacro:macro>

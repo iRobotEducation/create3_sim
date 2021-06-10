@@ -25,7 +25,7 @@
         <cylinder length="${wheel_width}" radius="${wheel_radius}"/>
       </geometry>
     </collision>
-    <xacro:inertial_cilinder mass="${wheel_mass}" radius="${wheel_radius}" length="${wheel_width}" />
+    <xacro:inertial_cylinder mass="${wheel_mass}" radius="${wheel_radius}" length="${wheel_width}" />
   </link>
 
   <gazebo reference="wheel_${name}_link">
