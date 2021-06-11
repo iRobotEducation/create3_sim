@@ -1,0 +1,36 @@
+name: Linter
+
+on:
+  pull_request:
+  push:
+    branches:
+      - master
+
+jobs:
+  ament_lint:
+    name: ament_${{ matrix.linter }}
+    runs-on: ubuntu-20.04
+    strategy:
+      fail-fast: false
+      matrix:
+        linter:
+          # - clang_format
+          # - clang_tidy
+          - copyright
+          # - cppcheck
+          # - cpplint
+          - flake8
+          - lint_cmake
+          - pep257
+          - xmllint
+    steps:
+      - uses: actions/checkout@v2.3.4
+      - uses: ros-tooling/setup-ros@0.2.1
+        with:
+          required-ros-distributions: foxy
+      - uses: ros-tooling/action-ros-lint@0.1.3
+        with:
+          distribution: foxy
+          linter: ${{ matrix.linter }}
+          package-name: |
+            irobot_create_msgs
