@@ -8,7 +8,6 @@ from launch.substitutions import Command
 from launch_ros.actions import Node
 
 def generate_launch_description():
-    pkg_gazebo_ros = get_package_share_directory('gazebo_ros')
     pkg_create3_description = get_package_share_directory('irobot_create_description')
 
     urdf_dir = os.path.join(pkg_create3_description, 'urdf')
@@ -33,12 +32,7 @@ def generate_launch_description():
         output='screen'
     )
 
-    # Gazebo client
-    gzclient_exe = launch.actions.ExecuteProcess(
-        cmd=['gzclient'],
-        output='screen'
-    )
-
+    # Publish joint states
     robot_state_publisher = Node(
         package='robot_state_publisher',
         executable='robot_state_publisher',
@@ -58,4 +52,4 @@ def generate_launch_description():
         output='screen'
     )
 
-    return LaunchDescription([spawn_robot, robot_state_publisher, gzserver_exe, gzclient_exe, rviz_node])
+    return LaunchDescription([gzserver_exe, robot_state_publisher, spawn_robot, rviz_node])
