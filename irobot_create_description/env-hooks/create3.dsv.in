@@ -1,4 +1,0 @@
-prepend-non-duplicate;GAZEBO_MODEL_PATH;share/@PROJECT_NAME@
-prepend-non-duplicate;GAZEBO_RESOURCE_PATH;share/@PROJECT_NAME@/worlds
-prepend-non-duplicate;GAZEBO_RESOURCE_PATH;share/@PROJECT_NAME@/urdf
-prepend-non-duplicate;GAZEBO_RESOURCE_PATH;share/@PROJECT_NAME@
