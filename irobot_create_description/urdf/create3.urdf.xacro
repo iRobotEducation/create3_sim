@@ -70,6 +70,7 @@
     <origin xyz="0 ${distance_between_wheels_cm*cm2m/2} ${wheel_height_cm*cm2m}" rpy="${-pi/2} 0 0"/>
   </xacro:wheel_with_wheeldrop>
 
+
   <xacro:wheel_with_wheeldrop name="right" parent_link="base_link">
     <origin xyz="0 ${-distance_between_wheels_cm*cm2m/2} ${wheel_height_cm*cm2m}" rpy="${-pi/2} 0 0"/>
   </xacro:wheel_with_wheeldrop>
