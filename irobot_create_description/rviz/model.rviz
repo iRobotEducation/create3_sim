@@ -8,7 +8,6 @@ Panels:
         - /Status1
         - /Grid1
         - /RobotModel1
-        - /RobotModel1/Status1
         - /RobotModel1/Description Topic1
       Splitter Ratio: 0.5
     Tree Height: 623
@@ -73,24 +72,28 @@ Visualization Manager:
           Show Axes: false
           Show Trail: false
           Value: true
-        battery_link:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
         bumper_link:
           Alpha: 1
           Show Axes: false
           Show Trail: false
-        caster_front_link:
+        caster_link:
           Alpha: 1
           Show Axes: false
           Show Trail: false
           Value: true
+        wheel_left_axle_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
         wheel_left_link:
           Alpha: 1
           Show Axes: false
           Show Trail: false
           Value: true
+        wheel_right_axle_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
         wheel_right_link:
           Alpha: 1
           Show Axes: false
