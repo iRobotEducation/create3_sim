@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://ros.org/wiki/xacro">
+
+<xacro:macro name="caster" params="name parent_link *origin">
+
+  <xacro:property name="radius" value="0.01" /> <!-- [m] -->
+
+  <joint name="${name}_joint" type="fixed">
+    <parent link="${parent_link}"/>
+    <child link="${name}_link"/>
+    <xacro:insert_block name="origin"/>
+  </joint>
+  <link name="${name}_link">
+    <visual>
+      <geometry>
+        <sphere radius="${radius}"/>
+      </geometry>
+    </visual>
+    <collision>
+      <geometry>
+        <sphere radius="${radius}"/>
+      </geometry>
+    </collision>
+  </link>
+
+</xacro:macro>
+</robot>

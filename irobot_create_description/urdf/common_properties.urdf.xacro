@@ -4,13 +4,13 @@
  -->
 <robot name="xacro_properties" xmlns:xacro="http://ros.org/wiki/xacro">
 
-  <xacro:macro name="inertial_cuboid" params="mass x_length y_length z_length">
+  <xacro:macro name="inertial_cuboid" params="mass x y z">
     <inertial>
       <mass value="${mass}" />
       <origin xyz="0 0 0" />
-      <inertia ixx="${(1/12) * mass * (y_length*y_length + z_length*z_length)}" ixy="0.0" ixz="0.0"
-	iyy="${(1/12) * mass * (x_length*x_length + z_length*z_length)}" iyz="0.0"
-	izz="${(1/12) * mass * (x_length*x_length + y_length*y_length)}" />
+      <inertia ixx="${(1/12) * mass * (y*y + z*z)}" ixy="0.0" ixz="0.0"
+	iyy="${(1/12) * mass * (x*x + z*z)}" iyz="0.0"
+	izz="${(1/12) * mass * (x*x + y*y)}" />
     </inertial>
   </xacro:macro>
 
