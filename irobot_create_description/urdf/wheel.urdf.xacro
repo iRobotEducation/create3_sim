@@ -25,7 +25,7 @@
         <cylinder length="${width_cm*cm2m}" radius="${radius_cm*cm2m}"/>
       </geometry>
     </collision>
-    <xacro:inertial_cylinder mass="${mass_kg}" radius="${radius_cm*cm2m}" 
+    <xacro:inertial_cylinder mass="${mass_kg}" radius="${radius_cm*cm2m}"
       length="${width_cm*cm2m}" />
   </link>
 
