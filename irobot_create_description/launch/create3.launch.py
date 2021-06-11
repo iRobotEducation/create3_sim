@@ -1,4 +1,4 @@
-"""Launch Gazebo with a world that has a Create3."""
+"""Launch Create3 in RViz."""
 
 import os
 import launch
@@ -26,13 +26,6 @@ def generate_launch_description():
         arguments=['-d', rviz_config_dir],
         output='screen')
 
-    # Gazebo server
-    gzserver_exe = launch.actions.ExecuteProcess(
-        cmd=['gzserver', '--verbose', '-s', 'libgazebo_ros_init.so', '-s', 'libgazebo_ros_factory.so'],
-        output='screen'
-    )
-
-    # Publish joint states
     robot_state_publisher = Node(
         package='robot_state_publisher',
         executable='robot_state_publisher',
@@ -44,12 +37,11 @@ def generate_launch_description():
         ],
     )
 
-    spawn_robot = Node(
-        package='gazebo_ros',
-        executable='spawn_entity.py',
-        arguments=['-entity', 'create3', '-topic', 'robot_description',
-                   '-x', '0', '-y', '0', '-z', '0.0', '-Y', "0"],
+    joint_state_publisher = Node(
+        package='joint_state_publisher_gui',
+        executable='joint_state_publisher_gui',
+        name='joint_state_publisher_gui',
         output='screen'
     )
 
-    return LaunchDescription([gzserver_exe, robot_state_publisher, spawn_robot, rviz_node])
+    return LaunchDescription([joint_state_publisher, robot_state_publisher, rviz_node])

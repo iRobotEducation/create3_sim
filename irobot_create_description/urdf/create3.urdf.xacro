@@ -33,7 +33,7 @@
     <visual>
       <origin xyz="0 0 ${body_z_offset}" rpy="0 0 ${-pi*3.0/2.0}"/>
       <geometry>
-        <mesh filename="file://meshes/body_collision.stl" scale="0.001 0.001 0.001"/>
+        <mesh filename="package://irobot_create_description/meshes/body_collision.stl" scale="0.001 0.001 0.001"/>
       </geometry>
     </visual>
     <collision name="create3_base_collision">
@@ -51,8 +51,8 @@
   <xacro:bumper
       parent_link="base_link"
       robot_type="create3"
-      visual_mesh="file://meshes/bumper_collision.stl"
-      collision_mesh="file://meshes/bumper_collision.stl">
+      visual_mesh="package://irobot_create_description/meshes/bumper_collision.stl"
+      collision_mesh="package://irobot_create_description/meshes/bumper_collision.stl">
     <origin xyz="0 0 ${bumper_offset_z}"/>
     <inertial>
       <origin xyz="0.08 0 ${bumper_offset_z + 0.01}"/>
@@ -69,20 +69,6 @@
   <xacro:wheel_with_wheeldrop name="right" parent_link="base_link">
     <origin xyz="0 ${-distance_between_wheels/2} ${wheel_height}" rpy="${-pi/2} 0 0"/>
   </xacro:wheel_with_wheeldrop>
-
-  <gazebo>
-      <plugin name="wheels_joint_states" filename="libgazebo_ros_joint_state_publisher.so">
-        <joint_name>wheel_right_joint</joint_name>
-        <joint_name>wheel_left_joint</joint_name>
-      </plugin>
-  </gazebo>
-
-  <gazebo>
-      <plugin name="wheel_drop_joint_states" filename="libgazebo_ros_joint_state_publisher.so">
-        <joint_name>wheel_right_axle_joint</joint_name>
-        <joint_name>wheel_left_axle_joint</joint_name>
-      </plugin>
-  </gazebo>
 
   <joint name="caster_joint" type="fixed">
     <parent link="base_link"/>

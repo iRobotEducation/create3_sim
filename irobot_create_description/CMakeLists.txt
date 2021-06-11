@@ -10,12 +10,6 @@ if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
   add_compile_options(-Wall -Wextra -Wpedantic)
 endif()
 
-find_package(gazebo QUIET)
-if(NOT gazebo_FOUND)
-  message(WARNING "Gazebo not found, proceeding without that simulator.")
-  return()
-endif()
-
 find_package(ament_cmake REQUIRED)
 
 install(
@@ -27,9 +21,5 @@ install(
   DESTINATION
     share/${PROJECT_NAME}/
 )
-
-# Update gazebo resources path
-ament_environment_hooks("${CMAKE_CURRENT_SOURCE_DIR}/env-hooks/create3.dsv.in")
-ament_environment_hooks("${CMAKE_CURRENT_SOURCE_DIR}/env-hooks/create3.sh.in")
 
 ament_package()
