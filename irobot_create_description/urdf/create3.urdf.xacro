@@ -2,7 +2,6 @@
 <robot name="create3" xmlns:xacro="http://ros.org/wiki/xacro">
   <xacro:include filename="$(find irobot_create_description)/urdf/common_properties.urdf.xacro"/>
   <xacro:include filename="$(find irobot_create_description)/urdf/bumper.xacro" />
-  <xacro:include filename="$(find irobot_create_description)/urdf/wheel.xacro" />
   <xacro:include filename="$(find irobot_create_description)/urdf/wheel_with_wheeldrop.xacro" />
 
   <!-- MECHANICAL PROPERTIES -->
@@ -75,6 +74,13 @@
   <xacro:wheel_with_wheeldrop name="right" parent_link="base_link">
     <origin xyz="0 ${-distance_between_wheels/2} ${wheel_height}" rpy="${-pi/2} 0 0"/>
   </xacro:wheel_with_wheeldrop>
+
+  <gazebo>
+      <plugin name="joint_states" filename="libgazebo_ros_joint_state_publisher.so">
+        <joint_name>wheel_right_joint</joint_name>
+        <joint_name>wheel_left_joint</joint_name>
+      </plugin>
+  </gazebo>
 
   <joint name="caster_joint" type="fixed">
     <parent link="base_link"/>
