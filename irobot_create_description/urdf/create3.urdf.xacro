@@ -57,6 +57,7 @@
       visual_mesh="file://$(find irobot_create_description)/meshes/bumper_collision.stl"
       collision_mesh="file://$(find irobot_create_description)/meshes/bumper_collision.stl">
     <origin xyz="0 0 ${bumper_offset_z_cm*cm2m}"/>
+
     <inertial>
         <origin xyz="${bumber_inertial_x_cm*cm2m} 0 ${bumper_offset_z_cm*cm2m}"/>
         <mass value="${bumper_mass_kg}"/>
