@@ -1,7 +1,5 @@
 <?xml version="1.0" ?>
-<!--
-  Various useful macros
- -->
+<!-- Various useful macros -->
 <robot name="xacro_properties" xmlns:xacro="http://ros.org/wiki/xacro">
 
   <xacro:macro name="inertial_cuboid" params="mass x y z">
