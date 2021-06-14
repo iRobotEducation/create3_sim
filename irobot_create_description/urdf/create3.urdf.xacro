@@ -18,15 +18,9 @@
   <xacro:property name="wheel_height_cm"            value="-2.75" />
   <xacro:property name="distance_between_wheels_cm" value="23.3" />
 
-<<<<<<< HEAD
   <xacro:property name="caster_position_x_cm"       value="12.5" />
   <xacro:property name="caster_position_y_cm"       value="0" />
   <xacro:property name="caster_position_z_cm"       value="-5.4" />
-=======
-  <xacro:property name="caster_position_x" value="0.125" /><!-- x [m] -->
-  <xacro:property name="caster_position_y" value="0" /><!-- y [m] -->
-  <xacro:property name="caster_position_z" value="-0.054" /><!-- z [m] -->
->>>>>>> Gives files more appropriate names and makes macro of the caster wheel
 
   <!-- Create 3 base definitions-->
   <link name="base_footprint"/>
@@ -84,12 +78,8 @@
 
   <!-- Caster wheel -->
   <xacro:caster name="front_caster" parent_link="base_link">
-<<<<<<< HEAD
     <origin xyz="${caster_position_x_cm*cm2m} ${caster_position_y_cm*cm2m} ${caster_position_z_cm*cm2m}"
       rpy="${-pi/2} 0 0"/>
-=======
-    <origin xyz="${caster_position_x} ${caster_position_y} ${caster_position_z}" rpy="${-pi/2} 0 0"/>
->>>>>>> Gives files more appropriate names and makes macro of the caster wheel
   </xacro:caster>
 
 </robot>
