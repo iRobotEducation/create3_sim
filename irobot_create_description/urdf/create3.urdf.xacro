@@ -6,20 +6,20 @@
   <xacro:include filename="$(find irobot_create_description)/urdf/caster.urdf.xacro" />
 
   <!-- MECHANICAL PROPERTIES -->
-  <xacro:property name="body_z_offset" value="-0.025" /><!-- z offset from ground [m] -->
-  <xacro:property name="body_mass" value="2.300" />
-  <xacro:property name="body_radius" value="0.16" />
-  <xacro:property name="body_length" value="0.048" />
+  <xacro:property name="body_z_offset"           value="-0.025" />  <!-- z offset from ground [m] -->
+  <xacro:property name="body_mass"               value="2.300" />   <!-- [kg] -->
+  <xacro:property name="body_radius"             value="0.16" />    <!-- [m] -->
+  <xacro:property name="body_length"             value="0.048" />   <!-- [m] -->
 
-  <xacro:property name="bumper_mass" value="0.1" /> <!-- [kg] -->
-  <xacro:property name="bumper_offset_z" value="-0.025" /><!-- [m] -->
+  <xacro:property name="bumper_mass"             value="0.1" />     <!-- [kg] -->
+  <xacro:property name="bumper_offset_z"         value="-0.025" />  <!-- [m] -->
 
-  <xacro:property name="wheel_height" value="-0.0275" /><!-- z [m] -->
-  <xacro:property name="distance_between_wheels" value="0.233" /><!-- y [m] -->
+  <xacro:property name="wheel_height"            value="-0.0275" /> <!-- z [m] -->
+  <xacro:property name="distance_between_wheels" value="0.233" />   <!-- y [m] -->
 
-  <xacro:property name="caster_position_x" value="0.125" /><!-- x [m] -->
-  <xacro:property name="caster_position_y" value="0" /><!-- y [m] -->
-  <xacro:property name="caster_position_z" value="-0.054" /><!-- z [m] -->
+  <xacro:property name="caster_position_x"       value="0.125" />   <!-- x [m] -->
+  <xacro:property name="caster_position_y"       value="0" />       <!-- y [m] -->
+  <xacro:property name="caster_position_z"       value="-0.054" />  <!-- z [m] -->
 
   <!-- Create 3 base definitions-->
   <link name="base_footprint"/>
@@ -37,7 +37,7 @@
       </geometry>
     </visual>
     <collision name="create3_base_collision">
-      <origin xyz="-0.005 0 ${(body_z_offset/2.) + 0.01}"/>
+      <origin xyz="-0.005 0 ${body_z_offset/2.}"/>
       <geometry>
         <cylinder length="${body_length}" radius="${body_radius}"/>
       </geometry>
@@ -57,11 +57,12 @@
     <inertial>
       <origin xyz="0.08 0 ${bumper_offset_z}"/>
       <mass value="${bumper_mass}"/>
-      <inertia ixx="0.0013483753405" ixy="0.0000000454352" ixz="0.0000014434849" iyy="0.0002521736852" iyz="-0.0000000006721" izz="0.0015442525386"/>
+      <inertia ixx="0.0013483753405" ixy="0.0000000454352" ixz="0.0000014434849" iyy="0.0002521736852" 
+        iyz="-0.0000000006721" izz="0.0015442525386"/>
     </inertial>
   </xacro:bumper>
 
-  <!-- Wheel with mechanical wheel drop -->
+  <!-- Wheels with mechanical wheel drop -->
   <xacro:wheel_with_wheeldrop name="left" parent_link="base_link">
     <origin xyz="0 ${distance_between_wheels/2} ${wheel_height}" rpy="${-pi/2} 0 0"/>
   </xacro:wheel_with_wheeldrop>

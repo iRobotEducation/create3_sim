@@ -20,11 +20,9 @@
   </gazebo>
 
   <link name="wheel_${name}_axle_link">
-      <xacro:inertial_cuboid mass="0.05"
-                             x="0.15"
-                             y="0.15"
-                             z="0.15"/>
+    <xacro:inertial_cuboid mass="0.05" x="0.15" y="0.15" z="0.15"/>
   </link>
+  
   <!-- Wheel definition -->
   <xacro:wheel name="${name}" parent_link="wheel_${name}_axle_link">
     <origin xyz="0 0 0" rpy="0 0 0"/>

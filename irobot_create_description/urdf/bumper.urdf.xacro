@@ -2,14 +2,12 @@
 <robot xmlns:xacro="http://ros.org/wiki/xacro">
 
 <xacro:macro name="bumper" params="name:=bumper parent_link robot_type visual_mesh collision_mesh
-                                          *origin *inertial">
+  *origin *inertial">
 
   <joint name="${name}_joint" type="fixed">
     <parent link="${parent_link}"/>
     <child link="${name}_link"/>
-    <axis xyz="0 1 0"/>
     <xacro:insert_block name="origin"/>
-    <limit lower="0" upper="0" velocity="0.01" effort="30"/>
   </joint>
   <link name="${name}_link">
     <visual>
@@ -31,7 +29,6 @@
     <maxVel>0.01</maxVel>
     <minDepth>0.001</minDepth>
     <maxContacts>10</maxContacts>
-    <material>Gazebo/Green</material>
   </gazebo>
 
   <gazebo reference="${name}_joint">

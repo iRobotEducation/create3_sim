@@ -19,7 +19,7 @@ def generate_launch_description():
         'rviz',
         'model.rviz')
 
-    rviz_node = Node(
+    rviz = Node(
         package='rviz2',
         executable='rviz2',
         name='rviz2',
@@ -44,4 +44,4 @@ def generate_launch_description():
         output='screen'
     )
 
-    return LaunchDescription([joint_state_publisher, robot_state_publisher, rviz_node])
+    return LaunchDescription([joint_state_publisher, robot_state_publisher, rviz])

@@ -3,9 +3,9 @@
 
 <xacro:macro name="wheel" params="name parent_link *origin">
 
-  <xacro:property name="wheel_mass"   value="0.2" /> <!-- [kg] -->
-  <xacro:property name="wheel_radius" value="0.03575" /> <!-- [m] -->
-  <xacro:property name="wheel_width"  value="0.015" /> <!-- [m] -->
+  <xacro:property name="wheel_mass"   value="0.2" />      <!-- [kg] -->
+  <xacro:property name="wheel_radius" value="0.03575" />  <!-- [m] -->
+  <xacro:property name="wheel_width"  value="0.015" />    <!-- [m] -->
 
   <joint name="wheel_${name}_joint" type="continuous">
     <parent link="${parent_link}"/>
@@ -17,7 +17,7 @@
   <link name="wheel_${name}_link">
     <visual>
       <geometry>
-          <cylinder length="${wheel_width}" radius="${wheel_radius}"/>
+        <cylinder length="${wheel_width}" radius="${wheel_radius}"/>
       </geometry>
     </visual>
     <collision>
