@@ -3,7 +3,7 @@
 <package format="3">
   <name>irobot_create_description</name>
   <author>iRobot</author>
-  <version>0.1.0</version>
+  <version>0.0.1</version>
   <maintainer email="ekumen@irbt.onmicrosoft.com">Ekumen</maintainer>
   <license>Apache-2.0</license>
   <description>

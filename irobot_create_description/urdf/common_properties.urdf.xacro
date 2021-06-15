@@ -32,4 +32,7 @@
     </inertial>
   </xacro:macro>
 
+  <!-- Conversion macros -->
+  <xacro:property name="cm2m"    value="${1/100.0}"/>
+
 </robot>
