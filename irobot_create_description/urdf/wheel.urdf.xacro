@@ -3,9 +3,9 @@
 
 <xacro:macro name="wheel" params="name parent_link *origin">
 
-  <xacro:property name="wheel_mass_kg"   value="0.2" />
-  <xacro:property name="wheel_radius_cm" value="3.575" />
-  <xacro:property name="wheel_width_cm"  value="1.5" />
+  <xacro:property name="mass_kg"   value="0.2" />
+  <xacro:property name="radius_cm" value="3.575" />
+  <xacro:property name="width_cm"  value="1.5" />
 
   <joint name="wheel_${name}_joint" type="continuous">
     <parent link="${parent_link}"/>
@@ -17,16 +17,16 @@
   <link name="wheel_${name}_link">
     <visual>
       <geometry>
-        <cylinder length="${wheel_width_cm*cm2m}" radius="${wheel_radius_cm*cm2m}"/>
+        <cylinder length="${width_cm*cm2m}" radius="${radius_cm*cm2m}"/>
       </geometry>
     </visual>
     <collision>
       <geometry>
-        <cylinder length="${wheel_width_cm*cm2m}" radius="${wheel_radius_cm*cm2m}"/>
+        <cylinder length="${width_cm*cm2m}" radius="${radius_cm*cm2m}"/>
       </geometry>
     </collision>
-    <xacro:inertial_cylinder mass="${wheel_mass_kg}" radius="${wheel_radius_cm*cm2m}" 
-      length="${wheel_width_cm*cm2m}" />
+    <xacro:inertial_cylinder mass="${mass_kg}" radius="${radius_cm*cm2m}" 
+      length="${width_cm*cm2m}" />
   </link>
 
   <gazebo reference="wheel_${name}_link">
