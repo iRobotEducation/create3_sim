@@ -32,5 +32,6 @@ jobs:
         with:
           distribution: foxy
           linter: ${{ matrix.linter }}
-          package-name: |
+          package-name:
             irobot_create_msgs
+            irobot_create_description

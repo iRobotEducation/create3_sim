@@ -20,5 +20,6 @@ jobs:
         with:
           target-ros2-distro: foxy
           import-token: ${{ secrets.REPO_TOKEN }}
-          package-name: |
+          package-name:
             irobot_create_msgs
+            irobot_create_description
