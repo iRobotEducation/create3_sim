@@ -1,28 +1,27 @@
 """Launch Create3 in RViz."""
 
-import os
-import launch
 from ament_index_python.packages import get_package_share_directory
 from launch import LaunchDescription
-from launch.substitutions import Command, LaunchConfiguration
 from launch.actions import DeclareLaunchArgument
 from launch.conditions import IfCondition
+from launch.substitutions import Command, LaunchConfiguration, PathJoinSubstitution
 from launch_ros.actions import Node
+
+ARGUMENTS = [
+  DeclareLaunchArgument("rviz", default_value="true",
+                                     description="Start rviz")
+]
 
 def generate_launch_description():
     pkg_create3_description = get_package_share_directory('irobot_create_description')
 
-    urdf_dir = os.path.join(pkg_create3_description, 'urdf')
-    xacro_file = os.path.join(urdf_dir, 'create3.urdf.xacro')
+    xacro_file = PathJoinSubstitution([pkg_create3_description, 'urdf', 'create3.urdf.xacro'])
 
     # Rviz
-    rviz_config_dir = os.path.join(
+    rviz_config_dir = PathJoinSubstitution([
         pkg_create3_description,
         'rviz',
-        'model.rviz')
-
-    run_rviz = DeclareLaunchArgument("rviz", default_value="true",
-                                     description="Start rviz")
+        'model.rviz'])
 
     rviz = Node(
         package='rviz2',
@@ -51,4 +50,11 @@ def generate_launch_description():
         output='screen'
     )
 
-    return LaunchDescription([run_rviz, joint_state_publisher, robot_state_publisher, rviz])
+    # Define LaunchDescription variable
+    ld = LaunchDescription(ARGUMENTS)
+    # Add nodes to LaunchDescription
+    ld.add_action(joint_state_publisher)
+    ld.add_action(robot_state_publisher)
+    ld.add_action(rviz)
+
+    return ld
