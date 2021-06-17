@@ -6,20 +6,29 @@ This is a [ROS 2](https://docs.ros.org/en/foxy/index.html) simulation stack for 
 
 ## Prerequisite
 
-Before moving forward make sure to have either ROS foxy or ROS galactic installed.
+Before moving forward make sure to have either ROS foxy or ROS galactic installed. 
 
 ## Build
 
-Upon cloning this repository, navigate to the root and install ros2 dependencies with:
+- Create a workspace if you don't already have one:
 
 ```bash
-rosdep install --from-path .
+mkdir -p ~/colcon_ws/src
 ```
 
-Build the workspace with:
+- Clone this repository into the src directory from above.
+
+- Navigate to the workspace and install ros2 dependencies with:
 
 ```bash
-colcon build
+cd ~/colcon_ws
+rosdep install --from-path src -yi
+```
+
+- Build the workspace with:
+
+```bash
+colcon build --symlink-install
 source install/local_setup.bash
 ```
 
