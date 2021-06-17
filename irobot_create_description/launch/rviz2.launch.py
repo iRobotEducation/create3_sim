@@ -23,8 +23,8 @@ from launch.substitutions import Command, LaunchConfiguration, PathJoinSubstitut
 from launch_ros.actions import Node
 
 ARGUMENTS = [
-  DeclareLaunchArgument('rviz', default_value='true',
-                        description='Start rviz')
+    DeclareLaunchArgument('rviz', default_value='true',
+                          description='Start rviz')
 ]
 
 
@@ -36,22 +36,29 @@ def generate_launch_description():
     # Rviz
     rviz_config_dir = PathJoinSubstitution([pkg_create3_description, 'rviz', 'model.rviz'])
 
-    rviz = Node(package='rviz2', executable='rviz2', name='rviz2',
-                arguments=['-d', rviz_config_dir],
-                condition=IfCondition(LaunchConfiguration('rviz')), output='screen')
+    rviz = Node(
+        package='rviz2',
+        executable='rviz2',
+        name='rviz2',
+        arguments=['-d', rviz_config_dir],
+        condition=IfCondition(LaunchConfiguration('rviz')),
+        output='screen')
 
-    robot_state_publisher = Node(package='robot_state_publisher',
-                                 executable='robot_state_publisher', name='robot_state_publisher',
-                                 output='screen',
-                                 parameters=[{'use_sim_time': True},
-                                             {'robot_description': Command(['xacro', ' ', 
-                                                                            xacro_file])}])
+    robot_state_publisher = Node(
+        package='robot_state_publisher',
+        executable='robot_state_publisher',
+        name='robot_state_publisher',
+        output='screen',
+        parameters=[
+            {'use_sim_time': True},
+            {'robot_description': Command(['xacro', ' ', xacro_file])}])
 
-    joint_state_publisher = Node(package='joint_state_publisher_gui',
-                                 executable='joint_state_publisher_gui',
-                                 name='joint_state_publisher_gui',
-                                 condition=IfCondition(LaunchConfiguration('rviz')),
-                                 output='screen')
+    joint_state_publisher = Node(
+        package='joint_state_publisher_gui',
+        executable='joint_state_publisher_gui',
+        name='joint_state_publisher_gui',
+        condition=IfCondition(LaunchConfiguration('rviz')),
+        output='screen')
 
     # Define LaunchDescription variable
     ld = LaunchDescription(ARGUMENTS)

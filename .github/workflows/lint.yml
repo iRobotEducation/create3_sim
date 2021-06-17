@@ -14,11 +14,11 @@ jobs:
       fail-fast: false
       matrix:
         linter:
-          - clang_format
-          - clang_tidy
+          # - clang_format
+          # - clang_tidy
           - copyright
-          - cppcheck
-          - cpplint
+          # - cppcheck
+          # - cpplint
           - flake8
           - lint_cmake
           - pep257
