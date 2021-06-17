@@ -1,0 +1,41 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://ros.org/wiki/xacro">
+
+<xacro:macro name="bumper" params="name:=bumper parent_link robot_type visual_mesh collision_mesh
+  *origin *inertial">
+
+  <joint name="${name}_joint" type="fixed">
+    <parent link="${parent_link}"/>
+    <child link="${name}_link"/>
+    <xacro:insert_block name="origin"/>
+  </joint>
+  <link name="${name}_link">
+    <visual>
+      <geometry>
+        <mesh filename="${visual_mesh}"/>
+      </geometry>
+    </visual>
+    <collision>
+      <geometry>
+        <mesh filename="${collision_mesh}"/>
+      </geometry>
+    </collision>
+    <xacro:insert_block name="inertial"/>
+  </link>
+
+  <gazebo reference="${name}_link" >
+    <material>Gazebo/Green</material>
+    <mu1>0.1</mu1>
+    <mu2>0.1</mu2>
+    <maxVel>0.01</maxVel>
+    <minDepth>0.001</minDepth>
+    <maxContacts>10</maxContacts>
+  </gazebo>
+
+  <gazebo reference="${name}_joint">
+    <preserveFixedJoint>true</preserveFixedJoint>
+  </gazebo>
+
+</xacro:macro>
+
+</robot>
