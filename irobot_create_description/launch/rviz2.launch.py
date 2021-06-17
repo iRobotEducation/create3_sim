@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 # Copyright 2021 iRobot Corporation. All Rights Reserved.
+# License Apache-2.0
 # @author Rodrigo Jose Causarano Nuñez (rcausaran@irobot.com)
 #
 # Launch Create3 in RViz.
