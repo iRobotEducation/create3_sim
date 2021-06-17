@@ -44,7 +44,8 @@ def generate_launch_description():
                                  executable='robot_state_publisher', name='robot_state_publisher',
                                  output='screen',
                                  parameters=[{'use_sim_time': True},
-                                             {'robot_description': Command(['xacro', ' ', xacro_file])}])
+                                             {'robot_description': Command(['xacro', ' ', 
+                                                                            xacro_file])}])
 
     joint_state_publisher = Node(package='joint_state_publisher_gui',
                                  executable='joint_state_publisher_gui',
