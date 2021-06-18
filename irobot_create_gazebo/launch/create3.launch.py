@@ -15,13 +15,13 @@
 #
 # Launch Create3 in Gazebo and optionally also in RViz.
 
-import launch
 from ament_index_python.packages import get_package_share_directory
+import launch
 from launch import LaunchDescription
 from launch.actions import DeclareLaunchArgument, IncludeLaunchDescription
 from launch.conditions import IfCondition
 from launch.launch_description_sources import PythonLaunchDescriptionSource
-from launch.substitutions import PathJoinSubstitution, LaunchConfiguration
+from launch.substitutions import LaunchConfiguration, PathJoinSubstitution
 from launch_ros.actions import Node
 
 ARGUMENTS = [
@@ -65,7 +65,7 @@ def generate_launch_description():
                    '-x', '0',
                    '-y', '0',
                    '-z', '0',
-                   '-Y', "0"],
+                   '-Y', '0'],
         output='screen'
     )
 
