@@ -27,7 +27,7 @@ from launch_ros.actions import Node
 ARGUMENTS = [
     DeclareLaunchArgument('rviz', default_value='true',
                           description='Start rviz'),
-    DeclareLaunchArgument('gui_required', default_value='true',
+    DeclareLaunchArgument('gui', default_value='true',
                           description='Set "false" to run gazebo headless')
 ]
 
@@ -39,12 +39,9 @@ def generate_launch_description():
 
     # Gazebo server
     gzserver = launch.actions.ExecuteProcess(
-        cmd=['gzserver',
-             '--verbose',
-             '-s',
-             'libgazebo_ros_init.so',
-             '-s',
-             'libgazebo_ros_factory.so'],
+        cmd=['gzserver', '--verbose',
+             '-s', 'libgazebo_ros_init.so',
+             '-s', 'libgazebo_ros_factory.so'],
         output='screen'
     )
 
