@@ -2,11 +2,10 @@ cmake_minimum_required(VERSION 3.5)
 
 project(irobot_create_gazebo)
 
-# Skip if Gazebo not present
+# Error if Gazebo not present
 find_package(gazebo QUIET)
 if(NOT gazebo_FOUND)
-  message(WARNING "Gazebo not found, proceeding without that simulator.")
-  return()
+  message(FATAL_ERROR "Gazebo not found.")
 endif()
 
 # Default to C++14

@@ -30,7 +30,6 @@ ARGUMENTS = [
 
 def generate_launch_description():
     pkg_create3_description = get_package_share_directory('irobot_create_description')
-
     xacro_file = PathJoinSubstitution([pkg_create3_description, 'urdf', 'create3.urdf.xacro'])
 
     # Rviz
@@ -68,4 +67,3 @@ def generate_launch_description():
     ld.add_action(rviz)
 
     return ld
-

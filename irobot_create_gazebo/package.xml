@@ -2,13 +2,12 @@
 <?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
 <package format="3">
   <name>irobot_create_gazebo</name>
-  <author>iRobot</author>
   <version>0.0.1</version>
+  <description>Provides the Gazebo simulation for the iRobot Create 3 platform.</description>
   <maintainer email="ekumen@irbt.onmicrosoft.com">Ekumen</maintainer>
   <license>Apache-2.0</license>
-  <description>
-      Provides the gazebo simulation for the iRobot Create 3 platform
-  </description>
+
+  <author>iRobot</author>
 
   <buildtool_depend>ament_cmake</buildtool_depend>
 
