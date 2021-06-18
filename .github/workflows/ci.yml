@@ -30,7 +30,6 @@ jobs:
       # ============
 
       - name: Dependencies [Ubuntu]
-        if: contains(matrix.os, 'ubuntu')
         shell: bash
         run: |
           sudo sh -c 'echo "deb http://packages.osrfoundation.org/gazebo/ubuntu `lsb_release -cs` main" > /etc/apt/sources.list.d/gazebo-latest.list'
