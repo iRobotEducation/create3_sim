@@ -27,7 +27,7 @@ from launch_ros.actions import Node
 ARGUMENTS = [
     DeclareLaunchArgument('rviz', default_value='true',
                           description='Start rviz'),
-    DeclareLaunchArgument('gui_required', default_value='true',
+    DeclareLaunchArgument('gui', default_value='true',
                           description='Set "false" to run gazebo headless')
 ]
 
