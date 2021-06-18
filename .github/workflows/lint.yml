@@ -35,3 +35,4 @@ jobs:
           package-name:
             irobot_create_msgs
             irobot_create_description
+            irobot_create_gazebo
