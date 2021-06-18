@@ -36,4 +36,4 @@ jobs:
           wget http://packages.osrfoundation.org/gazebo.key -O - | sudo apt-key add -
           sudo apt-get update
           sudo apt-get install git build-essential cmake libace-dev libeigen3-dev libopencv-dev
-          sudo apt-get install lib${{ matrix.gazebo_version }}-dev
+          sudo apt-get install libgazebo11-dev
