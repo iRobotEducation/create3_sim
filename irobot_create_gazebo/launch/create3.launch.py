@@ -31,11 +31,19 @@ ARGUMENTS = [
                           description='Set "false" to run gazebo headless')
 ]
 
+for pose_element in [ 'x', 'y', 'z', 'yaw' ]:
+  ARGUMENTS.append(
+    DeclareLaunchArgument(pose_element, default_value='0.0',
+                          description=f'{pose_element} component of the robot pose.'),
+  )
 
 def generate_launch_description():
     pkg_create3_description = get_package_share_directory('irobot_create_description')
     description_launch_file = PathJoinSubstitution(
         [pkg_create3_description, 'launch', 'rviz2.launch.py'])
+    x, y, z = LaunchConfiguration('x'), LaunchConfiguration('y'), LaunchConfiguration('z')
+    yaw = LaunchConfiguration('yaw')
+
 
     # Gazebo server
     gzserver = launch.actions.ExecuteProcess(
@@ -49,7 +57,7 @@ def generate_launch_description():
     gzclient = launch.actions.ExecuteProcess(
         cmd=['gzclient'],
         output='screen',
-        condition=IfCondition(LaunchConfiguration('gui_required'))
+        condition=IfCondition(LaunchConfiguration('gui'))
     )
 
     spawn_robot = Node(
@@ -59,10 +67,10 @@ def generate_launch_description():
                    'create3',
                    '-topic',
                    'robot_description',
-                   '-x', '0',
-                   '-y', '0',
-                   '-z', '0',
-                   '-Y', '0'],
+                   '-x', x,
+                   '-y', y,
+                   '-z', z,
+                   '-Y', yaw],
         output='screen'
     )
 
