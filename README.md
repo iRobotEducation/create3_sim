@@ -6,7 +6,7 @@ This is a [ROS 2](https://docs.ros.org/en/foxy/index.html) simulation stack for 
 
 ## Prerequisite
 
-Before moving forward make sure to have either ROS foxy or ROS galactic installed. 
+Before moving forward make sure to have either ROS foxy or ROS galactic installed.
 
 ## Build
 

@@ -11,7 +11,7 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-# @author Rodrigo Jose Causarano Nuñez (rcausaran@irobot.com)
+# @author Rodrigo Jose Causarano Nunez (rcausaran@irobot.com)
 #
 # Launch Create3 in RViz.
 
@@ -30,7 +30,6 @@ ARGUMENTS = [
 
 def generate_launch_description():
     pkg_create3_description = get_package_share_directory('irobot_create_description')
-
     xacro_file = PathJoinSubstitution([pkg_create3_description, 'urdf', 'create3.urdf.xacro'])
 
     # Rviz

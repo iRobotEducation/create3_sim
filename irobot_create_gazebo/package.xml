@@ -1,9 +1,9 @@
 <?xml version="1.0"?>
 <?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
 <package format="3">
-  <name>irobot_create_description</name>
+  <name>irobot_create_gazebo</name>
   <version>0.0.1</version>
-  <description>Provides the model description for the iRobot Create 3 platform.</description>
+  <description>Provides the Gazebo simulation for the iRobot Create 3 platform.</description>
   <maintainer email="ekumen@irbt.onmicrosoft.com">Ekumen</maintainer>
   <license>Apache-2.0</license>
 
@@ -14,7 +14,8 @@
   <depend>urdf</depend>
   <depend>xacro</depend>
 
-  <exec_depend>joint_state_publisher_gui</exec_depend>
+  <exec_depend>gazebo_ros</exec_depend>
+  <exec_depend>irobot_create_description</exec_depend>
   <exec_depend>ros2launch</exec_depend>
 
   <test_depend>ament_lint_auto</test_depend>
