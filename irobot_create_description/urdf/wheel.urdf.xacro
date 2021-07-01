@@ -39,5 +39,16 @@
     <material>Gazebo/DarkGrey</material>
   </gazebo>
 
+  <ros2_control name="${name}_wheel_system" type="system">
+      <hardware>
+        <plugin>gazebo_ros2_control/GazeboSystem</plugin>
+      </hardware>
+
+      <joint name="wheel_${name}_joint">
+        <command_interface name="velocity" />
+        <state_interface name="position"/>
+      </joint>
+  </ros2_control>
+
 </xacro:macro>
 </robot>
