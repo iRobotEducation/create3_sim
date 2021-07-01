@@ -46,6 +46,10 @@
 
       <joint name="wheel_${name}_joint">
         <command_interface name="velocity" />
+<<<<<<< HEAD
+=======
+        <state_interface name="position"/>
+>>>>>>> diffdrive control package
       </joint>
   </ros2_control>
 
