@@ -14,7 +14,6 @@ create_diffdrive_controller:
     right_wheel_names: ["wheel_right_joint"]
 
     wheel_separation: 0.233
-    #wheels_per_side: 1  # actually 2, but both are controlled by 1 signal
     wheel_radius: 0.0357
 
     wheel_separation_multiplier: 1.0
@@ -31,9 +30,7 @@ create_diffdrive_controller:
     enable_odom_tf: true
 
     cmd_vel_timeout: 5.0
-    #publish_limited_velocity: true
     use_stamped_vel: false
-    #velocity_rolling_window_size: 10
 
     # Preserve turning radius when limiting speed/acceleration/jerk
     preserve_turning_radius: true

@@ -13,12 +13,13 @@
 # limitations under the License.
 # @author Rodrigo Jose Causarano Nunez (rcausaran@irobot.com)
 #
-# Launch Create3 in Gazebo and optionally also in RViz.
+# Launch Create3 with diffdrive controller in Gazebo and optionally also in RViz.
 
 from ament_index_python.packages import get_package_share_directory
 from launch import LaunchDescription
-from launch.actions import DeclareLaunchArgument, IncludeLaunchDescription
+from launch.actions import DeclareLaunchArgument, IncludeLaunchDescription, RegisterEventHandler
 from launch.launch_description_sources import PythonLaunchDescriptionSource
+from launch.event_handlers import OnProcessExit
 from launch.substitutions import PathJoinSubstitution
 from launch_ros.actions import Node
 
@@ -31,44 +32,46 @@ ARGUMENTS = [
 
 
 def generate_launch_description():
+
     pkg_create3_gazebo = get_package_share_directory('irobot_create_gazebo')
+    pkg_create3_control = get_package_share_directory('irobot_create_control')
     gazebo_launch_file = PathJoinSubstitution(
         [pkg_create3_gazebo, 'launch', 'create3.launch.py'])
-    control_params_file = get_package_share_directory('irobot_create_control') + '/config/control.yaml'
-    remapping = [('/create_diffdrive_controller/cmd_vel_unstamped', '/cmd_vel')]
+    control_params_file = PathJoinSubstitution(
+        [pkg_create3_control, 'config', 'control.yaml'])
 
     diffdrive_controller_node = Node(
-        package = 'controller_manager',
-        executable = 'spawner.py',
-        parameters = [control_params_file],
+        package='controller_manager',
+        executable='spawner.py',
+        parameters=[control_params_file],
         arguments=['create_diffdrive_controller', '-c', '/controller_manager'],
-        output="screen",
+        output='screen',
     )
 
     joint_state_broadcaster_spawner = Node(
-        package="controller_manager",
-        executable="spawner.py",
-        arguments=["joint_state_broadcaster", "--controller-manager", "/controller_manager"],
-        output="screen",
+        package='controller_manager',
+        executable='spawner.py',
+        arguments=['joint_state_broadcaster', '-c', '/controller_manager'],
+        output='screen',
     )
 
-    # controller_manager_node = Node(
-    #     name='controller_manager',
-    #     package = 'controller_manager',
-    #     executable = 'spawner.py',
-    #     arguments=['create_diffdrive_controller'],
-    #     remappings=remapping,
-    #     output="screen",
-    # )
+    diffdrive_controller_callback = RegisterEventHandler(
+        event_handler=OnProcessExit(
+            target_action=joint_state_broadcaster_spawner,
+            on_exit=[diffdrive_controller_node],
+        )
+    )
+
+    includes = IncludeLaunchDescription(
+            PythonLaunchDescriptionSource([gazebo_launch_file])
+        )
 
     # Define LaunchDescription variable
     ld = LaunchDescription(ARGUMENTS)
+
     # Include robot description
-    ld.add_action(IncludeLaunchDescription(
-            PythonLaunchDescriptionSource([gazebo_launch_file])
-        ))
+    ld.add_action(includes)
     ld.add_action(joint_state_broadcaster_spawner)
-    ld.add_action(diffdrive_controller_node)
-    # ld.add_action(controller_manager_node)
+    ld.add_action(diffdrive_controller_callback)
 
     return ld
