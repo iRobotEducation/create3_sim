@@ -55,6 +55,7 @@ def generate_launch_description():
         output='screen',
     )
 
+    # Ensure diffdrive_controller_node starts after joint_state_broadcaster_spawner
     diffdrive_controller_callback = RegisterEventHandler(
         event_handler=OnProcessExit(
             target_action=joint_state_broadcaster_spawner,
@@ -62,15 +63,14 @@ def generate_launch_description():
         )
     )
 
-    includes = IncludeLaunchDescription(
+    include_gazebo_launch_file = IncludeLaunchDescription(
             PythonLaunchDescriptionSource([gazebo_launch_file])
         )
 
     # Define LaunchDescription variable
     ld = LaunchDescription(ARGUMENTS)
 
-    # Include robot description
-    ld.add_action(includes)
+    ld.add_action(include_gazebo_launch_file)
     ld.add_action(joint_state_broadcaster_spawner)
     ld.add_action(diffdrive_controller_callback)
 
