@@ -21,10 +21,11 @@ jobs:
           target-ros2-distro: foxy
           import-token: ${{ secrets.REPO_TOKEN }}
           package-name:
-            irobot_create_msgs
+            irobot_create_control
             irobot_create_description
             irobot_create_gazebo
             irobot_create_gazebo_plugins
+            irobot_create_msgs
             irobot_create_sim
 
       # ============

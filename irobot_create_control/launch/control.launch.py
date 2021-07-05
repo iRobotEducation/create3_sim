@@ -44,7 +44,7 @@ def generate_launch_description():
         package='controller_manager',
         executable='spawner.py',
         parameters=[control_params_file],
-        arguments=['create_diffdrive_controller', '-c', '/controller_manager'],
+        arguments=['diffdrive_controller', '-c', '/controller_manager'],
         output='screen',
     )
 
