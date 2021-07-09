@@ -50,12 +50,20 @@ def generate_launch_description():
         [pkg_create3_description, 'launch', 'dock.launch.py'])
 
     # Launch configurations
+    pkg_create3_control = get_package_share_directory('irobot_create_control')
+    description_launch_file = PathJoinSubstitution(
+        [pkg_create3_description, 'launch', 'rviz2.launch.py'])
+    control_launch_file = PathJoinSubstitution(
+        [pkg_create3_control, 'launch', 'control.launch.py'])
     x, y, z = LaunchConfiguration('x'), LaunchConfiguration('y'), LaunchConfiguration('z')
     yaw = LaunchConfiguration('yaw')
 
     # Includes
     robot_description = IncludeLaunchDescription(
         PythonLaunchDescriptionSource([description_launch_file])
+    )
+    diffdrive_controller = IncludeLaunchDescription(
+            PythonLaunchDescriptionSource([control_launch_file])
     )
     spawn_dock = IncludeLaunchDescription(
         PythonLaunchDescriptionSource([dock_launch_file]),
@@ -99,6 +107,7 @@ def generate_launch_description():
     ld = LaunchDescription(ARGUMENTS)
     # Include robot description
     ld.add_action(robot_description)
+    ld.add_action(diffdrive_controller)
     # Add nodes to LaunchDescription
     ld.add_action(gzserver)
     ld.add_action(gzclient)

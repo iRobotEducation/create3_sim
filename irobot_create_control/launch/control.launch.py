@@ -23,20 +23,10 @@ from launch.event_handlers import OnProcessExit
 from launch.substitutions import PathJoinSubstitution
 from launch_ros.actions import Node
 
-ARGUMENTS = [
-    DeclareLaunchArgument('rviz', default_value='false',
-                          description='Start rviz'),
-    DeclareLaunchArgument('gui', default_value='true',
-                          description='Set "false" to run gazebo headless')
-]
-
 
 def generate_launch_description():
-
-    pkg_create3_gazebo = get_package_share_directory('irobot_create_gazebo')
     pkg_create3_control = get_package_share_directory('irobot_create_control')
-    gazebo_launch_file = PathJoinSubstitution(
-        [pkg_create3_gazebo, 'launch', 'create3.launch.py'])
+
     control_params_file = PathJoinSubstitution(
         [pkg_create3_control, 'config', 'control.yaml'])
 
@@ -63,14 +53,8 @@ def generate_launch_description():
         )
     )
 
-    include_gazebo_launch_file = IncludeLaunchDescription(
-            PythonLaunchDescriptionSource([gazebo_launch_file])
-        )
+    ld = LaunchDescription()
 
-    # Define LaunchDescription variable
-    ld = LaunchDescription(ARGUMENTS)
-
-    ld.add_action(include_gazebo_launch_file)
     ld.add_action(joint_state_broadcaster_spawner)
     ld.add_action(diffdrive_controller_callback)
 
