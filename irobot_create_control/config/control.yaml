@@ -16,7 +16,12 @@ diffdrive_controller:
     wheel_separation: 0.233
     wheel_radius: 0.03575
 
+    # Multiplier applied to the wheel separation parameter.
+    # This is used to account for a difference between the robot model and a real robot.
     wheel_separation_multiplier: 1.0
+
+    # Multipliers applied to the wheel radius parameter.
+    # This is used to account for a difference between the robot model and a real robot.
     left_wheel_radius_multiplier: 1.0
     right_wheel_radius_multiplier: 1.0
 
@@ -26,10 +31,10 @@ diffdrive_controller:
     pose_covariance_diagonal : [0.001, 0.001, 0.001, 0.001, 0.001, 0.01]
     twist_covariance_diagonal: [0.001, 0.001, 0.001, 0.001, 0.001, 0.01]
 
-    open_loop: true
+    open_loop: false
     enable_odom_tf: true
 
-    cmd_vel_timeout: 5.0
+    cmd_vel_timeout: 0.25
     use_stamped_vel: false
 
     # Preserve turning radius when limiting speed/acceleration/jerk
