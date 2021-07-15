@@ -1,0 +1,10 @@
+# Service to induce slip in a robot
+
+# `velocity_scale` Scale value applied to the wheels' velocities
+float64 velocity_scale
+
+# `encoder_scale` Scale value applied to the encoder reads
+float64 encoder_scale
+---
+# `success` Result of the operation
+bool success

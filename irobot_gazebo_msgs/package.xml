@@ -1,0 +1,64 @@
+<?xml version="1.0"?>
+<?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
+<package format="3">
+  <name>irobot_gazebo_msgs</name>
+  <author>Ekumen</author>
+  <version>0.3.0</version>
+  <description>
+      iRobot plugins messages and services definitions.
+      It contains the following messages:
+        - Battery
+        - Beacon
+        - Bumper
+        - BumperContact
+        - Cliff
+        - Docking
+        - Duration
+        - FloorSensor
+        - IrRange
+        - IrReceiver
+        - JoystickCommand
+        - MagneticReceiver
+        - Motor
+        - OdoaSim
+        - OpticalMouse
+        - PixartDistance
+        - PosesStamped
+        - RfReceiver
+        - Rtf
+        - SensorEmitterDescriptor
+        - UiEvents
+        - Vector2D
+        - WheelDrop
+        - WheelDropArray
+        - WifiSignal
+      It contains the following services:
+        - CarpetAdder
+        - DoorAngle
+        - DoorState
+        - FastForward
+        - Force
+        - Kidnap
+        - Light
+        - PartitionSpacePoints
+        - Pose
+        - SavePath
+        - Slip
+  </description>
+  <maintainer email="ekumen@irbt.onmicrosoft.com">Ekumen</maintainer>
+  <license>Copyright iRobot</license>
+
+  <buildtool_depend>ament_cmake</buildtool_depend>
+  <buildtool_depend>rosidl_default_generators</buildtool_depend>
+
+  <exec_depend>rosidl_default_runtime</exec_depend>
+
+  <test_depend>ament_lint_auto</test_depend>
+  <test_depend>ament_lint_common</test_depend>
+
+  <member_of_group>rosidl_interface_packages</member_of_group>
+
+  <export>
+    <build_type>ament_cmake</build_type>
+  </export>
+</package>
