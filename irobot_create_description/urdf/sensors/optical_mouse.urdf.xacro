@@ -1,0 +1,57 @@
+<?xml version="1.0"?>
+
+<robot xmlns:xacro="http://ros.org/wiki/xacro">
+
+  <xacro:macro name="optical_mouse" params="name parent *origin ros_topic visualize sensor_rotation
+                                            noise_mean:=0 noise_var:=0 mouse_seed resolution update_rate" >
+
+    <!-- Sensor settings -->
+    <xacro:property name="mass" value="0.1" />
+    <xacro:property name="l" value="0.008" /> <!-- Length -->
+    <xacro:property name="r" value="0.01" /> <!-- Radius -->
+
+    <!-- Visualization settings -->
+    <xacro:property name="color" value="Red" />
+
+    <joint name="optical_mouse_joint" type="revolute">
+      <axis xyz="0 1 0" />
+      <limit effort="1000.0" lower="0.0" upper="0.0" velocity="0.0"/>
+      <xacro:insert_block name="origin"/>
+      <parent link="${parent}"/>
+      <child link="optical_mouse_${name}_link"/>
+    </joint>
+
+    <link name="optical_mouse_${name}_link">
+      <xacro:if value="${visualize}">
+        <visual>
+          <geometry>
+            <cylinder length="${l}" radius="${r}" />
+          </geometry>
+        </visual>
+      </xacro:if>
+      <xacro:inertial_cylinder mass="${mass}" length="${l}" radius="${r}" />
+    </link>
+
+    <gazebo>
+      <plugin name="gazebo_ros_optical_mouse" filename="libgazebo_ros_irobot_optical_mouse.so">
+        <ros>
+          <namespace>/</namespace>
+        </ros>
+        <update_rate>${update_rate}</update_rate>
+        <link>optical_mouse_${name}_link</link>
+        <resolution>${resolution}</resolution>
+        <sensor_rotation>${sensor_rotation}</sensor_rotation>
+        <gaussian_mean>${noise_mean}</gaussian_mean>
+        <gaussian_var>${noise_var}</gaussian_var>
+        <xacro:if value="${mouse_seed > 0}">
+          <!-- Only pass the value if it's possitive. Otherwise, use random. -->
+          <mouse_seed>${mouse_seed}</mouse_seed>
+        </xacro:if>
+      </plugin>
+    </gazebo>
+
+    <gazebo reference="optical_mouse_${name}_link" >
+      <material>Gazebo/${color}</material>
+    </gazebo>
+  </xacro:macro>
+</robot>

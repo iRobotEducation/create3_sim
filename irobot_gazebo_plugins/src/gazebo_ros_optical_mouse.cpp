@@ -1,16 +1,9 @@
 // Copyright 2021 iRobot, Inc.
 
-#include <algorithm>
-#include <cmath>
-#include <memory>
-#include <string>
-
 #include <gazebo/physics/Link.hh>
 #include <gazebo/physics/Model.hh>
 #include <gazebo/physics/World.hh>
 #include <gazebo_ros/conversions/builtin_interfaces.hpp>
-#include <gazebo_ros/node.hpp>
-#include <rclcpp/rclcpp.hpp>
 
 #include <irobot_gazebo_plugins/gazebo_ros_optical_mouse.h>
 
@@ -63,7 +56,7 @@ void GazeboRosOpticalMouse::Load(gazebo::physics::ModelPtr model, sdf::ElementPt
   const gazebo_ros::QoS& qos = ros_node_->get_qos();
 
   // Initialize ROS publisher
-  pub_ = ros_node_->create_publisher<irobot_gazebo_msgs::msg::OpticalMouse>(
+  pub_ = ros_node_->create_publisher<irobot_create_msgs::msg::Mouse>(
       topic_name_, qos.get_publisher_qos("optical_mouse/data", rclcpp::SensorDataQoS()));
 
   // Create a connection so the OnUpdate function is called at every simulation
@@ -89,11 +82,6 @@ void GazeboRosOpticalMouse::Reset() {
   last_position_ = link_->WorldPose().Pos();
 }
 
-inline double GazeboRosOpticalMouse::MetersToCounts(const double distance)
-{
-  return std::round(distance * M_TO_INCHES * resolution_);
-}
-
 void GazeboRosOpticalMouse::OnUpdate(const gazebo::common::UpdateInfo& info)
 {
   const gazebo::common::Time current_time = info.simTime;
@@ -114,19 +102,12 @@ void GazeboRosOpticalMouse::OnUpdate(const gazebo::common::UpdateInfo& info)
     const ignition::math::Vector3d& delta_distance = position - last_position_;
 
     // configure an empty message with the timestamp
-    irobot_gazebo_msgs::msg::OpticalMouse msg;
+    irobot_create_msgs::msg::Mouse msg;
     msg.header.stamp = gazebo_ros::Convert<builtin_interfaces::msg::Time>(current_time);
 
-    double dx_m = 0;
-    double dy_m = 0;
-
     // Calculate displacement for this iteration
-    dx_m = std::cos(sensor_rotation_) * delta_distance.X() - std::sin(sensor_rotation_) * delta_distance.Y();
-    dy_m = std::sin(sensor_rotation_) * delta_distance.X() + std::cos(sensor_rotation_) * delta_distance.Y();
-
-    // Convert distantance from original meters to CPI (counts per inch) and add gaussian noise
-    msg.dx = MetersToCounts(dx_m + d_(gen_));
-    msg.dy = MetersToCounts(dy_m + d_(gen_));
+    msg.integrated_x = std::cos(sensor_rotation_) * delta_distance.X() - std::sin(sensor_rotation_) * delta_distance.Y();
+    msg.integrated_y = std::sin(sensor_rotation_) * delta_distance.X() + std::cos(sensor_rotation_) * delta_distance.Y();
 
     // Publish message
     pub_->publish(msg);
@@ -135,7 +116,7 @@ void GazeboRosOpticalMouse::OnUpdate(const gazebo::common::UpdateInfo& info)
     last_time_ = current_time;
 
     // The position is updated according to the resolution of the sensor (i.e. snapped to discrete grid)
-    if (msg.dx != 0 || msg.dy != 0) {
+    if (msg.integrated_x != 0 || msg.integrated_y != 0) {
       last_position_ = position;
     }
   }

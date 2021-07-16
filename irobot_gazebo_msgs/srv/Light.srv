@@ -1,7 +1,0 @@
-# Light intensity request
-uint8 MAX=100
-uint8 MIN=0
-uint8 intensity
----
-# Clamped light intensity [0, 1]
-float64 intensity

@@ -4,6 +4,8 @@
   <xacro:include filename="$(find irobot_create_description)/urdf/caster.urdf.xacro" />
   <xacro:include filename="$(find irobot_create_description)/urdf/common_properties.urdf.xacro"/>
   <xacro:include filename="$(find irobot_create_description)/urdf/wheel_with_wheeldrop.urdf.xacro" />
+  <xacro:include filename="$(find irobot_create_description)/urdf/sensors/optical_mouse.urdf.xacro"/>
+
 
   <!-- MECHANICAL PROPERTIES -->
   <xacro:property name="body_z_offset_cm"           value="-2.5" />
@@ -91,5 +93,16 @@
       <parameters> $(find irobot_create_control)/config/control.yaml </parameters>
     </plugin>
   </gazebo>
+
+  <!-- Optical mouse -->
+  <xacro:optical_mouse name="optical_mouse"
+                      parent="base_link"
+                      ros_topic="optical_mouse"
+                      visualize="true"
+                      noise_mean="0.0"
+                      noise_var="0.0"
+                      mouse_seed="0.0" sensor_rotation="${pi/4}" resolution="492" update_rate="80">
+  <origin xyz="0.1015 0.087 -0.055"/>
+</xacro:optical_mouse>
 
 </robot>

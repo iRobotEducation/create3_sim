@@ -1,3 +1,0 @@
-# Service to send a new save directory for floorcoverage tracker
-std_msgs/String path
----

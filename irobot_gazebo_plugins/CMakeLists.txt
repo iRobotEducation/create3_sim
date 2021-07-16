@@ -30,7 +30,7 @@ find_package(gazebo_ros REQUIRED)
 find_package(gazebo_plugins REQUIRED)
 find_package(geometry_msgs REQUIRED)
 find_package(image_transport REQUIRED)
-find_package(irobot_gazebo_msgs REQUIRED)
+find_package(irobot_create_msgs REQUIRED)
 find_package(nav_msgs REQUIRED)
 find_package(rclcpp REQUIRED)
 find_package(sensor_msgs REQUIRED)
@@ -69,7 +69,7 @@ target_include_directories(gazebo_ros_irobot_optical_mouse PUBLIC include)
 ament_target_dependencies(gazebo_ros_irobot_optical_mouse
   "gazebo_dev"
   "gazebo_ros"
-  "irobot_gazebo_msgs"
+  "irobot_create_msgs"
   "rclcpp"
 )
 ament_export_libraries(gazebo_ros_irobot_optical_mouse)

@@ -6,7 +6,7 @@
 
 #include <gazebo/common/Plugin.hh>
 
-#include <irobot_gazebo_msgs/msg/optical_mouse.hpp>
+#include <irobot_create_msgs/msg/mouse.hpp>
 #include <irobot_gazebo_plugins/gazebo_ros_helpers.h>
 
 static constexpr double M_TO_INCHES = 100/2.54;
@@ -43,9 +43,6 @@ protected:
   void OnUpdate(const gazebo::common::UpdateInfo& info);
 
 private:
-  /// Conversion from meters to counts
-  inline double MetersToCounts(const double distance);
-
   /// Connection to world update event. Callback is called while this is alive.
   gazebo::event::ConnectionPtr update_connection_{ nullptr };
 
@@ -68,7 +65,7 @@ private:
   double sensor_rotation_;
 
   /// ROS publisher
-  rclcpp::Publisher<irobot_gazebo_msgs::msg::OpticalMouse>::SharedPtr pub_{ nullptr };
+  rclcpp::Publisher<irobot_create_msgs::msg::Mouse>::SharedPtr pub_{ nullptr };
 
   /// Normal_distribution
   std::normal_distribution<double> d_;

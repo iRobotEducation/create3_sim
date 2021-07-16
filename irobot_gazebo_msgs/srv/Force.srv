@@ -1,4 +1,0 @@
-# Service to apply wrench force on the robot.
-# `wrench` is the wrench applied to the robot body
-geometry_msgs/Wrench wrench
----
