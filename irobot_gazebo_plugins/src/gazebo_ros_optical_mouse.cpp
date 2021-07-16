@@ -43,11 +43,6 @@ void GazeboRosOpticalMouse::Load(gazebo::physics::ModelPtr model, sdf::ElementPt
   link_ = model->GetLink(link_name);
   GZ_ASSERT(link_, "Couldn't find optical mouse link.");
 
-  // instance of class std::normal_distribution with specific mean and stddev
-  d_ = std::normal_distribution<double>(gaussian_mean, gaussian_var);
-  // Initialize mt19337 generator with a known seed
-  gen_.seed(seed);
-
   // Create a GazeboRos node instead of a common ROS node.
   // Pass it SDF parameters so common options like namespace and remapping
   // can be handled.

@@ -67,12 +67,6 @@ private:
   /// ROS publisher
   rclcpp::Publisher<irobot_create_msgs::msg::Mouse>::SharedPtr pub_{ nullptr };
 
-  /// Normal_distribution
-  std::normal_distribution<double> d_;
-
-  /// Mersenne twister PRNG, initialized with seed from previous random device instance
-  std::mt19937 gen_;
-
   /// Last time the sensor was updated
   gazebo::common::Time last_time_;
 
