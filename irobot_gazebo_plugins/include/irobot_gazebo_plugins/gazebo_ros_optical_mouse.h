@@ -56,7 +56,7 @@ private:
   gazebo::physics::WorldPtr world_{ nullptr };
 
   /// Topic name
-  const std::string topic_name_{ "optical_mouse/data" };
+  const std::string topic_name_{ "mouse" };
 
   /// Sensor resolution
   double resolution_ = 0;

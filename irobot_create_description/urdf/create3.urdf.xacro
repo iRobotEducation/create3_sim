@@ -28,6 +28,8 @@
   <xacro:property name="inertial_offset_x_cm"       value="1" />
 
   <xacro:property name="wheel_drop_offset_z_mm"     value="3.5"/>
+  <xacro:property name="mouse_resolution"           value="492" />
+  <xacro:property name="mouse_update_rate"          value="62" />
 
   <!-- Create 3 base definitions-->
   <link name="base_footprint"/>
@@ -101,7 +103,7 @@
                       visualize="true"
                       noise_mean="0.0"
                       noise_var="0.0"
-                      mouse_seed="0.0" sensor_rotation="${pi/4}" resolution="492" update_rate="80">
+                      mouse_seed="0.0" sensor_rotation="${pi/4}" resolution="${mouse_resolution}" update_rate="${mouse_update_rate}">
   <origin xyz="0.1015 0.087 -0.055"/>
 </xacro:optical_mouse>
 
