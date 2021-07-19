@@ -27,6 +27,7 @@ void GazeboRosOpticalMouse::Load(gazebo::physics::ModelPtr model, sdf::ElementPt
   double update_rate;
   double gaussian_mean;
   double gaussian_var;
+  double sensor_rotation;
   int seed;
   srand(time(0));
 
@@ -34,7 +35,7 @@ void GazeboRosOpticalMouse::Load(gazebo::physics::ModelPtr model, sdf::ElementPt
   utils::initialize(link_name, sdf, "link", "base_link");
   utils::initialize(update_rate, sdf, "update_rate", 100.0);
   utils::initialize(resolution_, sdf, "resolution", 125.0);
-  utils::initialize(sensor_rotation_, sdf, "sensor_rotation", 0.0);
+  utils::initialize(sensor_rotation, sdf, "sensor_rotation", 0.0);
   utils::initialize(gaussian_mean, sdf, "gaussian_mean", 0.0);
   utils::initialize(gaussian_var, sdf, "gaussian_var", 0.0);
   utils::initialize(seed, sdf, "mouse_seed", rand());
@@ -66,6 +67,7 @@ void GazeboRosOpticalMouse::Load(gazebo::physics::ModelPtr model, sdf::ElementPt
   last_time_  = world_->SimTime();
   last_position_ = link_->WorldPose().Pos();
   integrated_position_ = {0, 0, 0};
+  sensor_rotation_ = ignition::math::Quaterniond(ignition::math::Vector3d::UnitZ, sensor_rotation);
 
   RCLCPP_INFO(ros_node_->get_logger(), "Starting optical mouse plugin");
 }
@@ -95,16 +97,18 @@ void GazeboRosOpticalMouse::OnUpdate(const gazebo::common::UpdateInfo& info)
     // Get position
     const ignition::math::Vector3d position = link_->WorldPose().Pos();
     // Position difference with respect to the robot frame
-    const ignition::math::Vector3d& delta_distance = position - last_position_;
+    const ignition::math::Vector3d& delta_distance = sensor_rotation_.RotateVector(position - last_position_);
 
     // configure an empty message with the timestamp
     irobot_create_msgs::msg::Mouse msg;
     msg.header.stamp = gazebo_ros::Convert<builtin_interfaces::msg::Time>(current_time);
 
-    // Calculate displacement for this iteration
-    msg.integrated_x = std::cos(sensor_rotation_) * delta_distance.X() - std::sin(sensor_rotation_) * delta_distance.Y();
-    msg.integrated_y = std::sin(sensor_rotation_) * delta_distance.X() + std::cos(sensor_rotation_) * delta_distance.Y();
+    integrated_position_.X(integrated_position_.X() + delta_distance.X());
+    integrated_position_.Y(integrated_position_.Y() + delta_distance.Y());
 
+    // Calculate displacement for this iteration
+    msg.integrated_x = integrated_position_.X();
+    msg.integrated_y = integrated_position_.Y();
     // Publish message
     pub_->publish(msg);
 

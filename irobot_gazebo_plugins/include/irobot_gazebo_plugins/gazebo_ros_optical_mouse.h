@@ -62,7 +62,7 @@ private:
   double resolution_ = 0;
 
   /// Sensor rotation
-  double sensor_rotation_;
+  ignition::math::Quaterniond sensor_rotation_;
 
   /// ROS publisher
   rclcpp::Publisher<irobot_create_msgs::msg::Mouse>::SharedPtr pub_{ nullptr };
