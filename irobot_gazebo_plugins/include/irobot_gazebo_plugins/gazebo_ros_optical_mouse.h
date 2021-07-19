@@ -16,7 +16,7 @@ namespace irobot_gazebo_plugins
 /*! \brief Plugin to control odometry based on the optical mouse sensor.
   *
   *  ROS Publishers
-  *  - /optical_mouse/data: Odometry data.
+  *  - /mouse: Odometry data.
   *
   */
 class GazeboRosOpticalMouse : public gazebo::ModelPlugin
