@@ -73,6 +73,9 @@ private:
   /// Position of the sensor for previous iteration
   ignition::math::Vector3d last_position_;
 
+  /// Integrated position of the sensor
+  ignition::math::Vector3d integrated_position_;
+
   /// Helper class to enforce a specific update rate
   UpdateRateEnforcer update_rate_enforcer_;
 };

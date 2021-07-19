@@ -65,6 +65,7 @@ void GazeboRosOpticalMouse::Load(gazebo::physics::ModelPtr model, sdf::ElementPt
   // Initialize time and position markers
   last_time_  = world_->SimTime();
   last_position_ = link_->WorldPose().Pos();
+  integrated_position_ = {0, 0, 0};
 
   RCLCPP_INFO(ros_node_->get_logger(), "Starting optical mouse plugin");
 }
