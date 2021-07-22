@@ -59,7 +59,9 @@ def generate_launch_description():
     )
     spawn_dock = IncludeLaunchDescription(
         PythonLaunchDescriptionSource([dock_launch_file]),
-        condition=IfCondition(LaunchConfiguration('dock'))
+        condition=IfCondition(LaunchConfiguration('dock')),
+        # The robot starts docked
+        launch_arguments={'x': x, 'y': y, 'z': z, 'yaw': yaw}.items()
     )
 
     # Gazebo server
@@ -77,9 +79,11 @@ def generate_launch_description():
         condition=IfCondition(LaunchConfiguration('gui'))
     )
 
+    # Spawn robot
     spawn_robot = Node(
         package='gazebo_ros',
         executable='spawn_entity.py',
+        name='spawn_create3',
         arguments=['-entity',
                    'create3',
                    '-topic',
@@ -96,7 +100,6 @@ def generate_launch_description():
     # Include robot description
     ld.add_action(robot_description)
     # Add nodes to LaunchDescription
-    ld.add_action(spawn_robot)
     ld.add_action(gzserver)
     ld.add_action(gzclient)
     ld.add_action(spawn_robot)
