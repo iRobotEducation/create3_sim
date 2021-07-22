@@ -32,14 +32,13 @@
 
   <link name="base_link">
     <visual>
-      <origin xyz="0 0 ${body_z_offset_cm*cm2m}" rpy="0 0 ${-pi*3.0/2.0}"/>
+      <origin xyz="0 0 ${body_z_offset_cm*cm2m}" rpy="0 0 ${pi/2}"/>
       <geometry>
-        <mesh filename="file://$(find irobot_create_description)/meshes/body_collision.stl"
-          scale="0.001 0.001 0.001"/>
+        <mesh filename="file://$(find irobot_create_description)/meshes/body_visual.dae" />
       </geometry>
     </visual>
     <collision name="create3_base_collision">
-      <origin xyz="0 0 ${body_z_offset_cm*cm2m/2}"/>
+      <origin xyz="0 0 ${body_z_offset_cm*cm2m}" rpy="0 0 ${pi/2}"/>
       <geometry>
         <cylinder length="${body_length_cm*cm2m}" radius="${body_radius_cm*cm2m}"/>
       </geometry>
@@ -54,9 +53,9 @@
   <xacro:bumper
       parent_link="base_link"
       robot_type="create3"
-      visual_mesh="file://$(find irobot_create_description)/meshes/bumper_collision.stl"
-      collision_mesh="file://$(find irobot_create_description)/meshes/bumper_collision.stl">
-    <origin xyz="0 0 ${bumper_offset_z_cm*cm2m}"/>
+      visual_mesh="file://$(find irobot_create_description)/meshes/bumper_visual.dae"
+      collision_mesh="file://$(find irobot_create_description)/meshes/bumper_collision.dae">
+    <origin xyz="0 0 ${bumper_offset_z_cm*cm2m}" rpy="0 0 ${pi/2}"/>
 
     <inertial>
         <origin xyz="${bumber_inertial_x_cm*cm2m} 0 ${bumper_offset_z_cm*cm2m}"/>
