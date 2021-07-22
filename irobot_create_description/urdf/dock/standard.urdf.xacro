@@ -1,0 +1,124 @@
+<?xml version="1.0"?>
+<robot name="standard_dock" xmlns:xacro="http://ros.org/wiki/xacro">
+  <xacro:include filename="$(find irobot_create_description)/urdf/common_properties.urdf.xacro"/>
+  <xacro:include filename="$(find irobot_create_description)/urdf/dock/ir_emitter.urdf.xacro"/>
+
+  <xacro:property name="z_offset_mm"   value="4.6"/>
+
+  <link name="base_link">
+    <visual>
+      <origin xyz="0 0 ${z_offset_mm*mm2m}"/>
+      <geometry>
+        <mesh filename="file://$(find irobot_create_description)/meshes/dock/visual.dae"/>
+      </geometry>
+    </visual>
+    <collision>
+      <origin xyz="0 0 ${z_offset_mm*mm2m}"/>
+      <geometry>
+        <mesh filename="file://$(find irobot_create_description)/meshes/dock/collision.stl"/>
+      </geometry>
+    </collision>
+    <xacro:inertial_cuboid_with_pose mass="2.5" x="0.15" y="0.13" z="0.19">
+      <origin xyz="-0.073 0 0"/>
+    </xacro:inertial_cuboid_with_pose>
+  </link>
+
+  <gazebo reference="base_link">
+    <mu1>1.0</mu1>
+    <mu2>1.0</mu2>
+    <kp>1000000.0</kp>
+    <kd>1.0</kd>
+  </gazebo>
+
+  <gazebo>
+    <static>true</static>
+  </gazebo>
+
+
+  <!-- Parameters for IR emitters -->
+  <xacro:property name="buoy_x" value="-0.037"/>
+  <xacro:property name="buoy_y" value="0.005"/>
+  <xacro:property name="buoy_z" value="${0.065 - (z_offset_mm*mm2m)}"/>
+  <xacro:property name="halo_x" value="-0.052"/>
+  <xacro:property name="halo_z" value="${0.095 - (z_offset_mm*mm2m)}"/>
+
+  <xacro:property name="halo_name" value="halo"/>
+  <xacro:property name="green_buoy_name" value="green_buoy"/>
+  <xacro:property name="red_buoy_name" value="red_buoy"/>
+  <xacro:property name="yellow_buoy_name" value="yellow_buoy"/>
+
+  <xacro:property name="buoy_central_aperture"  value="${10/180 * pi}"/>
+  <xacro:property name="buoy_lateral_angle_yaw" value="${10/180 * pi}"/>
+  <xacro:property name="buoy_lateral_aperture"  value="${30/180 * pi}"/>
+
+  <!-- Green IR emitter -->
+  <xacro:ir_emitter name="${green_buoy_name}"
+                    updateRate="20"
+                    broadcastRate="64"
+                    parent="base_link"
+                    ros_topic="ir_emitter"
+                    code="164"
+                    aperture="${buoy_lateral_aperture}"
+                    range="1.524"
+                    device_type="dock"
+                    visualize="$(arg visual_debug)">
+    <origin xyz="${buoy_x} ${- buoy_y} ${buoy_z}"
+            rpy="0 0 ${- buoy_lateral_angle_yaw}"/>
+  </xacro:ir_emitter>
+
+  <!-- Red IR emitter -->
+  <xacro:ir_emitter name="${red_buoy_name}"
+                    updateRate="20"
+                    broadcastRate="64"
+                    parent="base_link"
+                    ros_topic="ir_emitter"
+                    code="168"
+                    aperture="${buoy_lateral_aperture}"
+                    range="1.524"
+                    device_type="dock"
+                    visualize="$(arg visual_debug)">
+    <origin xyz="${buoy_x} ${buoy_y} ${buoy_z}"
+            rpy="0 0 ${buoy_lateral_angle_yaw}"/>
+  </xacro:ir_emitter>
+
+  <!-- Yellow IR emitter -->
+  <xacro:ir_emitter name="${yellow_buoy_name}"
+                    updateRate="20"
+                    broadcastRate="64"
+                    parent="base_link"
+                    ros_topic="ir_emitter"
+                    code="172"
+                    aperture="${buoy_central_aperture}"
+                    range="1.2192"
+                    device_type="dock"
+                    visualize="$(arg visual_debug)">
+    <origin xyz="${buoy_x} 0 ${buoy_z}"/>
+  </xacro:ir_emitter>
+
+  <!-- Halo IR emitter -->
+  <xacro:ir_emitter name="${halo_name}"
+                    updateRate="20"
+                    broadcastRate="64"
+                    parent="base_link"
+                    ros_topic="ir_emitter"
+                    code="161"
+                    aperture="360"
+                    range="0.6096"
+                    device_type="dock"
+                    visualize="$(arg visual_debug)">
+    <origin xyz="${halo_x} 0 ${halo_z}"/>
+  </xacro:ir_emitter>
+
+  <xacro:property name="real_behavior" value="$(arg real_behavior)"/>
+  <gazebo>
+      <static>true</static>
+      <!-- <plugin name="gazebo_ros_dock_manager" filename="libgazebo_ros_irobot_dock_manager.so">
+        <halo>${halo_name}</halo>
+        <greenBuoy>${green_buoy_name}</greenBuoy>
+        <redBuoy>${red_buoy_name}</redBuoy>
+        <yellowBuoy>${yellow_buoy_name}</yellowBuoy>
+        <realBehavior>${real_behavior}</realBehavior>
+      </plugin> -->
+    </gazebo>
+
+</robot>
