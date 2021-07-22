@@ -39,17 +39,14 @@
   <xacro:property name="buoy_x" value="-0.037"/>
   <xacro:property name="buoy_y" value="0.005"/>
   <xacro:property name="buoy_z" value="${0.065 - (z_offset_mm*mm2m)}"/>
-  <xacro:property name="halo_x" value="-0.052"/>
-  <xacro:property name="halo_z" value="${0.095 - (z_offset_mm*mm2m)}"/>
 
-  <xacro:property name="halo_name" value="halo"/>
-  <xacro:property name="green_buoy_name" value="green_buoy"/>
-  <xacro:property name="red_buoy_name" value="red_buoy"/>
+  <xacro:property name="halo_name"        value="halo"/>
+  <xacro:property name="green_buoy_name"  value="green_buoy"/>
+  <xacro:property name="red_buoy_name"    value="red_buoy"/>
   <xacro:property name="yellow_buoy_name" value="yellow_buoy"/>
 
-  <xacro:property name="buoy_central_aperture"  value="${10/180 * pi}"/>
-  <xacro:property name="buoy_lateral_angle_yaw" value="${10/180 * pi}"/>
-  <xacro:property name="buoy_lateral_aperture"  value="${30/180 * pi}"/>
+  <xacro:property name="buoy_lateral_angle_yaw" value="${10*deg2rad}"/>
+  <xacro:property name="buoy_lateral_aperture"  value="${30*deg2rad}"/>
 
   <!-- Green IR emitter -->
   <xacro:ir_emitter name="${green_buoy_name}"
@@ -72,7 +69,7 @@
   <!-- Yellow IR emitter -->
   <xacro:ir_emitter name="${yellow_buoy_name}"
                     code="172"
-                    aperture="${buoy_central_aperture}"
+                    aperture="${10*deg2rad}"
                     range="1.2192">
     <origin xyz="${buoy_x} 0 ${buoy_z}"/>
   </xacro:ir_emitter>
@@ -82,7 +79,7 @@
                     code="161"
                     aperture="360"
                     range="0.6096">
-    <origin xyz="${halo_x} 0 ${halo_z}"/>
+    <origin xyz="-0.052 0 ${0.095 - (z_offset_mm*mm2m)}"/>
   </xacro:ir_emitter>
 
   <xacro:property name="real_behavior" value="$(arg real_behavior)"/>

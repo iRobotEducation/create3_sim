@@ -35,7 +35,8 @@
   </xacro:macro>
 
   <!-- Conversion macros -->
-  <xacro:property name="cm2m" value="${1/100.0}"/>
-  <xacro:property name="mm2m" value="${1/1000.0}"/>
+  <xacro:property name="cm2m"    value="${1/100.0}"/>
+  <xacro:property name="mm2m"    value="${1/1000.0}"/>
+  <xacro:property name="deg2rad" value="${pi/180}"/>
 
 </robot>
