@@ -16,9 +16,8 @@
 # Launch Create3 in Gazebo and optionally also in RViz.
 
 from ament_index_python.packages import get_package_share_directory
-import launch
 from launch import LaunchDescription
-from launch.actions import DeclareLaunchArgument, IncludeLaunchDescription
+from launch.actions import DeclareLaunchArgument, ExecuteProcess, IncludeLaunchDescription
 from launch.conditions import IfCondition
 from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch.substitutions import LaunchConfiguration, PathJoinSubstitution
@@ -26,9 +25,14 @@ from launch_ros.actions import Node
 
 ARGUMENTS = [
     DeclareLaunchArgument('rviz', default_value='true',
-                          description='Start rviz'),
+                          choices=['true', 'false'],
+                          description='Start rviz.'),
     DeclareLaunchArgument('gui', default_value='true',
-                          description='Set "false" to run gazebo headless')
+                          choices=['true', 'false'],
+                          description='Set "false" to run gazebo headless.'),
+    DeclareLaunchArgument('dock', default_value='true',
+                          choices=['true', 'false'],
+                          description='Spawn the standard dock model.'),
 ]
 
 for pose_element in ['x', 'y', 'z', 'yaw']:
@@ -37,14 +41,29 @@ for pose_element in ['x', 'y', 'z', 'yaw']:
 
 
 def generate_launch_description():
+    # Directories
     pkg_create3_description = get_package_share_directory('irobot_create_description')
+    # Paths
     description_launch_file = PathJoinSubstitution(
         [pkg_create3_description, 'launch', 'rviz2.launch.py'])
+    dock_launch_file = PathJoinSubstitution(
+        [pkg_create3_description, 'launch', 'dock.launch.py'])
+
+    # Launch configurations
     x, y, z = LaunchConfiguration('x'), LaunchConfiguration('y'), LaunchConfiguration('z')
     yaw = LaunchConfiguration('yaw')
 
+    # Includes
+    robot_description = IncludeLaunchDescription(
+        PythonLaunchDescriptionSource([description_launch_file])
+    )
+    spawn_dock = IncludeLaunchDescription(
+        PythonLaunchDescriptionSource([dock_launch_file]),
+        condition=IfCondition(LaunchConfiguration('dock'))
+    )
+
     # Gazebo server
-    gzserver = launch.actions.ExecuteProcess(
+    gzserver = ExecuteProcess(
         cmd=['gzserver', '--verbose',
              '-s', 'libgazebo_ros_init.so',
              '-s', 'libgazebo_ros_factory.so'],
@@ -52,7 +71,7 @@ def generate_launch_description():
     )
 
     # Gazebo client
-    gzclient = launch.actions.ExecuteProcess(
+    gzclient = ExecuteProcess(
         cmd=['gzclient'],
         output='screen',
         condition=IfCondition(LaunchConfiguration('gui'))
@@ -69,18 +88,18 @@ def generate_launch_description():
                    '-y', y,
                    '-z', z,
                    '-Y', yaw],
-        output='screen'
+        output='screen',
     )
 
     # Define LaunchDescription variable
     ld = LaunchDescription(ARGUMENTS)
     # Include robot description
-    ld.add_action(IncludeLaunchDescription(
-            PythonLaunchDescriptionSource([description_launch_file])
-        ))
+    ld.add_action(robot_description)
     # Add nodes to LaunchDescription
     ld.add_action(spawn_robot)
     ld.add_action(gzserver)
     ld.add_action(gzclient)
+    ld.add_action(spawn_robot)
+    ld.add_action(spawn_dock)
 
     return ld
