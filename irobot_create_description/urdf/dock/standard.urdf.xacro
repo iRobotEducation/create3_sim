@@ -3,7 +3,7 @@
   <xacro:include filename="$(find irobot_create_description)/urdf/common_properties.urdf.xacro"/>
   <xacro:include filename="$(find irobot_create_description)/urdf/dock/ir_emitter.urdf.xacro"/>
 
-  <xacro:property name="z_offset_mm"   value="4.6"/>
+  <xacro:property name="z_offset_mm" value="4.6"/>
 
   <link name="base_link">
     <visual>
@@ -53,59 +53,35 @@
 
   <!-- Green IR emitter -->
   <xacro:ir_emitter name="${green_buoy_name}"
-                    updateRate="20"
-                    broadcastRate="64"
-                    parent="base_link"
-                    ros_topic="ir_emitter"
                     code="164"
                     aperture="${buoy_lateral_aperture}"
-                    range="1.524"
-                    device_type="dock"
-                    visualize="$(arg visual_debug)">
+                    range="1.524">
     <origin xyz="${buoy_x} ${- buoy_y} ${buoy_z}"
             rpy="0 0 ${- buoy_lateral_angle_yaw}"/>
   </xacro:ir_emitter>
 
   <!-- Red IR emitter -->
   <xacro:ir_emitter name="${red_buoy_name}"
-                    updateRate="20"
-                    broadcastRate="64"
-                    parent="base_link"
-                    ros_topic="ir_emitter"
                     code="168"
                     aperture="${buoy_lateral_aperture}"
-                    range="1.524"
-                    device_type="dock"
-                    visualize="$(arg visual_debug)">
+                    range="1.524">
     <origin xyz="${buoy_x} ${buoy_y} ${buoy_z}"
             rpy="0 0 ${buoy_lateral_angle_yaw}"/>
   </xacro:ir_emitter>
 
   <!-- Yellow IR emitter -->
   <xacro:ir_emitter name="${yellow_buoy_name}"
-                    updateRate="20"
-                    broadcastRate="64"
-                    parent="base_link"
-                    ros_topic="ir_emitter"
                     code="172"
                     aperture="${buoy_central_aperture}"
-                    range="1.2192"
-                    device_type="dock"
-                    visualize="$(arg visual_debug)">
+                    range="1.2192">
     <origin xyz="${buoy_x} 0 ${buoy_z}"/>
   </xacro:ir_emitter>
 
   <!-- Halo IR emitter -->
   <xacro:ir_emitter name="${halo_name}"
-                    updateRate="20"
-                    broadcastRate="64"
-                    parent="base_link"
-                    ros_topic="ir_emitter"
                     code="161"
                     aperture="360"
-                    range="0.6096"
-                    device_type="dock"
-                    visualize="$(arg visual_debug)">
+                    range="0.6096">
     <origin xyz="${halo_x} 0 ${halo_z}"/>
   </xacro:ir_emitter>
 

@@ -1,8 +1,10 @@
 <?xml version="1.0"?>
 <robot xmlns:xacro="http://ros.org/wiki/xacro">
-  <xacro:macro name="ir_emitter" params="name updateRate broadcastRate parent *origin
-                                         ros_topic device_type code aperture
-                                         min_range:=0.50 range visualize" >
+  <xacro:macro name="ir_emitter" params="name parent:=base_link *origin
+                                         range code aperture
+                                         update_rate:=20 broadcast_rate:=64
+                                         ros_topic:=ir_emitter min_range:=0.50
+                                         visualize:=false" >
 
     <!-- Physical link properties -->
     <xacro:property name="mass" value="0.15" />
@@ -10,13 +12,13 @@
     <xacro:property name="y"    value="0.02" />
     <xacro:property name="z"    value="0.008" />
 
-    <joint name="sensor_emitter_${name}_joint" type="fixed">
+    <joint name="${name}_joint" type="fixed">
       <xacro:insert_block name="origin" />
       <parent link="${parent}"/>
-      <child link="sensor_emitter_${name}_link"/>
+      <child link="${name}_link"/>
     </joint>
 
-    <link name="sensor_emitter_${name}_link">
+    <link name="${name}_link">
       <xacro:if value="${visualize}">
         <visual>
           <geometry>
@@ -27,11 +29,11 @@
       <xacro:inertial_cuboid mass="${mass}" x="${x}" y="${y}" z="${z}" />
     </link>
 
-    <gazebo reference="sensor_emitter_${name}_link">
+    <gazebo reference="${name}_link">
       <preserveFixedJoint>true</preserveFixedJoint>
       <sensor type="ray" name="${name}">
         <always_on>true</always_on>
-        <update_rate>10</update_rate>
+        <update_rate>${update_rate}</update_rate>
         <visualize>${visualize}</visualize>
         <ray>
           <scan>
@@ -55,16 +57,16 @@
 
     <gazebo>
       <static>true</static>
-      <!-- <plugin name="${name}_sensor_emitter" filename="libgazebo_ros_irobot_sensor_emitter.so">
-        <link>sensor_emitter_${name}_link</link>
+      <!-- MOVE TO SENSOR PLUGIN -->
+      <!-- <plugin name="${name}_ir_emitter" filename="libgazebo_ros_irobot_ir_emitter.so">
+        <link>${name}_link</link>
         <topicName>${ros_topic}</topicName>
         <emitterName>${name}</emitterName>
-        <emitterType>${device_type}</emitterType>
         <emitterCode>${code}</emitterCode>
         <rayAperture>${aperture}</rayAperture>
         <rayRange>${range}</rayRange>
-        <updateRate>${updateRate}</updateRate>
-        <broadcastRate>${broadcastRate}</broadcastRate>
+        <updateRate>${update_rate}</updateRate>
+        <broadcastRate>${broadcast_rate}</broadcastRate>
       </plugin> -->
     </gazebo>
 

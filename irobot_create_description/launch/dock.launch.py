@@ -63,8 +63,7 @@ def generate_launch_description():
         output='screen',
         parameters=[
             {'use_sim_time': True},
-            {'robot_description': Command(['xacro', ' ', dock_xacro_file,
-                                           ' visual_debug:=false'])}
+            {'robot_description': Command(['xacro', ' ', dock_xacro_file])}
         ],
         remappings=[
             ('robot_description', 'standard_dock_description')
