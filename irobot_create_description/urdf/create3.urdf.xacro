@@ -7,9 +7,10 @@
 
   <!-- MECHANICAL PROPERTIES -->
   <xacro:property name="body_z_offset_cm"           value="-2.5" />
+  <xacro:property name="body_collision_z_offset_cm" value="-1" />
   <xacro:property name="body_mass_kg"               value="2.300" />
-  <xacro:property name="body_radius_cm"             value="16" />
-  <xacro:property name="body_length_cm"             value="4.8" />
+  <xacro:property name="body_radius_cm"             value="16.4" />
+  <xacro:property name="body_length_cm"             value="6" />
 
   <xacro:property name="bumper_mass_kg"             value="0.1" />
   <xacro:property name="bumper_offset_z_cm"         value="-2.5" />
@@ -21,6 +22,8 @@
   <xacro:property name="caster_position_x_cm"       value="12.5" />
   <xacro:property name="caster_position_y_cm"       value="0" />
   <xacro:property name="caster_position_z_cm"       value="-5.4" />
+
+  <xacro:property name="inertial_offset_x_cm"       value="1" />
 
   <!-- Create 3 base definitions-->
   <link name="base_footprint"/>
@@ -38,14 +41,14 @@
       </geometry>
     </visual>
     <collision name="create3_base_collision">
-      <origin xyz="0 0 ${body_z_offset_cm*cm2m}" rpy="0 0 ${pi/2}"/>
+      <origin xyz="0 0 ${body_collision_z_offset_cm*cm2m}" rpy="0 0 ${pi/2}"/>
       <geometry>
         <cylinder length="${body_length_cm*cm2m}" radius="${body_radius_cm*cm2m}"/>
       </geometry>
     </collision>
     <xacro:inertial_cylinder_with_pose mass="${body_mass_kg}" radius="${body_radius_cm*cm2m}"
       length="${body_length_cm*cm2m}">
-      <origin xyz="0 0 ${body_z_offset_cm*cm2m}"/>
+      <origin xyz="${inertial_offset_x_cm*cm2m} 0 ${body_collision_z_offset_cm*cm2m}"/>
     </xacro:inertial_cylinder_with_pose>
   </link>
 
