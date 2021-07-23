@@ -36,6 +36,7 @@
     <kd>100.0</kd>
     <minDepth>0.0001</minDepth>
     <maxVel>1.0</maxVel>
+    <material>Gazebo/Grey</material>
   </gazebo>
 
 </xacro:macro>
