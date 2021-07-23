@@ -1,40 +1,14 @@
 <?xml version="1.0"?>
 <robot xmlns:xacro="http://ros.org/wiki/xacro">
-<xacro:include filename="$(find irobot_create_description)/urdf/wheel.urdf.xacro" />
 
-<xacro:macro name="wheel_with_wheeldrop" params="name parent_link *origin">
+<xacro:macro name="wheel_with_wheeldrop" params="name parent_link:=base_link *origin">
+  <xacro:include filename="$(find irobot_create_description)/urdf/wheel.urdf.xacro" />
+  <xacro:include filename="$(find irobot_create_description)/urdf/wheel_drop.urdf.xacro" />
 
-  <xacro:property name="lower_mm"         value="0" />
-  <xacro:property name="upper_mm"         value="30" />
-  <xacro:property name="effort"           value="100" />
-  <xacro:property name="velocity"         value="1" />
-  <xacro:property name="spring_stiffness" value="300" />
-  <xacro:property name="spring_reference" value="0.03" />
-  <xacro:property name="axle_mass"        value="0.05" />
-  <xacro:property name="axle_x"           value="0.15" />
-  <xacro:property name="axle_y"           value="0.15" />
-  <xacro:property name="axle_z"           value="0.15" />
-
-  <joint name="wheel_${name}_axle_joint" type="prismatic">
-    <parent link="${parent_link}"/>
-    <child link="wheel_${name}_axle_link"/>
+  <!-- Wheel Drop definition -->
+  <xacro:wheel_drop name="${name}" parent="${parent_link}">
     <xacro:insert_block name="origin"/>
-    <axis xyz="0 1 0"/>
-    <limit lower="${lower_mm*mm2m}" upper="${upper_mm*mm2m}" effort="${effort}"
-      velocity="${velocity}"/>
-  </joint>
-
-  <!-- Gazebo parameters to simulate a spring -->
-  <gazebo reference="wheel_${name}_axle_joint">
-    <implicitSpringDamper>true</implicitSpringDamper>
-    <springStiffness>${spring_stiffness}</springStiffness>
-    <springReference>${spring_reference}</springReference>
-  </gazebo>
-
-  <link name="wheel_${name}_axle_link">
-    <xacro:inertial_cuboid mass="${axle_mass}" x="${axle_x}" y="${axle_y}"
-      z="${axle_z}"/>
-  </link>
+  </xacro:wheel_drop>
 
   <!-- Wheel definition -->
   <xacro:wheel name="${name}" parent_link="wheel_${name}_axle_link">
