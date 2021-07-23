@@ -44,6 +44,17 @@ def generate_launch_description():
         output='screen',
     )
 
+    republish_node=Node(
+        package = 'topic_republisher',
+        name = 'republish_node',
+        executable = 'topic_republisher',
+        parameters = [
+            {"current_topic": "cmd_vel"},
+            {"new_topic": "diffdrive_controller/cmd_vel_unstamped"},
+            {"msg_type": "Twist"}
+        ]
+    )
+
     # Ensure diffdrive_controller_node starts after joint_state_broadcaster_spawner
     diffdrive_controller_callback = RegisterEventHandler(
         event_handler=OnProcessExit(
@@ -54,6 +65,7 @@ def generate_launch_description():
 
     ld = LaunchDescription()
 
+    ld.add_action(republish_node)
     ld.add_action(joint_state_broadcaster_spawner)
     ld.add_action(diffdrive_controller_callback)
 
