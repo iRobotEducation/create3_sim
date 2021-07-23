@@ -36,3 +36,4 @@ jobs:
             irobot_create_msgs
             irobot_create_description
             irobot_create_gazebo
+            irobot_create_sim
