@@ -24,7 +24,7 @@
   </link>
 
   <gazebo reference="${name}_link">
-    <material>Gazebo/Grey</material>
+    <material>Gazebo/DarkGrey</material>
   </gazebo>
 
 </xacro:macro>

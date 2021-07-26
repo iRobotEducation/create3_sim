@@ -4,7 +4,6 @@
   <xacro:include filename="$(find irobot_create_description)/urdf/bumper.urdf.xacro" />
   <xacro:include filename="$(find irobot_create_description)/urdf/wheel_with_wheeldrop.urdf.xacro" />
   <xacro:include filename="$(find irobot_create_description)/urdf/caster.urdf.xacro" />
-
   <!-- MECHANICAL PROPERTIES -->
   <xacro:property name="body_z_offset_cm"           value="-2.5" />
   <xacro:property name="body_collision_z_offset_cm" value="-1" />
