@@ -6,7 +6,7 @@
   <xacro:include filename="$(find irobot_create_description)/urdf/wheel_drop.urdf.xacro" />
 
   <!-- Wheel Drop definition -->
-  <xacro:wheel_drop name="${name}" parent="${parent_link}">
+  <xacro:wheel_drop name="${name}" parent_link="${parent_link}">
     <xacro:insert_block name="origin"/>
   </xacro:wheel_drop>
 
