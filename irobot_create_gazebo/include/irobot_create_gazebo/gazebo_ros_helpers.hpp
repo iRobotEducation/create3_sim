@@ -41,7 +41,7 @@ constexpr double UPDATE_RATE_EPSILON = 0.00001;
 class UpdateRateEnforcer
 {
 public:
-  UpdateRateEnforcer(){}
+  UpdateRateEnforcer() {}
   void load(const double & update_freq);
   bool shouldUpdate(const double & time_elapsed);
 
