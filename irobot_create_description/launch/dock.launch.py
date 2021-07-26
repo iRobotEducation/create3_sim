@@ -23,21 +23,22 @@ from launch.actions import DeclareLaunchArgument
 from launch.substitutions import Command, LaunchConfiguration, PathJoinSubstitution
 from launch_ros.actions import Node
 
-class OffsetParser(Substitution):
-  def __init__(
-      self,
-      number: SomeSubstitutionsType,
-      offset: float,
-  ) -> None:
-    self.__number = number
-    self.__offset = offset
 
-  def perform(
-      self,
-      context: LaunchContext = None,
-  ) -> Text:
-    number = float(self.__number.perform(context))
-    return f"{number + self.__offset}"
+class OffsetParser(Substitution):
+    def __init__(
+            self,
+            number: SomeSubstitutionsType,
+            offset: float,
+    ) -> None:
+        self.__number = number
+        self.__offset = offset
+
+    def perform(
+            self,
+            context: LaunchContext = None,
+    ) -> Text:
+        number = float(self.__number.perform(context))
+        return f'{number + self.__offset}'
 
 
 ARGUMENTS = []
@@ -50,7 +51,8 @@ def generate_launch_description():
     # Directory
     pkg_create3_description = get_package_share_directory('irobot_create_description')
     # Path
-    dock_xacro_file = PathJoinSubstitution([pkg_create3_description, 'urdf', 'dock', 'standard.urdf.xacro'])
+    dock_xacro_file = PathJoinSubstitution(
+            [pkg_create3_description, 'urdf', 'dock', 'standard.urdf.xacro'])
 
     # Launch Configurations
     x, y, z = LaunchConfiguration('x'), LaunchConfiguration('y'), LaunchConfiguration('z')
