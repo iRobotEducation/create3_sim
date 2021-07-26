@@ -1,4 +1,22 @@
-#pragma once
+// Copyright 2021 iRobot, Inc.
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+//
+// @author Emiliano Javier Borghi Orue
+// Contact: creativa_eborghi@irobot.com
+
+#ifndef IROBOT_CREATE_GAZEBO__GAZEBO_ROS_HELPERS_HPP_
+#define IROBOT_CREATE_GAZEBO__GAZEBO_ROS_HELPERS_HPP_
 
 #include <gazebo_ros/node.hpp>
 #include <sdf/sdf.hh>
@@ -7,7 +25,6 @@ namespace irobot_create_gazebo
 {
 namespace utils
 {
-
 // fine tuned for our specific scenario, where we check if
 // t(n) - t(n-1) >= 1/(update_rate)
 // with 5ms step size (assumption), t(a) - t(b) will always be a
@@ -24,27 +41,30 @@ constexpr double UPDATE_RATE_EPSILON = 0.00001;
 class UpdateRateEnforcer
 {
 public:
-  UpdateRateEnforcer() {};
-  void load(const double& update_freq);
-  bool shouldUpdate(const double& time_elapsed);
+  UpdateRateEnforcer(){}
+  void load(const double & update_freq);
+  bool shouldUpdate(const double & time_elapsed);
+
 private:
   double ideal_update_period_;
   double next_update_period_;
 };
 
-
-template<typename T, typename V>
-inline bool initialize(T &var, sdf::ElementPtr sdf, const char* str, V default_value)
+template <typename T, typename V>
+inline bool initialize(T & var, sdf::ElementPtr sdf, const char * str, V default_value)
 {
-  if(sdf->HasElement(str)){
+  if (sdf->HasElement(str)) {
     var = sdf->Get<T>(str);
     return true;
   } else {
     var = static_cast<T>(default_value);
     const auto ros_node = gazebo_ros::Node::Get(sdf);
-    RCLCPP_INFO_STREAM(ros_node->get_logger(), "Loaded default values for " << str << ": " << default_value);
+    RCLCPP_INFO_STREAM(
+      ros_node->get_logger(), "Loaded default values for " << str << ": " << default_value);
     return false;
   }
 }
 }  // namespace utils
 }  // namespace irobot_create_gazebo
+
+#endif  // IROBOT_CREATE_GAZEBO__GAZEBO_ROS_HELPERS_HPP_

@@ -11,25 +11,24 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
+//
 // @author Emiliano Javier Borghi Orue
 // Contact: creativa_eborghi@irobot.com
 
-#pragma once
-
-#include <memory>
+#ifndef IROBOT_CREATE_GAZEBO__GAZEBO_ROS_WHEEL_DROP_HPP_
+#define IROBOT_CREATE_GAZEBO__GAZEBO_ROS_WHEEL_DROP_HPP_
 
 #include <gazebo/common/Assert.hh>
 #include <gazebo/common/Plugin.hh>
 #include <gazebo/physics/Model.hh>
 #include <gazebo/physics/physics.hh>
-
-#include <rclcpp/rclcpp.hpp>
 #include <gazebo_ros/conversions/builtin_interfaces.hpp>
 #include <gazebo_ros/node.hpp>
-
-#include <irobot_create_msgs/msg/hazard_detection.hpp>
 #include <irobot_create_gazebo/gazebo_ros_helpers.hpp>
-
+#include <irobot_create_msgs/msg/hazard_detection.hpp>
+#include <memory>
+#include <rclcpp/rclcpp.hpp>
+#include <string>
 
 namespace irobot_create_gazebo
 {
@@ -61,19 +60,20 @@ protected:
 
 private:
   /// Publish state
-  void PublishState(const bool& state, const double& range, const gazebo::common::Time& common_time);
+  void PublishState(
+    const bool & state, const double & range, const gazebo::common::Time & common_time);
 
   /// Connection to world update event. Callback is called while this is alive.
-  gazebo::event::ConnectionPtr update_connection_{ nullptr };
+  gazebo::event::ConnectionPtr update_connection_{nullptr};
 
   /// Node for ROS communication.
-  gazebo_ros::Node::SharedPtr ros_node_{ nullptr };
+  gazebo_ros::Node::SharedPtr ros_node_{nullptr};
 
   /// ROS Publisher for wheel drop message
-  rclcpp::Publisher<irobot_create_msgs::msg::HazardDetection>::SharedPtr pub_{ nullptr };
+  rclcpp::Publisher<irobot_create_msgs::msg::HazardDetection>::SharedPtr pub_{nullptr};
 
   /// Flag to detect sensor
-  bool wheel_drop_detected_{ false };
+  bool wheel_drop_detected_{false};
 
   /// Detection limits
   double lower_limit_;
@@ -86,15 +86,17 @@ private:
   utils::UpdateRateEnforcer rate_enforcer_;
 
   /// Joint name
-  std::string name_{ "" };
+  std::string name_{""};
 
   /// Frame ID
-  std::string frame_id_{ "" };
+  std::string frame_id_{""};
 
   /// Joint pointer
-  gazebo::physics::JointPtr joint_{ nullptr };
+  gazebo::physics::JointPtr joint_{nullptr};
 
   /// World pointer
-  gazebo::physics::WorldPtr world_{ nullptr };
+  gazebo::physics::WorldPtr world_{nullptr};
 };
 }  // namespace irobot_create_gazebo
+
+#endif  // IROBOT_CREATE_GAZEBO__GAZEBO_ROS_WHEEL_DROP_HPP_
