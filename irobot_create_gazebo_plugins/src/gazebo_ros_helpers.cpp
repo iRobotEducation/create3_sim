@@ -15,9 +15,9 @@
 // @author Emiliano Javier Borghi Orue
 // Contact: creativa_eborghi@irobot.com
 
-#include <irobot_create_gazebo/gazebo_ros_helpers.hpp>
+#include <irobot_create_gazebo_plugins/gazebo_ros_helpers.hpp>
 
-namespace irobot_create_gazebo
+namespace irobot_create_gazebo_plugins
 {
 namespace utils
 {
@@ -42,4 +42,4 @@ bool UpdateRateEnforcer::shouldUpdate(const double & time_elapsed)
   }
 }
 }  // namespace utils
-}  // namespace irobot_create_gazebo
+}  // namespace irobot_create_gazebo_plugins

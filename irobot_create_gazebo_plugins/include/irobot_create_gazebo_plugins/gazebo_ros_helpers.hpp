@@ -21,7 +21,7 @@
 #include <gazebo_ros/node.hpp>
 #include <sdf/sdf.hh>
 
-namespace irobot_create_gazebo
+namespace irobot_create_gazebo_plugins
 {
 namespace utils
 {
@@ -65,6 +65,6 @@ inline bool initialize(T & var, sdf::ElementPtr sdf, const char * str, V default
   }
 }
 }  // namespace utils
-}  // namespace irobot_create_gazebo
+}  // namespace irobot_create_gazebo_plugins
 
 #endif  // IROBOT_CREATE_GAZEBO__GAZEBO_ROS_HELPERS_HPP_

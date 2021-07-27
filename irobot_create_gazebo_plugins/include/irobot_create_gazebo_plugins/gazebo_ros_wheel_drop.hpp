@@ -24,13 +24,13 @@
 #include <gazebo/physics/physics.hh>
 #include <gazebo_ros/conversions/builtin_interfaces.hpp>
 #include <gazebo_ros/node.hpp>
-#include <irobot_create_gazebo/gazebo_ros_helpers.hpp>
+#include <irobot_create_gazebo_plugins/gazebo_ros_helpers.hpp>
 #include <irobot_create_msgs/msg/hazard_detection.hpp>
 #include <memory>
 #include <rclcpp/rclcpp.hpp>
 #include <string>
 
-namespace irobot_create_gazebo
+namespace irobot_create_gazebo_plugins
 {
 /// Example ROS-powered Gazebo plugin with some useful boilerplate.
 /// \details This is a `ModelPlugin`, but it could be any supported Gazebo plugin type, such as
@@ -97,6 +97,6 @@ private:
   /// World pointer
   gazebo::physics::WorldPtr world_{nullptr};
 };
-}  // namespace irobot_create_gazebo
+}  // namespace irobot_create_gazebo_plugins
 
 #endif  // IROBOT_CREATE_GAZEBO__GAZEBO_ROS_WHEEL_DROP_HPP_

@@ -12,10 +12,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <irobot_create_gazebo/gazebo_ros_wheel_drop.hpp>
+#include <irobot_create_gazebo_plugins/gazebo_ros_wheel_drop.hpp>
 #include <string>
 
-namespace irobot_create_gazebo
+namespace irobot_create_gazebo_plugins
 {
 void GazeboRosWheelDrop::Load(gazebo::physics::ModelPtr model, sdf::ElementPtr sdf)
 {
@@ -100,4 +100,4 @@ void GazeboRosWheelDrop::PublishState(
 
 // Register this plugin with the simulator
 GZ_REGISTER_MODEL_PLUGIN(GazeboRosWheelDrop)
-}  // namespace irobot_create_gazebo
+}  // namespace irobot_create_gazebo_plugins

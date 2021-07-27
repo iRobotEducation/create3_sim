@@ -25,31 +25,31 @@ find_package(rclcpp REQUIRED)
 link_directories(${gazebo_dev_LIBRARY_DIRS})
 
 # Add libraries
-add_library(gazebo_ros_irobot_helpers SHARED
+add_library(gazebo_ros_create_helpers SHARED
   src/gazebo_ros_helpers.cpp
 )
-add_library(gazebo_ros_irobot_wheel_drop SHARED
+add_library(gazebo_ros_create_wheel_drop SHARED
   src/gazebo_ros_wheel_drop.cpp
 )
 
 # Linking
-## gazebo_ros_irobot_helpers
-target_include_directories(gazebo_ros_irobot_helpers PUBLIC include)
-ament_target_dependencies(gazebo_ros_irobot_helpers
+## gazebo_ros_create_helpers
+target_include_directories(gazebo_ros_create_helpers PUBLIC include)
+ament_target_dependencies(gazebo_ros_create_helpers
   "gazebo_dev"
   "gazebo_ros"
 )
-ament_export_libraries(gazebo_ros_irobot_helpers)
-## gazebo_ros_irobot_wheel_drop
-target_include_directories(gazebo_ros_irobot_wheel_drop PUBLIC include)
-ament_target_dependencies(gazebo_ros_irobot_wheel_drop
+ament_export_libraries(gazebo_ros_create_helpers)
+## gazebo_ros_create_wheel_drop
+target_include_directories(gazebo_ros_create_wheel_drop PUBLIC include)
+ament_target_dependencies(gazebo_ros_create_wheel_drop
   "gazebo_dev"
   "gazebo_ros"
   "irobot_create_msgs"
   "rclcpp"
 )
-ament_export_libraries(gazebo_ros_irobot_wheel_drop)
-target_link_libraries(gazebo_ros_irobot_wheel_drop gazebo_ros_irobot_helpers)
+ament_export_libraries(gazebo_ros_create_wheel_drop)
+target_link_libraries(gazebo_ros_create_wheel_drop gazebo_ros_create_helpers)
 
 # Exports
 ament_export_include_directories(include)
@@ -57,14 +57,14 @@ ament_export_dependencies(gazebo_ros)
 ament_export_dependencies(irobot_create_msgs)
 ament_export_dependencies(rclcpp)
 
+ament_package()
+
 install(DIRECTORY include/
         DESTINATION include)
 
 install(TARGETS
-    gazebo_ros_irobot_helpers
-    gazebo_ros_irobot_wheel_drop
+    gazebo_ros_create_helpers
+    gazebo_ros_create_wheel_drop
   ARCHIVE DESTINATION lib
   LIBRARY DESTINATION lib
   RUNTIME DESTINATION bin)
-
-ament_package()
