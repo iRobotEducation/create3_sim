@@ -64,7 +64,6 @@ def generate_launch_description():
 
     ld = LaunchDescription()
 
-    ld.add_action(cmd_vel_republish_node)
     ld.add_action(joint_state_broadcaster_spawner)
     ld.add_action(diffdrive_controller_callback)
     ld.add_action(cmd_vel_republish_node)
