@@ -49,10 +49,10 @@ def generate_launch_description():
         name='republish_node',
         executable='topic_republisher',
         parameters=[
-            {"current_topic": "cmd_vel"},
-            {"new_topic": "diffdrive_controller/cmd_vel_unstamped"},
-            {"msg_type": "geometry_msgs.msg.Twist"},
-            {"QoS": 10}
+            {'current_topic': 'cmd_vel'},
+            {'new_topic': 'diffdrive_controller/cmd_vel_unstamped'},
+            {'msg_type': 'geometry_msgs.msg.Twist'},
+            {'QoS': 10}
         ]
     )
 
