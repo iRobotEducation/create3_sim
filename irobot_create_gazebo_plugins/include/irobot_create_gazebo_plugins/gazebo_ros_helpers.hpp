@@ -15,8 +15,7 @@
 // @author Emiliano Javier Borghi Orue
 // Contact: creativa_eborghi@irobot.com
 
-#ifndef IROBOT_CREATE_GAZEBO__GAZEBO_ROS_HELPERS_HPP_
-#define IROBOT_CREATE_GAZEBO__GAZEBO_ROS_HELPERS_HPP_
+#pragma once
 
 #include <gazebo_ros/node.hpp>
 #include <sdf/sdf.hh>
@@ -66,5 +65,3 @@ inline bool initialize(T & var, sdf::ElementPtr sdf, const char * str, V default
 }
 }  // namespace utils
 }  // namespace irobot_create_gazebo_plugins
-
-#endif  // IROBOT_CREATE_GAZEBO__GAZEBO_ROS_HELPERS_HPP_

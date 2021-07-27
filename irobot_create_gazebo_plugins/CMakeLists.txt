@@ -2,12 +2,6 @@ cmake_minimum_required(VERSION 3.5)
 
 project(irobot_create_gazebo_plugins)
 
-# Error if Gazebo not present
-find_package(gazebo QUIET)
-if(NOT gazebo_FOUND)
-  message(FATAL_ERROR "Gazebo not found.")
-endif()
-
 # Default to C++14
 if(NOT CMAKE_CXX_STANDARD)
   set(CMAKE_CXX_STANDARD 14)

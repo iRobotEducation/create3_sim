@@ -23,7 +23,7 @@
   <gazebo reference="wheel_${name}_axle_joint">
     <provideFeedback>false</provideFeedback>
     <implicitSpringDamper>true</implicitSpringDamper>
-    <!-- This value should be high enough that the wheeldrop can
+    <!-- This value should be high enough so that the wheeldrop can
           retract with the robot's weight (mass * gravity) -->
     <springStiffness>${spring_stiffness_nm}</springStiffness>
     <springReference>${detection_threshold_cm*cm2m}</springReference>

@@ -15,8 +15,7 @@
 // @author Emiliano Javier Borghi Orue
 // Contact: creativa_eborghi@irobot.com
 
-#ifndef IROBOT_CREATE_GAZEBO__GAZEBO_ROS_WHEEL_DROP_HPP_
-#define IROBOT_CREATE_GAZEBO__GAZEBO_ROS_WHEEL_DROP_HPP_
+#pragma once
 
 #include <gazebo/common/Assert.hh>
 #include <gazebo/common/Plugin.hh>
@@ -98,5 +97,3 @@ private:
   gazebo::physics::WorldPtr world_{nullptr};
 };
 }  // namespace irobot_create_gazebo_plugins
-
-#endif  // IROBOT_CREATE_GAZEBO__GAZEBO_ROS_WHEEL_DROP_HPP_
