@@ -59,9 +59,7 @@ def generate_launch_description():
         package='joint_state_publisher',
         executable='joint_state_publisher',
         name='joint_state_publisher',
-        condition=IfCondition(LaunchConfiguration('rviz')),
-        output='screen',
-    )
+        output='screen'),
 
     # Define LaunchDescription variable
     ld = LaunchDescription(ARGUMENTS)

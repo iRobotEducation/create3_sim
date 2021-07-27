@@ -82,24 +82,6 @@ Visualization Manager:
           Show Axes: false
           Show Trail: false
           Value: true
-        wheel_left_axle_link:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-        wheel_left_link:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        wheel_right_axle_link:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-        wheel_right_link:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
       Name: RobotModel
       TF Prefix: ""
       Update Interval: 0
