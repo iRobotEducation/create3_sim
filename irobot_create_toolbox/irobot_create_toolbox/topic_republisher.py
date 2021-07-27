@@ -20,6 +20,7 @@ from rclpy.node import Node
 from rcl_interfaces.msg import SetParametersResult
 from pydoc import locate
 
+
 class TopicRepublisher(Node):
 
     def __init__(self):
@@ -65,7 +66,8 @@ class TopicRepublisher(Node):
                 self.QoS = param.value
 
         if self.current_topic and self.new_topic and self.msg_type and self.QoS:
-            self.get_logger().info('Republishing {} to {}...'.format(self.current_topic, self.new_topic))
+            self.get_logger().info('Republishing {} to {}...'.format(self.current_topic,
+                                                                     self.new_topic))
             self.init_pub_sub()
 
         return SetParametersResult(successful=True)

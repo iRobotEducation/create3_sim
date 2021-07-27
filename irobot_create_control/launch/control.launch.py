@@ -44,11 +44,11 @@ def generate_launch_description():
         output='screen',
     )
 
-    cmd_vel_republish_node=Node(
-        package = 'irobot_create_toolbox',
-        name = 'republish_node',
-        executable = 'topic_republisher',
-        parameters = [
+    cmd_vel_republish_node = Node(
+        package='irobot_create_toolbox',
+        name='republish_node',
+        executable='topic_republisher',
+        parameters=[
             {"current_topic": "cmd_vel"},
             {"new_topic": "diffdrive_controller/cmd_vel_unstamped"},
             {"msg_type": "geometry_msgs.msg.Twist"},
