@@ -18,8 +18,7 @@
 import rclpy
 from rclpy.node import Node
 from rcl_interfaces.msg import SetParametersResult
-from geometry_msgs.msg import *
-from std_msgs.msg import *
+from pydoc import locate
 
 class TopicRepublisher(Node):
 
@@ -28,6 +27,7 @@ class TopicRepublisher(Node):
         self.current_topic = None
         self.new_topic = None
         self.msg_type = None
+        self.QoS = None
         self.add_on_set_parameters_callback(self.parameters_callback)
 
         self.declare_parameters(
@@ -35,16 +35,19 @@ class TopicRepublisher(Node):
             parameters=[
                 ('current_topic', None),
                 ('new_topic', None),
-                ('msg_type', None)
+                ('msg_type', None),
+                ('QoS', None)
             ])
 
     def init_pub_sub(self):
+        msg_class = locate(self.msg_type)
+
         self.subscription = self.create_subscription(
-            eval(self.msg_type),
+            msg_class,
             self.current_topic,
             self.listener_callback,
-            10)
-        self.publisher_ = self.create_publisher(eval(self.msg_type), self.new_topic, 10)
+            self.QoS)
+        self.publisher_ = self.create_publisher(msg_class, self.new_topic, self.QoS)
         self.subscription  # prevent unused variable warning
 
     def listener_callback(self, msg):
@@ -58,8 +61,10 @@ class TopicRepublisher(Node):
                 self.new_topic = param.value
             if param.name == 'msg_type':
                 self.msg_type = param.value
+            if param.name == 'QoS':
+                self.QoS = param.value
 
-        if self.current_topic and self.new_topic and self.msg_type:
+        if self.current_topic and self.new_topic and self.msg_type and self.QoS:
             self.get_logger().info('Republishing {} to {}...'.format(self.current_topic, self.new_topic))
             self.init_pub_sub()
 

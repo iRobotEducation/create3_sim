@@ -40,9 +40,8 @@ def generate_launch_description():
         executable='rviz2',
         name='rviz2',
         arguments=['-d', rviz_config_dir],
-        condition=IfCondition(LaunchConfiguration('rviz')),
-        output='screen',
-    )
+        condition=IfCondition(LaunchConfiguration('rviz'))
+        )
 
     robot_state_publisher = Node(
         package='robot_state_publisher',
