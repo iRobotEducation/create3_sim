@@ -47,11 +47,11 @@ class TopicRepublisher(Node):
             self.current_topic,
             self.listener_callback,
             self.QoS)
-        self.publisher_ = self.create_publisher(msg_class, self.new_topic, self.QoS)
+        self.publisher = self.create_publisher(msg_class, self.new_topic, self.QoS)
         self.subscription  # prevent unused variable warning
 
     def listener_callback(self, msg):
-        self.publisher_.publish(msg)
+        self.publisher.publish(msg)
 
     def parameters_callback(self, params):
         for param in params:
