@@ -27,6 +27,7 @@ jobs:
             irobot_create_gazebo_plugins
             irobot_create_msgs
             irobot_create_sim
+            irobot_create_toolbox
 
       # ============
       # DEPENDENCIES

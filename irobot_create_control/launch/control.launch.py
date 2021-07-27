@@ -45,7 +45,7 @@ def generate_launch_description():
     )
 
     cmd_vel_republish_node=Node(
-        package = 'topic_republisher',
+        package = 'irobot_create_toolbox',
         name = 'republish_node',
         executable = 'topic_republisher',
         parameters = [
