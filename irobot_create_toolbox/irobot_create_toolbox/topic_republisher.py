@@ -16,8 +16,8 @@
 # Run a node to republish a topic into a different topic name.
 from pydoc import locate
 
-import rclpy
 from rcl_interfaces.msg import SetParametersResult
+import rclpy
 from rclpy.node import Node
 
 
