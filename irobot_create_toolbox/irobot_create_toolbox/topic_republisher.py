@@ -14,9 +14,9 @@
 # @author Rodrigo Jose Causarano Nunez (rcausaran@irobot.com)
 #
 # Run a node to republish a topic into a different topic name.
+from pydoc import locate
 
 import rclpy
-from pydoc import locate
 from rcl_interfaces.msg import SetParametersResult
 from rclpy.node import Node
 
