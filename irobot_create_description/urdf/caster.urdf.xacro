@@ -23,5 +23,9 @@
     </collision>
   </link>
 
+  <gazebo reference="${name}_link">
+    <material>Gazebo/DarkGrey</material>
+  </gazebo>
+
 </xacro:macro>
 </robot>

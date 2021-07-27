@@ -4,12 +4,12 @@
   <xacro:include filename="$(find irobot_create_description)/urdf/bumper.urdf.xacro" />
   <xacro:include filename="$(find irobot_create_description)/urdf/wheel_with_wheeldrop.urdf.xacro" />
   <xacro:include filename="$(find irobot_create_description)/urdf/caster.urdf.xacro" />
-
   <!-- MECHANICAL PROPERTIES -->
   <xacro:property name="body_z_offset_cm"           value="-2.5" />
+  <xacro:property name="body_collision_z_offset_cm" value="-1" />
   <xacro:property name="body_mass_kg"               value="2.300" />
-  <xacro:property name="body_radius_cm"             value="16" />
-  <xacro:property name="body_length_cm"             value="4.8" />
+  <xacro:property name="body_radius_cm"             value="16.4" />
+  <xacro:property name="body_length_cm"             value="6" />
 
   <xacro:property name="bumper_mass_kg"             value="0.1" />
   <xacro:property name="bumper_offset_z_cm"         value="-2.5" />
@@ -22,6 +22,8 @@
   <xacro:property name="caster_position_y_cm"       value="0" />
   <xacro:property name="caster_position_z_cm"       value="-5.4" />
 
+  <xacro:property name="inertial_offset_x_cm"       value="1" />
+
   <!-- Create 3 base definitions-->
   <link name="base_footprint"/>
 
@@ -32,21 +34,20 @@
 
   <link name="base_link">
     <visual>
-      <origin xyz="0 0 ${body_z_offset_cm*cm2m}" rpy="0 0 ${-pi*3.0/2.0}"/>
+      <origin xyz="0 0 ${body_z_offset_cm*cm2m}" rpy="0 0 ${pi/2}"/>
       <geometry>
-        <mesh filename="file://$(find irobot_create_description)/meshes/body_collision.stl"
-          scale="0.001 0.001 0.001"/>
+        <mesh filename="file://$(find irobot_create_description)/meshes/body_visual.dae" />
       </geometry>
     </visual>
     <collision name="create3_base_collision">
-      <origin xyz="0 0 ${body_z_offset_cm*cm2m/2}"/>
+      <origin xyz="0 0 ${body_collision_z_offset_cm*cm2m}" rpy="0 0 ${pi/2}"/>
       <geometry>
         <cylinder length="${body_length_cm*cm2m}" radius="${body_radius_cm*cm2m}"/>
       </geometry>
     </collision>
     <xacro:inertial_cylinder_with_pose mass="${body_mass_kg}" radius="${body_radius_cm*cm2m}"
       length="${body_length_cm*cm2m}">
-      <origin xyz="0 0 ${body_z_offset_cm*cm2m}"/>
+      <origin xyz="${inertial_offset_x_cm*cm2m} 0 ${body_collision_z_offset_cm*cm2m}"/>
     </xacro:inertial_cylinder_with_pose>
   </link>
 
@@ -54,9 +55,9 @@
   <xacro:bumper
       parent_link="base_link"
       robot_type="create3"
-      visual_mesh="file://$(find irobot_create_description)/meshes/bumper_collision.stl"
-      collision_mesh="file://$(find irobot_create_description)/meshes/bumper_collision.stl">
-    <origin xyz="0 0 ${bumper_offset_z_cm*cm2m}"/>
+      visual_mesh="file://$(find irobot_create_description)/meshes/bumper_visual.dae"
+      collision_mesh="file://$(find irobot_create_description)/meshes/bumper_collision.dae">
+    <origin xyz="0 0 ${bumper_offset_z_cm*cm2m}" rpy="0 0 ${pi/2}"/>
 
     <inertial>
         <origin xyz="${bumber_inertial_x_cm*cm2m} 0 ${bumper_offset_z_cm*cm2m}"/>
