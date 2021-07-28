@@ -124,4 +124,4 @@ void GazeboRosOpticalMouse::OnUpdate(const gazebo::common::UpdateInfo& info)
 
 // Register this plugin with the simulator
 GZ_REGISTER_MODEL_PLUGIN(GazeboRosOpticalMouse)
-}  // namespace irobot_gazebo_plugins
+}  // namespace irobot_create_gazebo_plugins
