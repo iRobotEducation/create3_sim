@@ -19,10 +19,10 @@ namespace irobot_create_gazebo_plugins
 {
 void GazeboRosWheelDrop::Load(gazebo::physics::ModelPtr model, sdf::ElementPtr sdf)
 {
-  double update_rate{50.0};
+  double update_rate{62.0};
   double detection_threshold{0.7};
   std::string joint_name{""};
-  utils::initialize(update_rate, sdf, "updateRate", 50.0);
+  utils::initialize(update_rate, sdf, "updateRate", 62.0);
   utils::initialize(detection_threshold, sdf, "detectionThreshold", 0.7);
   utils::initialize(joint_name, sdf, "jointName", "");
   utils::initialize(frame_id_, sdf, "frameId", "");

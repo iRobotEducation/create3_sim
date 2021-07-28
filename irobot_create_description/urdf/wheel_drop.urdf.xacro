@@ -7,7 +7,7 @@
   <xacro:property name="spring_stiffness_nm"    value="450"/>
 
   <!-- Sensor settings -->
-  <xacro:property name="update_rate" value="5" />
+  <xacro:property name="update_rate" value="62" />
 
   <joint name="wheel_${name}_axle_joint" type="prismatic">
     <parent link="${parent_link}"/>
