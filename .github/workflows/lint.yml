@@ -16,7 +16,7 @@ jobs:
       - name: Run style checks
         uses: coleaeason/actions-uncrustify@v1
         with:
-          configPath: 'myConfig.cfg'
+          configPath: 'uncrustify.cfg'
   ament_lint:
     name: ament_${{ matrix.linter }}
     runs-on: ubuntu-20.04
