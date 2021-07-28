@@ -1,2 +1,0 @@
-# generated from irobot_create_gazebo_plugins/env-hooks/irobot_create_gazebo_plugins.sh.in
-ament_prepend_unique_value LD_LIBRARY_PATH @IROBOT_CREATE_GAZEBO_PLUGINS_PATH@
