@@ -52,7 +52,7 @@ def generate_launch_description():
             {'current_topic': 'cmd_vel'},
             {'new_topic': 'diffdrive_controller/cmd_vel_unstamped'},
             {'msg_type': 'geometry_msgs.msg.Twist'},
-            {'QoS': 10}
+            {'qos': 10}
         ]
     )
 

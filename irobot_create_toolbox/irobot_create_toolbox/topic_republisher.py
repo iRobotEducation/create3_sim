@@ -28,7 +28,7 @@ class TopicRepublisher(Node):
         self.current_topic = None
         self.new_topic = None
         self.msg_type = None
-        self.QoS = None
+        self.qos = None
         self.add_on_set_parameters_callback(self.parameters_callback)
 
         self.declare_parameters(
@@ -37,7 +37,7 @@ class TopicRepublisher(Node):
                 ('current_topic', None),
                 ('new_topic', None),
                 ('msg_type', None),
-                ('QoS', None)
+                ('qos', None)
             ])
 
     def init_pub_sub(self):
@@ -47,8 +47,8 @@ class TopicRepublisher(Node):
             msg_class,
             self.current_topic,
             self.listener_callback,
-            self.QoS)
-        self.publisher = self.create_publisher(msg_class, self.new_topic, self.QoS)
+            self.qos)
+        self.publisher = self.create_publisher(msg_class, self.new_topic, self.qos)
 
     def listener_callback(self, msg):
         self.publisher.publish(msg)
@@ -61,10 +61,10 @@ class TopicRepublisher(Node):
                 self.new_topic = param.value
             if param.name == 'msg_type':
                 self.msg_type = param.value
-            if param.name == 'QoS':
-                self.QoS = param.value
+            if param.name == 'qos':
+                self.qos = param.value
 
-        if self.current_topic and self.new_topic and self.msg_type and self.QoS:
+        if self.current_topic and self.new_topic and self.msg_type and self.qos:
             self.get_logger().info('Republishing {} to {}...'.format(self.current_topic,
                                                                      self.new_topic))
             self.init_pub_sub()
