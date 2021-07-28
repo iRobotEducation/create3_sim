@@ -52,7 +52,7 @@ def generate_launch_description():
     pkg_create3_description = get_package_share_directory('irobot_create_description')
     # Path
     dock_xacro_file = PathJoinSubstitution(
-            [pkg_create3_description, 'urdf', 'dock', 'standard.urdf.xacro'])
+        [pkg_create3_description, 'urdf', 'dock', 'standard.urdf.xacro'])
 
     # Launch Configurations
     x, y, z = LaunchConfiguration('x'), LaunchConfiguration('y'), LaunchConfiguration('z')
