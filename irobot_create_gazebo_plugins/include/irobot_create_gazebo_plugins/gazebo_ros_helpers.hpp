@@ -62,5 +62,17 @@ inline bool initialize(T & var, sdf::ElementPtr sdf, const char * str, V default
     return false;
   }
 }
+
+// Find the minimum range given a vector of 'ranges'.
+// If none was found, returns a maximum double.
+double FindMinimumRange(std::vector<double> & ranges)
+{
+  std::vector<double>::iterator detection_ptr =
+    std::min_element(std::begin(ranges), std::end(ranges));
+  // If a minimum range was found, return it
+  if (detection_ptr != std::end(ranges)) return *detection_ptr;
+  // Otherwise, return a maximum range
+  return std::numeric_limits<double>::max();
+}
 }  // namespace utils
 }  // namespace irobot_create_gazebo_plugins

@@ -37,7 +37,11 @@
     <plugin name="wheel_drop_${name}" filename="libgazebo_ros_create_wheel_drop.so">
       <ros>
         <namespace>wheel_drop</namespace>
+<<<<<<< HEAD
         <argument>~/out:=${name}_wheel/event</argument>
+=======
+        <remapping>~/out:=${name}_wheel/event</remapping>
+>>>>>>> Use realistic wheel drop model (#8)
       </ros>
       <updateRate>${update_rate}</updateRate>
       <detectionThreshold>${detection_threshold_cm*cm2m}</detectionThreshold>

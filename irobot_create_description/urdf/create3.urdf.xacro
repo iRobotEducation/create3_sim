@@ -2,10 +2,10 @@
 <robot name="create3" xmlns:xacro="http://ros.org/wiki/xacro">
   <xacro:include filename="$(find irobot_create_description)/urdf/bumper.urdf.xacro" />
   <xacro:include filename="$(find irobot_create_description)/urdf/caster.urdf.xacro" />
+  <xacro:include filename="$(find irobot_create_description)/urdf/cliff_sensor.urdf.xacro"/>
   <xacro:include filename="$(find irobot_create_description)/urdf/common_properties.urdf.xacro"/>
   <xacro:include filename="$(find irobot_create_description)/urdf/sensors/optical_mouse.urdf.xacro"/>
   <xacro:include filename="$(find irobot_create_description)/urdf/wheel_with_wheeldrop.urdf.xacro" />
-
 
   <!-- MECHANICAL PROPERTIES -->
   <xacro:property name="body_z_offset_cm"           value="-2.5" />
@@ -98,5 +98,37 @@
   <xacro:optical_mouse>
     <origin xyz="0.1015 0.087 -0.055" rpy="0 0 ${-pi/4}"/>
   </xacro:optical_mouse>
+  <!-- Cliffs sensors -->
+  <xacro:property name="cliff_z"        value="${-4.5*cm2m}" />
+
+  <xacro:property name="cliff_center_x" value="${5.9*cm2m}"/>
+  <xacro:property name="cliff_center_y" value="${14.6*cm2m}"/>
+  <xacro:property name="cliff_center_P" value="${80*deg2rad}"/>
+  <xacro:property name="cliff_center_Y" value="${65.3*deg2rad}"/>
+
+  <xacro:property name="cliff_back_x" value="${-6.5*cm2m}"/>
+  <xacro:property name="cliff_back_y" value="${14.5*cm2m}"/>
+  <xacro:property name="cliff_back_P" value="${80*deg2rad}"/>
+  <xacro:property name="cliff_back_Y" value="${167.4*deg2rad}"/>
+
+  <xacro:cliff_sensor name="side_left">
+    <origin xyz="${cliff_back_x} ${cliff_back_y} ${cliff_z}"
+            rpy="0 ${cliff_back_P} ${cliff_back_Y}"/>
+  </xacro:cliff_sensor>
+
+  <xacro:cliff_sensor name="side_right">
+    <origin xyz="${cliff_back_x} ${- cliff_back_y} ${cliff_z}"
+            rpy="0 ${cliff_back_P} ${- cliff_back_Y}"/>
+  </xacro:cliff_sensor>
+
+  <xacro:cliff_sensor name="front_left">
+    <origin xyz="${cliff_center_x} ${cliff_center_y} ${cliff_z}"
+            rpy="0 ${cliff_center_P} ${cliff_center_Y}"/>
+  </xacro:cliff_sensor>
+
+  <xacro:cliff_sensor name="front_right">
+    <origin xyz="${cliff_center_x} ${- cliff_center_y} ${cliff_z}"
+            rpy="0 ${cliff_center_P} ${- cliff_center_Y}"/>
+  </xacro:cliff_sensor>
 
 </robot>

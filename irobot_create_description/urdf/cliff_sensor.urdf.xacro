@@ -1,0 +1,56 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://ros.org/wiki/xacro">
+
+<xacro:macro name="cliff_sensor" params="name parent:=base_link detection_threshold:=${8*cm2m}
+                                           visualize:=false *origin">
+  <!-- Sensor settings -->
+  <xacro:property name="update_rate" value="62"/>
+
+  <xacro:property name="fov_deg" value="5"/>
+  <xacro:property name="fov_rad" value="${fov_deg*deg2rad}"/>
+  <xacro:property name="min_range" value="${0*cm2m}"/>
+  <xacro:property name="max_range" value="${15*cm2m}"/>
+  <xacro:property name="samples" value="${fov_deg/5}"/>
+  <xacro:property name="sensor_name" value="cliff_${name}"/>
+
+  <joint name="${sensor_name}_joint" type="fixed">
+    <xacro:insert_block name="origin"/>
+    <parent link="${parent}"/>
+    <child link="${sensor_name}"/>
+  </joint>
+
+  <link name="${sensor_name}">
+    <xacro:inertial_dummy/>
+  </link>
+
+  <gazebo reference="${sensor_name}">
+    <sensor type="ray" name="${sensor_name}">
+      <update_rate>${update_rate}</update_rate>
+      <visualize>${visualize}</visualize>
+      <ray>
+        <scan>
+          <horizontal>
+            <samples>${samples}</samples>
+            <resolution>1.0</resolution>
+            <min_angle>-${fov_rad/2}</min_angle>
+            <max_angle>${fov_rad/2}</max_angle>
+          </horizontal>
+        </scan>
+        <range>
+          <min>${min_range}</min>
+          <max>${max_range}</max>
+          <resolution>1.0</resolution>
+        </range>
+      </ray>
+      <plugin name="${sensor_name}" filename="libgazebo_ros_create_cliff_sensor.so">
+        <ros>
+          <namespace>cliff</namespace>
+          <remapping>~/out:=${name}/event</remapping>
+        </ros>
+        <detectionThreshold>${detection_threshold}</detectionThreshold>
+      </plugin>
+    </sensor>
+  </gazebo>
+</xacro:macro>
+
+</robot>
