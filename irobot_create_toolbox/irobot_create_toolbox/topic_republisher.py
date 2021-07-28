@@ -43,13 +43,12 @@ class TopicRepublisher(Node):
     def init_pub_sub(self):
         msg_class = locate(self.msg_type)
 
-        self.subscription = self.create_subscription(
+        self._ = self.create_subscription(
             msg_class,
             self.current_topic,
             self.listener_callback,
             self.QoS)
         self.publisher = self.create_publisher(msg_class, self.new_topic, self.QoS)
-        self.subscription  # prevent unused variable warning
 
     def listener_callback(self, msg):
         self.publisher.publish(msg)
