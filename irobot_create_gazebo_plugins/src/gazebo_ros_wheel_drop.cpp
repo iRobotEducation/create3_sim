@@ -13,7 +13,6 @@
 // limitations under the License.
 
 #include <irobot_create_gazebo_plugins/gazebo_ros_wheel_drop.hpp>
-#include <string>
 
 namespace irobot_create_gazebo_plugins
 {
