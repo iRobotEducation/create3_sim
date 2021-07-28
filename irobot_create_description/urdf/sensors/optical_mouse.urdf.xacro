@@ -7,8 +7,8 @@
 
     <!-- Sensor settings -->
     <xacro:property name="mass" value="0.1" />
-    <xacro:property name="l" value="0.008" /> <!-- Length -->
-    <xacro:property name="r" value="0.01" /> <!-- Radius -->
+    <xacro:property name="length" value="0.008" /> <!-- Length -->
+    <xacro:property name="radius" value="0.01" /> <!-- Radius -->
 
     <!-- Visualization settings -->
     <xacro:property name="color" value="Red" />
@@ -25,11 +25,11 @@
       <xacro:if value="${visualize}">
         <visual>
           <geometry>
-            <cylinder length="${l}" radius="${r}" />
+            <cylinder length="${length}" radius="${radius}" />
           </geometry>
         </visual>
       </xacro:if>
-      <xacro:inertial_cylinder mass="${mass}" length="${l}" radius="${r}" />
+      <xacro:inertial_cylinder mass="${mass}" length="${length}" radius="${radius}" />
     </link>
 
     <gazebo>
