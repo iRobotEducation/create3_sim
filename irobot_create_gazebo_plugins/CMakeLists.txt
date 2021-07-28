@@ -51,8 +51,6 @@ ament_export_dependencies(gazebo_ros)
 ament_export_dependencies(irobot_create_msgs)
 ament_export_dependencies(rclcpp)
 
-ament_package()
-
 install(DIRECTORY include/
         DESTINATION include)
 
@@ -62,3 +60,5 @@ install(TARGETS
   ARCHIVE DESTINATION lib
   LIBRARY DESTINATION lib
   RUNTIME DESTINATION bin)
+
+ament_package()

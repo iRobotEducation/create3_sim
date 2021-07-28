@@ -21,4 +21,6 @@ install(
     share/${PROJECT_NAME}
 )
 
+ament_export_dependencies(irobot_create_gazebo_plugins)
+
 ament_package()
