@@ -5,9 +5,9 @@
 #include <gazebo/physics/World.hh>
 #include <gazebo_ros/conversions/builtin_interfaces.hpp>
 
-#include <irobot_gazebo_plugins/gazebo_ros_optical_mouse.h>
+#include <irobot_create_gazebo_plugins/gazebo_ros_optical_mouse.hpp>
 
-namespace irobot_gazebo_plugins
+namespace irobot_create_gazebo_plugins
 {
 GazeboRosOpticalMouse::GazeboRosOpticalMouse()
   : ModelPlugin()

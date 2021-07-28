@@ -7,11 +7,11 @@
 #include <gazebo/common/Plugin.hh>
 
 #include <irobot_create_msgs/msg/mouse.hpp>
-#include <irobot_gazebo_plugins/gazebo_ros_helpers.h>
+#include <irobot_create_gazebo_plugins/gazebo_ros_helpers.hpp>
 
 static constexpr double M_TO_INCHES = 100/2.54;
 
-namespace irobot_gazebo_plugins
+namespace irobot_create_gazebo_plugins
 {
 /*! \brief Plugin to control odometry based on the optical mouse sensor.
   *
@@ -77,6 +77,6 @@ private:
   ignition::math::Vector3d integrated_position_;
 
   /// Helper class to enforce a specific update rate
-  UpdateRateEnforcer update_rate_enforcer_;
+  utils::UpdateRateEnforcer update_rate_enforcer_;
 };
 }  // namespace irobot_gazebo_plugins

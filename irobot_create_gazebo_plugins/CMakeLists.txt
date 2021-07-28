@@ -22,6 +22,9 @@ link_directories(${gazebo_dev_LIBRARY_DIRS})
 add_library(gazebo_ros_create_helpers SHARED
   src/gazebo_ros_helpers.cpp
 )
+add_library(gazebo_ros_create_optical_mouse SHARED
+src/gazebo_ros_optical_mouse.cpp
+)
 add_library(gazebo_ros_create_wheel_drop SHARED
   src/gazebo_ros_wheel_drop.cpp
 )
@@ -34,6 +37,16 @@ ament_target_dependencies(gazebo_ros_create_helpers
   "gazebo_ros"
 )
 ament_export_libraries(gazebo_ros_create_helpers)
+# gazebo_ros_optical_mouse
+target_include_directories(gazebo_ros_create_optical_mouse PUBLIC include)
+ament_target_dependencies(gazebo_ros_create_optical_mouse
+  "gazebo_dev"
+  "gazebo_ros"
+  "irobot_create_msgs"
+  "rclcpp"
+)
+ament_export_libraries(gazebo_ros_create_optical_mouse)
+target_link_libraries(gazebo_ros_create_optical_mouse gazebo_ros_create_helpers)
 ## gazebo_ros_create_wheel_drop
 target_include_directories(gazebo_ros_create_wheel_drop PUBLIC include)
 ament_target_dependencies(gazebo_ros_create_wheel_drop
@@ -56,6 +69,7 @@ install(DIRECTORY include/
 
 install(TARGETS
     gazebo_ros_create_helpers
+    gazebo_ros_create_optical_mouse
     gazebo_ros_create_wheel_drop
   ARCHIVE DESTINATION lib
   LIBRARY DESTINATION lib
