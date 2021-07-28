@@ -27,8 +27,7 @@ class TopicRepublisher(Node):
         super().__init__('topic_republisher')
         self.current_topic = None
         self.new_topic = None
-        self.msg_type = None
-        self.qos = None
+        self.timer = None
         self.add_on_set_parameters_callback(self.parameters_callback)
 
         self.declare_parameters(
@@ -36,19 +35,29 @@ class TopicRepublisher(Node):
             parameters=[
                 ('current_topic', None),
                 ('new_topic', None),
-                ('msg_type', None),
-                ('qos', None)
             ])
 
-    def init_pub_sub(self):
-        msg_class = locate(self.msg_type)
+    def check_published_topic(self):
+        current_topic_publishers = self.get_publishers_info_by_topic(self.current_topic)
+        if len(current_topic_publishers) == 0:
+            self.get_logger().info('current_topic not yet published...')
+        else:
+            self.timer.destroy()
+            self.init_pub_sub(current_topic_publishers[0].topic_type, current_topic_publishers[0].qos_profile.history)
+
+
+    def init_pub_sub(self, msg_type, qos):
+
+        self.get_logger().info('Republishing {} to {}.'.format(self.current_topic,
+                                                                     self.new_topic))
+        msg_class = locate(msg_type.replace("/", "."))
 
         self._ = self.create_subscription(
             msg_class,
             self.current_topic,
             self.listener_callback,
-            self.qos)
-        self.publisher = self.create_publisher(msg_class, self.new_topic, self.qos)
+            qos)
+        self.publisher = self.create_publisher(msg_class, self.new_topic, qos)
 
     def listener_callback(self, msg):
         self.publisher.publish(msg)
@@ -59,15 +68,10 @@ class TopicRepublisher(Node):
                 self.current_topic = param.value
             if param.name == 'new_topic':
                 self.new_topic = param.value
-            if param.name == 'msg_type':
-                self.msg_type = param.value
-            if param.name == 'qos':
-                self.qos = param.value
 
-        if self.current_topic and self.new_topic and self.msg_type and self.qos:
-            self.get_logger().info('Republishing {} to {}...'.format(self.current_topic,
-                                                                     self.new_topic))
-            self.init_pub_sub()
+        if self.current_topic and self.new_topic:
+            # Now that all parameters are set, wait for topic to be published
+            self.timer = self.create_timer(2.0, self.check_published_topic)
 
         return SetParametersResult(successful=True)
 
