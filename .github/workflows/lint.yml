@@ -22,6 +22,7 @@ jobs:
           - flake8
           - lint_cmake
           - pep257
+          - pycodestyle
           - xmllint
     steps:
       - uses: actions/checkout@v2.3.4
