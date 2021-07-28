@@ -21,6 +21,7 @@ jobs:
           # - cpplint
           - flake8
           - lint_cmake
+          - mypy
           - pep257
           - pycodestyle
           - pyflakes
