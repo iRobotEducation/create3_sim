@@ -14,10 +14,10 @@ jobs:
       fail-fast: false
       matrix:
         linter:
-          # - clang_format
+          - clang_format
           # - clang_tidy
           - copyright
-          # - cppcheck
+          - cppcheck
           # - cpplint
           - flake8
           - lint_cmake
@@ -36,4 +36,5 @@ jobs:
             irobot_create_msgs
             irobot_create_description
             irobot_create_gazebo
+            irobot_create_gazebo_plugins
             irobot_create_sim
