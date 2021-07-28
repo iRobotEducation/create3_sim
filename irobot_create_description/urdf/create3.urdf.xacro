@@ -25,6 +25,8 @@
 
   <xacro:property name="inertial_offset_x_cm"       value="1" />
 
+  <xacro:property name="wheel_drop_offset_z_mm"     value="3.5"/>
+
   <!-- Create 3 base definitions-->
   <link name="base_footprint"/>
 
@@ -69,12 +71,13 @@
   </xacro:bumper>
 
   <!-- Wheels with mechanical wheel drop -->
+  <xacro:property name="wheel_drop_z" value="${wheel_height_cm*cm2m + wheel_drop_offset_z_mm*mm2m}"/>
   <xacro:wheel_with_wheeldrop name="left">
-    <origin xyz="0 ${distance_between_wheels_cm*cm2m/2} ${wheel_height_cm*cm2m}" rpy="${-pi/2} 0 0"/>
+    <origin xyz="0 ${distance_between_wheels_cm*cm2m/2} ${wheel_drop_z}" rpy="${-pi/2} 0 0"/>
   </xacro:wheel_with_wheeldrop>
 
   <xacro:wheel_with_wheeldrop name="right">
-    <origin xyz="0 ${-distance_between_wheels_cm*cm2m/2} ${wheel_height_cm*cm2m}" rpy="${-pi/2} 0 0"/>
+    <origin xyz="0 ${-distance_between_wheels_cm*cm2m/2} ${wheel_drop_z}" rpy="${-pi/2} 0 0"/>
   </xacro:wheel_with_wheeldrop>
 
   <!-- Caster wheel -->
