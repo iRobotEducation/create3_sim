@@ -43,14 +43,14 @@ class TopicRepublisher(Node):
             self.get_logger().info('current_topic not yet published...')
         else:
             self.timer.destroy()
-            self.init_pub_sub(current_topic_publishers[0].topic_type, current_topic_publishers[0].qos_profile.history)
-
+            self.init_pub_sub(current_topic_publishers[0].topic_type,
+                              current_topic_publishers[0].qos_profile.history)
 
     def init_pub_sub(self, msg_type, qos):
 
         self.get_logger().info('Republishing {} to {}.'.format(self.current_topic,
-                                                                     self.new_topic))
-        msg_class = locate(msg_type.replace("/", "."))
+                                                               self.new_topic))
+        msg_class = locate(msg_type.replace('/', '.'))
 
         self._ = self.create_subscription(
             msg_class,
