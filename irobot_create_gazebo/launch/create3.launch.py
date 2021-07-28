@@ -61,7 +61,7 @@ def generate_launch_description():
         PythonLaunchDescriptionSource([dock_launch_file]),
         condition=IfCondition(LaunchConfiguration('dock')),
         # The robot starts docked
-        launch_arguments={'x': x, 'y': y, 'z': z, 'yaw': yaw}.items()
+        launch_arguments={'x': x, 'y': y, 'z': z, 'yaw': yaw}.items(),
     )
 
     # Gazebo server
@@ -69,14 +69,14 @@ def generate_launch_description():
         cmd=['gzserver', '--verbose',
              '-s', 'libgazebo_ros_init.so',
              '-s', 'libgazebo_ros_factory.so'],
-        output='screen'
+        output='screen',
     )
 
     # Gazebo client
     gzclient = ExecuteProcess(
         cmd=['gzclient'],
         output='screen',
-        condition=IfCondition(LaunchConfiguration('gui'))
+        condition=IfCondition(LaunchConfiguration('gui')),
     )
 
     # Spawn robot

@@ -69,7 +69,7 @@ def generate_launch_description():
         ],
         remappings=[
             ('robot_description', 'standard_dock_description')
-        ]
+        ],
     )
 
     spawn_model = Node(
