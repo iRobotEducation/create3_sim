@@ -13,14 +13,12 @@
       </geometry>
     </visual>
     <collision>
-      <origin xyz="0 0 ${z_offset_mm*mm2m}"/>
+      <!-- Using a simple box as collision model -->
+      <origin xyz="-0.045 0 0.05"/>
       <geometry>
-        <mesh filename="file://$(find irobot_create_description)/meshes/dock/collision.stl"/>
+        <box size="0.04 0.13 0.1"/>
       </geometry>
     </collision>
-    <xacro:inertial_cuboid_with_pose mass="2.5" x="0.15" y="0.13" z="0.19">
-      <origin xyz="-0.073 0 0"/>
-    </xacro:inertial_cuboid_with_pose>
   </link>
 
   <gazebo reference="base_link">
@@ -29,11 +27,6 @@
     <kp>1000000.0</kp>
     <kd>1.0</kd>
   </gazebo>
-
-  <gazebo>
-    <static>true</static>
-  </gazebo>
-
 
   <!-- Parameters for IR emitters -->
   <xacro:property name="buoy_x" value="-0.037"/>
