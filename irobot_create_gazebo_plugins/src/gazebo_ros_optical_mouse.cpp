@@ -39,15 +39,12 @@ void GazeboRosOpticalMouse::Load(gazebo::physics::ModelPtr model, sdf::ElementPt
   double update_rate;
   double gaussian_mean;
   double gaussian_var;
-  double sensor_rotation;
   int seed;
   srand(time(0));
 
   // Get plugin parameters
   utils::initialize(link_name, sdf, "link", "base_link");
   utils::initialize(update_rate, sdf, "update_rate", 100.0);
-  utils::initialize(resolution_, sdf, "resolution", 125.0);
-  utils::initialize(sensor_rotation, sdf, "sensor_rotation", 0.0);
   utils::initialize(gaussian_mean, sdf, "gaussian_mean", 0.0);
   utils::initialize(gaussian_var, sdf, "gaussian_var", 0.0);
   utils::initialize(seed, sdf, "mouse_seed", rand());
@@ -75,11 +72,10 @@ void GazeboRosOpticalMouse::Load(gazebo::physics::ModelPtr model, sdf::ElementPt
   // Rate enforcer
   update_rate_enforcer_.load(update_rate);
 
-  // Initialize time and position markers
+  // Initialize time and pose markers
   last_time_  = world_->SimTime();
-  last_position_ = link_->WorldPose().Pos();
+  last_pose_ = link_->WorldPose();
   integrated_position_ = {0, 0, 0};
-  sensor_rotation_ = ignition::math::Quaterniond(ignition::math::Vector3d::UnitZ, sensor_rotation);
 
   RCLCPP_INFO(ros_node_->get_logger(), "Starting optical mouse plugin");
 }
@@ -88,8 +84,8 @@ void GazeboRosOpticalMouse::Load(gazebo::physics::ModelPtr model, sdf::ElementPt
 void GazeboRosOpticalMouse::Reset() {
   // Is necessary to reset time (it moved backwards)
   last_time_  = world_->SimTime();
-  // Update position because it was reset
-  last_position_ = link_->WorldPose().Pos();
+  // Update pose because it was reset
+  last_pose_ = link_->WorldPose();
 }
 
 void GazeboRosOpticalMouse::OnUpdate(const gazebo::common::UpdateInfo& info)
@@ -106,17 +102,18 @@ void GazeboRosOpticalMouse::OnUpdate(const gazebo::common::UpdateInfo& info)
   // Check if on this iteration corresponds to send the message
   if (update_rate_enforcer_.shouldUpdate(time_elapsed))
   {
-    // Get position
-    const ignition::math::Vector3d position = link_->WorldPose().Pos();
-    // Position difference with respect to the robot frame
-    const ignition::math::Vector3d& delta_distance = sensor_rotation_.RotateVector(position - last_position_);
+    // Get pose
+    const ignition::math::Pose3d current_pose = link_->WorldPose();
+    // Pose difference with respect to the last mouse link pose. The result is a Pose from
+    // the last pose to the current pose.
+    const ignition::math::Vector3d& position_displacement = (current_pose - last_pose_).Pos();
 
     // configure an empty message with the timestamp
     irobot_create_msgs::msg::Mouse msg;
     msg.header.stamp = gazebo_ros::Convert<builtin_interfaces::msg::Time>(current_time);
 
-    integrated_position_.X(integrated_position_.X() + delta_distance.X());
-    integrated_position_.Y(integrated_position_.Y() + delta_distance.Y());
+    integrated_position_.X(integrated_position_.X() + position_displacement.X());
+    integrated_position_.Y(integrated_position_.Y() + position_displacement.Y());
 
     // Calculate displacement for this iteration
     msg.integrated_x = integrated_position_.X();
@@ -124,12 +121,12 @@ void GazeboRosOpticalMouse::OnUpdate(const gazebo::common::UpdateInfo& info)
     // Publish message
     pub_->publish(msg);
 
-    // Update time and position markers
+    // Update time
     last_time_ = current_time;
 
-    // The position is updated according to the resolution of the sensor (i.e. snapped to discrete grid)
+    // The pose is updated
     if (msg.integrated_x != 0 || msg.integrated_y != 0) {
-      last_position_ = position;
+      last_pose_ = current_pose;
     }
   }
 }

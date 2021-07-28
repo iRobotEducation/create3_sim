@@ -76,17 +76,14 @@ private:
   /// Sensor resolution
   double resolution_ = 0;
 
-  /// Sensor rotation
-  ignition::math::Quaterniond sensor_rotation_;
-
   /// ROS publisher
   rclcpp::Publisher<irobot_create_msgs::msg::Mouse>::SharedPtr pub_{ nullptr };
 
   /// Last time the sensor was updated
   gazebo::common::Time last_time_;
 
-  /// Position of the sensor for previous iteration
-  ignition::math::Vector3d last_position_;
+  /// \brief Pose of the sensor from previous iteration.
+  ignition::math::Pose3d last_pose_;
 
   /// Integrated position of the sensor
   ignition::math::Vector3d integrated_position_;
