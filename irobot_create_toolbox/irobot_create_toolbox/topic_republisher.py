@@ -40,13 +40,13 @@ class TopicRepublisher(Node):
         self.timer = self.create_timer(2.0, self.check_published_topic)
 
     def check_published_topic(self):
-        current_topic_publishers = self.get_publishers_info_by_topic(self.current_topic)
-        if len(current_topic_publishers) == 0 or not (self.current_topic and self.new_topic):
+        current_topic_subscribers = self.get_subscriptions_info_by_topic(self.new_topic)
+        if len(current_topic_subscribers) == 0 or not (self.current_topic and self.new_topic):
             self.get_logger().debug('current_topic not yet ready for republish...')
         else:
             self.timer.destroy()
-            self.init_pub_sub(current_topic_publishers[0].topic_type,
-                              current_topic_publishers[0].qos_profile.history)
+            self.init_pub_sub(current_topic_subscribers[0].topic_type,
+                              current_topic_subscribers[0].qos_profile.history)
 
     def init_pub_sub(self, msg_type, qos):
         self.get_logger().info(f'Republishing {self.current_topic} to {self.new_topic}.')
