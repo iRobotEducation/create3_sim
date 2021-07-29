@@ -37,10 +37,12 @@ class TopicRepublisher(Node):
                 ('new_topic', None),
             ])
 
+        self.timer = self.create_timer(2.0, self.check_published_topic)
+
     def check_published_topic(self):
         current_topic_publishers = self.get_publishers_info_by_topic(self.current_topic)
-        if len(current_topic_publishers) == 0:
-            self.get_logger().info('current_topic not yet published...')
+        if len(current_topic_publishers) == 0 or not (self.current_topic and self.new_topic):
+            self.get_logger().info('current_topic not yet ready for republish...')
         else:
             self.timer.destroy()
             self.init_pub_sub(current_topic_publishers[0].topic_type,
@@ -68,10 +70,6 @@ class TopicRepublisher(Node):
                 self.current_topic = param.value
             if param.name == 'new_topic':
                 self.new_topic = param.value
-
-        if self.current_topic and self.new_topic:
-            # Now that all parameters are set, wait for topic to be published
-            self.timer = self.create_timer(2.0, self.check_published_topic)
 
         return SetParametersResult(successful=True)
 
