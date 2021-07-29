@@ -32,6 +32,9 @@
     <xacro:inertial_cylinder_with_pose mass="${mass}" radius="${radius}" length="${length}">
       <origin xyz="0 0 0" />
     </xacro:inertial_cylinder_with_pose>
+
+  <xacro:macro name="inertial_dummy">
+    <xacro:inertial_cuboid mass="0.01" x="0.01" y="0.01" z="0.01"/>
   </xacro:macro>
 
   <xacro:macro name="inertial_dummy">
@@ -41,6 +44,6 @@
   <!-- Conversion macros -->
   <xacro:property name="cm2m"    value="${1/100.0}"/>
   <xacro:property name="mm2m"    value="${1/1000.0}"/>
-  <xacro:property name="deg2rad" value="${pi/180}"/>
+  <xacro:property name="deg2rad" value="${pi/180.0}"/>
 
 </robot>
