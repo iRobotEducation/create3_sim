@@ -57,11 +57,6 @@ void GazeboRosIrIntensitySensor::OnNewLaserScans()
   msg_.header.stamp =
     gazebo_ros::Convert<builtin_interfaces::msg::Time>(parent_sensor_->LastMeasurementTime());
 
-  // Prevent new scans from arriving while we're processing this one
-  // parent_sensor_->SetActive(false);
-
-  const std::string name = parent_sensor_->Name();
-
   // Find the minimum detected distance
   double detection = max_range_;
   std::vector<double> ranges;
@@ -80,11 +75,9 @@ void GazeboRosIrIntensitySensor::OnNewLaserScans()
   // From the experiments B ~ 26.831568
   const double scaled_detection = 3500*std::exp(detection * (-2 * M_E/max_range_));
 
-  msg_.value = scaled_detection;
+  msg_.value = static_cast<irobot_create_msgs::msg::IrIntensity::_value_type>(scaled_detection);
   // Publish
   pub_->publish(msg_);
-
-  // parent_sensor_->SetActive(true);
 }
 
 }  // namespace irobot_gazebo_plugins
