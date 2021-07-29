@@ -101,7 +101,7 @@
   </xacro:optical_mouse>
 
   <!-- IR intensity sensors -->
-  <xacro:property name="ir_intensity_z_pos_cm" value="3"/>
+  <xacro:property name="ir_intensity_z_pos_cm" value="-0.7"/>
   <xacro:ir_intensity name="front_center_left">
     <origin xyz="0.1540 -0.0000 ${ir_intensity_z_pos_cm*cm2m}"/>
   </xacro:ir_intensity>

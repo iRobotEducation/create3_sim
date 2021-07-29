@@ -5,7 +5,7 @@
   <xacro:macro name="ir_intensity"
                params="name parent:=base_link
                        update_rate:=62.0 fov:=${10*deg2rad}
-                       min_range:=${5*mm2m} max_range:=${20*cm2m}
+                       min_range:=${25*mm2m} max_range:=${20*cm2m}
                        visualize:=true *origin" >
 
     <xacro:property name="link_name" value="ir_intensity_${name}"/>
