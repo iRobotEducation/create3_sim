@@ -1,0 +1,66 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://ros.org/wiki/xacro">
+  <xacro:include filename="$(find irobot_create_description)/urdf/common_properties.urdf.xacro"/>
+
+  <xacro:macro name="ir_intensity"
+               params="name parent:=base_link
+                       update_rate:=62.0 fov:=${10*deg2rad}
+                       min_range:=${5*mm2m} max_range:=${200*mm2m}
+                       visualize:=false *origin" >
+
+    <xacro:property name="link_name" value="ir_intensity_${name}"/>
+
+    <joint name="${link_name}_joint" type="fixed">
+      <xacro:insert_block name="origin" />
+      <parent link="${parent}"/>
+      <child link="${link_name}"/>
+    </joint>
+
+    <link name="${link_name}">
+      <xacro:inertial_dummy/>
+    </link>
+
+    <gazebo reference="${link_name}_joint">
+      <preserveFixedJoint>true</preserveFixedJoint>
+    </gazebo>
+
+    <gazebo reference="${link_name}">
+      <sensor type="ray" name="${link_name}">
+        <update_rate>${update_rate}</update_rate>
+        <visualize>${visualize}</visualize>
+        <ray>
+          <scan>
+            <horizontal>
+              <samples>5</samples>
+              <resolution>1</resolution>
+              <min_angle>-${fov/2}</min_angle>
+              <max_angle>${fov/2}</max_angle>
+            </horizontal>
+            <vertical>
+              <samples>5</samples>
+              <resolution>1</resolution>
+              <min_angle>-${fov/2}</min_angle>
+              <max_angle>${fov/2}</max_angle>
+            </vertical>
+          </scan>
+          <range>
+            <min>${min_range}</min>
+            <max>${max_range}</max>
+            <resolution>0.01</resolution>
+          </range>
+        </ray>
+        <noise>
+          <type>gaussian</type>
+          <mean>0.0</mean>
+          <stddev>0.0</stddev>
+        </noise>
+        <plugin filename="libgazebo_ros_create_ir_intensity_sensor.so" name="${link_name}">
+          <ros>
+            <namespace>/</namespace>
+            <remapping>~/out:=${link_name}</remapping>
+          </ros>
+        </plugin>
+      </sensor>
+    </gazebo>
+  </xacro:macro>
+</robot>
