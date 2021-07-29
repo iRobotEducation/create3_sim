@@ -50,8 +50,7 @@ class TopicRepublisher(Node):
 
     def init_pub_sub(self, msg_type, qos):
 
-        self.get_logger().info('Republishing {} to {}.'.format(self.current_topic,
-                                                               self.new_topic))
+        self.get_logger().info(f'Republishing {self.current_topic} to {self.new_topic}.')
         msg_class = locate(msg_type.replace('/', '.'))
 
         self._ = self.create_subscription(
