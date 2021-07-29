@@ -3,6 +3,7 @@
   <xacro:include filename="$(find irobot_create_description)/urdf/bumper.urdf.xacro" />
   <xacro:include filename="$(find irobot_create_description)/urdf/caster.urdf.xacro" />
   <xacro:include filename="$(find irobot_create_description)/urdf/common_properties.urdf.xacro"/>
+  <xacro:include filename="$(find irobot_create_description)/urdf/ir_intensity.urdf.xacro" />
   <xacro:include filename="$(find irobot_create_description)/urdf/sensors/optical_mouse.urdf.xacro"/>
   <xacro:include filename="$(find irobot_create_description)/urdf/wheel_with_wheeldrop.urdf.xacro" />
 
@@ -98,5 +99,29 @@
   <xacro:optical_mouse>
     <origin xyz="0.1015 0.087 -0.055" rpy="0 0 ${-pi/4}"/>
   </xacro:optical_mouse>
+
+  <!-- IR intensity sensors -->
+  <xacro:property name="ir_intensity_z_pos_cm" value="3"/>
+  <xacro:ir_intensity name="front_center_left">
+    <origin xyz="0.1540 -0.0000 ${ir_intensity_z_pos_cm*cm2m}"/>
+  </xacro:ir_intensity>
+  <xacro:ir_intensity name="front_center_right">
+    <origin xyz="0.1396 -0.0651 ${ir_intensity_z_pos_cm*cm2m}" rpy="0 0 -0.436"/>
+  </xacro:ir_intensity>
+  <xacro:ir_intensity name="front_left">
+    <origin xyz="0.1396 0.0651 ${ir_intensity_z_pos_cm*cm2m}" rpy="0 0 0.436"/>
+  </xacro:ir_intensity>
+  <xacro:ir_intensity name="front_right">
+    <origin xyz="0.0990 -0.1180 ${ir_intensity_z_pos_cm*cm2m}" rpy="0 0 -0.873"/>
+  </xacro:ir_intensity>
+  <xacro:ir_intensity name="left">
+    <origin xyz="0.0990 0.1180 ${ir_intensity_z_pos_cm*cm2m}" rpy="0 0 0.873"/>
+  </xacro:ir_intensity>
+  <xacro:ir_intensity name="right">
+    <origin xyz="0.0399 -0.1488 ${ir_intensity_z_pos_cm*cm2m}" rpy="0 0 -1.309"/>
+  </xacro:ir_intensity>
+  <xacro:ir_intensity name="side_left">
+    <origin xyz="0.0399 0.1488 ${ir_intensity_z_pos_cm*cm2m}" rpy="0 0 1.309"/>
+  </xacro:ir_intensity>
 
 </robot>
