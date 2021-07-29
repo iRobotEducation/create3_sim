@@ -16,6 +16,7 @@
 
 #pragma once
 
+#include <algorithm>
 #include <gazebo/common/Plugin.hh>
 #include <gazebo/common/common.hh>
 #include <gazebo/physics/physics.hh>
@@ -26,8 +27,10 @@
 #include <gazebo_ros/node.hpp>
 #include <gazebo_ros/utils.hpp>
 #include <irobot_create_msgs/msg/ir_intensity.hpp>
+#include <limits>
 #include <rclcpp/rclcpp.hpp>
 #include <std_msgs/msg/bool.hpp>
+#include <vector>
 
 namespace irobot_gazebo_plugins
 {
@@ -63,5 +66,8 @@ private:
 
   // Sensor Emitter description message
   irobot_create_msgs::msg::IrIntensity msg_;
+
+  // Maximum range detected by the sensor
+  double max_range_{std::numeric_limits<double>::max()};
 };
 }  // namespace irobot_gazebo_plugins

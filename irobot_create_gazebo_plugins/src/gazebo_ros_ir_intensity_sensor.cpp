@@ -46,6 +46,8 @@ void GazeboRosIrIntensitySensor::Load(gazebo::sensors::SensorPtr sensor, sdf::El
   // Configure our static message charasteristics
   msg_.header.frame_id = gazebo_ros::SensorFrameID(*sensor, *sdf);
 
+  max_range_ = parent_sensor_->RangeMax();
+
   RCLCPP_INFO(ros_node_->get_logger(), "Starting IR Emitter Plugin!");
 }
 
@@ -54,18 +56,35 @@ void GazeboRosIrIntensitySensor::OnNewLaserScans()
 {
   msg_.header.stamp =
     gazebo_ros::Convert<builtin_interfaces::msg::Time>(parent_sensor_->LastMeasurementTime());
-  // Set range to the minimum of the ray ranges
-  // For single rays, this will just be the range of the ray
-  msg_.value = parent_sensor_->RangeMax();
+
+  // Prevent new scans from arriving while we're processing this one
+  // parent_sensor_->SetActive(false);
+
+  const std::string name = parent_sensor_->Name();
+
+  // Find the minimum detected distance
+  double detection = max_range_;
   std::vector<double> ranges;
   parent_sensor_->Ranges(ranges);
-  for (const double & range : ranges) {
-    if (range < msg_.value) {
-      msg_.value = range;
-    }
-  }
+  auto detection_ptr = std::min_element(std::begin(ranges), std::end(ranges));
+  if( detection_ptr != std::end(ranges) ) detection = * detection_ptr;
+  RCLCPP_DEBUG_STREAM(
+    ros_node_->get_logger(), "IR reporting " << detection << " m");
+
+  // IR sensor produces an exponential signal that is corelated to the distance,
+  // that follows this formula: ir_reading = A exp(-x*B)
+  // where:
+  // A is a coefficient that depends on the colour surface and
+  // it an be as much as 3500
+  // B is the decay of the signal related to the distance.
+  // From the experiments B ~ 26.831568
+  const double scaled_detection = 3500*std::exp(detection * (-2 * M_E/max_range_));
+
+  msg_.value = scaled_detection;
   // Publish
   pub_->publish(msg_);
+
+  // parent_sensor_->SetActive(true);
 }
 
 }  // namespace irobot_gazebo_plugins
