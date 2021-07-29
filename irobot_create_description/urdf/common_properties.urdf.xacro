@@ -32,6 +32,7 @@
     <xacro:inertial_cylinder_with_pose mass="${mass}" radius="${radius}" length="${length}">
       <origin xyz="0 0 0" />
     </xacro:inertial_cylinder_with_pose>
+  </xacro:macro>
 
   <xacro:macro name="inertial_dummy">
     <xacro:inertial_cuboid mass="0.01" x="0.01" y="0.01" z="0.01"/>
