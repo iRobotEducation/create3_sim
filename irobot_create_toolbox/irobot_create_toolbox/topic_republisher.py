@@ -49,8 +49,9 @@ class TopicRepublisher(Node):
                               current_topic_publishers[0].qos_profile.history)
 
     def init_pub_sub(self, msg_type, qos):
-
         self.get_logger().info(f'Republishing {self.current_topic} to {self.new_topic}.')
+
+        # Convert type string to Python module format to extract class object
         msg_class = locate(msg_type.replace('/', '.'))
 
         self._ = self.create_subscription(
