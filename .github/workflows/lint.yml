@@ -26,7 +26,6 @@ jobs:
           - pycodestyle
           - pyflakes
           - xmllint
-          - uncrustify
     steps:
       - uses: actions/checkout@v2.3.4
       - uses: ros-tooling/setup-ros@0.2.1
