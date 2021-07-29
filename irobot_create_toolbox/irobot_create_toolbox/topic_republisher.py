@@ -91,7 +91,6 @@ class TopicRepublisher(Node):
     def parameters_callback(self, params):
         """
         Parameters callback. For each parameter the corresponding variable is set.
-
         params: Array of parameters set.
         """
         for param in params:
@@ -106,7 +105,6 @@ class TopicRepublisher(Node):
 def main(args=None):
     """
     Entrypoint for the TopicRepublisher.
-
     This tool can be used by simply passing the current_topic and new_topic parameters when
     executing the node. The republisher will wait until parameters are set and atleast one
     subscription to new_topic exists before republishing from current_topic.
