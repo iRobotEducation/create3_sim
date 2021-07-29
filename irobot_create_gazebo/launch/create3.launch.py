@@ -42,19 +42,18 @@ for pose_element in ['x', 'y', 'z', 'yaw']:
 
 def generate_launch_description():
     # Directories
+    pkg_create3_control = get_package_share_directory('irobot_create_control')
     pkg_create3_description = get_package_share_directory('irobot_create_description')
+
     # Paths
+    control_launch_file = PathJoinSubstitution(
+        [pkg_create3_control, 'launch', 'control.launch.py'])
     description_launch_file = PathJoinSubstitution(
         [pkg_create3_description, 'launch', 'rviz2.launch.py'])
     dock_launch_file = PathJoinSubstitution(
         [pkg_create3_description, 'launch', 'dock.launch.py'])
 
     # Launch configurations
-    pkg_create3_control = get_package_share_directory('irobot_create_control')
-    description_launch_file = PathJoinSubstitution(
-        [pkg_create3_description, 'launch', 'rviz2.launch.py'])
-    control_launch_file = PathJoinSubstitution(
-        [pkg_create3_control, 'launch', 'control.launch.py'])
     x, y, z = LaunchConfiguration('x'), LaunchConfiguration('y'), LaunchConfiguration('z')
     yaw = LaunchConfiguration('yaw')
 
@@ -63,7 +62,7 @@ def generate_launch_description():
         PythonLaunchDescriptionSource([description_launch_file])
     )
     diffdrive_controller = IncludeLaunchDescription(
-            PythonLaunchDescriptionSource([control_launch_file])
+        PythonLaunchDescriptionSource([control_launch_file])
     )
     spawn_dock = IncludeLaunchDescription(
         PythonLaunchDescriptionSource([dock_launch_file]),
