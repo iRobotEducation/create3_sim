@@ -105,6 +105,7 @@ class TopicRepublisher(Node):
 def main(args=None):
     """
     Entrypoint for the TopicRepublisher.
+
     This tool can be used by simply passing the current_topic and new_topic parameters when
     executing the node. The republisher will wait until parameters are set and atleast one
     subscription to new_topic exists before republishing from current_topic.
