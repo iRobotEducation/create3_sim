@@ -45,23 +45,23 @@ class TopicRepublisher(Node):
     def check_published_topic(self):
         """
         On every Timer timeout checks if the new_topic is advertised and if all parameters were set
-        before creating subscriber and publisher.
+        before creating subscription and publisher.
         """
 
-        current_topic_subscribers = self.get_subscriptions_info_by_topic(self.new_topic)
-        if len(current_topic_subscribers) == 0 or not (self.current_topic and self.new_topic):
+        current_topic_subscriptions = self.get_subscriptions_info_by_topic(self.new_topic)
+        if len(current_topic_subscriptions) == 0 or not (self.current_topic and self.new_topic):
             self.get_logger().debug('self.current_topic not yet ready for republish...')
         else:
             self.timer.destroy()
-            self.init_pub_sub(current_topic_subscribers[0].topic_type,
-                              current_topic_subscribers[0].qos_profile.history)
+            self.init_pub_sub(current_topic_subscriptions[0].topic_type,
+                              current_topic_subscriptions[0].qos_profile.history)
 
     def init_pub_sub(self, msg_type, qos):
         """
-        Creates the subscriber to current_topic and the publisher to new_topic.
+        Creates the subscription to current_topic and the publisher to new_topic.
 
         msg_type: String representation of the message type.
-        qos: The QoS profile history depth to apply to subscriber and publisher.
+        qos: The QoS profile history depth to apply to subscription and publisher.
         """
 
         self.get_logger().info(f'Republishing {self.current_topic} to {self.new_topic}.')
@@ -78,7 +78,7 @@ class TopicRepublisher(Node):
 
     def listener_callback(self, msg):
         """
-        Subscriber callback. Republishes messages on current_topic to new_topic.
+        Subscription callback. Republishes messages on current_topic to new_topic.
         msg: The message to republish.
         """
 
