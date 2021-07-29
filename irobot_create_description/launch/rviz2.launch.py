@@ -41,7 +41,8 @@ def generate_launch_description():
         name='rviz2',
         arguments=['-d', rviz_config_dir],
         condition=IfCondition(LaunchConfiguration('rviz')),
-        output='screen')
+        output='screen',
+    )
 
     robot_state_publisher = Node(
         package='robot_state_publisher',
@@ -50,14 +51,17 @@ def generate_launch_description():
         output='screen',
         parameters=[
             {'use_sim_time': True},
-            {'robot_description': Command(['xacro', ' ', xacro_file])}])
+            {'robot_description': Command(['xacro', ' ', xacro_file])},
+        ],
+    )
 
     joint_state_publisher = Node(
         package='joint_state_publisher_gui',
         executable='joint_state_publisher_gui',
         name='joint_state_publisher_gui',
         condition=IfCondition(LaunchConfiguration('rviz')),
-        output='screen')
+        output='screen',
+    )
 
     # Define LaunchDescription variable
     ld = LaunchDescription(ARGUMENTS)
