@@ -1,32 +1,40 @@
-#include <irobot_create_gazebo_plugins/gazebo_ros_ir_intensity_sensor.hpp>
+// Copyright 2021 iRobot, Inc.
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+//
+// @author Emiliano Javier Borghi Orue (creativa_eborghi@irobot.com)
 
+#include <irobot_create_gazebo_plugins/gazebo_ros_ir_intensity_sensor.hpp>
 
 namespace irobot_gazebo_plugins
 {
-  // Register this plugin with the simulator
+// Register this plugin with the simulator
 GZ_REGISTER_SENSOR_PLUGIN(GazeboRosIrIntensitySensor)
 
 ////////////////////////////////////////////////////////////////////////////////
 // Constructor
-GazeboRosIrIntensitySensor::GazeboRosIrIntensitySensor()
-  : SensorPlugin()
-{
-}
+GazeboRosIrIntensitySensor::GazeboRosIrIntensitySensor() : SensorPlugin() {}
 
 ////////////////////////////////////////////////////////////////////////////////
 // Destructor
-GazeboRosIrIntensitySensor::~GazeboRosIrIntensitySensor()
-{
-  new_laser_scans_connection_.reset();
-}
+GazeboRosIrIntensitySensor::~GazeboRosIrIntensitySensor() { new_laser_scans_connection_.reset(); }
 
 // Load the controller
 void GazeboRosIrIntensitySensor::Load(gazebo::sensors::SensorPtr sensor, sdf::ElementPtr sdf)
 {
   parent_sensor_ = std::dynamic_pointer_cast<gazebo::sensors::RaySensor>(sensor);
-  new_laser_scans_connection_ =
-    parent_sensor_->LaserShape()->ConnectNewLaserScans(
-      std::bind(&GazeboRosIrIntensitySensor::OnNewLaserScans, this));
+  new_laser_scans_connection_ = parent_sensor_->LaserShape()->ConnectNewLaserScans(
+    std::bind(&GazeboRosIrIntensitySensor::OnNewLaserScans, this));
 
   // Configure the plugin from the SDF file
   ros_node_ = gazebo_ros::Node::Get(sdf);
@@ -44,8 +52,8 @@ void GazeboRosIrIntensitySensor::Load(gazebo::sensors::SensorPtr sensor, sdf::El
 // On each sensor iteration
 void GazeboRosIrIntensitySensor::OnNewLaserScans()
 {
-  msg_.header.stamp = gazebo_ros::Convert<builtin_interfaces::msg::Time>(
-    parent_sensor_->LastMeasurementTime());
+  msg_.header.stamp =
+    gazebo_ros::Convert<builtin_interfaces::msg::Time>(parent_sensor_->LastMeasurementTime());
   // Set range to the minimum of the ray ranges
   // For single rays, this will just be the range of the ray
   msg_.value = parent_sensor_->RangeMax();
