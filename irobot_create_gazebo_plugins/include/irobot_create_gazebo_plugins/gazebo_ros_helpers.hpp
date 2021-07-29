@@ -49,7 +49,7 @@ private:
   double next_update_period_;
 };
 
-template <typename T, typename V>
+template<typename T, typename V>
 inline bool initialize(T & var, sdf::ElementPtr sdf, const char * str, V default_value)
 {
   if (sdf->HasElement(str)) {

@@ -71,7 +71,7 @@ void GazeboRosWheelDrop::OnUpdate()
 {
   const gazebo::common::Time current_time = world_->SimTime();
   const double time_elapsed = (current_time - last_time_).Double();
-  if (!rate_enforcer_.shouldUpdate(time_elapsed)) return;
+  if (!rate_enforcer_.shouldUpdate(time_elapsed)) {return;}
 
   const double displacement{joint_->Position()};
   if ((wheel_drop_detected_ == false) && (displacement >= upper_limit_)) {
