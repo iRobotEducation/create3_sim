@@ -20,8 +20,11 @@ from rcl_interfaces.msg import SetParametersResult
 import rclpy
 from rclpy.node import Node
 
-
 class TopicRepublisher(Node):
+    """
+    A Node to republish topic A (current_topic) to the new topic B (new_topic) both of which are
+    specified by parameters.
+    """
 
     def __init__(self):
         super().__init__('topic_republisher')
@@ -40,15 +43,27 @@ class TopicRepublisher(Node):
         self.timer = self.create_timer(2.0, self.check_published_topic)
 
     def check_published_topic(self):
+        """
+        On every Timer timeout checks if the new_topic is advertised and if all parameters were set
+        before creating subscriber and publisher.
+        """
+
         current_topic_subscribers = self.get_subscriptions_info_by_topic(self.new_topic)
         if len(current_topic_subscribers) == 0 or not (self.current_topic and self.new_topic):
-            self.get_logger().debug('current_topic not yet ready for republish...')
+            self.get_logger().debug('self.current_topic not yet ready for republish...')
         else:
             self.timer.destroy()
             self.init_pub_sub(current_topic_subscribers[0].topic_type,
                               current_topic_subscribers[0].qos_profile.history)
 
     def init_pub_sub(self, msg_type, qos):
+        """
+        Creates the subscriber to current_topic and the publisher to new_topic.
+
+        msg_type: String representation of the message type.
+        qos: The QoS profile history depth to apply to subscriber and publisher.
+        """
+
         self.get_logger().info(f'Republishing {self.current_topic} to {self.new_topic}.')
 
         # Convert type string to Python module format to extract class object
@@ -62,9 +77,18 @@ class TopicRepublisher(Node):
         self.publisher = self.create_publisher(msg_class, self.new_topic, qos)
 
     def listener_callback(self, msg):
+        """
+        Subscriber callback. Republishes messages on current_topic to new_topic.
+        msg: The message to republish.
+        """
+
         self.publisher.publish(msg)
 
     def parameters_callback(self, params):
+        """
+        Parameters callback. For each parameter the corresponding variable is set.
+        params: Array of parameters set.
+        """
         for param in params:
             if param.name == 'current_topic':
                 self.current_topic = param.value
