@@ -42,7 +42,7 @@ class TopicRepublisher(Node):
     def check_published_topic(self):
         current_topic_publishers = self.get_publishers_info_by_topic(self.current_topic)
         if len(current_topic_publishers) == 0 or not (self.current_topic and self.new_topic):
-            self.get_logger().info('current_topic not yet ready for republish...')
+            self.get_logger().debug('current_topic not yet ready for republish...')
         else:
             self.timer.destroy()
             self.init_pub_sub(current_topic_publishers[0].topic_type,

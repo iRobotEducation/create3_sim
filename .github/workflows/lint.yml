@@ -7,16 +7,6 @@ on:
       - master
 
 jobs:
-  cpp_style_check:
-      runs-on: ubuntu-latest
-      name: Check C++ Style
-      steps:
-      - name: Checkout this commit
-        uses: actions/checkout@v2
-      - name: Run style checks
-        uses: coleaeason/actions-uncrustify@v1
-        with:
-          configPath: 'uncrustify.cfg'
   ament_lint:
     name: ament_${{ matrix.linter }}
     runs-on: ubuntu-20.04
@@ -36,6 +26,7 @@ jobs:
           - pycodestyle
           - pyflakes
           - xmllint
+          - uncrustify
     steps:
       - uses: actions/checkout@v2.3.4
       - uses: ros-tooling/setup-ros@0.2.1
