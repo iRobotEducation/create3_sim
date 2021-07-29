@@ -42,8 +42,12 @@ for pose_element in ['x', 'y', 'z', 'yaw']:
 
 def generate_launch_description():
     # Directories
+    pkg_create3_control = get_package_share_directory('irobot_create_control')
     pkg_create3_description = get_package_share_directory('irobot_create_description')
+
     # Paths
+    control_launch_file = PathJoinSubstitution(
+        [pkg_create3_control, 'launch', 'control.launch.py'])
     description_launch_file = PathJoinSubstitution(
         [pkg_create3_description, 'launch', 'rviz2.launch.py'])
     dock_launch_file = PathJoinSubstitution(
@@ -56,6 +60,9 @@ def generate_launch_description():
     # Includes
     robot_description = IncludeLaunchDescription(
         PythonLaunchDescriptionSource([description_launch_file])
+    )
+    diffdrive_controller = IncludeLaunchDescription(
+        PythonLaunchDescriptionSource([control_launch_file])
     )
     spawn_dock = IncludeLaunchDescription(
         PythonLaunchDescriptionSource([dock_launch_file]),
@@ -99,6 +106,7 @@ def generate_launch_description():
     ld = LaunchDescription(ARGUMENTS)
     # Include robot description
     ld.add_action(robot_description)
+    ld.add_action(diffdrive_controller)
     # Add nodes to LaunchDescription
     ld.add_action(gzserver)
     ld.add_action(gzclient)

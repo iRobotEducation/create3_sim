@@ -86,4 +86,10 @@
       rpy="${-pi/2} 0 0"/>
   </xacro:caster>
 
+  <gazebo>
+    <plugin name="gazebo_ros2_control" filename="libgazebo_ros2_control.so">
+      <parameters> $(find irobot_create_control)/config/control.yaml </parameters>
+    </plugin>
+  </gazebo>
+
 </robot>

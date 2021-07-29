@@ -1,9 +1,9 @@
 <?xml version="1.0"?>
 <?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
 <package format="3">
-  <name>irobot_create_gazebo</name>
+  <name>irobot_create_control</name>
   <version>0.0.1</version>
-  <description>Provides the Gazebo simulation for the iRobot Create 3 platform.</description>
+  <description>Provides the diff-drive controller for the iRobot Create 3 platform.</description>
   <maintainer email="ekumen@irbt.onmicrosoft.com">Ekumen</maintainer>
   <license>Apache-2.0</license>
 
@@ -11,14 +11,11 @@
 
   <buildtool_depend>ament_cmake</buildtool_depend>
 
-  <depend>urdf</depend>
-  <depend>xacro</depend>
-
-  <exec_depend>irobot_create_control</exec_depend>
-  <exec_depend>irobot_create_description</exec_depend>
-  <exec_depend>irobot_create_gazebo_plugins</exec_depend>
-  <exec_depend>gazebo_ros</exec_depend>
   <exec_depend>ros2launch</exec_depend>
+  <exec_depend>gazebo_ros2_control</exec_depend>
+  <exec_depend>joint_state_controller</exec_depend>
+  <exec_depend>ros2_controllers</exec_depend>
+  <exec_depend>irobot_create_toolbox</exec_depend>
 
   <test_depend>ament_lint_auto</test_depend>
   <test_depend>ament_lint_common</test_depend>
@@ -26,5 +23,4 @@
   <export>
     <build_type>ament_cmake</build_type>
   </export>
-
 </package>
