@@ -15,8 +15,6 @@
 #
 # Launch standard docking station in Gazebo.
 
-from typing import Text
-
 from ament_index_python.packages import get_package_share_directory
 from launch import LaunchContext, LaunchDescription, SomeSubstitutionsType, Substitution
 from launch.actions import DeclareLaunchArgument
@@ -36,7 +34,7 @@ class OffsetParser(Substitution):
     def perform(
             self,
             context: LaunchContext = None,
-    ) -> Text:
+    ) -> str:
         number = float(self.__number.perform(context))
         return f'{number + self.__offset}'
 
@@ -65,10 +63,10 @@ def generate_launch_description():
         output='screen',
         parameters=[
             {'use_sim_time': True},
-            {'robot_description': Command(['xacro', ' ', dock_xacro_file])}
+            {'robot_description': Command(['xacro', ' ', dock_xacro_file])},
         ],
         remappings=[
-            ('robot_description', 'standard_dock_description')
+            ('robot_description', 'standard_dock_description'),
         ],
     )
 
