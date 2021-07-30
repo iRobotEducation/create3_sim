@@ -25,8 +25,6 @@
 #include <irobot_create_msgs/msg/mouse.hpp>
 #include <memory>
 
-static constexpr double M_TO_INCHES = 100 / 2.54;
-
 namespace irobot_create_gazebo_plugins
 {
 /*! \brief Plugin to control odometry based on the optical mouse sensor.
