@@ -21,7 +21,6 @@ import rclpy
 from rclpy.node import Node
 
 
-
 class TopicRepublisher(Node):
     """
     Node to republish topics.
@@ -91,6 +90,7 @@ class TopicRepublisher(Node):
     def parameters_callback(self, params):
         """
         Parameters callback. For each parameter the corresponding variable is set.
+
         params: Array of parameters set.
         """
         for param in params:

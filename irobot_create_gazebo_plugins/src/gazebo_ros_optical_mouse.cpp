@@ -16,7 +16,6 @@
 #include <gazebo/physics/Model.hh>
 #include <gazebo/physics/World.hh>
 #include <gazebo_ros/conversions/builtin_interfaces.hpp>
-
 #include <irobot_create_gazebo_plugins/gazebo_ros_optical_mouse.hpp>
 
 namespace irobot_create_gazebo_plugins

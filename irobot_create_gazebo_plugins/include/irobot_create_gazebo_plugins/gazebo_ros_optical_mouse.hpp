@@ -17,12 +17,10 @@
 
 #pragma once
 
-#include <memory>
-
 #include <gazebo/common/Plugin.hh>
-
-#include <irobot_create_msgs/msg/mouse.hpp>
 #include <irobot_create_gazebo_plugins/gazebo_ros_helpers.hpp>
+#include <irobot_create_msgs/msg/mouse.hpp>
+#include <memory>
 
 static constexpr double M_TO_INCHES = 100/2.54;
 
