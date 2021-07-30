@@ -20,8 +20,11 @@ from rcl_interfaces.msg import SetParametersResult
 import rclpy
 from rclpy.node import Node
 
+
 class TopicRepublisher(Node):
     """
+    Node to republish topics.
+
     A Node to republish topic A (current_topic) to the new topic B (new_topic) both of which are
     specified by parameters.
     """
@@ -44,10 +47,11 @@ class TopicRepublisher(Node):
 
     def check_published_topic(self):
         """
+        Check status of published topic.
+
         On every Timer timeout checks if the new_topic is advertised and if all parameters were set
         before creating subscription and publisher.
         """
-
         current_topic_subscriptions = self.get_subscriptions_info_by_topic(self.new_topic)
         if len(current_topic_subscriptions) == 0 or not (self.current_topic and self.new_topic):
             self.get_logger().debug('self.current_topic not yet ready for republish...')
@@ -58,12 +62,11 @@ class TopicRepublisher(Node):
 
     def init_pub_sub(self, msg_type, qos):
         """
-        Creates the subscription to current_topic and the publisher to new_topic.
+        Create the subscription to current_topic and the publisher to new_topic.
 
         msg_type: String representation of the message type.
         qos: The QoS profile history depth to apply to subscription and publisher.
         """
-
         self.get_logger().info(f'Republishing {self.current_topic} to {self.new_topic}.')
 
         # Convert type string to Python module format to extract class object
@@ -78,15 +81,16 @@ class TopicRepublisher(Node):
 
     def listener_callback(self, msg):
         """
-        Subscription callback. Republishes messages on current_topic to new_topic.
+        Subscription callback. Republish messages on current_topic to new_topic.
+
         msg: The message to republish.
         """
-
         self.publisher.publish(msg)
 
     def parameters_callback(self, params):
         """
         Parameters callback. For each parameter the corresponding variable is set.
+
         params: Array of parameters set.
         """
         for param in params:
@@ -106,7 +110,6 @@ def main(args=None):
     executing the node. The republisher will wait until parameters are set and atleast one
     subscription to new_topic exists before republishing from current_topic.
     """
-
     rclpy.init(args=args)
     topic_republisher = TopicRepublisher()
     rclpy.spin(topic_republisher)
