@@ -50,9 +50,6 @@ void GazeboRosOpticalMouse::Load(gazebo::physics::ModelPtr model, sdf::ElementPt
   pub_ = ros_node_->create_publisher<irobot_create_msgs::msg::Mouse>(
     topic_name_, qos.get_publisher_qos(topic_name_, rclcpp::SensorDataQoS()));
 
-  std::cout << "publisher to " << topic_name_ << " created" << std::endl;
-
-
   // Create a connection so the OnUpdate function is called at every simulation
   // iteration. Remove this call, the connection and the callback if not needed.
   update_connection_ = gazebo::event::Events::ConnectWorldUpdateBegin(

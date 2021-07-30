@@ -4,11 +4,6 @@
 
   <xacro:macro name="mouse" params="name:=mouse parent_link *origin update_rate" >
 
-    <!-- Sensor settings -->
-    <xacro:property name="mass" value="0.1" />
-    <xacro:property name="length" value="0.008" /> <!-- Length -->
-    <xacro:property name="radius" value="0.01" /> <!-- Radius -->
-
     <joint name="${name}_joint" type="fixed">
       <xacro:insert_block name="origin"/>
       <parent link="${parent_link}"/>
@@ -16,7 +11,7 @@
     </joint>
 
     <link name="${name}">
-      <xacro:inertial_cylinder mass="${mass}" length="${length}" radius="${radius}" />
+      <xacro:inertial_dummy />
     </link>
 
     <gazebo>
