@@ -69,9 +69,6 @@ private:
   /// World pointer
   gazebo::physics::WorldPtr world_{nullptr};
 
-  /// Topic name
-  const std::string topic_name_{"mouse"};
-
   /// ROS publisher
   rclcpp::Publisher<irobot_create_msgs::msg::Mouse>::SharedPtr pub_{nullptr};
 
