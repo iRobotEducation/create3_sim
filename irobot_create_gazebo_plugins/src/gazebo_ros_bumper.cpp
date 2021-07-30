@@ -1,4 +1,4 @@
-#include <irobot_gazebo_plugins/gazebo_ros_bumper.h>
+#include <irobot_create_gazebo_plugins/gazebo_ros_bumper.h>
 
 namespace irobot_gazebo_plugins
 {

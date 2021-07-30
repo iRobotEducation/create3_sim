@@ -36,7 +36,7 @@
       <contact>
         <collision>${name}_link_collision</collision>
       </contact>
-      <plugin name="bumper_controller" filename="libgazebo_ros_irobot_bumper.so"/>
+      <plugin name="bumper_controller" filename="libgazebo_ros_create_bumper.so"/>
     </sensor>
   </gazebo>
 
