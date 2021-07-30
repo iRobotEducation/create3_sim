@@ -30,6 +30,14 @@
     <minDepth>0.001</minDepth>
     <maxContacts>10</maxContacts>
     <material>Gazebo/DarkGrey</material>
+    <sensor name='${name}_contact_sensor' type='contact'>
+      <always_on>true</always_on>
+      <update_rate>62</update_rate>
+      <contact>
+        <collision>${name}_link_collision</collision>
+      </contact>
+      <plugin name="bumper_controller" filename="libgazebo_ros_irobot_bumper.so"/>
+    </sensor>
   </gazebo>
 
   <gazebo reference="${name}_joint">
