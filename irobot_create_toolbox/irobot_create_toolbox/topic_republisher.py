@@ -22,7 +22,12 @@ from rclpy.node import Node
 
 
 class TopicRepublisher(Node):
-    """A Node to republish topic A (current_topic) to the new topic B (new_topic) both of which are specified by parameters."""
+    """
+    Node to republish topics.
+
+    A Node to republish topic A (current_topic) to the new topic B (new_topic) both of which are
+    specified by parameters.
+    """
 
     def __init__(self):
         super().__init__('topic_republisher')
