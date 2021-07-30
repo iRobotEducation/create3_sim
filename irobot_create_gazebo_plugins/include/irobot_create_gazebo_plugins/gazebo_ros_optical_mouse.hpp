@@ -12,12 +12,15 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 //
-// @author Rodrigo Jose Causarano Nunez
-// Contact: rcausaran@irobot.com
+// @author Rodrigo Jose Causarano Nunez (rcausaran@irobot.com)
 
 #pragma once
 
 #include <gazebo/common/Plugin.hh>
+#include <gazebo_ros/conversions/builtin_interfaces.hpp>
+#include <gazebo/physics/Link.hh>
+#include <gazebo/physics/Model.hh>
+#include <gazebo/physics/World.hh>
 #include <irobot_create_gazebo_plugins/gazebo_ros_helpers.hpp>
 #include <irobot_create_msgs/msg/mouse.hpp>
 #include <memory>
@@ -70,9 +73,6 @@ private:
 
   /// Topic name
   const std::string topic_name_{"mouse"};
-
-  /// Sensor resolution
-  double resolution_ = 0;
 
   /// ROS publisher
   rclcpp::Publisher<irobot_create_msgs::msg::Mouse>::SharedPtr pub_{nullptr};

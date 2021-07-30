@@ -1,4 +1,4 @@
-// Copyright 2018 Open Source Robotics Foundation, Inc.
+// Copyright 2021 iRobot, Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -11,11 +11,9 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
+//
+// @author Rodrigo Jose Causarano Nunez (rcausaran@irobot.com)
 
-#include <gazebo/physics/Link.hh>
-#include <gazebo/physics/Model.hh>
-#include <gazebo/physics/World.hh>
-#include <gazebo_ros/conversions/builtin_interfaces.hpp>
 #include <irobot_create_gazebo_plugins/gazebo_ros_optical_mouse.hpp>
 
 namespace irobot_create_gazebo_plugins
@@ -31,17 +29,11 @@ void GazeboRosOpticalMouse::Load(gazebo::physics::ModelPtr model, sdf::ElementPt
 
   std::string link_name;
   double update_rate;
-  double gaussian_mean;
-  double gaussian_var;
-  int seed;
   srand(time(0));
 
   // Get plugin parameters
   utils::initialize(link_name, sdf, "link", "base_link");
   utils::initialize(update_rate, sdf, "update_rate", 100.0);
-  utils::initialize(gaussian_mean, sdf, "gaussian_mean", 0.0);
-  utils::initialize(gaussian_var, sdf, "gaussian_var", 0.0);
-  utils::initialize(seed, sdf, "mouse_seed", rand());
 
   // Get link
   link_ = model->GetLink(link_name);
@@ -57,6 +49,9 @@ void GazeboRosOpticalMouse::Load(gazebo::physics::ModelPtr model, sdf::ElementPt
   // Initialize ROS publisher
   pub_ = ros_node_->create_publisher<irobot_create_msgs::msg::Mouse>(
     topic_name_, qos.get_publisher_qos(topic_name_, rclcpp::SensorDataQoS()));
+
+  std::cout << "publisher to " << topic_name_ << " created" << std::endl;
+
 
   // Create a connection so the OnUpdate function is called at every simulation
   // iteration. Remove this call, the connection and the callback if not needed.

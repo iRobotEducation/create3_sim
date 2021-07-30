@@ -98,7 +98,6 @@
   <!-- Optical mouse -->
   <xacro:mouse
       parent_link="base_link"
-      mouse_seed="0.0"
       update_rate="${mouse_update_rate}">
     <origin xyz="0.1015 0.087 -0.055" rpy="0 0 ${-pi/4}"/>
   </xacro:mouse>

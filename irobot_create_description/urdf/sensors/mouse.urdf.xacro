@@ -2,55 +2,34 @@
 
 <robot xmlns:xacro="http://ros.org/wiki/xacro">
 
-  <xacro:macro name="mouse" params="name:=mouse parent_link *origin visualize:=true noise_mean:=0.0
-                                            noise_var:=0.0 mouse_seed:=0.0 update_rate" >
+  <xacro:macro name="mouse" params="name:=mouse parent_link *origin update_rate" >
 
     <!-- Sensor settings -->
     <xacro:property name="mass" value="0.1" />
     <xacro:property name="length" value="0.008" /> <!-- Length -->
     <xacro:property name="radius" value="0.01" /> <!-- Radius -->
 
-    <!-- Visualization settings -->
-    <xacro:property name="color" value="Red" />
-
-    <joint name="mouse_joint" type="fixed">
+    <joint name="${name}_joint" type="fixed">
       <xacro:insert_block name="origin"/>
       <parent link="${parent_link}"/>
       <child link="${name}"/>
     </joint>
 
     <link name="${name}">
-      <xacro:if value="${visualize}">
-        <visual>
-          <geometry>
-            <cylinder length="${length}" radius="${radius}" />
-          </geometry>
-        </visual>
-      </xacro:if>
       <xacro:inertial_cylinder mass="${mass}" length="${length}" radius="${radius}" />
     </link>
 
     <gazebo>
-      <plugin name="gazebo_ros_optical_mouse" filename="libgazebo_ros_create_optical_mouse.so">
+      <plugin name="${name}_plugin" filename="libgazebo_ros_create_optical_mouse.so">
         <ros>
           <namespace>/</namespace>
         </ros>
         <update_rate>${update_rate}</update_rate>
         <link>${name}</link>
-        <gaussian_mean>${noise_mean}</gaussian_mean>
-        <gaussian_var>${noise_var}</gaussian_var>
-        <xacro:if value="${mouse_seed > 0}">
-          <!-- Only pass the value if it's possitive. Otherwise, use random. -->
-          <mouse_seed>${mouse_seed}</mouse_seed>
-        </xacro:if>
       </plugin>
     </gazebo>
 
-    <gazebo reference="o${name}" >
-      <material>Gazebo/${color}</material>
-    </gazebo>
-
-    <gazebo reference="mouse_joint" >
+    <gazebo reference="${name}_joint" >
       <preserveFixedJoint>true</preserveFixedJoint>
     </gazebo>
   </xacro:macro>
