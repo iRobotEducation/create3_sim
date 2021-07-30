@@ -2,8 +2,8 @@
 
 <robot xmlns:xacro="http://ros.org/wiki/xacro">
 
-  <xacro:macro name="optical_mouse" params="name parent *origin ros_topic visualize noise_mean:=0
-                                            noise_var:=0 mouse_seed update_rate" >
+  <xacro:macro name="mouse" params="name:=mouse parent_link *origin visualize:=true noise_mean:=0.0
+                                            noise_var:=0.0 mouse_seed:=0.0 update_rate" >
 
     <!-- Sensor settings -->
     <xacro:property name="mass" value="0.1" />
@@ -13,13 +13,13 @@
     <!-- Visualization settings -->
     <xacro:property name="color" value="Red" />
 
-    <joint name="optical_mouse_joint" type="fixed">
+    <joint name="mouse_joint" type="fixed">
       <xacro:insert_block name="origin"/>
-      <parent link="${parent}"/>
-      <child link="optical_mouse_${name}_link"/>
+      <parent link="${parent_link}"/>
+      <child link="${name}"/>
     </joint>
 
-    <link name="optical_mouse_${name}_link">
+    <link name="${name}">
       <xacro:if value="${visualize}">
         <visual>
           <geometry>
@@ -36,7 +36,7 @@
           <namespace>/</namespace>
         </ros>
         <update_rate>${update_rate}</update_rate>
-        <link>optical_mouse_${name}_link</link>
+        <link>${name}</link>
         <gaussian_mean>${noise_mean}</gaussian_mean>
         <gaussian_var>${noise_var}</gaussian_var>
         <xacro:if value="${mouse_seed > 0}">
@@ -46,11 +46,11 @@
       </plugin>
     </gazebo>
 
-    <gazebo reference="optical_mouse_${name}_link" >
+    <gazebo reference="o${name}" >
       <material>Gazebo/${color}</material>
     </gazebo>
 
-    <gazebo reference="optical_mouse_joint" >
+    <gazebo reference="mouse_joint" >
       <preserveFixedJoint>true</preserveFixedJoint>
     </gazebo>
   </xacro:macro>

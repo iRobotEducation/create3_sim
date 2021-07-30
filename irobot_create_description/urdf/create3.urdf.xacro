@@ -3,7 +3,7 @@
   <xacro:include filename="$(find irobot_create_description)/urdf/bumper.urdf.xacro" />
   <xacro:include filename="$(find irobot_create_description)/urdf/caster.urdf.xacro" />
   <xacro:include filename="$(find irobot_create_description)/urdf/common_properties.urdf.xacro"/>
-  <xacro:include filename="$(find irobot_create_description)/urdf/sensors/optical_mouse.urdf.xacro"/>
+  <xacro:include filename="$(find irobot_create_description)/urdf/sensors/mouse.urdf.xacro"/>
   <xacro:include filename="$(find irobot_create_description)/urdf/wheel_with_wheeldrop.urdf.xacro" />
 
 
@@ -28,6 +28,8 @@
   <xacro:property name="inertial_offset_x_cm"       value="1" />
 
   <xacro:property name="wheel_drop_offset_z_mm"     value="3.5"/>
+  <xacro:property name="wheel_drop_z"               value="${wheel_height_cm*cm2m + wheel_drop_offset_z_mm*mm2m}"/>
+
   <xacro:property name="mouse_update_rate"          value="62" />
 
   <!-- Create 3 base definitions-->
@@ -60,7 +62,6 @@
   <!-- Bumper -->
   <xacro:bumper
       parent_link="base_link"
-      robot_type="create3"
       visual_mesh="file://$(find irobot_create_description)/meshes/bumper_visual.dae"
       collision_mesh="file://$(find irobot_create_description)/meshes/bumper_collision.dae">
     <origin xyz="0 0 ${bumper_offset_z_cm*cm2m}" rpy="0 0 ${pi/2}"/>
@@ -74,7 +75,6 @@
   </xacro:bumper>
 
   <!-- Wheels with mechanical wheel drop -->
-  <xacro:property name="wheel_drop_z" value="${wheel_height_cm*cm2m + wheel_drop_offset_z_mm*mm2m}"/>
   <xacro:wheel_with_wheeldrop name="left">
     <origin xyz="0 ${distance_between_wheels_cm*cm2m/2} ${wheel_drop_z}" rpy="${-pi/2} 0 0"/>
   </xacro:wheel_with_wheeldrop>
@@ -96,14 +96,11 @@
   </gazebo>
 
   <!-- Optical mouse -->
-  <xacro:optical_mouse name="optical_mouse"
-                      parent="base_link"
-                      ros_topic="optical_mouse"
-                      visualize="true"
-                      noise_mean="0.0"
-                      noise_var="0.0"
-                      mouse_seed="0.0" update_rate="${mouse_update_rate}">
-  <origin xyz="0.1015 0.087 -0.055" rpy="0 0 ${-pi/4}"/>
-</xacro:optical_mouse>
+  <xacro:mouse
+      parent_link="base_link"
+      mouse_seed="0.0"
+      update_rate="${mouse_update_rate}">
+    <origin xyz="0.1015 0.087 -0.055" rpy="0 0 ${-pi/4}"/>
+  </xacro:mouse>
 
 </robot>
