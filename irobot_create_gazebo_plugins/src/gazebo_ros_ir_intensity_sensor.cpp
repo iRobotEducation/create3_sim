@@ -62,9 +62,8 @@ void GazeboRosIrIntensitySensor::OnNewLaserScans()
   std::vector<double> ranges;
   parent_sensor_->Ranges(ranges);
   auto detection_ptr = std::min_element(std::begin(ranges), std::end(ranges));
-  if( detection_ptr != std::end(ranges) ) detection = * detection_ptr;
-  RCLCPP_DEBUG_STREAM(
-    ros_node_->get_logger(), "IR reporting " << detection << " m");
+  if (detection_ptr != std::end(ranges)) detection = *detection_ptr;
+  RCLCPP_DEBUG_STREAM(ros_node_->get_logger(), "IR reporting " << detection << " m");
 
   // IR sensor produces an exponential signal that is corelated to the distance,
   // that follows this formula: ir_reading = A exp(-x*B)
@@ -73,7 +72,7 @@ void GazeboRosIrIntensitySensor::OnNewLaserScans()
   // it an be as much as 3500
   // B is the decay of the signal related to the distance.
   // From the experiments B ~ 26.831568
-  const double scaled_detection = 3500*std::exp(detection * (-2 * M_E/max_range_));
+  const double scaled_detection = 3500 * std::exp(detection * (-2 * M_E / max_range_));
 
   msg_.value = static_cast<irobot_create_msgs::msg::IrIntensity::_value_type>(scaled_detection);
   // Publish
