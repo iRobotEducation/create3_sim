@@ -22,7 +22,7 @@
 #include <irobot_create_msgs/msg/mouse.hpp>
 #include <memory>
 
-static constexpr double M_TO_INCHES = 100/2.54;
+static constexpr double M_TO_INCHES = 100 / 2.54;
 
 namespace irobot_create_gazebo_plugins
 {
@@ -53,29 +53,29 @@ public:
 
 protected:
   /// Optional callback to be called at every simulation iteration.
-  void OnUpdate(const gazebo::common::UpdateInfo& info);
+  void OnUpdate(const gazebo::common::UpdateInfo & info);
 
 private:
   /// Connection to world update event. Callback is called while this is alive.
-  gazebo::event::ConnectionPtr update_connection_{ nullptr };
+  gazebo::event::ConnectionPtr update_connection_{nullptr};
 
   /// Node for ROS communication.
-  gazebo_ros::Node::SharedPtr ros_node_{ nullptr };
+  gazebo_ros::Node::SharedPtr ros_node_{nullptr};
 
   /// Link pointer to sensor
-  gazebo::physics::LinkPtr link_{ nullptr };
+  gazebo::physics::LinkPtr link_{nullptr};
 
   /// World pointer
-  gazebo::physics::WorldPtr world_{ nullptr };
+  gazebo::physics::WorldPtr world_{nullptr};
 
   /// Topic name
-  const std::string topic_name_{ "mouse" };
+  const std::string topic_name_{"mouse"};
 
   /// Sensor resolution
   double resolution_ = 0;
 
   /// ROS publisher
-  rclcpp::Publisher<irobot_create_msgs::msg::Mouse>::SharedPtr pub_{ nullptr };
+  rclcpp::Publisher<irobot_create_msgs::msg::Mouse>::SharedPtr pub_{nullptr};
 
   /// Last time the sensor was updated
   gazebo::common::Time last_time_;

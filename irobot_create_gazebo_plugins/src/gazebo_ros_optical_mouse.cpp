@@ -20,14 +20,9 @@
 
 namespace irobot_create_gazebo_plugins
 {
-GazeboRosOpticalMouse::GazeboRosOpticalMouse()
-  : ModelPlugin()
-{
-}
+GazeboRosOpticalMouse::GazeboRosOpticalMouse() : ModelPlugin() {}
 
-GazeboRosOpticalMouse::~GazeboRosOpticalMouse()
-{
-}
+GazeboRosOpticalMouse::~GazeboRosOpticalMouse() {}
 
 void GazeboRosOpticalMouse::Load(gazebo::physics::ModelPtr model, sdf::ElementPtr sdf)
 {
@@ -57,22 +52,22 @@ void GazeboRosOpticalMouse::Load(gazebo::physics::ModelPtr model, sdf::ElementPt
   // can be handled.
   ros_node_ = gazebo_ros::Node::Get(sdf);
   // Get QoS profiles
-  const gazebo_ros::QoS& qos = ros_node_->get_qos();
+  const gazebo_ros::QoS & qos = ros_node_->get_qos();
 
   // Initialize ROS publisher
   pub_ = ros_node_->create_publisher<irobot_create_msgs::msg::Mouse>(
-      topic_name_, qos.get_publisher_qos(topic_name_, rclcpp::SensorDataQoS()));
+    topic_name_, qos.get_publisher_qos(topic_name_, rclcpp::SensorDataQoS()));
 
   // Create a connection so the OnUpdate function is called at every simulation
   // iteration. Remove this call, the connection and the callback if not needed.
   update_connection_ = gazebo::event::Events::ConnectWorldUpdateBegin(
-      std::bind(&GazeboRosOpticalMouse::OnUpdate, this, std::placeholders::_1));
+    std::bind(&GazeboRosOpticalMouse::OnUpdate, this, std::placeholders::_1));
 
   // Rate enforcer
   update_rate_enforcer_.load(update_rate);
 
   // Initialize time and pose markers
-  last_time_  = world_->SimTime();
+  last_time_ = world_->SimTime();
   last_pose_ = link_->WorldPose();
   integrated_position_ = {0, 0, 0};
 
@@ -80,14 +75,15 @@ void GazeboRosOpticalMouse::Load(gazebo::physics::ModelPtr model, sdf::ElementPt
 }
 
 // Function is called when the world is reset
-void GazeboRosOpticalMouse::Reset() {
+void GazeboRosOpticalMouse::Reset()
+{
   // Is necessary to reset time (it moved backwards)
-  last_time_  = world_->SimTime();
+  last_time_ = world_->SimTime();
   // Update pose because it was reset
   last_pose_ = link_->WorldPose();
 }
 
-void GazeboRosOpticalMouse::OnUpdate(const gazebo::common::UpdateInfo& info)
+void GazeboRosOpticalMouse::OnUpdate(const gazebo::common::UpdateInfo & info)
 {
   const gazebo::common::Time current_time = info.simTime;
 
@@ -99,13 +95,12 @@ void GazeboRosOpticalMouse::OnUpdate(const gazebo::common::UpdateInfo& info)
   const double time_elapsed = (current_time - last_time_).Double();
 
   // Check if on this iteration corresponds to send the message
-  if (update_rate_enforcer_.shouldUpdate(time_elapsed))
-  {
+  if (update_rate_enforcer_.shouldUpdate(time_elapsed)) {
     // Get pose
     const ignition::math::Pose3d current_pose = link_->WorldPose();
     // Pose difference with respect to the last mouse link pose. The result is a Pose from
     // the last pose to the current pose.
-    const ignition::math::Vector3d& position_displacement = (current_pose - last_pose_).Pos();
+    const ignition::math::Vector3d & position_displacement = (current_pose - last_pose_).Pos();
 
     // configure an empty message with the timestamp
     irobot_create_msgs::msg::Mouse msg;
