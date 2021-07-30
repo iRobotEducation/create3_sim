@@ -81,7 +81,7 @@ class TopicRepublisher(Node):
 
     def listener_callback(self, msg):
         """
-        Subscription callback. Republishes messages on current_topic to new_topic.
+        Subscription callback. Republish messages on current_topic to new_topic.
 
         msg: The message to republish.
         """
