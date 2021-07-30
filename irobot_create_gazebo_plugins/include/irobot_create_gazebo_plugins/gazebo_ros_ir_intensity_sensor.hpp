@@ -32,7 +32,7 @@
 #include <std_msgs/msg/bool.hpp>
 #include <vector>
 
-namespace irobot_gazebo_plugins
+namespace irobot_create_gazebo_plugins
 {
 class GazeboRosIrIntensitySensor : public gazebo::SensorPlugin
 {
@@ -70,4 +70,4 @@ private:
   // Maximum range detected by the sensor
   double max_range_{std::numeric_limits<double>::max()};
 };
-}  // namespace irobot_gazebo_plugins
+}  // namespace irobot_create_gazebo_plugins

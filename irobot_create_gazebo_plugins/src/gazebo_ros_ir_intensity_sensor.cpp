@@ -16,7 +16,7 @@
 
 #include <irobot_create_gazebo_plugins/gazebo_ros_ir_intensity_sensor.hpp>
 
-namespace irobot_gazebo_plugins
+namespace irobot_create_gazebo_plugins
 {
 // Register this plugin with the simulator
 GZ_REGISTER_SENSOR_PLUGIN(GazeboRosIrIntensitySensor)
@@ -79,4 +79,4 @@ void GazeboRosIrIntensitySensor::OnNewLaserScans()
   pub_->publish(msg_);
 }
 
-}  // namespace irobot_gazebo_plugins
+}  // namespace irobot_create_gazebo_plugins
