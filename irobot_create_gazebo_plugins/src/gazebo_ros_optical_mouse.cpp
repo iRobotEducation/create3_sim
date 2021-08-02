@@ -91,7 +91,7 @@ void GazeboRosOpticalMouse::OnUpdate(const gazebo::common::UpdateInfo & info)
     // the last pose to the current pose.
     const ignition::math::Vector3d & position_displacement = (current_pose - last_pose_).Pos();
 
-    // configure an empty message with the timestamp
+    // Configure an empty message with the timestamp
     irobot_create_msgs::msg::Mouse msg;
     msg.header.stamp = gazebo_ros::Convert<builtin_interfaces::msg::Time>(current_time);
 
