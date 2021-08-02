@@ -6,6 +6,7 @@
   <xacro:include filename="$(find irobot_create_description)/urdf/sensors/ir_intensity.urdf.xacro" />
   <xacro:include filename="$(find irobot_create_description)/urdf/sensors/optical_mouse.urdf.xacro"/>
   <xacro:include filename="$(find irobot_create_description)/urdf/wheel_with_wheeldrop.urdf.xacro" />
+  <xacro:include filename="$(find irobot_create_description)/urdf/sensors/imu.urdf.xacro" />
 
 
   <!-- MECHANICAL PROPERTIES -->
@@ -88,6 +89,11 @@
     <origin xyz="${caster_position_x_cm*cm2m} ${caster_position_y_cm*cm2m} ${caster_position_z_cm*cm2m}"
       rpy="${-pi/2} 0 0"/>
   </xacro:caster>
+
+  <!-- IMU -->
+  <xacro:imu_sensor>
+  <origin xyz="0.050613 0.043673 0.0202"/>
+</xacro:imu_sensor>
 
   <gazebo>
     <plugin name="gazebo_ros2_control" filename="libgazebo_ros2_control.so">
