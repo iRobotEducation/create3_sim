@@ -43,12 +43,9 @@ void GazeboRosOpticalMouse::Load(gazebo::physics::ModelPtr model, sdf::ElementPt
   // Pass it SDF parameters so common options like namespace and remapping
   // can be handled.
   ros_node_ = gazebo_ros::Node::Get(sdf);
-  // Get QoS profiles
-  const gazebo_ros::QoS & qos = ros_node_->get_qos();
-
   // Initialize ROS publisher
   pub_ = ros_node_->create_publisher<irobot_create_msgs::msg::Mouse>(
-    "~/out", qos.get_publisher_qos("~/out", rclcpp::SensorDataQoS()));
+    "~/out", rclcpp::SensorDataQoS());
 
   // Create a connection so the OnUpdate function is called at every simulation
   // iteration. Remove this call, the connection and the callback if not needed.
