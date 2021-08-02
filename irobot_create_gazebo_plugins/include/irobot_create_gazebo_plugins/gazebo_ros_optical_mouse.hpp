@@ -79,7 +79,7 @@ private:
   ignition::math::Pose3d last_pose_;
 
   /// Integrated position of the sensor
-  ignition::math::Vector3d integrated_position_;
+  ignition::math::Vector2d integrated_position_;
 
   /// Helper class to enforce a specific update rate
   utils::UpdateRateEnforcer update_rate_enforcer_;
