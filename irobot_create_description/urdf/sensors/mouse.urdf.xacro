@@ -1,7 +1,5 @@
 <?xml version="1.0"?>
-
 <robot xmlns:xacro="http://ros.org/wiki/xacro">
-
   <xacro:macro name="mouse" params="name:=mouse parent_link *origin update_rate" >
 
     <joint name="${name}_joint" type="fixed">
