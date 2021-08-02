@@ -18,14 +18,9 @@
 
 namespace irobot_create_gazebo_plugins
 {
+GazeboRosImu::GazeboRosImu() {}
 
-GazeboRosImu::GazeboRosImu()
-{
-}
-
-GazeboRosImu::~GazeboRosImu()
-{
-}
+GazeboRosImu::~GazeboRosImu() {}
 
 void GazeboRosImu::Load(gazebo::sensors::SensorPtr _sensor, sdf::ElementPtr _sdf)
 {
@@ -42,8 +37,8 @@ void GazeboRosImu::Load(gazebo::sensors::SensorPtr _sensor, sdf::ElementPtr _sdf
 
   sensor_->SetWorldToReferenceOrientation(ignition::math::Quaterniond::Identity);
 
-  pub_ =
-    ros_node_->create_publisher<sensor_msgs::msg::Imu>("~/out", qos.get_publisher_qos("~/out", rclcpp::SensorDataQoS()));
+  pub_ = ros_node_->create_publisher<sensor_msgs::msg::Imu>(
+    "~/out", qos.get_publisher_qos("~/out", rclcpp::SensorDataQoS()));
 
   // Create message to be reused
   auto msg = std::make_shared<sensor_msgs::msg::Imu>();
@@ -53,24 +48,21 @@ void GazeboRosImu::Load(gazebo::sensors::SensorPtr _sensor, sdf::ElementPtr _sdf
 
   msg_ = msg;
 
-  sensor_update_event_ = sensor_->ConnectUpdated(
-    std::bind(&GazeboRosImu::OnUpdate, this));
+  sensor_update_event_ = sensor_->ConnectUpdated(std::bind(&GazeboRosImu::OnUpdate, this));
 }
 
 void GazeboRosImu::OnUpdate()
 {
   // Fill message with latest sensor data
-  msg_->header.stamp = gazebo_ros::Convert<builtin_interfaces::msg::Time>(
-    sensor_->LastUpdateTime());
-  msg_->orientation =
-    gazebo_ros::Convert<geometry_msgs::msg::Quaternion>(sensor_->Orientation());
-  msg_->angular_velocity = gazebo_ros::Convert<geometry_msgs::msg::Vector3>(
-    sensor_->AngularVelocity());
-  msg_->linear_acceleration = gazebo_ros::Convert<geometry_msgs::msg::Vector3>(
-    sensor_->LinearAcceleration());
+  msg_->header.stamp =
+    gazebo_ros::Convert<builtin_interfaces::msg::Time>(sensor_->LastUpdateTime());
+  msg_->orientation = gazebo_ros::Convert<geometry_msgs::msg::Quaternion>(sensor_->Orientation());
+  msg_->angular_velocity =
+    gazebo_ros::Convert<geometry_msgs::msg::Vector3>(sensor_->AngularVelocity());
+  msg_->linear_acceleration =
+    gazebo_ros::Convert<geometry_msgs::msg::Vector3>(sensor_->LinearAcceleration());
   // Publish message
   pub_->publish(*msg_);
-
 }
 
 GZ_REGISTER_SENSOR_PLUGIN(GazeboRosImu)

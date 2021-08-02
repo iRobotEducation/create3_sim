@@ -20,8 +20,8 @@
 #include <gazebo_ros/conversions/builtin_interfaces.hpp>
 #include <gazebo_ros/conversions/geometry_msgs.hpp>
 #include <gazebo_ros/utils.hpp>
-#include <sensor_msgs/msg/imu.hpp>
 #include <irobot_create_gazebo_plugins/gazebo_ros_helpers.hpp>
+#include <sensor_msgs/msg/imu.hpp>
 
 namespace irobot_create_gazebo_plugins
 {
@@ -38,7 +38,6 @@ public:
   void Load(gazebo::sensors::SensorPtr _sensor, sdf::ElementPtr _sdf) override;
 
 private:
-
   /// Node for ros communication
   gazebo_ros::Node::SharedPtr ros_node_;
   /// Publish for imu message
