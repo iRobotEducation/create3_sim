@@ -29,7 +29,6 @@ void GazeboRosOpticalMouse::Load(gazebo::physics::ModelPtr model, sdf::ElementPt
 
   std::string link_name;
   double update_rate;
-  srand(time(0));
 
   // Get plugin parameters
   utils::initialize(link_name, sdf, "link", "base_link");
