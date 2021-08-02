@@ -41,7 +41,7 @@ void GazeboRosBumper::Load(gazebo::sensors::SensorPtr sensor, sdf::ElementPtr sd
 
   // Make sure the parent sensor is active.
   bumper_->SetActive(true);
-  RCLCPP_INFO(rosnode_->get_logger(), "[IROBOT BUMPER] Bumper plugin loaded correctly");
+  RCLCPP_INFO(rosnode_->get_logger(), "Bumper plugin loaded correctly");
 }
 
 void GazeboRosBumper::OnUpdate()
