@@ -27,8 +27,8 @@ void GazeboRosOpticalMouse::Load(gazebo::physics::ModelPtr model, sdf::ElementPt
   world_ = model->GetWorld();
   GZ_ASSERT(world_, "World pointer is invalid!");
 
-  std::string link_name;
-  double update_rate;
+  std::string link_name{""};
+  double update_rate{62.0};
   srand(time(0));
 
   // Get plugin parameters
