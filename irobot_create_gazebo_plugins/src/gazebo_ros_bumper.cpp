@@ -64,7 +64,7 @@ void GazeboRosBumper::OnUpdate()
     }
     const ignition::math::Vector3d r_vec = r_tf_w_.Inverse() * c_vec;
     const double relative_contact_angle_xy = std::atan2(r_vec.Y(), r_vec.X());
-    // Check what zone of the bumper has bumped
+    // Check what zone of the bumper has hit an object
     // Only publish if the bump event corresponds to one of the zones
     // "released" events are not publsihed.
     for (auto & bumper_zone : bumper_angles_map) {
