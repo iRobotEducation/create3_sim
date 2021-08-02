@@ -16,7 +16,7 @@
 
 #include <irobot_create_gazebo_plugins/gazebo_ros_bumper.hpp>
 
-namespace irobot_gazebo_plugins
+namespace irobot_create_gazebo_plugins
 {
 void GazeboRosBumper::Load(gazebo::sensors::SensorPtr sensor, sdf::ElementPtr sdf)
 {
@@ -38,6 +38,9 @@ void GazeboRosBumper::Load(gazebo::sensors::SensorPtr sensor, sdf::ElementPtr sd
   gz_node_.reset(new gazebo::transport::Node());
   gz_node_->Init();
   gz_sub_ = gz_node_->Subscribe("~/pose/local/info", &GazeboRosBumper::GzPoseCallback, this);
+
+  // Set the hazard type a single time.
+  msg_.type = irobot_create_msgs::msg::HazardDetection::BUMP;
 
   // Make sure the parent sensor is active.
   bumper_->SetActive(true);
@@ -65,12 +68,11 @@ void GazeboRosBumper::OnUpdate()
     // Only publish if the bump event corresponds to one of the zones
     // "released" events are not publsihed.
     for (auto & bumper_zone : bumper_angles_map) {
-      if (IsAngleBetween(
+      if (utils::IsAngleBetween(
             relative_contact_angle_xy, bumper_zone.second.left_limit,
             bumper_zone.second.right_limit)) {
         // Fill and publish a message
         msg_.header.frame_id = bumper_zone.second.name;
-        msg_.type = irobot_create_msgs::msg::HazardDetection::BUMP;
         bumper_pub_->publish(msg_);
         break;
       }
@@ -100,4 +102,4 @@ void GazeboRosBumper::GzPoseCallback(ConstPosesStampedPtr & msg)
 // Register this plugin with the simulator
 GZ_REGISTER_SENSOR_PLUGIN(GazeboRosBumper)
 
-}  // namespace irobot_gazebo_plugins
+}  // namespace irobot_create_gazebo_plugins

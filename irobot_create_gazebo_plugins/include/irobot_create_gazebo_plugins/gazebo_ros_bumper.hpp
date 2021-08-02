@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 //
-// @author Alexis Pojomovsky (apojomovskyt @irobot.com)
+// @author Alexis Pojomovsky (apojomovsky@irobot.com)
 
 #pragma once
 
@@ -25,40 +25,14 @@
 #include <gazebo/transport/transport.hh>
 #include <gazebo_ros/conversions/builtin_interfaces.hpp>
 #include <gazebo_ros/node.hpp>
+#include <irobot_create_gazebo_plugins/gazebo_ros_helpers.hpp>
 #include <irobot_create_msgs/msg/hazard_detection.hpp>
 #include <memory>
 #include <string>
 #include <tuple>
 
-namespace irobot_gazebo_plugins
+namespace irobot_create_gazebo_plugins
 {
-/// \brief Convert radians to degradians
-inline int Rad2Deg(double radians) { return radians / M_PI * 180; }
-
-/**
- * https://stackoverflow.com/a/11412077
- *
- */
-bool IsAngleBetween(double target, double angle1, double angle2)
-{
-  int t = Rad2Deg(target);
-  int a1 = Rad2Deg(angle1);
-  int a2 = Rad2Deg(angle2);
-
-  // make the angle from a1 to a2 to be <= 180 degrees
-  int r = ((a2 - a1) % 360 + 360) % 360;
-  if (r >= 180) {
-    std::swap(a1, a2);
-  }
-
-  // check if it passes through zero
-  if (a1 <= a2) {
-    return (t >= a1) && (t <= a2);
-  } else {
-    return (t >= a1) || (t <= a2);
-  }
-}
-
 /// \brief Bumper controller
 class GazeboRosBumper : public gazebo::SensorPlugin
 {
@@ -129,4 +103,4 @@ private:
   void GzPoseCallback(ConstPosesStampedPtr & msg);
 };
 
-}  // namespace irobot_gazebo_plugins
+}  // namespace irobot_create_gazebo_plugins

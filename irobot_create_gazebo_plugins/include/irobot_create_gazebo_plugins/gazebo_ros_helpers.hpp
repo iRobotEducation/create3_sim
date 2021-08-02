@@ -62,5 +62,35 @@ inline bool initialize(T & var, sdf::ElementPtr sdf, const char * str, V default
     return false;
   }
 }
+
+
+/// \brief Convert radians to degradians
+inline int Rad2Deg(double radians) { return radians / M_PI * 180; }
+
+/**
+ * https://stackoverflow.com/a/11412077
+ *
+ */
+bool IsAngleBetween(double target, double angle1, double angle2)
+{
+  int t = Rad2Deg(target);
+  int a1 = Rad2Deg(angle1);
+  int a2 = Rad2Deg(angle2);
+
+  // make the angle from a1 to a2 to be <= 180 degrees
+  int r = ((a2 - a1) % 360 + 360) % 360;
+  if (r >= 180) {
+    std::swap(a1, a2);
+  }
+
+  // check if it passes through zero
+  if (a1 <= a2) {
+    return (t >= a1) && (t <= a2);
+  } else {
+    return (t >= a1) || (t <= a2);
+  }
+}
+
+
 }  // namespace utils
 }  // namespace irobot_create_gazebo_plugins
