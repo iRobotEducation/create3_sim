@@ -27,12 +27,12 @@ void GazeboRosOpticalMouse::Load(gazebo::physics::ModelPtr model, sdf::ElementPt
   world_ = model->GetWorld();
   GZ_ASSERT(world_, "World pointer is invalid!");
 
-  std::string link_name;
-  double update_rate;
+  std::string link_name{""};
+  double update_rate{62.0};
 
   // Get plugin parameters
-  utils::initialize(link_name, sdf, "link", "base_link");
-  utils::initialize(update_rate, sdf, "update_rate", 100.0);
+  utils::initialize(link_name, sdf, "link", "");
+  utils::initialize(update_rate, sdf, "update_rate", 62.0);
 
   // Get link
   link_ = model->GetLink(link_name);
@@ -42,12 +42,9 @@ void GazeboRosOpticalMouse::Load(gazebo::physics::ModelPtr model, sdf::ElementPt
   // Pass it SDF parameters so common options like namespace and remapping
   // can be handled.
   ros_node_ = gazebo_ros::Node::Get(sdf);
-  // Get QoS profiles
-  const gazebo_ros::QoS & qos = ros_node_->get_qos();
-
   // Initialize ROS publisher
   pub_ = ros_node_->create_publisher<irobot_create_msgs::msg::Mouse>(
-    "~/out", qos.get_publisher_qos("~/out", rclcpp::SensorDataQoS()));
+    "~/out", rclcpp::SensorDataQoS());
 
   // Create a connection so the OnUpdate function is called at every simulation
   // iteration. Remove this call, the connection and the callback if not needed.
@@ -86,33 +83,32 @@ void GazeboRosOpticalMouse::OnUpdate(const gazebo::common::UpdateInfo & info)
   const double time_elapsed = (current_time - last_time_).Double();
 
   // Check if on this iteration corresponds to send the message
-  if (update_rate_enforcer_.shouldUpdate(time_elapsed)) {
-    // Get pose
-    const ignition::math::Pose3d current_pose = link_->WorldPose();
-    // Pose difference with respect to the last mouse link pose. The result is a Pose from
-    // the last pose to the current pose.
-    const ignition::math::Vector3d & position_displacement = (current_pose - last_pose_).Pos();
+  if (!update_rate_enforcer_.shouldUpdate(time_elapsed)) return;
 
-    // configure an empty message with the timestamp
-    irobot_create_msgs::msg::Mouse msg;
-    msg.header.stamp = gazebo_ros::Convert<builtin_interfaces::msg::Time>(current_time);
+  // Get pose
+  const ignition::math::Pose3d current_pose = link_->WorldPose();
+  // Pose difference with respect to the last mouse link pose. The result is a Pose from
+  // the last pose to the current pose.
+  const ignition::math::Vector3d & position_displacement = (current_pose - last_pose_).Pos();
 
-    integrated_position_.X(integrated_position_.X() + position_displacement.X());
-    integrated_position_.Y(integrated_position_.Y() + position_displacement.Y());
+  // Configure an empty message with the timestamp
+  irobot_create_msgs::msg::Mouse msg;
+  msg.header.stamp = gazebo_ros::Convert<builtin_interfaces::msg::Time>(current_time);
 
-    // Calculate displacement for this iteration
-    msg.integrated_x = integrated_position_.X();
-    msg.integrated_y = integrated_position_.Y();
-    // Publish message
-    pub_->publish(msg);
+  integrated_position_ += position_displacement;
 
-    // Update time
-    last_time_ = current_time;
+  // Calculate displacement for this iteration
+  msg.integrated_x = integrated_position_.X();
+  msg.integrated_y = integrated_position_.Y();
+  // Publish message
+  pub_->publish(msg);
 
-    // The pose is updated
-    if (msg.integrated_x != 0 || msg.integrated_y != 0) {
-      last_pose_ = current_pose;
-    }
+  // Update time
+  last_time_ = current_time;
+
+  // The pose is updated
+  if (msg.integrated_x != 0 || msg.integrated_y != 0) {
+    last_pose_ = current_pose;
   }
 }
 

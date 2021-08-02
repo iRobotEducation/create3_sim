@@ -1,5 +1,4 @@
 <?xml version="1.0"?>
-
 <robot xmlns:xacro="http://ros.org/wiki/xacro">
 
   <xacro:macro name="optical_mouse" params="name:=mouse parent_link:=base_link *origin update_rate:=62" >
