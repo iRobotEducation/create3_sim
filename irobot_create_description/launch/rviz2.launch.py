@@ -34,12 +34,16 @@ def generate_launch_description():
 
     # Rviz
     rviz_config_dir = PathJoinSubstitution([pkg_create3_description, 'rviz', 'model.rviz'])
+    rviz_logo_dir = PathJoinSubstitution([pkg_create3_description, 'rviz', 'irobot_logo.jpg'])
 
     rviz = Node(
         package='rviz2',
         executable='rviz2',
         name='rviz2',
-        arguments=['-d', rviz_config_dir],
+        arguments=[
+            '--display-config', rviz_config_dir,
+            '--splash-screen', rviz_logo_dir,
+        ],
         condition=IfCondition(LaunchConfiguration('rviz')),
     )
 
