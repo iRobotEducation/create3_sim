@@ -30,8 +30,6 @@
   <xacro:property name="wheel_drop_offset_z_mm"     value="3.5"/>
   <xacro:property name="wheel_drop_z"               value="${wheel_height_cm*cm2m + wheel_drop_offset_z_mm*mm2m}"/>
 
-  <xacro:property name="mouse_update_rate"          value="62" />
-
   <!-- Create 3 base definitions-->
   <link name="base_footprint"/>
 
@@ -95,10 +93,8 @@
     </plugin>
   </gazebo>
 
-  <!-- Optical mouse -->
-  <xacro:mouse
-      parent_link="base_link"
-      update_rate="${mouse_update_rate}">
+  <!-- mouse -->
+  <xacro:mouse>
     <origin xyz="0.1015 0.087 -0.055" rpy="0 0 ${-pi/4}"/>
   </xacro:mouse>
 
