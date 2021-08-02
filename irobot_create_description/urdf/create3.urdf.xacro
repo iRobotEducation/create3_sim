@@ -102,8 +102,23 @@
 
   <!-- IR intensity sensors -->
   <xacro:property name="ir_intensity_z_pos_cm" value="-0.7"/>
+  <!--
+  The robot uses 7 IR sensors in the front to execute a wall-following action
+  or reduce the speed when it detects something in front for safety reasons.
+
+  The arrangement of the sensors is defined in the following schema of the top
+  view of the robot:
+                          Front view
+                              |
+                              V
+
+                        front_center_left
+                front_left            front_right
+            left                                 right
+  side_left                                           side_right
+  -->
   <xacro:ir_intensity name="front_center_left">
-    <origin xyz="0.1540 -0.0000 ${ir_intensity_z_pos_cm*cm2m}"/>
+    <origin xyz="0.1540 0 ${ir_intensity_z_pos_cm*cm2m}"/>
   </xacro:ir_intensity>
   <xacro:ir_intensity name="front_center_right">
     <origin xyz="0.1396 -0.0651 ${ir_intensity_z_pos_cm*cm2m}" rpy="0 0 -0.436"/>

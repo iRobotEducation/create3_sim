@@ -18,14 +18,9 @@
 
 namespace irobot_create_gazebo_plugins
 {
-// Register this plugin with the simulator
-GZ_REGISTER_SENSOR_PLUGIN(GazeboRosIrIntensitySensor)
-
-////////////////////////////////////////////////////////////////////////////////
 // Constructor
 GazeboRosIrIntensitySensor::GazeboRosIrIntensitySensor() : SensorPlugin() {}
 
-////////////////////////////////////////////////////////////////////////////////
 // Destructor
 GazeboRosIrIntensitySensor::~GazeboRosIrIntensitySensor() { new_laser_scans_connection_.reset(); }
 
@@ -78,5 +73,8 @@ void GazeboRosIrIntensitySensor::OnNewLaserScans()
   // Publish
   pub_->publish(msg_);
 }
+
+// Register this plugin with the simulator
+GZ_REGISTER_SENSOR_PLUGIN(GazeboRosIrIntensitySensor)
 
 }  // namespace irobot_create_gazebo_plugins

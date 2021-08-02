@@ -18,8 +18,7 @@
 
 #include <algorithm>
 #include <gazebo/common/Plugin.hh>
-#include <gazebo/common/common.hh>
-#include <gazebo/physics/physics.hh>
+#include <gazebo/physics/MultiRayShape.hh>
 #include <gazebo/plugins/RayPlugin.hh>
 #include <gazebo/sensors/RaySensor.hh>
 #include <gazebo/sensors/SensorTypes.hh>
