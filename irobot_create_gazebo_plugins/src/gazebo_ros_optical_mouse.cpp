@@ -95,8 +95,7 @@ void GazeboRosOpticalMouse::OnUpdate(const gazebo::common::UpdateInfo & info)
     irobot_create_msgs::msg::Mouse msg;
     msg.header.stamp = gazebo_ros::Convert<builtin_interfaces::msg::Time>(current_time);
 
-    integrated_position_.X(integrated_position_.X() + position_displacement.X());
-    integrated_position_.Y(integrated_position_.Y() + position_displacement.Y());
+    integrated_position_ += position_displacement;
 
     // Calculate displacement for this iteration
     msg.integrated_x = integrated_position_.X();
