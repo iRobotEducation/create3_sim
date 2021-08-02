@@ -31,7 +31,7 @@ void GazeboRosOpticalMouse::Load(gazebo::physics::ModelPtr model, sdf::ElementPt
   double update_rate{62.0};
 
   // Get plugin parameters
-  utils::initialize(link_name, sdf, "link", "");
+  utils::initialize(link_name, sdf, "link_name", "");
   utils::initialize(update_rate, sdf, "update_rate", 62.0);
 
   // Get link

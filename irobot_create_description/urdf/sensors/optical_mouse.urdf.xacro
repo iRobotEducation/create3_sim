@@ -20,7 +20,7 @@
             <remapping>~/out:=${name}</remapping>
           </ros>
         <update_rate>${update_rate}</update_rate>
-        <link>${name}</link>
+        <link_name>${name}</link_name>
       </plugin>
     </gazebo>
 
