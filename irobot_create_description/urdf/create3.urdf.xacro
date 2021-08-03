@@ -101,7 +101,7 @@
   </xacro:optical_mouse>
 
   <!-- IR intensity sensors -->
-  <xacro:property name="ir_intensity_z_pos_cm" value="-0.7"/>
+  <xacro:property name="ir_intensity_z_pos" value="-0.7*cm2m"/>
   <!--
   The robot uses 7 IR sensors in the front to execute a wall-following action
   or reduce the speed when it detects something in front for safety reasons.
@@ -118,25 +118,25 @@
   side_left                                           side_right
   -->
   <xacro:ir_intensity name="front_center_left">
-    <origin xyz="0.1540 0 ${ir_intensity_z_pos_cm*cm2m}"/>
+    <origin xyz="0.1540 0 ${ir_intensity_z_pos}"/>
   </xacro:ir_intensity>
   <xacro:ir_intensity name="front_center_right">
-    <origin xyz="0.1396 -0.0651 ${ir_intensity_z_pos_cm*cm2m}" rpy="0 0 -0.436"/>
+    <origin xyz="0.1396 -0.0651 ${ir_intensity_z_pos}" rpy="0 0 -0.436"/>
   </xacro:ir_intensity>
   <xacro:ir_intensity name="front_left">
-    <origin xyz="0.1396 0.0651 ${ir_intensity_z_pos_cm*cm2m}" rpy="0 0 0.436"/>
+    <origin xyz="0.1396 0.0651 ${ir_intensity_z_pos}" rpy="0 0 0.436"/>
   </xacro:ir_intensity>
   <xacro:ir_intensity name="front_right">
-    <origin xyz="0.0990 -0.1180 ${ir_intensity_z_pos_cm*cm2m}" rpy="0 0 -0.873"/>
+    <origin xyz="0.0990 -0.1180 ${ir_intensity_z_pos}" rpy="0 0 -0.873"/>
   </xacro:ir_intensity>
   <xacro:ir_intensity name="left">
-    <origin xyz="0.0990 0.1180 ${ir_intensity_z_pos_cm*cm2m}" rpy="0 0 0.873"/>
+    <origin xyz="0.0990 0.1180 ${ir_intensity_z_pos}" rpy="0 0 0.873"/>
   </xacro:ir_intensity>
   <xacro:ir_intensity name="right">
-    <origin xyz="0.0399 -0.1488 ${ir_intensity_z_pos_cm*cm2m}" rpy="0 0 -1.309"/>
+    <origin xyz="0.0399 -0.1488 ${ir_intensity_z_pos}" rpy="0 0 -1.309"/>
   </xacro:ir_intensity>
   <xacro:ir_intensity name="side_left">
-    <origin xyz="0.0399 0.1488 ${ir_intensity_z_pos_cm*cm2m}" rpy="0 0 1.309"/>
+    <origin xyz="0.0399 0.1488 ${ir_intensity_z_pos}" rpy="0 0 1.309"/>
   </xacro:ir_intensity>
 
 </robot>
