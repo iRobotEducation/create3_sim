@@ -51,6 +51,13 @@ void GazeboRosOpticalMouse::Load(gazebo::physics::ModelPtr model, sdf::ElementPt
   update_connection_ = gazebo::event::Events::ConnectWorldUpdateBegin(
     std::bind(&GazeboRosOpticalMouse::OnUpdate, this, std::placeholders::_1));
 
+  // Set message frame_id
+  msg_.header.frame_id = link_->GetName();
+
+  // Set frame_id and last_squal to 0. These values are not updated by the simulator.
+  msg_.frame_id = 0;
+  msg_.last_squal = 0;
+
   // Rate enforcer
   update_rate_enforcer_.load(update_rate);
 
@@ -91,27 +98,22 @@ void GazeboRosOpticalMouse::OnUpdate(const gazebo::common::UpdateInfo & info)
   // the last pose to the current pose.
   const ignition::math::Vector3d & position_displacement = (current_pose - last_pose_).Pos();
 
-  irobot_create_msgs::msg::Mouse msg;
-
-  // Set frame_id
-  msg.header.frame_id = link_->GetName();
-
   // Configure an empty message with the timestamp
-  msg.header.stamp = gazebo_ros::Convert<builtin_interfaces::msg::Time>(current_time);
+  msg_.header.stamp = gazebo_ros::Convert<builtin_interfaces::msg::Time>(current_time);
 
   integrated_position_ += position_displacement;
 
   // Calculate displacement for this iteration
-  msg.integrated_x = integrated_position_.X();
-  msg.integrated_y = integrated_position_.Y();
+  msg_.integrated_x = integrated_position_.X();
+  msg_.integrated_y = integrated_position_.Y();
   // Publish message
-  pub_->publish(msg);
+  pub_->publish(msg_);
 
   // Update time
   last_time_ = current_time;
 
   // The pose is updated
-  if (msg.integrated_x != 0 || msg.integrated_y != 0) {
+  if (msg_.integrated_x != 0.0 || msg_.integrated_y != 0.0) {
     last_pose_ = current_pose;
   }
 }

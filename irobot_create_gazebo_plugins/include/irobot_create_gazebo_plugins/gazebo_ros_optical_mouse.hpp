@@ -69,6 +69,9 @@ private:
   /// World pointer
   gazebo::physics::WorldPtr world_{nullptr};
 
+  /// ROS mouse messaga
+  irobot_create_msgs::msg::Mouse msg_;
+
   /// ROS publisher
   rclcpp::Publisher<irobot_create_msgs::msg::Mouse>::SharedPtr pub_{nullptr};
 
