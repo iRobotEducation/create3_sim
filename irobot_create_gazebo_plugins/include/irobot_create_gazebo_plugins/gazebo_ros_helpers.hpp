@@ -63,18 +63,11 @@ inline bool initialize(T & var, sdf::ElementPtr sdf, const char * str, V default
   }
 }
 
-
 /// \brief Convert radians to degradians
-inline int Rad2Deg(double radians)
-{
-  return radians / M_PI * 180;
-}
+inline int Rad2Deg(double radians) { return radians / M_PI * 180; }
 
 /// \brief Wrap angle between (-pi, pi]
-inline double WrapAngle(double angle)
-{
-  return atan2(sin(angle), cos(angle));
-}
+inline double WrapAngle(double angle) { return atan2(sin(angle), cos(angle)); }
 
 /**
  * https://stackoverflow.com/a/11412077
@@ -93,7 +86,6 @@ bool IsAngleBetween(double target, double angle1, double angle2)
   }
   return false;
 }
-
 
 }  // namespace utils
 }  // namespace irobot_create_gazebo_plugins
