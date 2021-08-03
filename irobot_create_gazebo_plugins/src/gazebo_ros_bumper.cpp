@@ -80,17 +80,18 @@ void GazeboRosBumper::GzPoseCallback(ConstPosesStampedPtr & msg)
   // Proactively update the message's timestamp
   msg_.header.stamp =
     gazebo_ros::Convert<builtin_interfaces::msg::Time>(bumper_->LastMeasurementTime());
-
-  // Iterate over the pose's msg
-  for (auto & pose : msg->pose()) {
-    // Stop when the create3 is found, since it's the one in world coordinates.
-    if (pose.name() == "create3") {
-      // Update the global pose object
-      r_tf_w_ = ignition::math::Matrix4d(ignition::math::Pose3d(
-        pose.position().x(), pose.position().y(), pose.position().z(), pose.orientation().w(),
-        pose.orientation().x(), pose.orientation().y(), pose.orientation().z()));
-      return;
-    }
+  auto & poses = msg->pose();
+  const auto i = std::find_if(
+    poses.begin(), poses.end(), [](const auto& pose) -> bool { return pose.name() == "create3"; });
+  // If not matches are found, return immediately.
+  // Otherwise, update global pose.
+  if (i == poses.end()) {
+    return;
+  } else {
+    r_tf_w_ = ignition::math::Matrix4d(ignition::math::Pose3d(
+      i->position().x(), i->position().y(), i->position().z(), i->orientation().w(),
+      i->orientation().x(), i->orientation().y(), i->orientation().z()));
+    return;
   }
 }
 
