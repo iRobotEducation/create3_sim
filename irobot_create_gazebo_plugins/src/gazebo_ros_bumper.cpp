@@ -21,15 +21,9 @@ namespace irobot_create_gazebo_plugins
 void GazeboRosBumper::Load(gazebo::sensors::SensorPtr sensor, sdf::ElementPtr sdf)
 {
   bumper_ = std::dynamic_pointer_cast<gazebo::sensors::ContactSensor>(sensor);
-  if (!bumper_) {
-    gzerr << "Bumper Contact Plugin requires a Contact Sensor.\n";
-    return;
-  }
-  rosnode_ = gazebo_ros::Node::Get(sdf);
-  const std::string bumper_topic_name = "/bumper";
-  const gazebo_ros::QoS & qos = rosnode_->get_qos();
-  bumper_pub_ = rosnode_->create_publisher<irobot_create_msgs::msg::HazardDetection>(
-    bumper_topic_name, qos.get_publisher_qos(bumper_topic_name, rclcpp::SensorDataQoS()));
+  GZ_ASSERT(bumper_, "Bumper Contact Plugin requires a Contact Sensor");
+  ros_node_ = gazebo_ros::Node::Get(sdf);
+  bumper_pub_ = ros_node_->create_publisher<irobot_create_msgs::msg::HazardDetection>("~/out", rclcpp::SensorDataQoS());
 
   // Listen to the update event.
   update_connection_ = bumper_->ConnectUpdated(boost::bind(&GazeboRosBumper::OnUpdate, this));
@@ -44,7 +38,7 @@ void GazeboRosBumper::Load(gazebo::sensors::SensorPtr sensor, sdf::ElementPtr sd
 
   // Make sure the parent sensor is active.
   bumper_->SetActive(true);
-  RCLCPP_INFO(rosnode_->get_logger(), "Bumper plugin loaded correctly");
+  RCLCPP_INFO(ros_node_->get_logger(), "Bumper plugin loaded correctly");
 }
 
 void GazeboRosBumper::OnUpdate()
@@ -59,7 +53,7 @@ void GazeboRosBumper::OnUpdate()
       gazebo::msgs::ConvertIgn(contacts.contact(i).position(0));
     // Get collision w.r.t. robot frame
     if (r_tf_w_ == ignition::math::Matrix4d::Zero) {
-      RCLCPP_WARN_STREAM(rosnode_->get_logger(), "Global pose callback is not being invoked");
+      RCLCPP_WARN_STREAM(ros_node_->get_logger(), "Global pose callback is not being invoked");
       return;
     }
     const ignition::math::Vector3d r_vec = r_tf_w_.Inverse() * c_vec;

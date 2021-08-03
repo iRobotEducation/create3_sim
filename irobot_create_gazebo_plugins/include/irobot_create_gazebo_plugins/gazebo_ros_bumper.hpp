@@ -17,6 +17,7 @@
 #pragma once
 
 #include <cmath>
+#include <gazebo/common/Assert.hh>
 #include <gazebo/common/Plugin.hh>
 #include <gazebo/gazebo.hh>
 #include <gazebo/msgs/msgs.hh>
@@ -54,7 +55,7 @@ protected:
 
 private:
   // Bumper zones
-  enum class BumperZone { RIGHT, CENTER_RIGHT, CENTER, CENTER_LEFT, LEFT };
+  enum class Zone { RIGHT, CENTER_RIGHT, CENTER, CENTER_LEFT, LEFT };
 
   // Auxiliar data structure to hold bumper zone details
   struct BumperZoneDefinition
@@ -65,15 +66,15 @@ private:
   };
 
   // Data structure to hold the definitions related to bumper zones
-  const std::map<BumperZone, BumperZoneDefinition> bumper_angles_map = {
-    {BumperZone::RIGHT, {-M_PI / 2, -3 * M_PI / 10, "right"}},
-    {BumperZone::CENTER_RIGHT, {-3 * M_PI / 10, -M_PI / 10, "center_right"}},
-    {BumperZone::CENTER, {-M_PI / 10, M_PI / 10, "center"}},
-    {BumperZone::CENTER_LEFT, {M_PI / 10., 3 * M_PI / 10, "center_left"}},
-    {BumperZone::LEFT, {3 * M_PI / 10, M_PI / 2, "left"}}};
+  const std::map<Zone, BumperZoneDefinition> bumper_angles_map = {
+    {Zone::RIGHT, {-M_PI / 2, -3 * M_PI / 10, "right"}},
+    {Zone::CENTER_RIGHT, {-3 * M_PI / 10, -M_PI / 10, "center_right"}},
+    {Zone::CENTER, {-M_PI / 10, M_PI / 10, "center"}},
+    {Zone::CENTER_LEFT, {M_PI / 10., 3 * M_PI / 10, "center_left"}},
+    {Zone::LEFT, {3 * M_PI / 10, M_PI / 2, "left"}}};
 
   // Pointer to ros node
-  gazebo_ros::Node::SharedPtr rosnode_;
+  gazebo_ros::Node::SharedPtr ros_node_{nullptr};
 
   // ROS publisher for the bumper output
   rclcpp::Publisher<irobot_create_msgs::msg::HazardDetection>::SharedPtr bumper_pub_{nullptr};
@@ -82,13 +83,10 @@ private:
   ignition::math::Matrix4d r_tf_w_;
 
   // Pointer to the Contact Sensor model
-  gazebo::sensors::ContactSensorPtr bumper_;
-
-  // ROS namespace
-  std::string robot_namespace_;
+  gazebo::sensors::ContactSensorPtr bumper_{nullptr};
 
   // Pointer to the update event connection
-  gazebo::event::ConnectionPtr update_connection_;
+  gazebo::event::ConnectionPtr update_connection_{nullptr};
 
   // HazardDetection message instance
   irobot_create_msgs::msg::HazardDetection msg_;

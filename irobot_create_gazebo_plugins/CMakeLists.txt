@@ -19,6 +19,9 @@ find_package(rclcpp REQUIRED)
 link_directories(${gazebo_dev_LIBRARY_DIRS})
 
 # Add libraries
+add_library(gazebo_ros_create_bumper SHARED
+  src/gazebo_ros_bumper.cpp
+)
 add_library(gazebo_ros_create_helpers SHARED
   src/gazebo_ros_helpers.cpp
 )
@@ -27,9 +30,6 @@ src/gazebo_ros_optical_mouse.cpp
 )
 add_library(gazebo_ros_create_wheel_drop SHARED
   src/gazebo_ros_wheel_drop.cpp
-)
-add_library(gazebo_ros_create_bumper SHARED
-  src/gazebo_ros_bumper.cpp
 )
 
 ## gazebo_ros_create_bumper
@@ -40,7 +40,6 @@ ament_target_dependencies(gazebo_ros_create_bumper
   "irobot_create_msgs"
   "rclcpp"
 )
-
 ament_export_libraries(gazebo_ros_create_bumper)
 target_link_libraries(gazebo_ros_create_bumper gazebo_ros_create_helpers)
 ## gazebo_ros_create_helpers
