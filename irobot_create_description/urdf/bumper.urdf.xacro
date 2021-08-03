@@ -36,7 +36,7 @@
       <contact>
         <collision>${name}_link_collision</collision>
       </contact>
-      <plugin name="bumper_controller" filename="libgazebo_ros_create_bumper.so">
+      <plugin name="${name}_plugin" filename="libgazebo_ros_create_bumper.so">
         <ros>
           <namespace>/</namespace>
           <remapping>~/out:=bumper</remapping>

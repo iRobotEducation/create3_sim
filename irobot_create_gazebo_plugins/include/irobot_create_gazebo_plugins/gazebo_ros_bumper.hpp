@@ -57,7 +57,7 @@ private:
   // Bumper zones
   enum class Zone { RIGHT, CENTER_RIGHT, CENTER, CENTER_LEFT, LEFT };
 
-  // Auxiliar data structure to hold bumper zone details
+  // Auxiliary data structure to hold bumper zone details
   struct BumperZoneDefinition
   {
     double left_limit;
