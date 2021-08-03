@@ -92,8 +92,8 @@
 
   <!-- IMU -->
   <xacro:imu_sensor>
-  <origin xyz="0.050613 0.043673 0.0202"/>
-</xacro:imu_sensor>
+    <origin xyz="0.050613 0.043673 0.0202"/>
+  </xacro:imu_sensor>
 
   <gazebo>
     <plugin name="gazebo_ros2_control" filename="libgazebo_ros2_control.so">
