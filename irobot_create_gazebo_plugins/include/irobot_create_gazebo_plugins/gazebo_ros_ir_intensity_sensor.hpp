@@ -16,7 +16,6 @@
 
 #pragma once
 
-#include <algorithm>
 #include <gazebo/common/Plugin.hh>
 #include <gazebo/physics/MultiRayShape.hh>
 #include <gazebo/plugins/RayPlugin.hh>
@@ -25,6 +24,7 @@
 #include <gazebo_ros/conversions/builtin_interfaces.hpp>
 #include <gazebo_ros/node.hpp>
 #include <gazebo_ros/utils.hpp>
+#include <irobot_create_gazebo_plugins/gazebo_ros_helpers.hpp>
 #include <irobot_create_msgs/msg/ir_intensity.hpp>
 #include <limits>
 #include <rclcpp/rclcpp.hpp>

@@ -53,11 +53,9 @@ void GazeboRosIrIntensitySensor::OnNewLaserScans()
     gazebo_ros::Convert<builtin_interfaces::msg::Time>(parent_sensor_->LastMeasurementTime());
 
   // Find the minimum detected distance
-  double detection = max_range_;
   std::vector<double> ranges;
   parent_sensor_->Ranges(ranges);
-  auto detection_ptr = std::min_element(std::begin(ranges), std::end(ranges));
-  if (detection_ptr != std::end(ranges)) detection = *detection_ptr;
+  const double detection = std::min(utils::FindMinimumRange(ranges), max_range_);
   RCLCPP_DEBUG_STREAM(ros_node_->get_logger(), "IR reporting " << detection << " m");
 
   // IR sensor produces an exponential signal that is corelated to the distance,

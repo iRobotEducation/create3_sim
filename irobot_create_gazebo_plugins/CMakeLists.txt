@@ -49,7 +49,7 @@ ament_target_dependencies(gazebo_ros_create_ir_intensity_sensor
   "rclcpp"
 )
 ament_export_libraries(gazebo_ros_create_ir_intensity_sensor)
-target_link_libraries(gazebo_ros_create_ir_intensity_sensor)
+target_link_libraries(gazebo_ros_create_ir_intensity_sensor gazebo_ros_create_helpers)
 # gazebo_ros_optical_mouse
 target_include_directories(gazebo_ros_create_optical_mouse PUBLIC include)
 ament_target_dependencies(gazebo_ros_create_optical_mouse
