@@ -82,7 +82,7 @@ void GazeboRosBumper::GzPoseCallback(ConstPosesStampedPtr & msg)
     gazebo_ros::Convert<builtin_interfaces::msg::Time>(bumper_->LastMeasurementTime());
   auto & poses = msg->pose();
   const auto i = std::find_if(
-    poses.begin(), poses.end(), [](const auto& pose) -> bool { return pose.name() == "create3"; });
+    poses.begin(), poses.end(), [](const auto & pose) -> bool { return pose.name() == "create3"; });
   // If not matches are found, return immediately.
   // Otherwise, update global pose.
   if (i == poses.end()) {
