@@ -101,7 +101,7 @@
   </xacro:optical_mouse>
 
   <!-- IR intensity sensors -->
-  <xacro:property name="ir_intensity_z_pos" value="-0.7*cm2m"/>
+  <xacro:property name="ir_intensity_z_pos" value="${-0.7*cm2m}"/>
   <!--
   The robot uses 7 IR sensors in the front to execute a wall-following action
   or reduce the speed when it detects something in front for safety reasons.
