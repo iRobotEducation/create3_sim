@@ -54,9 +54,9 @@ void GazeboRosOpticalMouse::Load(gazebo::physics::ModelPtr model, sdf::ElementPt
   // Set message frame_id
   msg_.header.frame_id = link_->GetName();
 
-  // Set frame_id and last_squal to 0. These values are not updated by the simulator.
+  // Set frame_id and last_squal default values. These values are not updated by the simulator.
   msg_.frame_id = 0;
-  msg_.last_squal = 0;
+  msg_.last_squal = 90;
 
   // Rate enforcer
   update_rate_enforcer_.load(update_rate);
