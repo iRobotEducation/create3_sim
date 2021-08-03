@@ -93,7 +93,7 @@
     </plugin>
   </gazebo>
 
-  <!-- mouse -->
+  <!-- Mouse -->
   <xacro:optical_mouse>
     <origin xyz="0.1015 0.087 -0.055" rpy="0 0 ${-pi/4}"/>
   </xacro:optical_mouse>
