@@ -55,10 +55,10 @@ protected:
 
 private:
   // Bumper zones
-  enum class Zone { RIGHT, CENTER_RIGHT, CENTER, CENTER_LEFT, LEFT };
+  enum class ZoneType { RIGHT, CENTER_RIGHT, CENTER, CENTER_LEFT, LEFT };
 
   // Auxiliary data structure to hold bumper zone details
-  struct BumperZoneDefinition
+  struct Zone
   {
     double left_limit;
     double right_limit;
@@ -66,12 +66,12 @@ private:
   };
 
   // Data structure to hold the definitions related to bumper zones
-  const std::map<Zone, BumperZoneDefinition> bumper_angles_map = {
-    {Zone::RIGHT, {-M_PI / 2, -3 * M_PI / 10, "right"}},
-    {Zone::CENTER_RIGHT, {-3 * M_PI / 10, -M_PI / 10, "center_right"}},
-    {Zone::CENTER, {-M_PI / 10, M_PI / 10, "center"}},
-    {Zone::CENTER_LEFT, {M_PI / 10., 3 * M_PI / 10, "center_left"}},
-    {Zone::LEFT, {3 * M_PI / 10, M_PI / 2, "left"}}};
+  const std::map<ZoneType, Zone> bumper_angles_map = {
+    {ZoneType::RIGHT, {-M_PI / 2, -3 * M_PI / 10, "right"}},
+    {ZoneType::CENTER_RIGHT, {-3 * M_PI / 10, -M_PI / 10, "center_right"}},
+    {ZoneType::CENTER, {-M_PI / 10, M_PI / 10, "center"}},
+    {ZoneType::CENTER_LEFT, {M_PI / 10., 3 * M_PI / 10, "center_left"}},
+    {ZoneType::LEFT, {3 * M_PI / 10, M_PI / 2, "left"}}};
 
   // Pointer to ros node
   gazebo_ros::Node::SharedPtr ros_node_{nullptr};
