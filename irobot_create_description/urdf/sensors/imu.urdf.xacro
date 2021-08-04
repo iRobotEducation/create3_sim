@@ -1,5 +1,4 @@
 <?xml version="1.0"?>
-
 <robot xmlns:xacro="http://ros.org/wiki/xacro">
 
 <xacro:macro name="imu_sensor" params="name:=imu parent:=base_link update_rate:=62 *origin">
