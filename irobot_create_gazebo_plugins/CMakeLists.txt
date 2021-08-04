@@ -34,7 +34,8 @@ add_library(gazebo_ros_create_ir_intensity_sensor SHARED
 )
 
 add_library(gazebo_ros_create_optical_mouse SHARED
-src/gazebo_ros_optical_mouse.cpp
+  src/gazebo_ros_optical_mouse.cpp
+)
 
 add_library(gazebo_ros_create_wheel_drop SHARED
   src/gazebo_ros_wheel_drop.cpp
