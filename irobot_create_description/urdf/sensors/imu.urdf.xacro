@@ -10,7 +10,7 @@
   </joint>
 
   <link name="${name}_link">
-    <xacro:inertial_cuboid mass="0.05" x="0.01" y="0.01" z="0.01" />
+      <xacro:inertial_dummy />
   </link>
 
   <gazebo reference="${name}_link">
