@@ -2,21 +2,20 @@
 
 <robot xmlns:xacro="http://ros.org/wiki/xacro">
 
-<xacro:macro name="imu_sensor" params="*origin parent:=base_link update_rate:=62">
+<xacro:macro name="imu_sensor" params="name:=imu parent:=base_link update_rate:=62 *origin">
 
-  <joint name="gyro_joint" type="prismatic">
-    <axis xyz="0 1 0"/>
+  <joint name="${name}_joint" type="fixed">
     <xacro:insert_block name="origin"/>
-    <limit lower="0.0" upper="0.0" effort="0.0" velocity="0.0"/>
     <parent link="${parent}"/>
-    <child link="gyro_link"/>
+    <child link="${name}_link"/>
   </joint>
-  <link name="gyro_link">
+
+  <link name="${name}_link">
     <xacro:inertial_cuboid mass="0.05" x="0.01" y="0.01" z="0.01" />
   </link>
 
-  <gazebo reference="gyro_link">
-    <sensor type="imu" name="imu">
+  <gazebo reference="${name}_link">
+    <sensor type="imu" name="${name}">
       <always_on>true</always_on>
       <update_rate>${update_rate}</update_rate>
       <imu>
@@ -61,7 +60,7 @@
           </z>
         </linear_acceleration>
       </imu>
-      <plugin name="imu" filename="libgazebo_ros_create_imu.so">
+      <plugin name="${name}_plugin" filename="libgazebo_ros_create_imu.so">
         <ros>
           <namespace>/</namespace>
           <remapping>~/out:=imu</remapping>
