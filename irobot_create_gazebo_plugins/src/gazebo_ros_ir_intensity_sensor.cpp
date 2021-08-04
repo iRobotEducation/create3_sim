@@ -58,11 +58,11 @@ void GazeboRosIrIntensitySensor::OnNewLaserScans()
   const double detection = std::min(utils::FindMinimumRange(ranges), max_range_);
   RCLCPP_DEBUG_STREAM(ros_node_->get_logger(), "IR reporting " << detection << " m");
 
-  // IR sensor produces an exponential signal that is corelated to the distance,
+  // IR sensor produces an exponential signal that is correlated to the distance,
   // that follows this formula: ir_reading = A exp(-x*B)
   // where:
-  // A is a coefficient that depends on the colour surface and
-  // it an be as much as 3500
+  // A is a coefficient that depends on the color surface and
+  // it an be as high as 3500
   // B is the decay of the signal related to the distance.
   // From the experiments B ~ 26.831568
   const double scaled_detection = 3500 * std::exp(detection * (-2 * M_E / max_range_));
