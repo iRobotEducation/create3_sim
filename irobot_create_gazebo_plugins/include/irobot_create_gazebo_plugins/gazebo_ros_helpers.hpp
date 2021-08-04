@@ -69,10 +69,10 @@ inline int Rad2Deg(double radians) { return radians / M_PI * 180; }
 /// \brief Wrap angle between (-pi, pi]
 inline double WrapAngle(double angle) { return atan2(sin(angle), cos(angle)); }
 
-/**
- * https://stackoverflow.com/a/11412077
- *
- */
+/// \brief Calculate if a provided angle in radians is within the arc formed by two other angles.
+/// \param target angle to test
+/// \param angle1 first leg of the arc
+/// \param target second leg of the arc
 bool IsAngleBetween(double target, double angle1, double angle2)
 {
   double t = WrapAngle(target);
