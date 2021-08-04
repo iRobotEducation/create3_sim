@@ -1,0 +1,31 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://ros.org/wiki/xacro">
+
+  <xacro:macro name="optical_mouse" params="name:=mouse parent_link:=base_link update_rate:=62 *origin" >
+
+    <joint name="${name}_joint" type="fixed">
+      <xacro:insert_block name="origin"/>
+      <parent link="${parent_link}"/>
+      <child link="${name}"/>
+    </joint>
+
+    <link name="${name}">
+      <xacro:inertial_dummy />
+    </link>
+
+    <gazebo>
+      <plugin name="${name}_plugin" filename="libgazebo_ros_create_optical_mouse.so">
+          <ros>
+            <namespace>/</namespace>
+            <remapping>~/out:=${name}</remapping>
+          </ros>
+        <update_rate>${update_rate}</update_rate>
+        <link_name>${name}</link_name>
+      </plugin>
+    </gazebo>
+
+    <gazebo reference="${name}_joint" >
+      <preserveFixedJoint>true</preserveFixedJoint>
+    </gazebo>
+  </xacro:macro>
+</robot>

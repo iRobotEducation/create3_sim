@@ -34,6 +34,10 @@
     </xacro:inertial_cylinder_with_pose>
   </xacro:macro>
 
+  <xacro:macro name="inertial_dummy">
+    <xacro:inertial_cuboid mass="0.01" x="0.01" y="0.01" z="0.01"/>
+  </xacro:macro>
+
   <!-- Conversion macros -->
   <xacro:property name="cm2m"    value="${1/100.0}"/>
   <xacro:property name="mm2m"    value="${1/1000.0}"/>

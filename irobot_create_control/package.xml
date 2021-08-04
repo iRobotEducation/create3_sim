@@ -11,11 +11,11 @@
 
   <buildtool_depend>ament_cmake</buildtool_depend>
 
-  <exec_depend>ros2launch</exec_depend>
   <exec_depend>gazebo_ros2_control</exec_depend>
-  <exec_depend>joint_state_controller</exec_depend>
-  <exec_depend>ros2_controllers</exec_depend>
   <exec_depend>irobot_create_toolbox</exec_depend>
+  <exec_depend>joint_state_controller</exec_depend>
+  <exec_depend>ros2launch</exec_depend>
+  <exec_depend>ros2_controllers</exec_depend>
 
   <test_depend>ament_lint_auto</test_depend>
   <test_depend>ament_lint_common</test_depend>
@@ -23,4 +23,5 @@
   <export>
     <build_type>ament_cmake</build_type>
   </export>
+
 </package>

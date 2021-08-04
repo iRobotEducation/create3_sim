@@ -12,8 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 //
-// @author Emiliano Javier Borghi Orue
-// Contact: creativa_eborghi@irobot.com
+// @author Emiliano Javier Borghi Orue (creativa_eborghi@irobot.com)
 
 #pragma once
 
