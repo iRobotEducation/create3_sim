@@ -62,15 +62,18 @@ void GazeboRosBumper::OnUpdate()
     // Check what zone of the bumper has hit an object
     // Only publish if the bump event corresponds to one of the zones
     // "released" events are not publsihed.
-    for (auto & bumper_zone : bumper_angles_map) {
-      if (utils::IsAngleBetween(
-            relative_contact_angle_xy, bumper_zone.second.left_limit,
-            bumper_zone.second.right_limit)) {
-        // Fill and publish a message
-        msg_.header.frame_id = bumper_zone.second.name;
-        bumper_pub_->publish(msg_);
-        break;
-      }
+    const auto iter = std::find_if(
+      bumper_angles_map_.begin(), bumper_angles_map_.end(),
+      [relative_contact_angle_xy](const auto & zone) -> bool {
+        return utils::IsAngleBetween(
+          zone.second.left_limit, zone.second.right_limit, relative_contact_angle_xy);
+      });
+    if (iter == bumper_angles_map_.end()) {
+      return;
+    } else {
+      msg_.header.frame_id = (*iter).second.name;
+      bumper_pub_->publish(msg_);
+      return;
     }
   }
 }
@@ -81,12 +84,14 @@ void GazeboRosBumper::GzPoseCallback(ConstPosesStampedPtr & msg)
   msg_.header.stamp =
     gazebo_ros::Convert<builtin_interfaces::msg::Time>(bumper_->LastMeasurementTime());
   auto & poses = msg->pose();
+  // Find in the message's vector a pose element corresponding to the mobile base's absolute pose
+  // identified under the "create3" name.
   const auto i = std::find_if(
     poses.begin(), poses.end(), [](const auto & pose) -> bool { return pose.name() == "create3"; });
   // If not matches are found, return immediately.
-  // Otherwise, update global pose.
   if (i == poses.end()) {
     return;
+  //  Otherwise, update global pose with the new value.
   } else {
     r_tf_w_ = ignition::math::Matrix4d(ignition::math::Pose3d(
       i->position().x(), i->position().y(), i->position().z(), i->orientation().w(),
