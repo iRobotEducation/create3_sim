@@ -62,7 +62,7 @@ void GazeboRosIrIntensitySensor::OnNewLaserScans()
   // that follows this formula: ir_reading = A exp(-x*B)
   // where:
   // A is a coefficient that depends on the color surface and
-  // it an be as high as 3500
+  // it can be as high as 3500
   // B is the decay of the signal related to the distance.
   // From the experiments B ~ 26.831568
   const double scaled_detection = 3500 * std::exp(detection * (-2 * M_E / max_range_));
