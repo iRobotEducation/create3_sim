@@ -113,9 +113,9 @@
                               V
 
                         front_center_left
-                front_left            front_right
-            left                                 right
-  side_left                                           side_right
+                front_left            front_center_right
+            left                                    front_right
+  side_left                                                   right
   -->
   <xacro:ir_intensity name="front_center_left">
     <origin xyz="0.1540 0 ${ir_intensity_z_pos}"/>
