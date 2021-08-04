@@ -53,6 +53,15 @@ void GazeboRosImu::Load(gazebo::sensors::SensorPtr _sensor, sdf::ElementPtr _sdf
 
 void GazeboRosImu::OnUpdate()
 {
+  // Calculate gravity w.r.t. IMU frame
+  const ignition::math::Matrix4d imu_tf_w{ sensor_->Orientation() };
+  const gazebo::physics::WorldPtr world{ gazebo::physics::get_world(sensor_->WorldName()) };
+  const ignition::math::Vector3d gravity_{ world->Gravity() };
+  const ignition::math::Vector3d g = imu_tf_w.Inverse() * gravity_;
+
+  // Remove gravity component from IMU reading
+  const ignition::math::Vector3d no_gravity_acceleration = sensor_->LinearAcceleration() + g;
+
   // Fill message with latest sensor data
   msg_->header.stamp =
     gazebo_ros::Convert<builtin_interfaces::msg::Time>(sensor_->LastUpdateTime());
@@ -60,7 +69,7 @@ void GazeboRosImu::OnUpdate()
   msg_->angular_velocity =
     gazebo_ros::Convert<geometry_msgs::msg::Vector3>(sensor_->AngularVelocity());
   msg_->linear_acceleration =
-    gazebo_ros::Convert<geometry_msgs::msg::Vector3>(sensor_->LinearAcceleration());
+    gazebo_ros::Convert<geometry_msgs::msg::Vector3>(no_gravity_acceleration);
   // Publish message
   pub_->publish(*msg_);
 }
