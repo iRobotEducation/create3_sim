@@ -35,7 +35,7 @@ public:
   virtual ~GazeboRosImu();
 
   // Documentation Inherited
-  void Load(gazebo::sensors::SensorPtr _sensor, sdf::ElementPtr _sdf) override;
+  void Load(gazebo::sensors::SensorPtr sensor, sdf::ElementPtr sdf) override;
 
 private:
   /// Node for ros communication
