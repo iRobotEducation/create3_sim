@@ -33,7 +33,7 @@ void GazeboRosCliffSensor::Load(gazebo::sensors::SensorPtr parent, sdf::ElementP
     cliff_sensor_, "[CLIFF PLUGIN] GazeboRosRange controller requires a Ray Sensor as its parent");
   cliff_sensor_->SetActive(true);
 
-  utils::initialize(cliff_detection_threshold_, sdf, "detectionThreshold", 0.01);
+  utils::initialize(cliff_detection_threshold_, sdf, "detection_threshold", 0.01);
 
   // Create a GazeboRos node instead of a common ROS node.
   // Pass it SDF parameters so common options like namespace and remapping can be handled.

@@ -47,7 +47,7 @@
           <namespace>cliff</namespace>
           <remapping>~/out:=${name}/event</remapping>
         </ros>
-        <detectionThreshold>${detection_threshold}</detectionThreshold>
+        <detection_threshold>${detection_threshold}</detection_threshold>
       </plugin>
     </sensor>
   </gazebo>
