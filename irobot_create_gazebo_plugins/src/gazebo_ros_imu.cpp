@@ -51,7 +51,7 @@ void GazeboRosImu::OnUpdate()
   const ignition::math::Matrix4d imu_tf_w{sensor_->Orientation()};
   const gazebo::physics::WorldPtr world{gazebo::physics::get_world(sensor_->WorldName())};
   const ignition::math::Vector3d gravity_{world->Gravity()};
-  const ignition::math::Vector3d g = imu_tf_w.Inverse() * gravity_;
+  const ignition::math::Vector3d gravity_imu{imu_tf_w.Inverse() * gravity_};
 
   // Remove gravity component from IMU reading
   const ignition::math::Vector3d no_gravity_acceleration = sensor_->LinearAcceleration() + g;
