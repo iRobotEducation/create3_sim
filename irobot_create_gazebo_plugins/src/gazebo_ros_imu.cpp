@@ -54,7 +54,7 @@ void GazeboRosImu::OnUpdate()
   const ignition::math::Vector3d gravity_imu{imu_tf_w.Inverse() * gravity_};
 
   // Remove gravity component from IMU reading
-  const ignition::math::Vector3d no_gravity_acceleration = sensor_->LinearAcceleration() + g;
+  const ignition::math::Vector3d no_gravity_acceleration{sensor_->LinearAcceleration() + g};
 
   // Fill message with latest sensor data
   msg_->header.stamp =
