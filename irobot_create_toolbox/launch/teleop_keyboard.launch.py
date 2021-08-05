@@ -18,6 +18,7 @@
 from launch import LaunchDescription
 from launch_ros.actions import Node
 
+
 def generate_launch_description():
 
     teleop_twist_keyboard = Node(
@@ -25,7 +26,7 @@ def generate_launch_description():
         executable='teleop_twist_keyboard',
         name='teleop',
         output='screen',
-        prefix = 'xterm -e',
+        prefix='xterm -e',
     )
 
     # Define LaunchDescription variable
