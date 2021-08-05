@@ -47,6 +47,7 @@ private:
   sensor_msgs::msg::Imu msg_;
   /// IMU sensor this plugin is attached to
   gazebo::sensors::ImuSensorPtr sensor_;
+  // The gravity vector
   ignition::math::Vector3d gravity_;
   /// Event triggered when sensor updates
   gazebo::event::ConnectionPtr sensor_update_event_;
