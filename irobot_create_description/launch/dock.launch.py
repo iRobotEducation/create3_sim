@@ -93,7 +93,7 @@ def generate_launch_description():
         executable='static_transform_publisher',
         name='static_transform_publisher',
         arguments=[x, y, z,
-                   yaw, '0', '0', # Acording to documentation the order is yaw, pitch, roll
+                   yaw, '0', '0',  # Acording to documentation the order is yaw, pitch, roll
                    'odom', 'std_dock_link'],
         output='screen',
     )
