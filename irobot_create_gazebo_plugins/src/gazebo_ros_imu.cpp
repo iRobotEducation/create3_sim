@@ -57,6 +57,7 @@ void GazeboRosImu::OnUpdate()
     gazebo_ros::Convert<geometry_msgs::msg::Vector3>(sensor_->AngularVelocity());
   msg_.linear_acceleration =
     gazebo_ros::Convert<geometry_msgs::msg::Vector3>(no_gravity_acceleration);
+
   // Publish message
   pub_->publish(msg_);
 }
