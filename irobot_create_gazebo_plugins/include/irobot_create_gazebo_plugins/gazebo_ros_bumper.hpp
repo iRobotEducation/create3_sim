@@ -66,7 +66,7 @@ private:
   };
 
   // Data structure to hold the definitions related to bumper zones
-  const std::map<ZoneType, Zone> bumper_angles_map_ = {
+  const std::map<ZoneType, Zone> angles_map_ = {
     {ZoneType::RIGHT, {-M_PI / 2, -3 * M_PI / 10, "right"}},
     {ZoneType::CENTER_RIGHT, {-3 * M_PI / 10, -M_PI / 10, "center_right"}},
     {ZoneType::CENTER, {-M_PI / 10, M_PI / 10, "center"}},

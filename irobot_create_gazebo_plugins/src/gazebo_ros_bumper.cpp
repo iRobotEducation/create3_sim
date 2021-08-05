@@ -63,15 +63,15 @@ void GazeboRosBumper::OnUpdate()
     // Only publish if the bump event corresponds to one of the zones
     // "released" events are not publsihed.
     const auto iter = std::find_if(
-      bumper_angles_map_.begin(), bumper_angles_map_.end(),
+      angles_map_.begin(), angles_map_.end(),
       [relative_contact_angle_xy](const auto & zone) -> bool {
         return utils::IsAngleBetween(
           zone.second.left_limit, zone.second.right_limit, relative_contact_angle_xy);
       });
-    if (iter == bumper_angles_map_.end()) {
+    if (iter == angles_map_.end()) {
       return;
     } else {
-      msg_.header.frame_id = (*iter).second.name;
+      msg_.header.frame_id = iter->second.name;
       bumper_pub_->publish(msg_);
       return;
     }
