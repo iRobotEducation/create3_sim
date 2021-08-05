@@ -5,7 +5,7 @@
 
   <xacro:property name="z_offset_mm" value="4.6"/>
 
-  <link name="base_link">
+  <link name="std_dock_link">
     <visual>
       <origin xyz="0 0 ${z_offset_mm*mm2m}"/>
       <geometry>
@@ -21,7 +21,7 @@
     </collision>
   </link>
 
-  <gazebo reference="base_link">
+  <gazebo reference="std_dock_link">
     <mu1>1.0</mu1>
     <mu2>1.0</mu2>
     <kp>1000000.0</kp>
@@ -43,6 +43,7 @@
 
   <!-- Green IR emitter -->
   <xacro:ir_emitter name="${green_buoy_name}"
+                    parent="std_dock_link"
                     code="164"
                     aperture="${buoy_lateral_aperture}"
                     range="1.524">
@@ -52,6 +53,7 @@
 
   <!-- Red IR emitter -->
   <xacro:ir_emitter name="${red_buoy_name}"
+                    parent="std_dock_link"
                     code="168"
                     aperture="${buoy_lateral_aperture}"
                     range="1.524">
@@ -61,6 +63,7 @@
 
   <!-- Yellow IR emitter -->
   <xacro:ir_emitter name="${yellow_buoy_name}"
+                    parent="std_dock_link"
                     code="172"
                     aperture="${10*deg2rad}"
                     range="1.2192">
@@ -69,6 +72,7 @@
 
   <!-- Halo IR emitter -->
   <xacro:ir_emitter name="${halo_name}"
+                    parent="std_dock_link"
                     code="161"
                     aperture="360"
                     range="0.6096">

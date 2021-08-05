@@ -55,6 +55,9 @@ def generate_launch_description():
     # Launch Configurations
     x, y, z = LaunchConfiguration('x'), LaunchConfiguration('y'), LaunchConfiguration('z')
     yaw = LaunchConfiguration('yaw')
+    # Apply offsets
+    x = OffsetParser(x, 0.157)
+    yaw = OffsetParser(yaw, 3.1416)
 
     state_publisher = Node(
         package='robot_state_publisher',
@@ -78,10 +81,20 @@ def generate_launch_description():
                    'standard_dock',
                    '-topic',
                    'standard_dock_description',
-                   '-x', OffsetParser(x, 0.157),
+                   '-x', x,
                    '-y', y,
                    '-z', z,
-                   '-Y', OffsetParser(yaw, 3.1416)],
+                   '-Y', yaw],
+        output='screen',
+    )
+
+    static_transform_publisher = Node(
+        package='tf2_ros',
+        executable='static_transform_publisher',
+        name='static_transform_publisher',
+        arguments=[x, y, z,
+                   yaw, '0', '0', # Acording to documentation the order is yaw, pitch, roll
+                   'odom', 'std_dock_link'],
         output='screen',
     )
 
@@ -90,5 +103,6 @@ def generate_launch_description():
     # Add nodes to LaunchDescription
     ld.add_action(state_publisher)
     ld.add_action(spawn_model)
+    ld.add_action(static_transform_publisher)
 
     return ld
