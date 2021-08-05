@@ -73,7 +73,7 @@ def generate_launch_description():
 
     # Gazebo server
     gzserver = ExecuteProcess(
-        cmd=['gzserver', '--verbose',
+        cmd=['gzserver',
              '-s', 'libgazebo_ros_init.so',
              '-s', 'libgazebo_ros_factory.so'],
         output='screen',
