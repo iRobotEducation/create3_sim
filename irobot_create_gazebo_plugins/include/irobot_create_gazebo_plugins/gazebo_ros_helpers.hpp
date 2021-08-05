@@ -16,8 +16,11 @@
 
 #pragma once
 
+#include <algorithm>
 #include <gazebo_ros/node.hpp>
+#include <limits>
 #include <sdf/sdf.hh>
+#include <vector>
 
 namespace irobot_create_gazebo_plugins
 {
