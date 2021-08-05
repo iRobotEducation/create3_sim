@@ -30,7 +30,6 @@ void GazeboRosImu::Load(gazebo::sensors::SensorPtr sensor, sdf::ElementPtr sdf)
   ros_node_ = gazebo_ros::Node::Get(sdf);
 
   sensor_ = std::dynamic_pointer_cast<gazebo::sensors::ImuSensor>(sensor);
-  sensor_->SetWorldToReferenceOrientation(ignition::math::Quaterniond::Identity);
 
   gravity_ = gazebo::physics::get_world(sensor_->WorldName())->Gravity();
 
