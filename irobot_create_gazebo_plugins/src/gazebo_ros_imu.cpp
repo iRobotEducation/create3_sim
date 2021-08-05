@@ -39,13 +39,8 @@ void GazeboRosImu::Load(gazebo::sensors::SensorPtr _sensor, sdf::ElementPtr _sdf
 
   pub_ = ros_node_->create_publisher<sensor_msgs::msg::Imu>("~/out", rclcpp::SensorDataQoS());
 
-  // Create message to be reused
-  auto msg = std::make_shared<sensor_msgs::msg::Imu>();
-
   // Get frame for message
-  msg->header.frame_id = gazebo_ros::SensorFrameID(*_sensor, *_sdf);
-
-  msg_ = msg;
+  msg_->header.frame_id = gazebo_ros::SensorFrameID(*_sensor, *_sdf);
 
   sensor_update_event_ = sensor_->ConnectUpdated(std::bind(&GazeboRosImu::OnUpdate, this));
 }
