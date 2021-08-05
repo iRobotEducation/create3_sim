@@ -39,10 +39,10 @@
         <namespace>wheel_drop</namespace>
         <remapping>~/out:=${name}_wheel/event</remapping>
       </ros>
-      <updateRate>${update_rate}</updateRate>
-      <detectionThreshold>${detection_threshold_cm*cm2m}</detectionThreshold>
-      <jointName>wheel_${name}_axle_joint</jointName>
-      <frameId>wheel_${name}_axle_link</frameId>
+      <update_rate>${update_rate}</update_rate>
+      <detection_threshold>${detection_threshold_cm*cm2m}</detection_threshold>
+      <joint_name>wheel_${name}_axle_joint</joint_name>
+      <frame_id>wheel_${name}_axle_link</frame_id>
     </plugin>
   </gazebo>
 
