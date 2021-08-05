@@ -68,5 +68,9 @@
     </sensor>
   </gazebo>
 
+  <gazebo reference="${name}_joint">
+    <preserveFixedJoint>true</preserveFixedJoint>
+  </gazebo>
+
 </xacro:macro>
 </robot>
