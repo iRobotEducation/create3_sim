@@ -16,6 +16,7 @@
 
 #pragma once
 
+#include <gazebo/common/Assert.hh>
 #include <gazebo/plugins/ImuSensorPlugin.hh>
 #include <gazebo_ros/conversions/builtin_interfaces.hpp>
 #include <gazebo_ros/conversions/geometry_msgs.hpp>
