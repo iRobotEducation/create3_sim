@@ -91,7 +91,7 @@ void GazeboRosBumper::GzPoseCallback(ConstPosesStampedPtr & msg)
   // If not matches are found, return immediately.
   if (i == poses.end()) {
     return;
-  //  Otherwise, update global pose with the new value.
+    //  Otherwise, update global pose with the new value.
   } else {
     r_tf_w_ = ignition::math::Matrix4d(ignition::math::Pose3d(
       i->position().x(), i->position().y(), i->position().z(), i->orientation().w(),
