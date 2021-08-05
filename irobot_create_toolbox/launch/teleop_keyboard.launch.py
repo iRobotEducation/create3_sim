@@ -11,6 +11,7 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+#
 # @author Emiliano Javier Borghi Orue (creativa_eborghi@irobot.com)
 #
 # Launch a teleop keyboard node.
@@ -21,6 +22,9 @@ from launch_ros.actions import Node
 
 def generate_launch_description():
 
+    # Publish Twist message with the keyboard.
+    # Executes the node in another XTerm terminal to avoid issues
+    # with ros2 launch.
     teleop_twist_keyboard = Node(
         package='teleop_twist_keyboard',
         executable='teleop_twist_keyboard',
