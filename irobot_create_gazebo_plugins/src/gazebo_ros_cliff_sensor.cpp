@@ -54,10 +54,7 @@ void GazeboRosCliffSensor::Load(gazebo::sensors::SensorPtr parent, sdf::ElementP
 }
 
 // Function is called when the world is resetted
-void GazeboRosCliffSensor::Reset()
-{
-  new_laser_scans_connection_.reset();
-}
+void GazeboRosCliffSensor::Reset() { new_laser_scans_connection_.reset(); }
 
 // Update the plugin
 void GazeboRosCliffSensor::OnNewLaserScans()
@@ -76,7 +73,8 @@ void GazeboRosCliffSensor::OnNewLaserScans()
     // Publish message
     pub_->publish(msg_);
     RCLCPP_INFO_EXPRESSION(
-      ros_node_->get_logger(), true, "Cliff %s ON: %.3f", msg_.header.frame_id.c_str(), displacement);
+      ros_node_->get_logger(), true, "Cliff %s ON: %.3f", msg_.header.frame_id.c_str(),
+      displacement);
   }
 }
 }  // namespace irobot_create_gazebo_plugins
