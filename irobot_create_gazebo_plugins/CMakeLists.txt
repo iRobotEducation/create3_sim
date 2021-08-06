@@ -21,6 +21,9 @@ find_package(sensor_msgs REQUIRED)
 link_directories(${gazebo_dev_LIBRARY_DIRS})
 
 # Add libraries
+add_library(gazebo_ros_create_bumper SHARED
+  src/gazebo_ros_bumper.cpp
+)
 add_library(gazebo_ros_create_helpers SHARED
   src/gazebo_ros_helpers.cpp
 )
@@ -41,7 +44,16 @@ add_library(gazebo_ros_create_wheel_drop SHARED
   src/gazebo_ros_wheel_drop.cpp
 )
 
-# Linking
+## gazebo_ros_create_bumper
+target_include_directories(gazebo_ros_create_bumper PUBLIC include)
+ament_target_dependencies(gazebo_ros_create_bumper
+  "gazebo_dev"
+  "gazebo_ros"
+  "irobot_create_msgs"
+  "rclcpp"
+)
+ament_export_libraries(gazebo_ros_create_bumper)
+target_link_libraries(gazebo_ros_create_bumper gazebo_ros_create_helpers)
 ## gazebo_ros_create_helpers
 target_include_directories(gazebo_ros_create_helpers PUBLIC include)
 ament_target_dependencies(gazebo_ros_create_helpers
@@ -105,6 +117,7 @@ install(DIRECTORY include/
         DESTINATION include)
 
 install(TARGETS
+    gazebo_ros_create_bumper
     gazebo_ros_create_helpers
     gazebo_ros_create_imu
     gazebo_ros_create_ir_intensity_sensor
