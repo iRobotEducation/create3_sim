@@ -31,7 +31,6 @@ void GazeboRosImu::Load(gazebo::sensors::SensorPtr sensor, sdf::ElementPtr sdf)
   sensor_ = std::dynamic_pointer_cast<gazebo::sensors::ImuSensor>(sensor);
   sensor_->SetWorldToReferenceOrientation(ignition::math::Quaterniond::Identity);
 
-
   gravity_ = gazebo::physics::get_world(sensor_->WorldName())->Gravity();
 
   pub_ = ros_node_->create_publisher<sensor_msgs::msg::Imu>("~/out", rclcpp::SensorDataQoS());
@@ -54,7 +53,8 @@ void GazeboRosImu::OnUpdate()
     sensor_->LinearAcceleration() + gravity_imu};
 
   // Fill message with latest sensor data
-  msg_->header.stamp = gazebo_ros::Convert<builtin_interfaces::msg::Time>(sensor_->LastUpdateTime());
+  msg_->header.stamp =
+    gazebo_ros::Convert<builtin_interfaces::msg::Time>(sensor_->LastUpdateTime());
   msg_->orientation = gazebo_ros::Convert<geometry_msgs::msg::Quaternion>(sensor_->Orientation());
   msg_->angular_velocity =
     gazebo_ros::Convert<geometry_msgs::msg::Vector3>(sensor_->AngularVelocity());
