@@ -14,7 +14,7 @@
 #
 # @author Emiliano Javier Borghi Orue (creativa_eborghi@irobot.com)
 #
-# Launch a teleop keyboard node.
+# Launch a keyboard teleop node.
 
 from launch import LaunchDescription
 from launch_ros.actions import Node
@@ -22,7 +22,7 @@ from launch_ros.actions import Node
 
 def generate_launch_description():
 
-    # Publish Twist message with the keyboard.
+    # Publish unstamped Twist message with the keyboard.
     # Executes the node in another XTerm terminal to avoid issues
     # with ros2 launch.
     teleop_twist_keyboard = Node(
