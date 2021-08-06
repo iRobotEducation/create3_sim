@@ -29,13 +29,16 @@ void GazeboRosImu::Load(gazebo::sensors::SensorPtr sensor, sdf::ElementPtr sdf)
   ros_node_ = gazebo_ros::Node::Get(sdf);
 
   sensor_ = std::dynamic_pointer_cast<gazebo::sensors::ImuSensor>(sensor);
+  sensor_->SetWorldToReferenceOrientation(ignition::math::Quaterniond::Identity);
+
 
   gravity_ = gazebo::physics::get_world(sensor_->WorldName())->Gravity();
 
   pub_ = ros_node_->create_publisher<sensor_msgs::msg::Imu>("~/out", rclcpp::SensorDataQoS());
 
   // Get frame for message
-  msg_.header.frame_id = gazebo_ros::SensorFrameID(*sensor, *sdf);
+  msg_ = std::make_shared<sensor_msgs::msg::Imu>();
+  msg_->header.frame_id = gazebo_ros::SensorFrameID(*sensor, *sdf);
 
   sensor_update_event_ = sensor_->ConnectUpdated(std::bind(&GazeboRosImu::OnUpdate, this));
 }
@@ -51,15 +54,15 @@ void GazeboRosImu::OnUpdate()
     sensor_->LinearAcceleration() + gravity_imu};
 
   // Fill message with latest sensor data
-  msg_.header.stamp = gazebo_ros::Convert<builtin_interfaces::msg::Time>(sensor_->LastUpdateTime());
-  msg_.orientation = gazebo_ros::Convert<geometry_msgs::msg::Quaternion>(sensor_->Orientation());
-  msg_.angular_velocity =
+  msg_->header.stamp = gazebo_ros::Convert<builtin_interfaces::msg::Time>(sensor_->LastUpdateTime());
+  msg_->orientation = gazebo_ros::Convert<geometry_msgs::msg::Quaternion>(sensor_->Orientation());
+  msg_->angular_velocity =
     gazebo_ros::Convert<geometry_msgs::msg::Vector3>(sensor_->AngularVelocity());
-  msg_.linear_acceleration =
+  msg_->linear_acceleration =
     gazebo_ros::Convert<geometry_msgs::msg::Vector3>(no_gravity_acceleration);
 
   // Publish message
-  pub_->publish(msg_);
+  pub_->publish(*msg_);
 }
 
 GZ_REGISTER_SENSOR_PLUGIN(GazeboRosImu)

@@ -45,7 +45,7 @@ private:
   /// Publisher for imu message
   rclcpp::Publisher<sensor_msgs::msg::Imu>::SharedPtr pub_;
   /// IMU message modified each update
-  sensor_msgs::msg::Imu msg_;
+  sensor_msgs::msg::Imu::SharedPtr msg_;
   /// IMU sensor this plugin is attached to
   gazebo::sensors::ImuSensorPtr sensor_;
   // The gravity vector
