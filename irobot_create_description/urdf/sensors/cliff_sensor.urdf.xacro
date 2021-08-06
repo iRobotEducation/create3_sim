@@ -27,6 +27,7 @@
     <sensor type="ray" name="${sensor_name}">
       <update_rate>${update_rate}</update_rate>
       <visualize>${visualize}</visualize>
+      <always_on>1</always_on>
       <ray>
         <scan>
           <horizontal>
