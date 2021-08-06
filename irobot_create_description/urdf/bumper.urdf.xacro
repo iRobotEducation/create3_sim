@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <robot xmlns:xacro="http://ros.org/wiki/xacro">
 
-<xacro:macro name="bumper" params="name:=bumper parent_link visual_mesh collision_mesh
+<xacro:macro name="bumper" params="name:=bumper parent_link update_rate:=62.0 visual_mesh collision_mesh
   *origin *inertial">
 
   <joint name="${name}_joint" type="fixed">
@@ -30,6 +30,20 @@
     <minDepth>0.001</minDepth>
     <maxContacts>10</maxContacts>
     <material>Gazebo/DarkGrey</material>
+    <sensor name='${name}_contact_sensor' type='contact'>
+      <always_on>true</always_on>
+      <update_rate>${update_rate}</update_rate>
+      <contact>
+        <collision>${name}_link_collision</collision>
+      </contact>
+      <plugin name="${name}_plugin" filename="libgazebo_ros_create_bumper.so">
+        <ros>
+          <namespace>/</namespace>
+          <remapping>~/out:=bumper/event</remapping>
+        </ros>
+      </plugin>
+
+    </sensor>
   </gazebo>
 
   <gazebo reference="${name}_joint">

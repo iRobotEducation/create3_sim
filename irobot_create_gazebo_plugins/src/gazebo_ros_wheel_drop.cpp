@@ -23,10 +23,10 @@ void GazeboRosWheelDrop::Load(gazebo::physics::ModelPtr model, sdf::ElementPtr s
   double update_rate{62.0};
   double detection_threshold{0.7};
   std::string joint_name{""};
-  utils::initialize(update_rate, sdf, "updateRate", 62.0);
-  utils::initialize(detection_threshold, sdf, "detectionThreshold", 0.7);
-  utils::initialize(joint_name, sdf, "jointName", "");
-  utils::initialize(frame_id_, sdf, "frameId", "");
+  utils::initialize(update_rate, sdf, "update_rate", 62.0);
+  utils::initialize(detection_threshold, sdf, "detection_threshold", 0.7);
+  utils::initialize(joint_name, sdf, "joint_name", "");
+  utils::initialize(frame_id_, sdf, "frame_id", "");
 
   world_ = model->GetWorld();
   GZ_ASSERT(world_, "[WHEEL DROP PLUGIN] Invalid world pointer!");

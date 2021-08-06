@@ -1,0 +1,76 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://ros.org/wiki/xacro">
+
+<xacro:macro name="imu_sensor" params="name:=imu parent:=base_link update_rate:=62 *origin">
+
+  <joint name="${name}_joint" type="fixed">
+    <xacro:insert_block name="origin"/>
+    <parent link="${parent}"/>
+    <child link="${name}_link"/>
+  </joint>
+
+  <link name="${name}_link">
+      <xacro:inertial_dummy />
+  </link>
+
+  <gazebo reference="${name}_link">
+    <sensor type="imu" name="${name}">
+      <always_on>true</always_on>
+      <update_rate>${update_rate}</update_rate>
+      <imu>
+        <angular_velocity>
+          <x>
+            <noise type="gaussian">
+              <mean>0.0</mean>
+              <stddev>0.0</stddev>
+            </noise>
+          </x>
+          <y>
+            <noise type="gaussian">
+              <mean>0.0</mean>
+              <stddev>0.0</stddev>
+            </noise>
+          </y>
+          <z>
+            <noise type="gaussian">
+              <mean>0.0</mean>
+              <stddev>0.0</stddev>
+            </noise>
+          </z>
+        </angular_velocity>
+        <linear_acceleration>
+          <x>
+            <noise type="gaussian">
+              <mean>0.0</mean>
+              <stddev>0.0</stddev>
+            </noise>
+          </x>
+          <y>
+            <noise type="gaussian">
+              <mean>0.0</mean>
+              <stddev>0.0</stddev>
+            </noise>
+          </y>
+          <z>
+            <noise type="gaussian">
+              <mean>0.0</mean>
+              <stddev>0.0</stddev>
+            </noise>
+          </z>
+        </linear_acceleration>
+      </imu>
+      <plugin name="${name}_plugin" filename="libgazebo_ros_create_imu.so">
+        <ros>
+          <namespace>/</namespace>
+          <remapping>~/out:=imu</remapping>
+        </ros>
+      </plugin>
+    </sensor>
+  </gazebo>
+
+  <gazebo reference="${name}_joint">
+    <preserveFixedJoint>true</preserveFixedJoint>
+  </gazebo>
+
+</xacro:macro>
+</robot>
