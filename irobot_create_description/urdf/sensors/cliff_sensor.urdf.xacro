@@ -4,14 +4,15 @@
 <xacro:macro name="cliff_sensor" params="name parent:=base_link
                                          visualize:=false *origin">
   <!-- Sensor settings -->
-  <xacro:property name="update_rate" value="62"/>
+  <xacro:property name="update_rate"         value="62"/>
+  <xacro:property name="fov_deg"             value="5"/>
+  <xacro:property name="fov_rad"             value="${fov_deg*deg2rad}"/>
+  <xacro:property name="min_range"           value="${0*cm2m}"/>
+  <xacro:property name="max_range"           value="${15*cm2m}"/>
+  <xacro:property name="samples"             value="${fov_deg/5}"/>
+  <xacro:property name="sensor_name"         value="cliff_${name}"/>
+  <xacro:property name="detection_threshold" value="${8*cm2m}"/>
 
-  <xacro:property name="fov_deg"     value="5"/>
-  <xacro:property name="fov_rad"     value="${fov_deg*deg2rad}"/>
-  <xacro:property name="min_range"   value="${0*cm2m}"/>
-  <xacro:property name="max_range"   value="${15*cm2m}"/>
-  <xacro:property name="samples"     value="${fov_deg/5}"/>
-  <xacro:property name="sensor_name" value="cliff_${name}"/>
 
   <joint name="${sensor_name}_joint" type="fixed">
     <xacro:insert_block name="origin"/>
@@ -54,7 +55,7 @@
           <namespace>/</namespace>
           <remapping>~/out:=${sensor_name}/event</remapping>
         </ros>
-        <detection_threshold>${8*cm2m}</detection_threshold>
+        <detection_threshold>${detection_threshold}</detection_threshold>
       </plugin>
     </sensor>
   </gazebo>
