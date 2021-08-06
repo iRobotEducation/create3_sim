@@ -3,10 +3,10 @@
   <xacro:include filename="$(find irobot_create_description)/urdf/bumper.urdf.xacro" />
   <xacro:include filename="$(find irobot_create_description)/urdf/caster.urdf.xacro" />
   <xacro:include filename="$(find irobot_create_description)/urdf/common_properties.urdf.xacro"/>
+  <xacro:include filename="$(find irobot_create_description)/urdf/sensors/imu.urdf.xacro" />
   <xacro:include filename="$(find irobot_create_description)/urdf/sensors/ir_intensity.urdf.xacro" />
   <xacro:include filename="$(find irobot_create_description)/urdf/sensors/optical_mouse.urdf.xacro"/>
   <xacro:include filename="$(find irobot_create_description)/urdf/wheel_with_wheeldrop.urdf.xacro" />
-  <xacro:include filename="$(find irobot_create_description)/urdf/sensors/imu.urdf.xacro" />
 
 
   <!-- MECHANICAL PROPERTIES -->
