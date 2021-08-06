@@ -38,7 +38,7 @@ public:
   /// Destructor
   ~GazeboRosCliffSensor() = default;
   /// Called when plugin is loaded
-  void Load(gazebo::sensors::SensorPtr model, sdf::ElementPtr sdf);
+  void Load(gazebo::sensors::SensorPtr parent, sdf::ElementPtr sdf);
   /// \brief Reset variables on Reset event
   void Reset() override;
 
@@ -52,7 +52,7 @@ private:
   /// \brief Node for ROS communication.
   gazebo_ros::Node::SharedPtr ros_node_{nullptr};
   /// Measured distance in meter for detecting a cliff
-  double cliff_detection_threshold_;
+  double detection_threshold_;
   /// \brief Cliff message modified each update
   irobot_create_msgs::msg::HazardDetection msg_;
   // Set bound for cliff  detection

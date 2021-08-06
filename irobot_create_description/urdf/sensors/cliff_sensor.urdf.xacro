@@ -43,6 +43,12 @@
           <resolution>1.0</resolution>
         </range>
       </ray>
+      <!-- Noise is currently disabled -->
+      <noise>
+        <type>gaussian</type>
+        <mean>0.0</mean>
+        <stddev>0.0</stddev>
+      </noise>
       <plugin name="${sensor_name}" filename="libgazebo_ros_create_cliff_sensor.so">
         <ros>
           <namespace>cliff</namespace>

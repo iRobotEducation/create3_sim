@@ -31,23 +31,24 @@ void GazeboRosCliffSensor::Load(gazebo::sensors::SensorPtr parent, sdf::ElementP
   cliff_sensor_ = std::dynamic_pointer_cast<gazebo::sensors::RaySensor>(parent);
   GZ_ASSERT(
     cliff_sensor_, "[CLIFF PLUGIN] GazeboRosRange controller requires a Ray Sensor as its parent");
-  cliff_sensor_->SetActive(true);
 
-  utils::initialize(cliff_detection_threshold_, sdf, "detection_threshold", 0.01);
+  utils::initialize(detection_threshold_, sdf, "detection_threshold", 0.01);
 
   // Create a GazeboRos node instead of a common ROS node.
   // Pass it SDF parameters so common options like namespace and remapping can be handled.
   ros_node_ = gazebo_ros::Node::Get(sdf);
-  // Get QoS profiles
-  const gazebo_ros::QoS & qos = ros_node_->get_qos();
 
-  msg_.header.frame_id = gazebo_ros::SensorFrameID(*parent, *sdf);
-  max_range_ = cliff_sensor_->RangeMax();
   // Initialize ROS publisher
-  pub_ = ros_node_->create_publisher<irobot_create_msgs::msg::HazardDetection>("~/out", rclcpp::SensorDataQoS());
+  pub_ = ros_node_->create_publisher<irobot_create_msgs::msg::HazardDetection>(
+    "~/out", rclcpp::SensorDataQoS());
 
   new_laser_scans_connection_ = cliff_sensor_->LaserShape()->ConnectNewLaserScans(
     std::bind(&GazeboRosCliffSensor::OnNewLaserScans, this));
+
+  // Configure our static message charasteristics
+  msg_.header.frame_id = gazebo_ros::SensorFrameID(*parent, *sdf);
+
+  max_range_ = cliff_sensor_->RangeMax();
 
   RCLCPP_INFO(ros_node_->get_logger(), "Started plugin");
 }
@@ -64,16 +65,16 @@ void GazeboRosCliffSensor::OnNewLaserScans()
   // Find the minimum detected distance
   std::vector<double> ranges;
   cliff_sensor_->Ranges(ranges);
-  const double displacement = std::min(utils::FindMinimumRange(ranges), max_range_);
-  RCLCPP_DEBUG_STREAM(ros_node_->get_logger(), "Cliff reporting " << displacement << " m");
+  const double range_detection = std::min(utils::FindMinimumRange(ranges), max_range_);
+  RCLCPP_DEBUG_STREAM(ros_node_->get_logger(), "Cliff reporting " << range_detection << " m");
 
-  if (displacement >= cliff_detection_threshold_) {
+  if (range_detection >= detection_threshold_) {
     msg_.type = msg_.CLIFF;
     // Publish message
     pub_->publish(msg_);
     RCLCPP_INFO_EXPRESSION(
       ros_node_->get_logger(), true, "Cliff %s ON: %.3f", msg_.header.frame_id.c_str(),
-      displacement);
+      range_detection);
   }
 }
 }  // namespace irobot_create_gazebo_plugins
