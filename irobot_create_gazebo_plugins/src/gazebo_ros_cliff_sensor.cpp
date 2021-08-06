@@ -44,8 +44,7 @@ void GazeboRosCliffSensor::Load(gazebo::sensors::SensorPtr parent, sdf::ElementP
   msg_.header.frame_id = gazebo_ros::SensorFrameID(*parent, *sdf);
   max_range_ = cliff_sensor_->RangeMax();
   // Initialize ROS publisher
-  pub_ = ros_node_->create_publisher<irobot_create_msgs::msg::HazardDetection>(
-    "~/out", qos.get_publisher_qos("~/out", rclcpp::SensorDataQoS()));
+  pub_ = ros_node_->create_publisher<irobot_create_msgs::msg::HazardDetection>("~/out", rclcpp::SensorDataQoS());
 
   new_laser_scans_connection_ = cliff_sensor_->LaserShape()->ConnectNewLaserScans(
     std::bind(&GazeboRosCliffSensor::OnNewLaserScans, this));
