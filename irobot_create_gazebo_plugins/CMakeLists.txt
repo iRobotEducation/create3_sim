@@ -36,7 +36,7 @@ add_library(gazebo_ros_create_wheel_drop SHARED
 )
 
 # Linking
-# gazebo_ros_cliff_sensor
+## gazebo_ros_cliff_sensor
 target_include_directories(gazebo_ros_create_cliff_sensor PUBLIC include)
 ament_target_dependencies(gazebo_ros_create_cliff_sensor
   "gazebo_dev"
