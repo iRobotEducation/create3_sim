@@ -15,12 +15,17 @@
 #
 # Launch Create3 in RViz.
 
+import os
+
 from ament_index_python.packages import get_package_share_directory
 from launch import LaunchDescription
 from launch.actions import DeclareLaunchArgument
 from launch.conditions import IfCondition
 from launch.substitutions import Command, LaunchConfiguration, PathJoinSubstitution
 from launch_ros.actions import Node
+
+# Rviz requires US locale to correctly display the wheels
+os.environ['LC_NUMERIC'] = 'en_US.UTF-8'
 
 ARGUMENTS = [
     DeclareLaunchArgument('rviz', default_value='true',
