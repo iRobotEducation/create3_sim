@@ -105,32 +105,32 @@
 
   <xacro:property name="cliff_center_x" value="${5.9*cm2m}"/>
   <xacro:property name="cliff_center_y" value="${14.6*cm2m}"/>
-  <xacro:property name="cliff_center_P" value="${80*deg2rad}"/>
-  <xacro:property name="cliff_center_Y" value="${65.3*deg2rad}"/>
+  <xacro:property name="cliff_center_pitch" value="${80*deg2rad}"/>
+  <xacro:property name="cliff_center_yaw" value="${65.3*deg2rad}"/>
 
   <xacro:property name="cliff_back_x" value="${-6.5*cm2m}"/>
   <xacro:property name="cliff_back_y" value="${14.5*cm2m}"/>
-  <xacro:property name="cliff_back_P" value="${80*deg2rad}"/>
-  <xacro:property name="cliff_back_Y" value="${167.4*deg2rad}"/>
+  <xacro:property name="cliff_back_pitch" value="${80*deg2rad}"/>
+  <xacro:property name="cliff_back_yaw" value="${167.4*deg2rad}"/>
 
   <xacro:cliff_sensor name="side_left">
     <origin xyz="${cliff_back_x} ${cliff_back_y} ${cliff_z}"
-            rpy="0 ${cliff_back_P} ${cliff_back_Y}"/>
+            rpy="0 ${cliff_back_pitch} ${cliff_back_yaw}"/>
   </xacro:cliff_sensor>
 
   <xacro:cliff_sensor name="side_right">
     <origin xyz="${cliff_back_x} ${- cliff_back_y} ${cliff_z}"
-            rpy="0 ${cliff_back_P} ${- cliff_back_Y}"/>
+            rpy="0 ${cliff_back_pitch} ${- cliff_back_yaw}"/>
   </xacro:cliff_sensor>
 
   <xacro:cliff_sensor name="front_left">
     <origin xyz="${cliff_center_x} ${cliff_center_y} ${cliff_z}"
-            rpy="0 ${cliff_center_P} ${cliff_center_Y}"/>
+            rpy="0 ${cliff_center_pitch} ${cliff_center_yaw}"/>
   </xacro:cliff_sensor>
 
   <xacro:cliff_sensor name="front_right">
     <origin xyz="${cliff_center_x} ${- cliff_center_y} ${cliff_z}"
-            rpy="0 ${cliff_center_P} ${- cliff_center_Y}"/>
+            rpy="0 ${cliff_center_pitch} ${- cliff_center_yaw}"/>
   </xacro:cliff_sensor>
 
   <!-- IR intensity sensors -->

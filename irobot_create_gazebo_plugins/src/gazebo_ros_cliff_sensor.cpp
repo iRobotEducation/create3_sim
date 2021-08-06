@@ -29,7 +29,7 @@ void GazeboRosCliffSensor::Load(gazebo::sensors::SensorPtr parent, sdf::ElementP
   world_ = gazebo::physics::get_world(world_name_);
 
   cliff_sensor_ = std::dynamic_pointer_cast<gazebo::sensors::RaySensor>(parent);
-  GZ_ASSERT(cliff_sensor_, "GazeboRosRange controller requires a Ray Sensor as its parent");
+  GZ_ASSERT(cliff_sensor_, "GazeboRosCliffSensor controller requires a Ray Sensor as its parent");
 
   utils::initialize(detection_threshold_, sdf, "detection_threshold", 0.01);
 
@@ -58,7 +58,7 @@ void GazeboRosCliffSensor::Reset() { new_laser_scans_connection_.reset(); }
 // Update the plugin
 void GazeboRosCliffSensor::OnNewLaserScans()
 {
-  // Configure an empty message with the timestamp and frame id
+  // Configure an empty message with the timestamp
   msg_.header.stamp = gazebo_ros::Convert<builtin_interfaces::msg::Time>(world_->SimTime());
 
   // Find the minimum detected distance
@@ -71,7 +71,7 @@ void GazeboRosCliffSensor::OnNewLaserScans()
     msg_.type = msg_.CLIFF;
     // Publish message
     pub_->publish(msg_);
-    RCLCPP_INFO_EXPRESSION(
+    RCLCPP_DEBUG_EXPRESSION(
       ros_node_->get_logger(), true, "Cliff %s ON: %.3f", msg_.header.frame_id.c_str(),
       range_detection);
   }

@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
 <robot xmlns:xacro="http://ros.org/wiki/xacro">
 
-<xacro:macro name="cliff_sensor" params="name parent:=base_link detection_threshold:=${8*cm2m}
-                                           visualize:=false *origin">
+<xacro:macro name="cliff_sensor" params="name parent:=base_link
+                                         visualize:=false *origin">
   <!-- Sensor settings -->
   <xacro:property name="update_rate" value="62"/>
 
@@ -51,10 +51,10 @@
       </noise>
       <plugin name="${sensor_name}" filename="libgazebo_ros_create_cliff_sensor.so">
         <ros>
-          <namespace>cliff</namespace>
-          <remapping>~/out:=${name}/event</remapping>
+          <namespace>/</namespace>
+          <remapping>~/out:=${sensor_name}/event</remapping>
         </ros>
-        <detection_threshold>${detection_threshold}</detection_threshold>
+        <detection_threshold>${8*cm2m}</detection_threshold>
       </plugin>
     </sensor>
   </gazebo>
