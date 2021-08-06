@@ -66,7 +66,7 @@ inline bool initialize(T & var, sdf::ElementPtr sdf, const char * str, V default
   }
 }
 
-/// \brief Convert radians to degradians
+/// \brief Convert radians to degrees
 inline int Rad2Deg(double radians) { return radians / M_PI * 180; }
 
 /// \brief Wrap angle between (-pi, pi]
