@@ -26,6 +26,7 @@
 #include <gazebo_ros/utils.hpp>
 #include <irobot_create_gazebo_plugins/gazebo_ros_helpers.hpp>
 #include <irobot_create_msgs/msg/hazard_detection.hpp>
+#include <limits>
 #include <rclcpp/node.hpp>
 
 namespace irobot_create_gazebo_plugins
@@ -33,11 +34,13 @@ namespace irobot_create_gazebo_plugins
 class GazeboRosCliffSensor : public gazebo::SensorPlugin
 {
 public:
-  /// Constructor
+  /// \brief Constructor
   GazeboRosCliffSensor() = default;
-  /// Destructor
+  /// \brief Destructor
   ~GazeboRosCliffSensor() = default;
-  /// Called when plugin is loaded
+  /// \brief Called when plugin is loaded
+  /// \param parent Pointer to the parent sensor to which the plugin is attached
+  /// \param sdf Take in SDF root element
   void Load(gazebo::sensors::SensorPtr parent, sdf::ElementPtr sdf);
   /// \brief Reset variables on Reset event
   void Reset() override;
@@ -47,21 +50,21 @@ protected:
   virtual void OnNewLaserScans();
 
 private:
-  /// Pointer to left cliff sensor
+  // Pointer to left cliff sensor
   gazebo::sensors::RaySensorPtr cliff_sensor_{nullptr};
-  /// \brief Node for ROS communication.
+  // Node for ROS communication.
   gazebo_ros::Node::SharedPtr ros_node_{nullptr};
-  /// Measured distance in meter for detecting a cliff
+  // Measured distance in meter for detecting a cliff
   double detection_threshold_;
-  /// \brief Cliff message modified each update
+  // Cliff message modified each update
   irobot_create_msgs::msg::HazardDetection msg_;
   // Set bound for cliff  detection
-  double max_range_;
-  /// World pointer
+  double max_range_{std::numeric_limits<double>::max()};
+  // World pointer
   gazebo::physics::WorldPtr world_{nullptr};
-  /// Publish for cliff message
+  // Publish for cliff message
   rclcpp::Publisher<irobot_create_msgs::msg::HazardDetection>::SharedPtr pub_{nullptr};
-  /// \brief The connection tied to update the laser scans OnNewLaserScans()
+  // The connection tied to update the laser scans OnNewLaserScans()
   gazebo::event::ConnectionPtr new_laser_scans_connection_{nullptr};
 };
 
