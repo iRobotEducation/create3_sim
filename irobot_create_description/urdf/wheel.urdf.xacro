@@ -19,6 +19,8 @@
       <geometry>
         <cylinder length="${width_cm*cm2m}" radius="${radius_cm*cm2m}"/>
       </geometry>
+      <!-- Give black color to wheels in Rviz -->
+      <xacro:insert_block name="material_black"/>
     </visual>
     <collision>
       <geometry>

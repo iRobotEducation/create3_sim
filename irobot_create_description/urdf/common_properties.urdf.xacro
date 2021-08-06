@@ -38,9 +38,20 @@
     <xacro:inertial_cuboid mass="0.01" x="0.01" y="0.01" z="0.01"/>
   </xacro:macro>
 
+  <xacro:macro name="inertial_dummy">
+    <xacro:inertial_cuboid mass="0.01" x="0.01" y="0.01" z="0.01"/>
+  </xacro:macro>
+
   <!-- Conversion macros -->
   <xacro:property name="cm2m"    value="${1/100.0}"/>
   <xacro:property name="mm2m"    value="${1/1000.0}"/>
-  <xacro:property name="deg2rad" value="${pi/180}"/>
+  <xacro:property name="deg2rad" value="${pi/180.0}"/>
+
+  <!-- Material colors -->
+  <xacro:property name="material_black">
+    <material name="black">
+      <color rgba="0.1 0.1 0.1 1"/>
+    </material>
+  </xacro:property>
 
 </robot>
