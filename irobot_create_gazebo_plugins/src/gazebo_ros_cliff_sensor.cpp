@@ -29,8 +29,7 @@ void GazeboRosCliffSensor::Load(gazebo::sensors::SensorPtr parent, sdf::ElementP
   world_ = gazebo::physics::get_world(world_name_);
 
   cliff_sensor_ = std::dynamic_pointer_cast<gazebo::sensors::RaySensor>(parent);
-  GZ_ASSERT(
-    cliff_sensor_, "GazeboRosRange controller requires a Ray Sensor as its parent");
+  GZ_ASSERT(cliff_sensor_, "GazeboRosRange controller requires a Ray Sensor as its parent");
 
   utils::initialize(detection_threshold_, sdf, "detection_threshold", 0.01);
 
