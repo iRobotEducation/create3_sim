@@ -61,7 +61,7 @@ void GazeboRosBumper::OnUpdate()
     const double relative_contact_angle_xy = std::atan2(r_vec.Y(), r_vec.X());
     // Check what zone of the bumper has hit an object
     // Only publish if the bump event corresponds to one of the zones
-    // "released" events are not publsihed.
+    // "released" events are not published.
     const auto iter = std::find_if(
       angles_map_.begin(), angles_map_.end(),
       [relative_contact_angle_xy](const auto & zone) -> bool {
