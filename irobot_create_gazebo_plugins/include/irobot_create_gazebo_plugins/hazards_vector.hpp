@@ -19,13 +19,13 @@
 #include <algorithm>
 #include <chrono>
 #include <functional>
+#include <irobot_create_msgs/msg/hazard_detection.hpp>
+#include <irobot_create_msgs/msg/hazard_detection_vector.hpp>
 #include <memory>
 #include <string>
 #include <vector>
 
 #include "rclcpp/rclcpp.hpp"
-#include <irobot_create_msgs/msg/hazard_detection.hpp>
-#include <irobot_create_msgs/msg/hazard_detection_vector.hpp>
 
 class HazardsVector : public rclcpp::Node
 {
@@ -54,8 +54,10 @@ private:
   rclcpp::Subscription<irobot_create_msgs::msg::HazardDetection>::SharedPtr cliff_side_right_sub_;
 
   // Wheeldrop subscriptions
-  rclcpp::Subscription<irobot_create_msgs::msg::HazardDetection>::SharedPtr wheel_drop_left_wheel_sub_;
-  rclcpp::Subscription<irobot_create_msgs::msg::HazardDetection>::SharedPtr wheel_drop_right_wheel_sub_;
+  rclcpp::Subscription<irobot_create_msgs::msg::HazardDetection>::SharedPtr
+    wheel_drop_left_wheel_sub_;
+  rclcpp::Subscription<irobot_create_msgs::msg::HazardDetection>::SharedPtr
+    wheel_drop_right_wheel_sub_;
 
   // Vector holding hazard detections per iteration
   std::vector<irobot_create_msgs::msg::HazardDetection> msgs_;
