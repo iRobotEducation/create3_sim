@@ -16,29 +16,50 @@
 
 #pragma once
 
+#include <algorithm>
 #include <chrono>
 #include <functional>
 #include <memory>
 #include <string>
+#include <vector>
 
 #include "rclcpp/rclcpp.hpp"
 #include <irobot_create_msgs/msg/hazard_detection.hpp>
+#include <irobot_create_msgs/msg/hazard_detection_vector.hpp>
 
 class HazardsVector : public rclcpp::Node
 {
 public:
+  /// Constructor
+
   HazardsVector();
 
 private:
-  void subscriber_callback(const irobot_create_msgs::msg::HazardDetection::SharedPtr msg) const;
+  void subscriber_callback(irobot_create_msgs::msg::HazardDetection::SharedPtr msg);
   void publish_timer_callback();
 
+  // Publish aggregated hazard detections on timer_'s frequency
   rclcpp::TimerBase::SharedPtr timer_;
-  rclcpp::Publisher<irobot_create_msgs::msg::HazardDetection>::SharedPtr publisher_;
+
+  // Hazard detection vector publisher
+  rclcpp::Publisher<irobot_create_msgs::msg::HazardDetectionVector>::SharedPtr publisher_;
+
+  // Bumper subscriptions
+  rclcpp::Subscription<irobot_create_msgs::msg::HazardDetection>::SharedPtr bumper_sub_;
+
+  // Cliff subscriptions
   rclcpp::Subscription<irobot_create_msgs::msg::HazardDetection>::SharedPtr cliff_front_left_sub_;
   rclcpp::Subscription<irobot_create_msgs::msg::HazardDetection>::SharedPtr cliff_front_right_sub_;
   rclcpp::Subscription<irobot_create_msgs::msg::HazardDetection>::SharedPtr cliff_side_left_sub_;
   rclcpp::Subscription<irobot_create_msgs::msg::HazardDetection>::SharedPtr cliff_side_right_sub_;
 
-  size_t count_;
+  // Wheeldrop subscriptions
+  rclcpp::Subscription<irobot_create_msgs::msg::HazardDetection>::SharedPtr wheel_drop_left_wheel_sub_;
+  rclcpp::Subscription<irobot_create_msgs::msg::HazardDetection>::SharedPtr wheel_drop_right_wheel_sub_;
+
+  // Vector holding hazard detections per iteration
+  std::vector<irobot_create_msgs::msg::HazardDetection> msgs_;
+
+  // Mutex
+  std::mutex mutex_;
 };
