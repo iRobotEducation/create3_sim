@@ -16,13 +16,17 @@
 
 #include <irobot_create_gazebo_plugins/hazards_vector.hpp>
 
-HazardsVector::HazardsVector() : Node("hazards_vector"), count_(0)
+HazardsVector::HazardsVector() : Node("hazards_vector")
 {
-  publisher_ = this->create_publisher<irobot_create_msgs::msg::HazardDetection>("hazard_detection", rclcpp::SensorDataQoS());
+  publisher_ = this->create_publisher<irobot_create_msgs::msg::HazardDetectionVector>("hazard_detection", rclcpp::SensorDataQoS());
   float freq = 62.0F; // Hz
   timer_ = this->create_wall_timer(std::chrono::duration<float>(1 / freq), std::bind(&HazardsVector::publish_timer_callback, this));
 
-  // Cliff Subscriber topics
+  // Bumper Subscriber
+  bumper_sub_ = this->create_subscription<irobot_create_msgs::msg::HazardDetection>(
+    "/bumper/event", rclcpp::SensorDataQoS(), std::bind(&HazardsVector::subscriber_callback, this, std::placeholders::_1));
+
+  // Cliff Subscribers
   cliff_front_left_sub_ = this->create_subscription<irobot_create_msgs::msg::HazardDetection>(
     "/cliff_front_left/event", rclcpp::SensorDataQoS(), std::bind(&HazardsVector::subscriber_callback, this, std::placeholders::_1));
   cliff_front_right_sub_ = this->create_subscription<irobot_create_msgs::msg::HazardDetection>(
@@ -32,18 +36,33 @@ HazardsVector::HazardsVector() : Node("hazards_vector"), count_(0)
   cliff_side_right_sub_ = this->create_subscription<irobot_create_msgs::msg::HazardDetection>(
     "/cliff_side_right/event", rclcpp::SensorDataQoS(), std::bind(&HazardsVector::subscriber_callback, this, std::placeholders::_1));
 
+  // Wheeldrop Subscribers
+  wheel_drop_left_wheel_sub_ = this->create_subscription<irobot_create_msgs::msg::HazardDetection>(
+    "/wheel_drop/left_wheel/event", rclcpp::SensorDataQoS(), std::bind(&HazardsVector::subscriber_callback, this, std::placeholders::_1));
+  wheel_drop_right_wheel_sub_ = this->create_subscription<irobot_create_msgs::msg::HazardDetection>(
+    "/wheel_drop/right_wheel/event", rclcpp::SensorDataQoS(), std::bind(&HazardsVector::subscriber_callback, this, std::placeholders::_1));
 }
 
-void HazardsVector::subscriber_callback(const irobot_create_msgs::msg::HazardDetection::SharedPtr msg) const
+void HazardsVector::subscriber_callback(irobot_create_msgs::msg::HazardDetection::SharedPtr msg)
 {
-  std::cout << "I heard: " <<  msg->header.frame_id << std::endl;
+  std::lock_guard<std::mutex> lock(mutex_);
+
+  // Add message to hazards vector.
+  msgs_.push_back(*msg);
 }
 
 void HazardsVector::publish_timer_callback()
 {
-  auto message = irobot_create_msgs::msg::HazardDetection();
-  // RCLCPP_INFO(this->get_logger(), "Publishing now");
-  publisher_->publish(message);
+  std::lock_guard<std::mutex> lock(mutex_);
+
+  auto msg = irobot_create_msgs::msg::HazardDetectionVector();
+
+  // Publish detected hazards vector.
+  msg.detections = msgs_;
+  publisher_->publish(msg);
+
+  // Clear the hazards vector now that it was published.
+  msgs_.clear();
 }
 
 int main(int argc, char * argv[])
