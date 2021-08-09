@@ -63,6 +63,8 @@ ament_export_libraries(gazebo_ros_create_cliff_sensor)
 target_link_libraries(gazebo_ros_create_cliff_sensor gazebo_ros_create_helpers)
 add_executable(talker src/publisher_member_function.cpp)
 ament_target_dependencies(talker rclcpp std_msgs)
+add_executable(hazards_vector src/hazards_vector.cpp)
+ament_target_dependencies(hazards_vector rclcpp std_msgs)
 
 ## gazebo_ros_create_bumper
 target_include_directories(gazebo_ros_create_bumper PUBLIC include)
@@ -150,7 +152,7 @@ install(TARGETS
   RUNTIME DESTINATION bin)
 
 install(TARGETS
-    talker
+    hazards_vector
   DESTINATION lib/${PROJECT_NAME})
 
 ament_package()
