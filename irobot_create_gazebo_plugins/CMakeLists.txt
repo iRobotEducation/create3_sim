@@ -61,10 +61,13 @@ ament_target_dependencies(gazebo_ros_create_cliff_sensor
 )
 ament_export_libraries(gazebo_ros_create_cliff_sensor)
 target_link_libraries(gazebo_ros_create_cliff_sensor gazebo_ros_create_helpers)
-add_executable(talker src/publisher_member_function.cpp)
-ament_target_dependencies(talker rclcpp std_msgs)
+
+## hazards_vector
 add_executable(hazards_vector src/hazards_vector.cpp)
-ament_target_dependencies(hazards_vector rclcpp std_msgs)
+ament_target_dependencies(hazards_vector
+  "irobot_create_msgs"
+  "rclcpp"
+)
 
 ## gazebo_ros_create_bumper
 target_include_directories(gazebo_ros_create_bumper PUBLIC include)
