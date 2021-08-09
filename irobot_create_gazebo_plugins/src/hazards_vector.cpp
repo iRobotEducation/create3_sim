@@ -18,29 +18,39 @@
 
 HazardsVector::HazardsVector() : Node("hazards_vector")
 {
-  publisher_ = this->create_publisher<irobot_create_msgs::msg::HazardDetectionVector>("hazard_detection", rclcpp::SensorDataQoS());
-  float freq = 62.0F; // Hz
-  timer_ = this->create_wall_timer(std::chrono::duration<float>(1 / freq), std::bind(&HazardsVector::publish_timer_callback, this));
+  publisher_ = this->create_publisher<irobot_create_msgs::msg::HazardDetectionVector>(
+    "hazard_detection", rclcpp::SensorDataQoS());
+  float freq = 62.0F;  // Hz
+  timer_ = this->create_wall_timer(
+    std::chrono::duration<float>(1 / freq),
+    std::bind(&HazardsVector::publish_timer_callback, this));
 
   // Bumper Subscriber
   bumper_sub_ = this->create_subscription<irobot_create_msgs::msg::HazardDetection>(
-    "/bumper/event", rclcpp::SensorDataQoS(), std::bind(&HazardsVector::subscriber_callback, this, std::placeholders::_1));
+    "/bumper/event", rclcpp::SensorDataQoS(),
+    std::bind(&HazardsVector::subscriber_callback, this, std::placeholders::_1));
 
   // Cliff Subscribers
   cliff_front_left_sub_ = this->create_subscription<irobot_create_msgs::msg::HazardDetection>(
-    "/cliff_front_left/event", rclcpp::SensorDataQoS(), std::bind(&HazardsVector::subscriber_callback, this, std::placeholders::_1));
+    "/cliff_front_left/event", rclcpp::SensorDataQoS(),
+    std::bind(&HazardsVector::subscriber_callback, this, std::placeholders::_1));
   cliff_front_right_sub_ = this->create_subscription<irobot_create_msgs::msg::HazardDetection>(
-    "/cliff_front_right/event", rclcpp::SensorDataQoS(), std::bind(&HazardsVector::subscriber_callback, this, std::placeholders::_1));
+    "/cliff_front_right/event", rclcpp::SensorDataQoS(),
+    std::bind(&HazardsVector::subscriber_callback, this, std::placeholders::_1));
   cliff_side_left_sub_ = this->create_subscription<irobot_create_msgs::msg::HazardDetection>(
-    "/cliff_side_left/event", rclcpp::SensorDataQoS(), std::bind(&HazardsVector::subscriber_callback, this, std::placeholders::_1));
+    "/cliff_side_left/event", rclcpp::SensorDataQoS(),
+    std::bind(&HazardsVector::subscriber_callback, this, std::placeholders::_1));
   cliff_side_right_sub_ = this->create_subscription<irobot_create_msgs::msg::HazardDetection>(
-    "/cliff_side_right/event", rclcpp::SensorDataQoS(), std::bind(&HazardsVector::subscriber_callback, this, std::placeholders::_1));
+    "/cliff_side_right/event", rclcpp::SensorDataQoS(),
+    std::bind(&HazardsVector::subscriber_callback, this, std::placeholders::_1));
 
   // Wheeldrop Subscribers
   wheel_drop_left_wheel_sub_ = this->create_subscription<irobot_create_msgs::msg::HazardDetection>(
-    "/wheel_drop/left_wheel/event", rclcpp::SensorDataQoS(), std::bind(&HazardsVector::subscriber_callback, this, std::placeholders::_1));
+    "/wheel_drop/left_wheel/event", rclcpp::SensorDataQoS(),
+    std::bind(&HazardsVector::subscriber_callback, this, std::placeholders::_1));
   wheel_drop_right_wheel_sub_ = this->create_subscription<irobot_create_msgs::msg::HazardDetection>(
-    "/wheel_drop/right_wheel/event", rclcpp::SensorDataQoS(), std::bind(&HazardsVector::subscriber_callback, this, std::placeholders::_1));
+    "/wheel_drop/right_wheel/event", rclcpp::SensorDataQoS(),
+    std::bind(&HazardsVector::subscriber_callback, this, std::placeholders::_1));
 }
 
 void HazardsVector::subscriber_callback(irobot_create_msgs::msg::HazardDetection::SharedPtr msg)
