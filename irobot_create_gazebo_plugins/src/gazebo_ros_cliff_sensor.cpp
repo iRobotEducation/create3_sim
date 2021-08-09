@@ -35,7 +35,6 @@ void GazeboRosCliffSensor::Load(gazebo::sensors::SensorPtr parent, sdf::ElementP
   // Configure our static header message
   utils::initialize(msg_.header.frame_id, sdf, "frame_id", "");
 
-
   // Create a GazeboRos node instead of a common ROS node.
   // Pass it SDF parameters so common options like namespace and remapping can be handled.
   ros_node_ = gazebo_ros::Node::Get(sdf);
