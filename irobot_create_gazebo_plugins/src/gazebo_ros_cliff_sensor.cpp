@@ -32,6 +32,9 @@ void GazeboRosCliffSensor::Load(gazebo::sensors::SensorPtr parent, sdf::ElementP
   GZ_ASSERT(cliff_sensor_, "GazeboRosCliffSensor controller requires a Ray Sensor as its parent");
 
   utils::initialize(detection_threshold_, sdf, "detection_threshold", 0.01);
+  // Configure our static header message
+  utils::initialize(msg_.header.frame_id, sdf, "frame_id", "");
+
 
   // Create a GazeboRos node instead of a common ROS node.
   // Pass it SDF parameters so common options like namespace and remapping can be handled.
@@ -45,8 +48,6 @@ void GazeboRosCliffSensor::Load(gazebo::sensors::SensorPtr parent, sdf::ElementP
     std::bind(&GazeboRosCliffSensor::OnNewLaserScans, this));
 
   // Configure our static message charasteristics
-  msg_.header.frame_id = gazebo_ros::SensorFrameID(*parent, *sdf);
-
   max_range_ = cliff_sensor_->RangeMax();
 
   RCLCPP_INFO(ros_node_->get_logger(), "Started plugin");
