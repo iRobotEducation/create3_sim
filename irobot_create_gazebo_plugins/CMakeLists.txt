@@ -17,6 +17,7 @@ find_package(geometry_msgs REQUIRED)
 find_package(irobot_create_msgs REQUIRED)
 find_package(rclcpp REQUIRED)
 find_package(sensor_msgs REQUIRED)
+find_package(std_msgs REQUIRED)
 
 link_directories(${gazebo_dev_LIBRARY_DIRS})
 
@@ -60,6 +61,8 @@ ament_target_dependencies(gazebo_ros_create_cliff_sensor
 )
 ament_export_libraries(gazebo_ros_create_cliff_sensor)
 target_link_libraries(gazebo_ros_create_cliff_sensor gazebo_ros_create_helpers)
+add_executable(talker src/publisher_member_function.cpp)
+ament_target_dependencies(talker rclcpp std_msgs)
 
 ## gazebo_ros_create_bumper
 target_include_directories(gazebo_ros_create_bumper PUBLIC include)
@@ -145,5 +148,9 @@ install(TARGETS
   ARCHIVE DESTINATION lib
   LIBRARY DESTINATION lib
   RUNTIME DESTINATION bin)
+
+install(TARGETS
+    talker
+  DESTINATION lib/${PROJECT_NAME})
 
 ament_package()
