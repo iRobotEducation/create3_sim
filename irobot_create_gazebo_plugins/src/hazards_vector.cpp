@@ -14,58 +14,37 @@
 //
 // @author Rodrigo Jose Causarano Nunez (rcausaran@irobot.com)
 
-#include <chrono>
-#include <functional>
-#include <memory>
-#include <string>
+#include <irobot_create_gazebo_plugins/hazards_vector.hpp>
 
-#include "rclcpp/rclcpp.hpp"
-#include <irobot_create_msgs/msg/hazard_detection.hpp>
-
-class HazardsVector : public rclcpp::Node
+HazardsVector::HazardsVector() : Node("hazards_vector"), count_(0)
 {
-public:
-  HazardsVector() : Node("hazards_vector"), count_(0)
-  {
-    publisher_ = this->create_publisher<irobot_create_msgs::msg::HazardDetection>("hazard_detection", rclcpp::SensorDataQoS());
-    float freq = 62.0F; // Hz
-    timer_ = this->create_wall_timer(std::chrono::duration<float>(1 / freq), std::bind(&HazardsVector::publish_timer_callback, this));
+  publisher_ = this->create_publisher<irobot_create_msgs::msg::HazardDetection>("hazard_detection", rclcpp::SensorDataQoS());
+  float freq = 62.0F; // Hz
+  timer_ = this->create_wall_timer(std::chrono::duration<float>(1 / freq), std::bind(&HazardsVector::publish_timer_callback, this));
 
-    // Cliff Subscriber topics
-    cliff_front_left_sub_ = this->create_subscription<irobot_create_msgs::msg::HazardDetection>(
-      "/cliff_front_left/event", rclcpp::SensorDataQoS(), std::bind(&HazardsVector::subscriber_callback, this, std::placeholders::_1));
-    cliff_front_right_sub_ = this->create_subscription<irobot_create_msgs::msg::HazardDetection>(
-      "/cliff_front_right/event", rclcpp::SensorDataQoS(), std::bind(&HazardsVector::subscriber_callback, this, std::placeholders::_1));
-    cliff_side_left_sub_ = this->create_subscription<irobot_create_msgs::msg::HazardDetection>(
-      "/cliff_side_left/event", rclcpp::SensorDataQoS(), std::bind(&HazardsVector::subscriber_callback, this, std::placeholders::_1));
-    cliff_side_right_sub_ = this->create_subscription<irobot_create_msgs::msg::HazardDetection>(
-      "/cliff_side_right/event", rclcpp::SensorDataQoS(), std::bind(&HazardsVector::subscriber_callback, this, std::placeholders::_1));
+  // Cliff Subscriber topics
+  cliff_front_left_sub_ = this->create_subscription<irobot_create_msgs::msg::HazardDetection>(
+    "/cliff_front_left/event", rclcpp::SensorDataQoS(), std::bind(&HazardsVector::subscriber_callback, this, std::placeholders::_1));
+  cliff_front_right_sub_ = this->create_subscription<irobot_create_msgs::msg::HazardDetection>(
+    "/cliff_front_right/event", rclcpp::SensorDataQoS(), std::bind(&HazardsVector::subscriber_callback, this, std::placeholders::_1));
+  cliff_side_left_sub_ = this->create_subscription<irobot_create_msgs::msg::HazardDetection>(
+    "/cliff_side_left/event", rclcpp::SensorDataQoS(), std::bind(&HazardsVector::subscriber_callback, this, std::placeholders::_1));
+  cliff_side_right_sub_ = this->create_subscription<irobot_create_msgs::msg::HazardDetection>(
+    "/cliff_side_right/event", rclcpp::SensorDataQoS(), std::bind(&HazardsVector::subscriber_callback, this, std::placeholders::_1));
 
-  }
+}
 
-private:
-  void subscriber_callback(const irobot_create_msgs::msg::HazardDetection::SharedPtr msg) const
-  {
-    std::cout << "I heard: " <<  msg->header.frame_id << std::endl;
-  }
-  void publish_timer_callback()
-  {
-    auto message = irobot_create_msgs::msg::HazardDetection();
-    // RCLCPP_INFO(this->get_logger(), "Publishing now");
-    publisher_->publish(message);
-  }
-  rclcpp::TimerBase::SharedPtr timer_;
-  rclcpp::Publisher<irobot_create_msgs::msg::HazardDetection>::SharedPtr publisher_;
-  rclcpp::Subscription<irobot_create_msgs::msg::HazardDetection>::SharedPtr cliff_front_left_sub_;
-  rclcpp::Subscription<irobot_create_msgs::msg::HazardDetection>::SharedPtr cliff_front_right_sub_;
-  rclcpp::Subscription<irobot_create_msgs::msg::HazardDetection>::SharedPtr cliff_side_left_sub_;
-  rclcpp::Subscription<irobot_create_msgs::msg::HazardDetection>::SharedPtr cliff_side_right_sub_;
+void HazardsVector::subscriber_callback(const irobot_create_msgs::msg::HazardDetection::SharedPtr msg) const
+{
+  std::cout << "I heard: " <<  msg->header.frame_id << std::endl;
+}
 
-      // /cliff_front_right/event
-    // /cliff_side_left/event
-    // /cliff_side_right/event
-  size_t count_;
-};
+void HazardsVector::publish_timer_callback()
+{
+  auto message = irobot_create_msgs::msg::HazardDetection();
+  // RCLCPP_INFO(this->get_logger(), "Publishing now");
+  publisher_->publish(message);
+}
 
 int main(int argc, char * argv[])
 {

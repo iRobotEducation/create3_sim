@@ -50,6 +50,12 @@ add_library(gazebo_ros_create_wheel_drop SHARED
   src/gazebo_ros_wheel_drop.cpp
 )
 
+add_executable(hazards_vector src/hazards_vector.cpp)
+ament_target_dependencies(hazards_vector
+  "irobot_create_msgs"
+  "rclcpp"
+)
+
 # Linking
 ## gazebo_ros_cliff_sensor
 target_include_directories(gazebo_ros_create_cliff_sensor PUBLIC include)
@@ -63,11 +69,7 @@ ament_export_libraries(gazebo_ros_create_cliff_sensor)
 target_link_libraries(gazebo_ros_create_cliff_sensor gazebo_ros_create_helpers)
 
 ## hazards_vector
-add_executable(hazards_vector src/hazards_vector.cpp)
-ament_target_dependencies(hazards_vector
-  "irobot_create_msgs"
-  "rclcpp"
-)
+target_include_directories(hazards_vector PUBLIC include)
 
 ## gazebo_ros_create_bumper
 target_include_directories(gazebo_ros_create_bumper PUBLIC include)
