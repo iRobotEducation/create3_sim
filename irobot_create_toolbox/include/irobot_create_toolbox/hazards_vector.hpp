@@ -57,8 +57,10 @@ private:
   rclcpp::Subscription<irobot_create_msgs::msg::HazardDetection>::SharedPtr
     wheel_drop_right_wheel_sub_;
 
+  // hazard detections message
+  irobot_create_msgs::msg::HazardDetectionVector msg_;
   // Vector holding hazard detections per iteration
-  std::vector<irobot_create_msgs::msg::HazardDetection> msgs_;
+  std::vector<irobot_create_msgs::msg::HazardDetection> msgs_vector_;
 
   // Mutex
   std::mutex mutex_;
