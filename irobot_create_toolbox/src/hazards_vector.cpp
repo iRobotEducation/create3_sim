@@ -72,11 +72,3 @@ void HazardsVector::publisher_callback()
   // Clear the hazards vector now that it was published.
   msg_.detections.clear();
 }
-
-int main(int argc, char * argv[])
-{
-  rclcpp::init(argc, argv);
-  rclcpp::spin(std::make_shared<HazardsVector>());
-  rclcpp::shutdown();
-  return 0;
-}
