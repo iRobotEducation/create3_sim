@@ -14,10 +14,10 @@
   <depend>urdf</depend>
   <depend>xacro</depend>
 
-  <exec_depend>irobot_create_control</exec_depend>
-  <exec_depend>joint_state_publisher</exec_depend>
-  <exec_depend>robot_state_publisher</exec_depend>
-  <exec_depend>ros2launch</exec_depend>
+  <depend>irobot_create_control</depend>
+  <depend>joint_state_publisher</depend>
+  <depend>robot_state_publisher</depend>
+  <depend>ros2launch</depend>
 
   <test_depend>ament_lint_auto</test_depend>
   <test_depend>ament_lint_common</test_depend>
