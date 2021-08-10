@@ -36,7 +36,17 @@ install(DIRECTORY include/
         DESTINATION include)
 
 install(TARGETS
-    hazards_vector
-  DESTINATION lib/${PROJECT_NAME})
+  hazards_vector
+  DESTINATION lib/${PROJECT_NAME}
+)
+
+# Install Python modules
+ament_python_install_package(${PROJECT_NAME})
+
+# Install Python executables
+install(PROGRAMS
+  scripts/topic_republisher.py
+  DESTINATION lib/${PROJECT_NAME}
+)
 
 ament_package()

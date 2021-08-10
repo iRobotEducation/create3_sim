@@ -12,14 +12,13 @@
   <author>iRobot</author>
 
   <buildtool_depend>ament_cmake</buildtool_depend>
-  <buildtool_depend>ament_cmake_python</buildtool_depend>
 
-  <depend>irobot_create_control</depend>
-  <depend>irobot_create_description</depend>
-  <depend>irobot_create_gazebo</depend>
-  <depend>irobot_create_gazebo_plugins</depend>
-  <depend>irobot_create_msgs</depend>
-  <depend>irobot_create_toolbox</depend>
+  <exec_depend>irobot_create_control</exec_depend>
+  <exec_depend>irobot_create_description</exec_depend>
+  <exec_depend>irobot_create_gazebo</exec_depend>
+  <exec_depend>irobot_create_gazebo_plugins</exec_depend>
+  <exec_depend>irobot_create_msgs</exec_depend>
+  <exec_depend>irobot_create_toolbox</exec_depend>
 
   <export>
     <build_type>ament_cmake</build_type>

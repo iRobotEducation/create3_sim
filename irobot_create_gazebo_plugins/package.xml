@@ -11,12 +11,12 @@
 
   <buildtool_depend>ament_cmake</buildtool_depend>
 
-  <depend>gazebo_dev</depend>
-  <depend>gazebo_ros</depend>
-  <depend>geometry_msgs</depend>
-  <depend>irobot_create_msgs</depend>
-  <depend>rclcpp</depend>
-  <depend>sensor_msgs</depend>
+  <exec_depend>gazebo_dev</exec_depend>
+  <exec_depend>gazebo_ros</exec_depend>
+  <exec_depend>geometry_msgs</exec_depend>
+  <exec_depend>irobot_create_msgs</exec_depend>
+  <exec_depend>rclcpp</exec_depend>
+  <exec_depend>sensor_msgs</exec_depend>
 
   <test_depend>ament_lint_auto</test_depend>
   <test_depend>ament_lint_common</test_depend>
