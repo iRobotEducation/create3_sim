@@ -57,21 +57,18 @@ void HazardsVector::subscription_callback(irobot_create_msgs::msg::HazardDetecti
   std::lock_guard<std::mutex> lock(mutex_);
 
   // Add message to hazards vector.
-  msgs_.push_back(*msg);
+  msg_.detections.push_back(*msg);
 }
 
 void HazardsVector::publisher_callback()
 {
   std::lock_guard<std::mutex> lock(mutex_);
 
-  auto msg = irobot_create_msgs::msg::HazardDetectionVector();
-
   // Publish detected hazards vector.
-  msg.detections = msgs_;
-  publisher_->publish(msg);
+  publisher_->publish(msg_);
 
   // Clear the hazards vector now that it was published.
-  msgs_.clear();
+  msg_.detections.clear();
 }
 
 int main(int argc, char * argv[])
