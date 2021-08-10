@@ -22,10 +22,9 @@
 #include <irobot_create_msgs/msg/hazard_detection.hpp>
 #include <irobot_create_msgs/msg/hazard_detection_vector.hpp>
 #include <memory>
+#include <rclcpp/rclcpp.hpp>
 #include <string>
 #include <vector>
-
-#include "rclcpp/rclcpp.hpp"
 
 class HazardsVector : public rclcpp::Node
 {
