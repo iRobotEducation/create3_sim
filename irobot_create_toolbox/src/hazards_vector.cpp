@@ -22,8 +22,7 @@ HazardsVector::HazardsVector() : Node("hazards_vector")
     "hazard_detection", rclcpp::SensorDataQoS());
   float freq = 62.0F;  // Hz
   timer_ = this->create_wall_timer(
-    std::chrono::duration<float>(1 / freq),
-    std::bind(&HazardsVector::publisher_callback, this));
+    std::chrono::duration<float>(1 / freq), std::bind(&HazardsVector::publisher_callback, this));
 
   // Bumper Subscription
   bumper_sub_ = this->create_subscription<irobot_create_msgs::msg::HazardDetection>(
