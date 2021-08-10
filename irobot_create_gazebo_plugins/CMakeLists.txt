@@ -17,7 +17,6 @@ find_package(geometry_msgs REQUIRED)
 find_package(irobot_create_msgs REQUIRED)
 find_package(rclcpp REQUIRED)
 find_package(sensor_msgs REQUIRED)
-find_package(std_msgs REQUIRED)
 
 link_directories(${gazebo_dev_LIBRARY_DIRS})
 

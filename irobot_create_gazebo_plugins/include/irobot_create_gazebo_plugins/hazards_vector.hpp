@@ -31,12 +31,11 @@ class HazardsVector : public rclcpp::Node
 {
 public:
   /// Constructor
-
   HazardsVector();
 
 private:
-  void subscriber_callback(irobot_create_msgs::msg::HazardDetection::SharedPtr msg);
-  void publish_timer_callback();
+  void subscription_callback(irobot_create_msgs::msg::HazardDetection::SharedPtr msg);
+  void publisher_callback();
 
   // Publish aggregated hazard detections on timer_'s frequency
   rclcpp::TimerBase::SharedPtr timer_;
