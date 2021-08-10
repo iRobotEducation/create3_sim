@@ -15,10 +15,8 @@ jobs:
       matrix:
         linter:
           - clang_format
-          # - clang_tidy
           - copyright
           - cppcheck
-          # - cpplint
           - flake8
           - lint_cmake
           - mypy
