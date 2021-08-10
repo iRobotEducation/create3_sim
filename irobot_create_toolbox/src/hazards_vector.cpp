@@ -20,41 +20,43 @@ HazardsVector::HazardsVector() : Node("hazards_vector")
 {
   publisher_ = this->create_publisher<irobot_create_msgs::msg::HazardDetectionVector>(
     "hazard_detection", rclcpp::SensorDataQoS());
-  float freq = 62.0F;  // Hz
+
+  const float frequency{62.0};  // Hz
   timer_ = this->create_wall_timer(
-    std::chrono::duration<float>(1 / freq), std::bind(&HazardsVector::publisher_callback, this));
+    std::chrono::duration<float>(1 / frequency),
+    std::bind(&HazardsVector::publisher_callback, this));
 
   // Bumper Subscription
-  bumper_sub_ = this->create_subscription<irobot_create_msgs::msg::HazardDetection>(
+  subs_vector_.push_back(this->create_subscription<irobot_create_msgs::msg::HazardDetection>(
     "/bumper/event", rclcpp::SensorDataQoS(),
-    std::bind(&HazardsVector::subscription_callback, this, std::placeholders::_1));
+    std::bind(&HazardsVector::subscription_callback, this, std::placeholders::_1)));
 
   // Cliff Subscriptions
-  cliff_front_left_sub_ = this->create_subscription<irobot_create_msgs::msg::HazardDetection>(
+  subs_vector_.push_back(this->create_subscription<irobot_create_msgs::msg::HazardDetection>(
     "/cliff_front_left/event", rclcpp::SensorDataQoS(),
-    std::bind(&HazardsVector::subscription_callback, this, std::placeholders::_1));
-  cliff_front_right_sub_ = this->create_subscription<irobot_create_msgs::msg::HazardDetection>(
+    std::bind(&HazardsVector::subscription_callback, this, std::placeholders::_1)));
+  subs_vector_.push_back(this->create_subscription<irobot_create_msgs::msg::HazardDetection>(
     "/cliff_front_right/event", rclcpp::SensorDataQoS(),
-    std::bind(&HazardsVector::subscription_callback, this, std::placeholders::_1));
-  cliff_side_left_sub_ = this->create_subscription<irobot_create_msgs::msg::HazardDetection>(
+    std::bind(&HazardsVector::subscription_callback, this, std::placeholders::_1)));
+  subs_vector_.push_back(this->create_subscription<irobot_create_msgs::msg::HazardDetection>(
     "/cliff_side_left/event", rclcpp::SensorDataQoS(),
-    std::bind(&HazardsVector::subscription_callback, this, std::placeholders::_1));
-  cliff_side_right_sub_ = this->create_subscription<irobot_create_msgs::msg::HazardDetection>(
+    std::bind(&HazardsVector::subscription_callback, this, std::placeholders::_1)));
+  subs_vector_.push_back(this->create_subscription<irobot_create_msgs::msg::HazardDetection>(
     "/cliff_side_right/event", rclcpp::SensorDataQoS(),
-    std::bind(&HazardsVector::subscription_callback, this, std::placeholders::_1));
+    std::bind(&HazardsVector::subscription_callback, this, std::placeholders::_1)));
 
   // Wheeldrop Subscriptions
-  wheel_drop_left_wheel_sub_ = this->create_subscription<irobot_create_msgs::msg::HazardDetection>(
+  subs_vector_.push_back(this->create_subscription<irobot_create_msgs::msg::HazardDetection>(
     "/wheel_drop/left_wheel/event", rclcpp::SensorDataQoS(),
-    std::bind(&HazardsVector::subscription_callback, this, std::placeholders::_1));
-  wheel_drop_right_wheel_sub_ = this->create_subscription<irobot_create_msgs::msg::HazardDetection>(
+    std::bind(&HazardsVector::subscription_callback, this, std::placeholders::_1)));
+  subs_vector_.push_back(this->create_subscription<irobot_create_msgs::msg::HazardDetection>(
     "/wheel_drop/right_wheel/event", rclcpp::SensorDataQoS(),
-    std::bind(&HazardsVector::subscription_callback, this, std::placeholders::_1));
+    std::bind(&HazardsVector::subscription_callback, this, std::placeholders::_1)));
 }
 
 void HazardsVector::subscription_callback(irobot_create_msgs::msg::HazardDetection::SharedPtr msg)
 {
-  std::lock_guard<std::mutex> lock(mutex_);
+  std::lock_guard<std::mutex> lock{mutex_};
 
   // Add message to hazards vector.
   msg_.detections.push_back(*msg);
@@ -62,7 +64,7 @@ void HazardsVector::subscription_callback(irobot_create_msgs::msg::HazardDetecti
 
 void HazardsVector::publisher_callback()
 {
-  std::lock_guard<std::mutex> lock(mutex_);
+  std::lock_guard<std::mutex> lock{mutex_};
 
   // Publish detected hazards vector.
   publisher_->publish(msg_);
