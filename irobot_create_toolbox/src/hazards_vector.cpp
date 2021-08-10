@@ -14,7 +14,7 @@
 //
 // @author Rodrigo Jose Causarano Nunez (rcausaran@irobot.com)
 
-#include <irobot_create_gazebo_plugins/hazards_vector.hpp>
+#include <irobot_create_toolbox/hazards_vector.hpp>
 
 HazardsVector::HazardsVector() : Node("hazards_vector")
 {
