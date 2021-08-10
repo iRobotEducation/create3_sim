@@ -102,6 +102,13 @@ def generate_launch_description():
         output='screen',
     )
 
+    # Publish hazards vector
+    hazards_vector_node = Node(
+        package='irobot_create_toolbox',
+        name='hazards_vector_node',
+        executable='hazards_vector',
+    )
+
     # Define LaunchDescription variable
     ld = LaunchDescription(ARGUMENTS)
     # Include robot description
@@ -112,5 +119,6 @@ def generate_launch_description():
     ld.add_action(gzclient)
     ld.add_action(spawn_robot)
     ld.add_action(spawn_dock)
+    ld.add_action(hazards_vector_node)
 
     return ld

@@ -42,20 +42,9 @@ private:
   // Hazard detection vector publisher
   rclcpp::Publisher<irobot_create_msgs::msg::HazardDetectionVector>::SharedPtr publisher_;
 
-  // Bumper subscriptions
-  rclcpp::Subscription<irobot_create_msgs::msg::HazardDetection>::SharedPtr bumper_sub_;
-
-  // Cliff subscriptions
-  rclcpp::Subscription<irobot_create_msgs::msg::HazardDetection>::SharedPtr cliff_front_left_sub_;
-  rclcpp::Subscription<irobot_create_msgs::msg::HazardDetection>::SharedPtr cliff_front_right_sub_;
-  rclcpp::Subscription<irobot_create_msgs::msg::HazardDetection>::SharedPtr cliff_side_left_sub_;
-  rclcpp::Subscription<irobot_create_msgs::msg::HazardDetection>::SharedPtr cliff_side_right_sub_;
-
-  // Wheeldrop subscriptions
-  rclcpp::Subscription<irobot_create_msgs::msg::HazardDetection>::SharedPtr
-    wheel_drop_left_wheel_sub_;
-  rclcpp::Subscription<irobot_create_msgs::msg::HazardDetection>::SharedPtr
-    wheel_drop_right_wheel_sub_;
+  // Vector of subscriptions
+  std::vector<rclcpp::Subscription<irobot_create_msgs::msg::HazardDetection>::SharedPtr>
+    subs_vector_;
 
   // hazard detections message
   irobot_create_msgs::msg::HazardDetectionVector msg_;
