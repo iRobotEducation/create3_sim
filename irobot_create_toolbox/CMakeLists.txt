@@ -22,7 +22,7 @@ add_library(vector_publisher SHARED
 )
 
 # Add executables
-add_executable(vector_publisher_node src/vector_publisher_node.cpp)
+# add_executable(vector_publisher_node src/vector_publisher_node.cpp)
 
 # Linking
 ## vector publisher
@@ -32,7 +32,7 @@ ament_target_dependencies(vector_publisher
   "rclcpp"
 )
 
-target_link_libraries(vector_publisher_node vector_publisher)
+# target_link_libraries(vector_publisher_node vector_publisher)
 
 # Exports
 ament_export_include_directories(include)
@@ -44,7 +44,7 @@ install(DIRECTORY include/
 
 install(TARGETS
   vector_publisher
-  vector_publisher_node
+  # vector_publisher_node
   ARCHIVE DESTINATION lib
   LIBRARY DESTINATION lib
   RUNTIME DESTINATION lib/${PROJECT_NAME}
