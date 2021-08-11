@@ -16,9 +16,10 @@
 
 #include <irobot_create_toolbox/vector_publisher.hpp>
 
-VectorPublisher::VectorPublisher() : Node("vector_publisher")
+template<class T, class V>
+VectorPublisher<T, V>::VectorPublisher() : Node("vector_publisher")
 {
-  publisher_ = this->create_publisher<irobot_create_msgs::msg::HazardDetectionVector>(
+  publisher_ = this->create_publisher<V>(
     "hazard_detection", rclcpp::SensorDataQoS());
 
   const float frequency{62.0};  // Hz
@@ -27,34 +28,35 @@ VectorPublisher::VectorPublisher() : Node("vector_publisher")
     std::bind(&VectorPublisher::publisher_callback, this));
 
   // Bumper Subscription
-  subs_vector_.push_back(this->create_subscription<irobot_create_msgs::msg::HazardDetection>(
+  subs_vector_.push_back(this->create_subscription<T>(
     "/bumper/event", rclcpp::SensorDataQoS(),
     std::bind(&VectorPublisher::subscription_callback, this, std::placeholders::_1)));
 
   // Cliff Subscriptions
-  subs_vector_.push_back(this->create_subscription<irobot_create_msgs::msg::HazardDetection>(
+  subs_vector_.push_back(this->create_subscription<T>(
     "/cliff_front_left/event", rclcpp::SensorDataQoS(),
     std::bind(&VectorPublisher::subscription_callback, this, std::placeholders::_1)));
-  subs_vector_.push_back(this->create_subscription<irobot_create_msgs::msg::HazardDetection>(
+  subs_vector_.push_back(this->create_subscription<T>(
     "/cliff_front_right/event", rclcpp::SensorDataQoS(),
     std::bind(&VectorPublisher::subscription_callback, this, std::placeholders::_1)));
-  subs_vector_.push_back(this->create_subscription<irobot_create_msgs::msg::HazardDetection>(
+  subs_vector_.push_back(this->create_subscription<T>(
     "/cliff_side_left/event", rclcpp::SensorDataQoS(),
     std::bind(&VectorPublisher::subscription_callback, this, std::placeholders::_1)));
-  subs_vector_.push_back(this->create_subscription<irobot_create_msgs::msg::HazardDetection>(
+  subs_vector_.push_back(this->create_subscription<T>(
     "/cliff_side_right/event", rclcpp::SensorDataQoS(),
     std::bind(&VectorPublisher::subscription_callback, this, std::placeholders::_1)));
 
   // Wheeldrop Subscriptions
-  subs_vector_.push_back(this->create_subscription<irobot_create_msgs::msg::HazardDetection>(
+  subs_vector_.push_back(this->create_subscription<T>(
     "/wheel_drop/left_wheel/event", rclcpp::SensorDataQoS(),
     std::bind(&VectorPublisher::subscription_callback, this, std::placeholders::_1)));
-  subs_vector_.push_back(this->create_subscription<irobot_create_msgs::msg::HazardDetection>(
+  subs_vector_.push_back(this->create_subscription<T>(
     "/wheel_drop/right_wheel/event", rclcpp::SensorDataQoS(),
     std::bind(&VectorPublisher::subscription_callback, this, std::placeholders::_1)));
 }
 
-void VectorPublisher::subscription_callback(std::shared_ptr<irobot_create_msgs::msg::HazardDetection> msg)
+template<class T, class V>
+void VectorPublisher<T, V>::subscription_callback(std::shared_ptr<T> msg)
 {
   std::lock_guard<std::mutex> lock{mutex_};
 
@@ -62,7 +64,8 @@ void VectorPublisher::subscription_callback(std::shared_ptr<irobot_create_msgs::
   msg_.detections.push_back(*msg);
 }
 
-void VectorPublisher::publisher_callback()
+template<class T, class V>
+void VectorPublisher<T, V>::publisher_callback()
 {
   std::lock_guard<std::mutex> lock{mutex_};
 
