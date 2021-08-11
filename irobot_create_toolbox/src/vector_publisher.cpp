@@ -54,7 +54,7 @@ VectorPublisher::VectorPublisher() : Node("vector_publisher")
     std::bind(&VectorPublisher::subscription_callback, this, std::placeholders::_1)));
 }
 
-void VectorPublisher::subscription_callback(irobot_create_msgs::msg::HazardDetection::SharedPtr msg)
+void VectorPublisher::subscription_callback(std::shared_ptr<irobot_create_msgs::msg::HazardDetection> msg)
 {
   std::lock_guard<std::mutex> lock{mutex_};
 
