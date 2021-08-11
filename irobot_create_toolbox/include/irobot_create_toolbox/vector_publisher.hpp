@@ -41,10 +41,10 @@ private:
   rclcpp::TimerBase::SharedPtr timer_;
 
   // Detection vector publisher
-  rclcpp::Publisher<V>::SharedPtr publisher_;
+  std::shared_ptr<rclcpp::Publisher<V>> publisher_;
 
   // Vector of subscriptions
-  std::vector<rclcpp::Subscription<T>::SharedPtr>
+  std::vector<std::shared_ptr<rclcpp::Subscription<T>>>
     subs_vector_;
 
   // Detections message
@@ -53,3 +53,5 @@ private:
   // Mutex
   std::mutex mutex_;
 };
+
+#include <irobot_create_toolbox/vector_publisher.tpp>

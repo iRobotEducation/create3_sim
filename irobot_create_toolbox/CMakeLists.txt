@@ -16,23 +16,16 @@ find_package(irobot_create_msgs REQUIRED)
 find_package(rclcpp REQUIRED)
 find_package(rclpy REQUIRED)
 
-# Add libraries
-add_library(vector_publisher SHARED
-  src/vector_publisher.cpp
-)
-
 # Add executables
-# add_executable(vector_publisher_node src/vector_publisher_node.cpp)
+add_executable(vector_publisher_node src/vector_publisher_node.cpp)
 
 # Linking
-## vector publisher
-target_include_directories(vector_publisher PUBLIC include)
-ament_target_dependencies(vector_publisher
+## vector publisher node
+target_include_directories(vector_publisher_node PUBLIC include)
+ament_target_dependencies(vector_publisher_node
   "irobot_create_msgs"
   "rclcpp"
 )
-
-# target_link_libraries(vector_publisher_node vector_publisher)
 
 # Exports
 ament_export_include_directories(include)
@@ -43,8 +36,7 @@ install(DIRECTORY include/
         DESTINATION include)
 
 install(TARGETS
-  vector_publisher
-  # vector_publisher_node
+  vector_publisher_node
   ARCHIVE DESTINATION lib
   LIBRARY DESTINATION lib
   RUNTIME DESTINATION lib/${PROJECT_NAME}

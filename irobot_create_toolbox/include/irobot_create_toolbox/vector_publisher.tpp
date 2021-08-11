@@ -14,8 +14,6 @@
 //
 // @author Rodrigo Jose Causarano Nunez (rcausaran@irobot.com)
 
-#include <irobot_create_toolbox/vector_publisher.hpp>
-
 template<class T, class V>
 VectorPublisher<T, V>::VectorPublisher() : Node("vector_publisher")
 {
