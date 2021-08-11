@@ -14,12 +14,12 @@
 //
 // @author Rodrigo Jose Causarano Nunez (rcausaran@irobot.com)
 
-#include <irobot_create_toolbox/hazards_vector.hpp>
+#include <irobot_create_toolbox/vector_publisher.hpp>
 
 int main(int argc, char * argv[])
 {
   rclcpp::init(argc, argv);
-  rclcpp::spin(std::make_shared<HazardsVector>());
+  rclcpp::spin(std::make_shared<VectorPublisher>());
   rclcpp::shutdown();
   return 0;
 }
