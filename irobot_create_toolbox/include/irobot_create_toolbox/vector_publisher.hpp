@@ -26,11 +26,11 @@
 #include <string>
 #include <vector>
 
-class HazardsVector : public rclcpp::Node
+class VectorPublisher : public rclcpp::Node
 {
 public:
   /// Constructor
-  HazardsVector();
+  VectorPublisher();
 
 private:
   void subscription_callback(irobot_create_msgs::msg::HazardDetection::SharedPtr msg);
