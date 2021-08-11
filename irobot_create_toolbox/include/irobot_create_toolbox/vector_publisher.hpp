@@ -19,8 +19,6 @@
 #include <algorithm>
 #include <chrono>
 #include <functional>
-// #include <irobot_create_msgs/msg/hazard_detection.hpp>
-// #include <irobot_create_msgs/msg/hazard_detection_vector.hpp>
 #include <memory>
 #include <rclcpp/rclcpp.hpp>
 #include <string>
@@ -31,11 +29,13 @@ class VectorPublisher : public rclcpp::Node
 {
 public:
   /// Constructor
-  VectorPublisher();
+  VectorPublisher(std::string publisher_topic, std::vector<std::string> subscription_topics);
 
 private:
   void subscription_callback(std::shared_ptr<T> msg);
   void publisher_callback();
+  void add_msg(std::shared_ptr<T> msg);
+  void clear_msgs();
 
   // Publish aggregated detections on timer_'s frequency
   rclcpp::TimerBase::SharedPtr timer_;
@@ -54,4 +54,4 @@ private:
   std::mutex mutex_;
 };
 
-#include <irobot_create_toolbox/vector_publisher.tpp>
+#include <irobot_create_toolbox/vector_publisher.cpp>

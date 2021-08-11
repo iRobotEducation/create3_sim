@@ -21,8 +21,24 @@
 
 int main(int argc, char * argv[])
 {
+  std::string publisher_topic = "hazard_detection";
+  std::vector<std::string> subscription_topics;
+
+  // Bumper Subscription
+  subscription_topics.push_back("/bumper/event");
+
+  // Cliff Subscriptions
+  subscription_topics.push_back("/cliff_front_left/event");
+  subscription_topics.push_back("/cliff_front_right/event");
+  subscription_topics.push_back("/cliff_side_left/event");
+  subscription_topics.push_back("/cliff_side_right/event");
+
+  // Wheeldrop Subscriptions
+  subscription_topics.push_back("/wheel_drop/left_wheel/event");
+  subscription_topics.push_back("/wheel_drop/right_wheel/event");
+
   rclcpp::init(argc, argv);
-  rclcpp::spin(std::make_shared<VectorPublisher<irobot_create_msgs::msg::HazardDetection, irobot_create_msgs::msg::HazardDetectionVector>>());
+  rclcpp::spin(std::make_shared<VectorPublisher<irobot_create_msgs::msg::HazardDetection, irobot_create_msgs::msg::HazardDetectionVector>>(publisher_topic, subscription_topics));
   rclcpp::shutdown();
   return 0;
 }
