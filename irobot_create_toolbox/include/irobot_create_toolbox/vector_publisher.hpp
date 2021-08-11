@@ -33,7 +33,7 @@ public:
   VectorPublisher();
 
 private:
-  void subscription_callback(irobot_create_msgs::msg::HazardDetection::SharedPtr msg);
+  void subscription_callback(std::shared_ptr<irobot_create_msgs::msg::HazardDetection> msg);
   void publisher_callback();
 
   // Publish aggregated hazard detections on timer_'s frequency
