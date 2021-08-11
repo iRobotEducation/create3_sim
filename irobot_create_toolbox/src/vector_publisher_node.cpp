@@ -15,11 +15,14 @@
 // @author Rodrigo Jose Causarano Nunez (rcausaran@irobot.com)
 
 #include <irobot_create_toolbox/vector_publisher.hpp>
+#include <irobot_create_msgs/msg/hazard_detection.hpp>
+#include <irobot_create_msgs/msg/hazard_detection_vector.hpp>
+
 
 int main(int argc, char * argv[])
 {
   rclcpp::init(argc, argv);
-  rclcpp::spin(std::make_shared<VectorPublisher>());
+  rclcpp::spin(std::make_shared<VectorPublisher<irobot_create_msgs::msg::HazardDetection, irobot_create_msgs::msg::HazardDetectionVector>>());
   rclcpp::shutdown();
   return 0;
 }
