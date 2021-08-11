@@ -19,13 +19,14 @@
 #include <algorithm>
 #include <chrono>
 #include <functional>
-#include <irobot_create_msgs/msg/hazard_detection.hpp>
-#include <irobot_create_msgs/msg/hazard_detection_vector.hpp>
+// #include <irobot_create_msgs/msg/hazard_detection.hpp>
+// #include <irobot_create_msgs/msg/hazard_detection_vector.hpp>
 #include <memory>
 #include <rclcpp/rclcpp.hpp>
 #include <string>
 #include <vector>
 
+template<typename T, typename V>
 class VectorPublisher : public rclcpp::Node
 {
 public:
@@ -33,23 +34,21 @@ public:
   VectorPublisher();
 
 private:
-  void subscription_callback(std::shared_ptr<irobot_create_msgs::msg::HazardDetection> msg);
+  void subscription_callback(std::shared_ptr<T> msg);
   void publisher_callback();
 
-  // Publish aggregated hazard detections on timer_'s frequency
+  // Publish aggregated detections on timer_'s frequency
   rclcpp::TimerBase::SharedPtr timer_;
 
-  // Hazard detection vector publisher
-  rclcpp::Publisher<irobot_create_msgs::msg::HazardDetectionVector>::SharedPtr publisher_;
+  // Detection vector publisher
+  rclcpp::Publisher<V>::SharedPtr publisher_;
 
   // Vector of subscriptions
-  std::vector<rclcpp::Subscription<irobot_create_msgs::msg::HazardDetection>::SharedPtr>
+  std::vector<rclcpp::Subscription<T>::SharedPtr>
     subs_vector_;
 
-  // hazard detections message
-  irobot_create_msgs::msg::HazardDetectionVector msg_;
-  // Vector holding hazard detections per iteration
-  std::vector<irobot_create_msgs::msg::HazardDetection> msgs_vector_;
+  // Detections message
+  V msg_;
 
   // Mutex
   std::mutex mutex_;
