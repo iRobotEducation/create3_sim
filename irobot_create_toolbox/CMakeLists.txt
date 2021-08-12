@@ -22,7 +22,7 @@ add_library(hazards_vector_publisher SHARED
 )
 
 # Add executables
-add_executable(vector_publisher_node src/vector_publisher_node.cpp)
+add_executable(hazards_vector_publisher_node src/hazards_vector_publisher_node.cpp)
 
 # Linking
 ## hazards vector publisher
@@ -32,8 +32,8 @@ ament_target_dependencies(hazards_vector_publisher
   "rclcpp"
 )
 
-## vector publisher node
-target_link_libraries(vector_publisher_node hazards_vector_publisher)
+## Link vector publisher node
+target_link_libraries(hazards_vector_publisher_node hazards_vector_publisher)
 
 # Exports
 ament_export_include_directories(include)
@@ -45,7 +45,7 @@ install(DIRECTORY include/
 
 install(TARGETS
   hazards_vector_publisher
-  vector_publisher_node
+  hazards_vector_publisher_node
   ARCHIVE DESTINATION lib
   LIBRARY DESTINATION lib
   RUNTIME DESTINATION lib/${PROJECT_NAME}
