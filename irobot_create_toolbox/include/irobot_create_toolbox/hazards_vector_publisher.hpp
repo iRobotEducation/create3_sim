@@ -23,7 +23,7 @@
 #include <string>
 #include <vector>
 
-class HazardsVectorPublisher
+class HazardsVectorPublisher : public rclcpp::Node
 {
 public:
   /// \brief Constructor

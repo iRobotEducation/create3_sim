@@ -24,8 +24,8 @@
 #include <string>
 #include <vector>
 
-template<typename T, typename V>
-class VectorPublisher
+template<typename T, typename V, typename Base>
+class VectorPublisher : public Base
 {
 public:
   /// Constructor

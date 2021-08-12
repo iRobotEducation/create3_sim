@@ -14,10 +14,10 @@
 //
 // @author Rodrigo Jose Causarano Nunez (rcausaran@irobot.com)
 
-template<class T, class V>
-VectorPublisher<T, V>::VectorPublisher(std::string publisher_topic, std::vector<std::string> subscription_topics)
+template<class T, class V, class Base>
+VectorPublisher<T, V, Base>::VectorPublisher(std::string publisher_topic, std::vector<std::string> subscription_topics) : Base()
 {
-  publisher_ = this->create_publisher<V>(publisher_topic, rclcpp::SensorDataQoS());
+  publisher_ = ((rclcpp::Node* )this)->create_publisher<V>(publisher_topic, rclcpp::SensorDataQoS());
 
   std::cout << subscription_topics[0] << std::endl;
 
@@ -28,24 +28,24 @@ VectorPublisher<T, V>::VectorPublisher(std::string publisher_topic, std::vector<
 
 
   // Create subscriptions
-  for(std::string topic : subscription_topics) subs_vector_.push_back(this->create_subscription<T>(topic, rclcpp::SensorDataQoS(), std::bind(&VectorPublisher::subscription_callback, this, std::placeholders::_1)));
+  for(std::string topic : subscription_topics) subs_vector_.push_back(((rclcpp::Node* )this)->create_subscription<T>(topic, rclcpp::SensorDataQoS(), std::bind(&VectorPublisher::subscription_callback, this, std::placeholders::_1)));
 }
 
-template<class T, class V>
-void VectorPublisher<T, V>::subscription_callback(std::shared_ptr<T> msg)
+template<class T, class V, class Base>
+void VectorPublisher<T, V, Base>::subscription_callback(std::shared_ptr<T> msg)
 {
   std::lock_guard<std::mutex> lock{mutex_};
 
-  add_msg(msg);
+  this->add_msg(msg);
 }
 
-template<class T, class V>
-void VectorPublisher<T, V>::publisher_callback()
+template<class T, class V, class Base>
+void VectorPublisher<T, V, Base>::publisher_callback()
 {
   std::lock_guard<std::mutex> lock{mutex_};
 
   // Publish detected vector.
-  publisher_->publish(msg_);
+  publisher_->publish(this->msg_);
 
-  clear_msgs();
+  this->clear_msgs();
 }

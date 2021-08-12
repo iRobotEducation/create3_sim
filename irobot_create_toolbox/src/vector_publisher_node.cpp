@@ -38,7 +38,7 @@ int main(int argc, char * argv[])
   subscription_topics.push_back("/wheel_drop/right_wheel/event");
 
   rclcpp::init(argc, argv);
-  rclcpp::spin(std::make_shared<VectorPublisher<irobot_create_msgs::msg::HazardDetection, irobot_create_msgs::msg::HazardDetectionVector>>(publisher_topic, subscription_topics));
+  rclcpp::spin(std::make_shared<VectorPublisher<irobot_create_msgs::msg::HazardDetection, irobot_create_msgs::msg::HazardDetectionVector, HazardsVectorPublisher>>(publisher_topic, subscription_topics));
   rclcpp::shutdown();
   return 0;
 }
