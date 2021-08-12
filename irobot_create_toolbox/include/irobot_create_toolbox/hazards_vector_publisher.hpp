@@ -34,7 +34,10 @@ public:
   void clear_msgs();
 
 protected:
+  // Topic to publish hazards vector to
   std::string publisher_topic_;
+
+  // Topics from where hazard messages will be received from
   std::vector<std::string> subscription_topics_;
 
   // Message containing a vector to store detected hazards
