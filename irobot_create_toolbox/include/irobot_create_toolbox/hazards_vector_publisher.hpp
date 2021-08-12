@@ -19,15 +19,13 @@
 #include <irobot_create_msgs/msg/hazard_detection_vector.hpp>
 #include <rclcpp/rclcpp.hpp>
 
-class HazardsVectorPublisher
+class HazardsVectorPublisher : public rclcpp::Node
 {
 public:
   /// Constructor
-  explicit HazardsVectorPublisher(std::string name);
+  HazardsVectorPublisher();
   void add_msg(std::shared_ptr<irobot_create_msgs::msg::HazardDetection> msg);
   void clear_msgs();
 
-
-private:
   irobot_create_msgs::msg::HazardDetectionVector msg_;
 };
