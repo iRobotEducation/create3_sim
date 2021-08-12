@@ -37,7 +37,10 @@ public:
   VectorPublisher();
 
 private:
+  // Callback to be called upon receiving a message
   void subscription_callback(const std::shared_ptr<Msg> msg);
+
+  // Callback to be called periodically to publish the vector message
   void publisher_callback();
 
   // Publish aggregated detections on timer_'s frequency

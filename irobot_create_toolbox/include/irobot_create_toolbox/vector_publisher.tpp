@@ -24,7 +24,6 @@ VectorPublisher<T, V>::VectorPublisher(std::string publisher_topic, std::vector<
     std::chrono::duration<double>(1 / frequency),
     std::bind(&VectorPublisher::publisher_callback, this));
 
-
   // Create subscriptions
   for(std::string topic : subscription_topics) subs_vector_.push_back(this->create_subscription<T>(topic, rclcpp::SensorDataQoS(), std::bind(&VectorPublisher::subscription_callback, this, std::placeholders::_1)));
 }
