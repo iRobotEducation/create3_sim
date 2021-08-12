@@ -19,6 +19,7 @@ find_package(rclpy REQUIRED)
 
 ament_auto_add_library(hazards_vector_publisher_lib SHARED
   src/hazards_vector_publisher.cpp
+  src/ir_intensity_vector_publisher.cpp
 )
 ament_target_dependencies(hazards_vector_publisher_lib
   "irobot_create_msgs"
@@ -35,7 +36,6 @@ install(DIRECTORY include/
 
 # Install CPP libraries and executables
 install(TARGETS
-  hazards_vector_publisher_lib
   hazards_vector_publisher_node
   LIBRARY DESTINATION lib
   RUNTIME DESTINATION lib/${PROJECT_NAME}

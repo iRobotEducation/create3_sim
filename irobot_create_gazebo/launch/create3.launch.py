@@ -114,6 +114,15 @@ def generate_launch_description():
         output='screen',
     )
 
+    # Publish IR intensity vector
+    ir_intensity_vector_node = Node(
+        package='irobot_create_toolbox',
+        name='ir_intensity_vector_node',
+        executable='ir_intensity_vector_publisher_node',
+        parameters=[params_yaml_file],
+        output='screen',
+    )
+
     # Define LaunchDescription variable
     ld = LaunchDescription(ARGUMENTS)
     # Include robot description
@@ -125,5 +134,6 @@ def generate_launch_description():
     ld.add_action(spawn_robot)
     ld.add_action(spawn_dock)
     ld.add_action(hazards_vector_node)
+    ld.add_action(ir_intensity_vector_node)
 
     return ld
