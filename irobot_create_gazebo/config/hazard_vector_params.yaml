@@ -2,7 +2,6 @@
 hazards_vector_node:
   ros__parameters:
     # Publisher topic and rate
-    # Hazard detection publisher topic
     publisher_topic: /hazard_detection
     publish_rate: 62.0
     subscription_topics:
@@ -16,3 +15,17 @@ hazards_vector_node:
       # Wheel drop topics
       - /wheel_drop/left_wheel/event
       - /wheel_drop/right_wheel/event
+
+ir_intensity_vector_node:
+  ros__parameters:
+    # IR intensity publisher topic
+    publisher_topic: /ir_intensity
+    subscription_topics:
+      # IR intensity topics
+      - /ir_intensity_front_center_left
+      - /ir_intensity_front_center_right
+      - /ir_intensity_front_left
+      - /ir_intensity_front_right
+      - /ir_intensity_left
+      - /ir_intensity_right
+      - /ir_intensity_side_left
