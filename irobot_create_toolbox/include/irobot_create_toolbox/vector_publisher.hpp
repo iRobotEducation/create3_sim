@@ -33,7 +33,7 @@ template <typename Msg, typename VectorMsg, typename Base>
 class VectorPublisher : public Base
 {
 public:
-  /// Constructor
+  /// \brief Constructor
   VectorPublisher(std::string publisher_topic, std::vector<std::string> subscription_topics);
 
 private:

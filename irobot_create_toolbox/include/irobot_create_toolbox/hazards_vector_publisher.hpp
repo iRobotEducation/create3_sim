@@ -22,10 +22,16 @@
 class HazardsVectorPublisher : public rclcpp::Node
 {
 public:
-  /// Constructor
+  /// \brief Constructor
   HazardsVectorPublisher();
+
+  /// \brief Add a detected hazard message to the msg_ vector
   void add_msg(const std::shared_ptr<irobot_create_msgs::msg::HazardDetection> msg);
+
+  /// \brief Clear the detected hazard messages stored in the msg_ vector
   void clear_msgs();
 
+protected:
+  // Message containing a vector to store detected hazards
   irobot_create_msgs::msg::HazardDetectionVector msg_;
 };
