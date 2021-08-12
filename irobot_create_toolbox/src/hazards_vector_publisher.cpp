@@ -18,7 +18,8 @@
 
 HazardsVectorPublisher::HazardsVectorPublisher() : rclcpp::Node("hazards_vector") {}
 
-void HazardsVectorPublisher::add_msg(const std::shared_ptr<irobot_create_msgs::msg::HazardDetection> msg)
+void HazardsVectorPublisher::add_msg(
+  const std::shared_ptr<irobot_create_msgs::msg::HazardDetection> msg)
 {
   msg_.detections.push_back(*msg);
 }

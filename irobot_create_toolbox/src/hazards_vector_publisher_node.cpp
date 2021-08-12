@@ -40,8 +40,8 @@ int main(int argc, char * argv[])
   subscription_topics.push_back("/wheel_drop/right_wheel/event");
 
   using HazardDetectionVectorPublisher = VectorPublisher<
-      irobot_create_msgs::msg::HazardDetection, irobot_create_msgs::msg::HazardDetectionVector,
-      HazardsVectorPublisher>;
+    irobot_create_msgs::msg::HazardDetection, irobot_create_msgs::msg::HazardDetectionVector,
+    HazardsVectorPublisher>;
 
   rclcpp::init(argc, argv);
   // Instantiate a VectorPublisher node specialized to handle hazards detections and pass that
