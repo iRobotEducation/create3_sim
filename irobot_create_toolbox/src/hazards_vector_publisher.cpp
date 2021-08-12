@@ -16,12 +16,11 @@
 
 #include <irobot_create_toolbox/hazards_vector_publisher.hpp>
 
-HazardsVectorPublisher::HazardsVectorPublisher() : rclcpp::Node("hazards_vector"){}
+HazardsVectorPublisher::HazardsVectorPublisher() : rclcpp::Node("hazards_vector") {}
 
-void HazardsVectorPublisher::add_msg(std::shared_ptr<irobot_create_msgs::msg::HazardDetection> msg){
-    msg_.detections.push_back(*msg);
+void HazardsVectorPublisher::add_msg(std::shared_ptr<irobot_create_msgs::msg::HazardDetection> msg)
+{
+  msg_.detections.push_back(*msg);
 }
 
-void HazardsVectorPublisher::clear_msgs(){
-    msg_.detections.clear();
-}
+void HazardsVectorPublisher::clear_msgs() { msg_.detections.clear(); }

@@ -14,14 +14,16 @@
 //
 // @author Rodrigo Jose Causarano Nunez (rcausaran@irobot.com)
 
-#include <irobot_create_toolbox/vector_publisher.hpp>
-#include <irobot_create_toolbox/hazards_vector_publisher.hpp>
 #include <irobot_create_msgs/msg/hazard_detection.hpp>
 #include <irobot_create_msgs/msg/hazard_detection_vector.hpp>
+#include <irobot_create_toolbox/hazards_vector_publisher.hpp>
+#include <irobot_create_toolbox/vector_publisher.hpp>
 
 int main(int argc, char * argv[])
 {
+  // Topic to publish hazards vector to.
   std::string publisher_topic = "hazard_detection";
+  // Vector of subscription topics to listen for messages.
   std::vector<std::string> subscription_topics;
 
   // Bumper Subscription
@@ -38,7 +40,12 @@ int main(int argc, char * argv[])
   subscription_topics.push_back("/wheel_drop/right_wheel/event");
 
   rclcpp::init(argc, argv);
-  rclcpp::spin(std::make_shared<VectorPublisher<irobot_create_msgs::msg::HazardDetection, irobot_create_msgs::msg::HazardDetectionVector, HazardsVectorPublisher>>(publisher_topic, subscription_topics));
+  // Instantiate a VectorPublisher node specialized to handle hazards detections and pass that
+  // node to spin().
+  rclcpp::spin(
+    std::make_shared<VectorPublisher<
+      irobot_create_msgs::msg::HazardDetection, irobot_create_msgs::msg::HazardDetectionVector,
+      HazardsVectorPublisher>>(publisher_topic, subscription_topics));
   rclcpp::shutdown();
   return 0;
 }
