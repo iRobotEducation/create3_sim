@@ -37,17 +37,17 @@ public:
   VectorPublisher(std::string publisher_topic, std::vector<std::string> subscription_topics);
 
 private:
-  void subscription_callback(std::shared_ptr<T> msg);
+  void subscription_callback(std::shared_ptr<Msg> msg);
   void publisher_callback();
 
   // Publish aggregated detections on timer_'s frequency
   rclcpp::TimerBase::SharedPtr timer_;
 
   // Detection vector publisher
-  std::shared_ptr<rclcpp::Publisher<V>> publisher_;
+  std::shared_ptr<rclcpp::Publisher<VectorMsg>> publisher_;
 
   // Vector of subscriptions
-  std::vector<std::shared_ptr<rclcpp::Subscription<T>>> subs_vector_;
+  std::vector<std::shared_ptr<rclcpp::Subscription<Msg>>> subs_vector_;
 
   // Mutex
   std::mutex mutex_;
