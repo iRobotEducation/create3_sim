@@ -25,7 +25,7 @@
 #include <vector>
 
 template<typename T, typename V>
-class VectorPublisher : public rclcpp::Node
+class VectorPublisher
 {
 public:
   /// Constructor
@@ -34,8 +34,6 @@ public:
 private:
   void subscription_callback(std::shared_ptr<T> msg);
   void publisher_callback();
-  void add_msg(std::shared_ptr<T> msg);
-  void clear_msgs();
 
   // Publish aggregated detections on timer_'s frequency
   rclcpp::TimerBase::SharedPtr timer_;
@@ -46,9 +44,6 @@ private:
   // Vector of subscriptions
   std::vector<std::shared_ptr<rclcpp::Subscription<T>>>
     subs_vector_;
-
-  // Detections message
-  V msg_;
 
   // Mutex
   std::mutex mutex_;

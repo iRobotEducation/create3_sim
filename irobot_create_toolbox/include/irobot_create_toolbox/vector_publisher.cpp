@@ -15,7 +15,7 @@
 // @author Rodrigo Jose Causarano Nunez (rcausaran@irobot.com)
 
 template<class T, class V>
-VectorPublisher<T, V>::VectorPublisher(std::string publisher_topic, std::vector<std::string> subscription_topics) : Node("vector_publisher")
+VectorPublisher<T, V>::VectorPublisher(std::string publisher_topic, std::vector<std::string> subscription_topics)
 {
   publisher_ = this->create_publisher<V>(publisher_topic, rclcpp::SensorDataQoS());
 
@@ -48,16 +48,4 @@ void VectorPublisher<T, V>::publisher_callback()
   publisher_->publish(msg_);
 
   clear_msgs();
-}
-
-template<class T, class V>
-void VectorPublisher<T, V>::add_msg(std::shared_ptr<T> msg){
-  // Add message to vector.
-  msg_.detections.push_back(*msg);
-}
-
-template<class T, class V>
-void VectorPublisher<T, V>::clear_msgs(){
-  // Clear the vector now that it was published.
-  msg_.detections.clear();
 }

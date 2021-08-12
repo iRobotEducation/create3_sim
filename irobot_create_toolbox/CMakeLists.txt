@@ -33,11 +33,13 @@ ament_target_dependencies(hazards_vector_publisher
 )
 
 ## vector publisher node
-target_include_directories(vector_publisher_node PUBLIC include)
-ament_target_dependencies(vector_publisher_node
-  "irobot_create_msgs"
-  "rclcpp"
-)
+# target_include_directories(vector_publisher_node PUBLIC include)
+# ament_target_dependencies(vector_publisher_node
+#   "irobot_create_msgs"
+#   "rclcpp"
+# )
+
+target_link_libraries(vector_publisher_node hazards_vector_publisher)
 
 # Exports
 ament_export_include_directories(include)
