@@ -21,24 +21,6 @@
 
 int main(int argc, char * argv[])
 {
-  // Topic to publish hazards vector to.
-  std::string publisher_topic = "/hazard_detection";
-  // Vector of subscription topics to listen for messages.
-  std::vector<std::string> subscription_topics;
-
-  // Bumper Subscription
-  subscription_topics.push_back("/bumper/event");
-
-  // Cliff Subscriptions
-  subscription_topics.push_back("/cliff_front_left/event");
-  subscription_topics.push_back("/cliff_front_right/event");
-  subscription_topics.push_back("/cliff_side_left/event");
-  subscription_topics.push_back("/cliff_side_right/event");
-
-  // Wheeldrop Subscriptions
-  subscription_topics.push_back("/wheel_drop/left_wheel/event");
-  subscription_topics.push_back("/wheel_drop/right_wheel/event");
-
   using HazardDetectionVectorPublisher = VectorPublisher<
     irobot_create_msgs::msg::HazardDetection, irobot_create_msgs::msg::HazardDetectionVector,
     HazardsVectorPublisher>;
@@ -46,8 +28,7 @@ int main(int argc, char * argv[])
   rclcpp::init(argc, argv);
   // Instantiate a VectorPublisher node specialized to handle hazards detections and pass that
   // node to spin().
-  rclcpp::spin(
-    std::make_shared<HazardDetectionVectorPublisher>(publisher_topic, subscription_topics));
+  rclcpp::spin(std::make_shared<HazardDetectionVectorPublisher>());
   rclcpp::shutdown();
   return 0;
 }

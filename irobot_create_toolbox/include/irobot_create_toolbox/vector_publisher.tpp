@@ -20,9 +20,9 @@
 */
 
 template<class Msg, class VectorMsg, class Base>
-VectorPublisher<Msg, VectorMsg, Base>::VectorPublisher(std::string publisher_topic, std::vector<std::string> subscription_topics) : Base()
+VectorPublisher<Msg, VectorMsg, Base>::VectorPublisher() : Base()
 {
-  publisher_ = ((rclcpp::Node* )this)->create_publisher<VectorMsg>(publisher_topic, rclcpp::SensorDataQoS());
+  publisher_ = ((rclcpp::Node* )this)->create_publisher<VectorMsg>(this->publisher_topic_, rclcpp::SensorDataQoS());
 
   const double frequency{62.0};  // Hz
   timer_ = this->create_wall_timer(
@@ -31,7 +31,7 @@ VectorPublisher<Msg, VectorMsg, Base>::VectorPublisher(std::string publisher_top
 
 
   // Create subscriptions
-  for(std::string topic : subscription_topics) subs_vector_.push_back(((rclcpp::Node* )this)->create_subscription<Msg>(topic, rclcpp::SensorDataQoS(), std::bind(&VectorPublisher::subscription_callback, this, std::placeholders::_1)));
+  for(std::string topic : this->subscription_topics_) subs_vector_.push_back(((rclcpp::Node* )this)->create_subscription<Msg>(topic, rclcpp::SensorDataQoS(), std::bind(&VectorPublisher::subscription_callback, this, std::placeholders::_1)));
 }
 
 template<class Msg, class VectorMsg, class Base>

@@ -31,10 +31,10 @@ HazardsVectorPublisher::HazardsVectorPublisher() : rclcpp::Node("hazard_detectio
   publisher_topic_ = publisher_topic_param.as_string();
   subscription_topics_ = subscription_topics_param.as_string_array();
 
-  RCLCPP_INFO(this->get_logger(), publisher_topic_);
+  RCLCPP_DEBUG(this->get_logger(), publisher_topic_);
 
-  for(std::string topic : subscription_topics_){
-    RCLCPP_INFO(this->get_logger(), topic);
+  for (std::string topic : subscription_topics_) {
+    RCLCPP_DEBUG(this->get_logger(), topic);
   }
 }
 

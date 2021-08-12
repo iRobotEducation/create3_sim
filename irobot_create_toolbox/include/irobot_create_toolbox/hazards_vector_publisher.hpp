@@ -18,8 +18,8 @@
 
 #include <irobot_create_msgs/msg/hazard_detection_vector.hpp>
 #include <rclcpp/rclcpp.hpp>
-#include <vector>
 #include <string>
+#include <vector>
 
 class HazardsVectorPublisher : public rclcpp::Node
 {
