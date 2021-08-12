@@ -24,8 +24,6 @@ VectorPublisher<Msg, VectorMsg, Base>::VectorPublisher(std::string publisher_top
 {
   publisher_ = ((rclcpp::Node* )this)->create_publisher<VectorMsg>(publisher_topic, rclcpp::SensorDataQoS());
 
-  std::cout << subscription_topics[0] << std::endl;
-
   const double frequency{62.0};  // Hz
   timer_ = this->create_wall_timer(
     std::chrono::duration<double>(1 / frequency),
