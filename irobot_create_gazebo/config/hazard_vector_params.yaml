@@ -16,3 +16,4 @@ hazards_vector_node:
       # Wheel drop topics
       - /wheel_drop/left_wheel/event
       - /wheel_drop/right_wheel/event
+
