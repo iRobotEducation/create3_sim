@@ -34,7 +34,7 @@ class VectorPublisher
 {
 public:
   /// \brief Constructor
-  VectorPublisher(std::string publisher_topic, std::vector<std::string> subscription_topics);
+  VectorPublisher();
 
 private:
   void subscription_callback(const std::shared_ptr<Msg> msg);
