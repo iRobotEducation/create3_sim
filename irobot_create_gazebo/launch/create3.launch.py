@@ -106,7 +106,7 @@ def generate_launch_description():
     hazards_vector_node = Node(
         package='irobot_create_toolbox',
         name='hazards_vector_node',
-        executable='vector_publisher_node',
+        executable='hazards_vector_publisher_node',
         output='screen',
     )
 
