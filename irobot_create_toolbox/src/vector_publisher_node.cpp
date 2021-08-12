@@ -15,9 +15,9 @@
 // @author Rodrigo Jose Causarano Nunez (rcausaran@irobot.com)
 
 #include <irobot_create_toolbox/vector_publisher.hpp>
+#include <irobot_create_toolbox/hazards_vector_publisher.hpp>
 #include <irobot_create_msgs/msg/hazard_detection.hpp>
 #include <irobot_create_msgs/msg/hazard_detection_vector.hpp>
-
 
 int main(int argc, char * argv[])
 {
