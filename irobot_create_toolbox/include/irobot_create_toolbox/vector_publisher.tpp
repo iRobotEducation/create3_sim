@@ -19,10 +19,10 @@
 * publishing agregator messages of type Base. In order for this class to work the Base class needs to derive from rclcpp::Node.
 */
 
-template<class T, class V, class Base>
-VectorPublisher<T, V, Base>::VectorPublisher(std::string publisher_topic, std::vector<std::string> subscription_topics) : Base()
+template<class Msg, class VectorMsg, class Base>
+VectorPublisher<Msg, VectorMsg, Base>::VectorPublisher(std::string publisher_topic, std::vector<std::string> subscription_topics) : Base()
 {
-  publisher_ = ((rclcpp::Node* )this)->create_publisher<V>(publisher_topic, rclcpp::SensorDataQoS());
+  publisher_ = ((rclcpp::Node* )this)->create_publisher<VectorMsg>(publisher_topic, rclcpp::SensorDataQoS());
 
   std::cout << subscription_topics[0] << std::endl;
 
@@ -33,11 +33,11 @@ VectorPublisher<T, V, Base>::VectorPublisher(std::string publisher_topic, std::v
 
 
   // Create subscriptions
-  for(std::string topic : subscription_topics) subs_vector_.push_back(((rclcpp::Node* )this)->create_subscription<T>(topic, rclcpp::SensorDataQoS(), std::bind(&VectorPublisher::subscription_callback, this, std::placeholders::_1)));
+  for(std::string topic : subscription_topics) subs_vector_.push_back(((rclcpp::Node* )this)->create_subscription<Msg>(topic, rclcpp::SensorDataQoS(), std::bind(&VectorPublisher::subscription_callback, this, std::placeholders::_1)));
 }
 
-template<class T, class V, class Base>
-void VectorPublisher<T, V, Base>::subscription_callback(std::shared_ptr<T> msg)
+template<class Msg, class VectorMsg, class Base>
+void VectorPublisher<Msg, VectorMsg, Base>::subscription_callback(std::shared_ptr<Msg> msg)
 {
   {  // Limit the scope of the mutex for good practice.
     std::lock_guard<std::mutex> lock{mutex_};
@@ -45,8 +45,8 @@ void VectorPublisher<T, V, Base>::subscription_callback(std::shared_ptr<T> msg)
   }
 }
 
-template<class T, class V, class Base>
-void VectorPublisher<T, V, Base>::publisher_callback()
+template<class Msg, class VectorMsg, class Base>
+void VectorPublisher<Msg, VectorMsg, Base>::publisher_callback()
 {
   {  // Limit the scope of the mutex for good practice.
     std::lock_guard<std::mutex> lock{mutex_};
