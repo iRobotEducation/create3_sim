@@ -22,7 +22,7 @@
 int main(int argc, char * argv[])
 {
   // Topic to publish hazards vector to.
-  std::string publisher_topic = "hazard_detection";
+  std::string publisher_topic = "/hazard_detection";
   // Vector of subscription topics to listen for messages.
   std::vector<std::string> subscription_topics;
 

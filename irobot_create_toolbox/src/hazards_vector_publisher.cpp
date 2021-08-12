@@ -16,7 +16,23 @@
 
 #include <irobot_create_toolbox/hazards_vector_publisher.hpp>
 
-HazardsVectorPublisher::HazardsVectorPublisher() : rclcpp::Node("hazards_vector") {}
+HazardsVectorPublisher::HazardsVectorPublisher() : rclcpp::Node("hazard_detection_vector_node")
+{
+  // Topic to publish hazards vector to
+  this->declare_parameter("publisher_topic");
+
+  // Subscription topics
+  this->declare_parameter("subscription_topics");
+
+  rclcpp::Parameter publisher_topic_param = this->get_parameter("publisher_topic");
+  rclcpp::Parameter subscription_topics_param = this->get_parameter("subscription_topics");
+
+  RCLCPP_INFO(this->get_logger(), publisher_topic_param.as_string());
+
+  for(std::string topic : subscription_topics_param.as_string_array()){
+    RCLCPP_INFO(this->get_logger(), topic);
+  }
+}
 
 void HazardsVectorPublisher::add_msg(
   const std::shared_ptr<irobot_create_msgs::msg::HazardDetection> msg)
