@@ -37,7 +37,7 @@ public:
   VectorPublisher(std::string publisher_topic, std::vector<std::string> subscription_topics);
 
 private:
-  void subscription_callback(std::shared_ptr<Msg> msg);
+  void subscription_callback(const std::shared_ptr<Msg> msg);
   void publisher_callback();
 
   // Publish aggregated detections on timer_'s frequency

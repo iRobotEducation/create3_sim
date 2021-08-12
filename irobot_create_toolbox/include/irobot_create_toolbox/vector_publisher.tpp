@@ -35,7 +35,7 @@ VectorPublisher<Msg, VectorMsg, Base>::VectorPublisher(std::string publisher_top
 }
 
 template<class Msg, class VectorMsg, class Base>
-void VectorPublisher<Msg, VectorMsg, Base>::subscription_callback(std::shared_ptr<Msg> msg)
+void VectorPublisher<Msg, VectorMsg, Base>::subscription_callback(const std::shared_ptr<Msg> msg)
 {
   {  // Limit the scope of the mutex for good practice.
     std::lock_guard<std::mutex> lock{mutex_};
