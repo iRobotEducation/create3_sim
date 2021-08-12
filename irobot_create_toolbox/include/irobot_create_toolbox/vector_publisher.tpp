@@ -39,18 +39,20 @@ VectorPublisher<T, V, Base>::VectorPublisher(std::string publisher_topic, std::v
 template<class T, class V, class Base>
 void VectorPublisher<T, V, Base>::subscription_callback(std::shared_ptr<T> msg)
 {
-  std::lock_guard<std::mutex> lock{mutex_};
-
-  this->add_msg(msg);
+  {  // Limit the scope of the mutex for good practice.
+    std::lock_guard<std::mutex> lock{mutex_};
+    this->add_msg(msg);
+  }
 }
 
 template<class T, class V, class Base>
 void VectorPublisher<T, V, Base>::publisher_callback()
 {
-  std::lock_guard<std::mutex> lock{mutex_};
+  {  // Limit the scope of the mutex for good practice.
+    std::lock_guard<std::mutex> lock{mutex_};
 
-  // Publish detected vector.
-  publisher_->publish(this->msg_);
-
-  this->clear_msgs();
+    // Publish detected vector.
+    publisher_->publish(this->msg_);
+    this->clear_msgs();
+  }
 }
