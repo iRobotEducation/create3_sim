@@ -18,6 +18,8 @@
 
 #include <irobot_create_msgs/msg/hazard_detection_vector.hpp>
 #include <rclcpp/rclcpp.hpp>
+#include <vector>
+#include <string>
 
 class HazardsVectorPublisher : public rclcpp::Node
 {
@@ -32,6 +34,9 @@ public:
   void clear_msgs();
 
 protected:
+  std::string publisher_topic_;
+  std::vector<std::string> subscription_topics_;
+
   // Message containing a vector to store detected hazards
   irobot_create_msgs::msg::HazardDetectionVector msg_;
 };

@@ -27,9 +27,13 @@ HazardsVectorPublisher::HazardsVectorPublisher() : rclcpp::Node("hazard_detectio
   rclcpp::Parameter publisher_topic_param = this->get_parameter("publisher_topic");
   rclcpp::Parameter subscription_topics_param = this->get_parameter("subscription_topics");
 
-  RCLCPP_INFO(this->get_logger(), publisher_topic_param.as_string());
+  // Store values from parameters
+  publisher_topic_ = publisher_topic_param.as_string();
+  subscription_topics_ = subscription_topics_param.as_string_array();
 
-  for(std::string topic : subscription_topics_param.as_string_array()){
+  RCLCPP_INFO(this->get_logger(), publisher_topic_);
+
+  for(std::string topic : subscription_topics_){
     RCLCPP_INFO(this->get_logger(), topic);
   }
 }
