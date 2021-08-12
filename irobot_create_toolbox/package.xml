@@ -14,7 +14,6 @@
   <depend>rclcpp</depend>
   <depend>rclpy</depend>
 
-  <exec_depend>irobot_create_msgs</exec_depend>
   <exec_depend>rcl_interfaces</exec_depend>
   <exec_depend>teleop_twist_keyboard</exec_depend>
 
