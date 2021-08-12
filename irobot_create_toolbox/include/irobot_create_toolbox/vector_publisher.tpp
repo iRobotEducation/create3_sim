@@ -26,9 +26,9 @@ VectorPublisher<T, V, Base>::VectorPublisher(std::string publisher_topic, std::v
 
   std::cout << subscription_topics[0] << std::endl;
 
-  const float frequency{62.0};  // Hz
+  const double frequency{62.0};  // Hz
   timer_ = this->create_wall_timer(
-    std::chrono::duration<float>(1 / frequency),
+    std::chrono::duration<double>(1 / frequency),
     std::bind(&VectorPublisher::publisher_callback, this));
 
 
