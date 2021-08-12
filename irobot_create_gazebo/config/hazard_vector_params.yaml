@@ -2,6 +2,7 @@
 hazards_vector_node:
   ros__parameters:
     # Publisher topic and rate
+    # Hazard detection publisher topic
     publisher_topic: /hazard_detection
     publish_rate: 62.0
     subscription_topics:
