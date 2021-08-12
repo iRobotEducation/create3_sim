@@ -15,7 +15,7 @@
 // @author Rodrigo Jose Causarano Nunez (rcausaran@irobot.com)
 
 /*
-* vector_publisher.tpp the template definition of vector_publisher.hpp. This class implements the policy based design to allow
+* vector_publisher.tpp is the template definition of vector_publisher.hpp. This class implements the policy based design to allow
 * publishing agregator messages of type Base. In order for this class to work the Base class needs to derive from rclcpp::Node.
 */
 
