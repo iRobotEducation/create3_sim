@@ -107,6 +107,7 @@ def generate_launch_description():
         package='irobot_create_toolbox',
         name='hazards_vector_node',
         executable='vector_publisher_node',
+        output='screen',
     )
 
     # Define LaunchDescription variable
