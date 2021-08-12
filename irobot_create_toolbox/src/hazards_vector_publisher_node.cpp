@@ -39,13 +39,15 @@ int main(int argc, char * argv[])
   subscription_topics.push_back("/wheel_drop/left_wheel/event");
   subscription_topics.push_back("/wheel_drop/right_wheel/event");
 
+  using HazardDetectionVectorPublisher = VectorPublisher<
+      irobot_create_msgs::msg::HazardDetection, irobot_create_msgs::msg::HazardDetectionVector,
+      HazardsVectorPublisher>;
+
   rclcpp::init(argc, argv);
   // Instantiate a VectorPublisher node specialized to handle hazards detections and pass that
   // node to spin().
   rclcpp::spin(
-    std::make_shared<VectorPublisher<
-      irobot_create_msgs::msg::HazardDetection, irobot_create_msgs::msg::HazardDetectionVector,
-      HazardsVectorPublisher>>(publisher_topic, subscription_topics));
+    std::make_shared<HazardDetectionVectorPublisher>(publisher_topic, subscription_topics));
   rclcpp::shutdown();
   return 0;
 }
