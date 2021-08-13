@@ -34,8 +34,13 @@
     </xacro:inertial_cylinder_with_pose>
   </xacro:macro>
 
-  <xacro:macro name="inertial_dummy">
-    <xacro:inertial_cuboid mass="0.01" x="0.01" y="0.01" z="0.01"/>
+  <xacro:macro name="inertial_sphere" params="mass diameter">
+    <inertial>
+      <mass value="${mass}" />
+      <inertia ixx="${(2/5) * mass * ( (diameter*0.5) * (diameter*0.5) )}" ixy="0.0" ixz="0.0"
+	             iyy="${(2/5) * mass * ( (diameter*0.5) * (diameter*0.5) )}" iyz="0.0"
+	             izz="${(2/5) * mass * ( (diameter*0.5) * (diameter*0.5) )}" />
+    </inertial>
   </xacro:macro>
 
   <xacro:macro name="inertial_dummy">
@@ -45,6 +50,7 @@
   <!-- Conversion macros -->
   <xacro:property name="cm2m"    value="${1/100.0}"/>
   <xacro:property name="mm2m"    value="${1/1000.0}"/>
+  <xacro:property name="in2m"    value="0.0254"/>
   <xacro:property name="deg2rad" value="${pi/180.0}"/>
 
   <!-- Material colors -->
