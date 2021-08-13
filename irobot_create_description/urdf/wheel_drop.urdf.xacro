@@ -3,46 +3,50 @@
 <xacro:macro name="wheel_drop" params="name parent_link *origin" >
   <xacro:include filename="$(find irobot_create_description)/urdf/common_properties.urdf.xacro"/>
 
-  <xacro:property name="detection_threshold_cm" value="3"/>
-  <xacro:property name="spring_stiffness_nm"    value="450"/>
+  <xacro:property name="detection_threshold" value="${3*cm2m}"/>
+  <xacro:property name="spring_stiffness_nm" value="450"/>
 
-  <!-- Sensor settings -->
-  <xacro:property name="update_rate" value="62" />
+  <xacro:property name="wd_size" value="${5*cm2m}"/>
+  <xacro:property name="wd_mass" value="0.05"/>
 
-  <joint name="wheel_${name}_axle_joint" type="prismatic">
+  <xacro:property name="update_rate"   value="62" />
+  <xacro:property name="wd_link_name"  value="wheel_drop_${name}"/>
+  <xacro:property name="wd_joint_name" value="${wd_link_name}_joint"/>
+
+  <joint name="${wd_joint_name}" type="prismatic">
     <parent link="${parent_link}"/>
-    <child link="wheel_${name}_axle_link"/>
+    <child link="${wd_link_name}"/>
     <xacro:insert_block name="origin"/>
     <axis xyz="0 1 0"/>
-    <limit lower="0" upper="${detection_threshold_cm*cm2m}" effort="0" velocity="0"/>
+    <limit lower="0" upper="${detection_threshold}" effort="0" velocity="0"/>
     <!-- Damping is big enough to don't make the body oscillate too much when it's lifted up -->
     <dynamics damping="50" friction="0.1"/>
   </joint>
 
   <!-- Gazebo parameters to simulate a spring -->
-  <gazebo reference="wheel_${name}_axle_joint">
+  <gazebo reference="${wd_joint_name}">
     <provideFeedback>false</provideFeedback>
     <implicitSpringDamper>true</implicitSpringDamper>
     <!-- This value should be high enough so that the wheeldrop can
           retract with the robot's weight (mass * gravity) -->
     <springStiffness>${spring_stiffness_nm}</springStiffness>
-    <springReference>${detection_threshold_cm*cm2m}</springReference>
+    <springReference>${detection_threshold}</springReference>
   </gazebo>
 
-  <link name="wheel_${name}_axle_link">
-    <xacro:inertial_cuboid mass="0.05" x="0.15" y="0.15" z="0.15"/>
+  <link name="${wd_link_name}">
+    <xacro:inertial_cuboid mass="${wd_mass}" x="${wd_size}" y="${wd_size}" z="${wd_size}"/>
   </link>
 
   <gazebo>
-    <plugin name="wheel_drop_${name}" filename="libgazebo_ros_create_wheel_drop.so">
+    <plugin name="${wd_link_name}_plugin" filename="libgazebo_ros_create_wheel_drop.so">
       <ros>
         <namespace>wheel_drop</namespace>
         <remapping>~/out:=${name}_wheel/event</remapping>
       </ros>
       <update_rate>${update_rate}</update_rate>
-      <detection_threshold>${detection_threshold_cm*cm2m}</detection_threshold>
-      <joint_name>wheel_${name}_axle_joint</joint_name>
-      <frame_id>wheel_${name}_axle_link</frame_id>
+      <detection_threshold>${detection_threshold}</detection_threshold>
+      <joint_name>${wd_joint_name}</joint_name>
+      <frame_id>${wd_link_name}</frame_id>
     </plugin>
   </gazebo>
 
