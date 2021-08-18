@@ -47,5 +47,10 @@ void WheelsPublisher::publisher_callback(){
     std::lock_guard<std::mutex> lock{mutex_};
     std::cout << "left wheel angular vel: " << last_left_angular_vel_ << std::endl;
     std::cout << "right wheel angular vel: " << last_right_angular_vel_ << std::endl;
+
+    // Publish WheelVels
+    angular_vels_msg_.velocity_left = last_left_angular_vel_;
+    angular_vels_msg_.velocity_right = last_right_angular_vel_;
+    angular_vels_publisher_->publish(angular_vels_msg_);
   }
 }
