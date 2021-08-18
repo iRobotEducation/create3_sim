@@ -38,19 +38,27 @@ void WheelsPublisher::subscription_callback(const control_msgs::msg::DynamicJoin
     // the desired wheel independent of the indexes.
     last_right_angular_vel_ = msg->interface_values[0].values[1];  // index [0].[1] refers to the right wheel angular velocity
     last_left_angular_vel_ = msg->interface_values[1].values[1];  // index [1].[1] refers to the left wheel angular velocity
+    last_right_displacement_ = msg->interface_values[0].values[2];  // index [0].[2] refers to the right wheel displacement
+    last_left_displacement_ = msg->interface_values[1].values[2];  // index [1].[2] refers to the left wheel displacement
   }
 }
 
 void WheelsPublisher::publisher_callback(){
   RCLCPP_INFO(this->get_logger(), "publisher is working");
+
   {  // Limit the scope of the mutex for good practice.
     std::lock_guard<std::mutex> lock{mutex_};
-    std::cout << "left wheel angular vel: " << last_left_angular_vel_ << std::endl;
-    std::cout << "right wheel angular vel: " << last_right_angular_vel_ << std::endl;
 
     // Publish WheelVels
     angular_vels_msg_.velocity_left = last_left_angular_vel_;
     angular_vels_msg_.velocity_right = last_right_angular_vel_;
     angular_vels_publisher_->publish(angular_vels_msg_);
+
+    // Calculate and publish WheelTicks
+    double left_ticks = (last_left_displacement_ / WHEEL_CIRCUMFERENCE) * ENCODER_RESOLUTION;
+    double right_ticks = (last_right_displacement_ / WHEEL_CIRCUMFERENCE) * ENCODER_RESOLUTION;
+    wheel_ticks_msg_.ticks_left = round(left_ticks);
+    wheel_ticks_msg_.ticks_right = round(right_ticks);
+    wheel_ticks_publisher_->publish(wheel_ticks_msg_);
   }
 }

@@ -21,6 +21,17 @@
 #include <control_msgs/msg/dynamic_joint_state.hpp>
 #include <std_msgs/msg/string.hpp>
 #include <rclcpp/rclcpp.hpp>
+#include <math.h>
+#include <cmath>
+
+// TODO set these via parameters
+// Set encoder resolution
+constexpr double ENCODER_RESOLUTION = 508.8;
+// Set wheel radius in meters
+constexpr double WHEEL_RADIUS = 0.03575;
+
+// Set wheel circumference
+constexpr double WHEEL_CIRCUMFERENCE = 2 * M_PI * WHEEL_RADIUS;
 
 class WheelsPublisher : public rclcpp::Node
 {
@@ -34,6 +45,9 @@ private:
   rclcpp::TimerBase::SharedPtr timer_;
   double last_right_angular_vel_;
   double last_left_angular_vel_;
+  double last_right_displacement_;
+  double last_left_displacement_;
+
   irobot_create_msgs::msg::WheelVels angular_vels_msg_;
   irobot_create_msgs::msg::WheelTicks wheel_ticks_msg_;
   std::shared_ptr<rclcpp::Publisher<irobot_create_msgs::msg::WheelVels>> angular_vels_publisher_;
