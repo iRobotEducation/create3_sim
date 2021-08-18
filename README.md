@@ -34,10 +34,10 @@ source install/local_setup.bash
 
 ## Examples
 
-Create 3 can be spawned in an empty world in RViz with
+Create 3 can be spawned in an empty world in Gazebo and RViz with
 
 ```bash
-ros2 launch irobot_create_description rviz2.launch.py
+ros2 launch irobot_create_gazebo create3.launch.py
 ```
 
 ## [Contributions](CONTRIBUTING.md)
