@@ -47,6 +47,7 @@
       </hardware>
 
       <joint name="wheel_${name}_joint">
+        <state_interface name="position" />
         <command_interface name="velocity" />
       </joint>
   </ros2_control>
