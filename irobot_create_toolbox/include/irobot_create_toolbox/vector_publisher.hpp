@@ -52,7 +52,7 @@ private:
   // Vector of subscriptions
   std::vector<std::shared_ptr<rclcpp::Subscription<Msg>>> subs_vector_;
 
-  // Mutex
+  // Mutex to protect access to subs_vector_ from different threads
   std::mutex mutex_;
 };
 
