@@ -14,21 +14,12 @@
 //
 // @author Rodrigo Jose Causarano Nunez (rcausaran@irobot.com)
 
-#include <irobot_create_msgs/msg/hazard_detection.hpp>
-#include <irobot_create_msgs/msg/hazard_detection_vector.hpp>
 #include <irobot_create_toolbox/hazards_vector_publisher.hpp>
-#include <irobot_create_toolbox/vector_publisher.hpp>
 
 int main(int argc, char * argv[])
 {
-  using HazardDetectionVectorPublisher = VectorPublisher<
-    irobot_create_msgs::msg::HazardDetection, irobot_create_msgs::msg::HazardDetectionVector,
-    HazardsVectorPublisher>;
-
   rclcpp::init(argc, argv);
-  // Instantiate a VectorPublisher node specialized to handle hazards detections and pass that
-  // node to spin().
-  rclcpp::spin(std::make_shared<HazardDetectionVectorPublisher>());
+  rclcpp::spin(std::make_shared<HazardsVectorPublisher>());
   rclcpp::shutdown();
   return 0;
 }

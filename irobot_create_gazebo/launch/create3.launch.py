@@ -54,7 +54,7 @@ def generate_launch_description():
     dock_launch_file = PathJoinSubstitution(
         [pkg_create3_description, 'launch', 'dock.launch.py'])
     params_yaml_file = PathJoinSubstitution(
-        [pkg_create3_gazebo, 'config', 'params.yaml'])
+        [pkg_create3_gazebo, 'config', 'hazard_vector_params.yaml'])
 
     # Launch configurations
     x, y, z = LaunchConfiguration('x'), LaunchConfiguration('y'), LaunchConfiguration('z')

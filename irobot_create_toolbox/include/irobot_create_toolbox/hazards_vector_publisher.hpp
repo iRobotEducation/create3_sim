@@ -17,6 +17,7 @@
 #pragma once
 
 #include <irobot_create_msgs/msg/hazard_detection_vector.hpp>
+#include <irobot_create_msgs/msg/hazard_detection.hpp>
 #include <rclcpp/rclcpp.hpp>
 #include <string>
 #include <vector>
@@ -27,13 +28,25 @@ public:
   /// \brief Constructor
   HazardsVectorPublisher();
 
-  /// \brief Add a detected hazard message to the msg_ vector
-  void add_msg(const std::shared_ptr<irobot_create_msgs::msg::HazardDetection> msg);
+  // Callback to be called upon receiving a message
+  void subscription_callback(const std::shared_ptr<irobot_create_msgs::msg::HazardDetection> msg);
 
-  /// \brief Clear the detected hazard messages stored in the msg_ vector
-  void clear_msgs();
+  // Callback to be called periodically to publish the vector message
+  void publisher_callback();
 
-protected:
+private:
+  // Publish aggregated detections on timer_'s frequency
+  rclcpp::TimerBase::SharedPtr timer_;
+
+  // Detection vector publisher
+  std::shared_ptr<rclcpp::Publisher<irobot_create_msgs::msg::HazardDetectionVector>> publisher_;
+
+  // Vector of subscriptions
+  std::vector<std::shared_ptr<rclcpp::Subscription<irobot_create_msgs::msg::HazardDetection>>> subs_vector_;
+
+  // Mutex to protect access to subs_vector_ from different threads
+  std::mutex mutex_;
+
   // Topic to publish hazards vector to
   std::string publisher_topic_;
 

@@ -19,29 +19,44 @@
 HazardsVectorPublisher::HazardsVectorPublisher() : rclcpp::Node("hazard_detection_vector_node")
 {
   // Topic to publish hazards vector to
-  this->declare_parameter("publisher_topic");
+  declare_parameter("publisher_topic");
 
   // Subscription topics
-  this->declare_parameter("subscription_topics");
+  declare_parameter("subscription_topics");
 
-  rclcpp::Parameter publisher_topic_param = this->get_parameter("publisher_topic");
-  rclcpp::Parameter subscription_topics_param = this->get_parameter("subscription_topics");
+  rclcpp::Parameter publisher_topic_param = get_parameter("publisher_topic");
+  rclcpp::Parameter subscription_topics_param = get_parameter("subscription_topics");
 
   // Store values from parameters
   publisher_topic_ = publisher_topic_param.as_string();
   subscription_topics_ = subscription_topics_param.as_string_array();
 
-  RCLCPP_DEBUG(this->get_logger(), publisher_topic_);
+  publisher_ = create_publisher<irobot_create_msgs::msg::HazardDetectionVector>(publisher_topic_, rclcpp::SensorDataQoS());
 
-  for (std::string topic : subscription_topics_) {
-    RCLCPP_DEBUG(this->get_logger(), topic);
+  const double frequency{62.0};  // Hz
+  timer_ = create_wall_timer(
+    std::chrono::duration<double>(1 / frequency),
+    std::bind(&HazardsVectorPublisher::publisher_callback, this));
+
+  // Create subscriptions
+  for(std::string topic : subscription_topics_) subs_vector_.push_back((create_subscription<irobot_create_msgs::msg::HazardDetection>(topic, rclcpp::SensorDataQoS(), std::bind(&HazardsVectorPublisher::subscription_callback, this, std::placeholders::_1))));
+}
+
+void HazardsVectorPublisher::subscription_callback(
+  const std::shared_ptr<irobot_create_msgs::msg::HazardDetection> msg)
+{
+  {  // Limit the scope of the mutex for good practice.
+    std::lock_guard<std::mutex> lock{mutex_};
+    msg_.detections.push_back(*msg);
   }
 }
 
-void HazardsVectorPublisher::add_msg(
-  const std::shared_ptr<irobot_create_msgs::msg::HazardDetection> msg)
-{
-  msg_.detections.push_back(*msg);
-}
+void HazardsVectorPublisher::publisher_callback() {
+  {  // Limit the scope of the mutex for good practice.
+    std::lock_guard<std::mutex> lock{mutex_};
 
-void HazardsVectorPublisher::clear_msgs() { msg_.detections.clear(); }
+    // Publish detected vector.
+    publisher_->publish(this->msg_);
+    msg_.detections.clear();
+  }
+}
