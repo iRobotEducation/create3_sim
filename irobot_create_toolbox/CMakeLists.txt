@@ -10,31 +10,33 @@ if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
   add_compile_options(-Wall -Wextra -Wpedantic)
 endif()
 
+find_package(ament_cmake_auto REQUIRED)
 find_package(ament_cmake REQUIRED)
 find_package(ament_cmake_python REQUIRED)
 find_package(irobot_create_msgs REQUIRED)
 find_package(rclcpp REQUIRED)
 find_package(rclpy REQUIRED)
 
-add_library(hazards_vector_publisher_lib SHARED
+ament_auto_add_library(hazards_vector_publisher_lib SHARED
   src/hazards_vector_publisher.cpp
 )
-target_include_directories(hazards_vector_publisher_lib PUBLIC include)
 ament_target_dependencies(hazards_vector_publisher_lib
   "irobot_create_msgs"
   "rclcpp"
 )
 
-add_executable(hazards_vector_publisher_node src/hazards_vector_publisher_node.cpp)
+ament_auto_add_executable(hazards_vector_publisher_node
+  src/hazards_vector_publisher_node.cpp
+)
 target_link_libraries(hazards_vector_publisher_node hazards_vector_publisher_lib)
 
 install(DIRECTORY include/
         DESTINATION include)
 
+# Install CPP libraries and executables
 install(TARGETS
   hazards_vector_publisher_lib
   hazards_vector_publisher_node
-  ARCHIVE DESTINATION lib
   LIBRARY DESTINATION lib
   RUNTIME DESTINATION lib/${PROJECT_NAME}
 )
