@@ -83,20 +83,20 @@ Visualization Manager:
           Alpha: 1
           Show Axes: false
           Show Trail: false
-        wheel_left_axle_link:
+        wheel_drop_left:
           Alpha: 1
           Show Axes: false
           Show Trail: false
-        wheel_left_link:
+        left_wheel:
           Alpha: 1
           Show Axes: false
           Show Trail: false
           Value: true
-        wheel_right_axle_link:
+        wheel_drop_right:
           Alpha: 1
           Show Axes: false
           Show Trail: false
-        wheel_right_link:
+        right_wheel:
           Alpha: 1
           Show Axes: false
           Show Trail: false

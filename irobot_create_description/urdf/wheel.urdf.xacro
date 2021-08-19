@@ -3,35 +3,38 @@
 
 <xacro:macro name="wheel" params="name parent_link *origin">
 
-  <xacro:property name="mass_kg"   value="0.2" />
-  <xacro:property name="radius_cm" value="3.575" />
-  <xacro:property name="width_cm"  value="1.5" />
+  <xacro:property name="mass"   value="0.2" />
+  <xacro:property name="radius" value="${3.575*cm2m}" />
+  <xacro:property name="width"  value="${1.5*cm2m}" />
 
-  <joint name="wheel_${name}_joint" type="continuous">
+  <xacro:property name="wheel_link_name"  value="${name}_wheel"/>
+  <xacro:property name="wheel_joint_name" value="${wheel_link_name}_joint"/>
+
+  <joint name="${wheel_joint_name}" type="continuous">
     <parent link="${parent_link}"/>
-    <child link="wheel_${name}_link"/>
+    <child link="${wheel_link_name}"/>
     <xacro:insert_block name="origin"/>
     <axis xyz="0 0 1"/>
   </joint>
 
-  <link name="wheel_${name}_link">
+  <link name="${wheel_link_name}">
     <visual>
       <geometry>
-        <cylinder length="${width_cm*cm2m}" radius="${radius_cm*cm2m}"/>
+        <cylinder length="${width}" radius="${radius}"/>
       </geometry>
       <!-- Give black color to wheels in Rviz -->
       <xacro:insert_block name="material_black"/>
     </visual>
     <collision>
       <geometry>
-        <cylinder length="${width_cm*cm2m}" radius="${radius_cm*cm2m}"/>
+        <cylinder length="${width}" radius="${radius}"/>
       </geometry>
     </collision>
-    <xacro:inertial_cylinder mass="${mass_kg}" radius="${radius_cm*cm2m}"
-      length="${width_cm*cm2m}" />
+    <xacro:inertial_cylinder mass="${mass}" radius="${radius}"
+      length="${width}" />
   </link>
 
-  <gazebo reference="wheel_${name}_link">
+  <gazebo reference="${wheel_link_name}">
     <mu1>1.0</mu1>
     <mu2>1.0</mu2>
     <kp>1000000.0</kp>
@@ -41,15 +44,14 @@
     <material>Gazebo/DarkGrey</material>
   </gazebo>
 
-  <ros2_control name="${name}_wheel_system" type="system">
-      <hardware>
-        <plugin>gazebo_ros2_control/GazeboSystem</plugin>
-      </hardware>
-
-      <joint name="wheel_${name}_joint">
-        <state_interface name="position" />
-        <command_interface name="velocity" />
-      </joint>
+  <ros2_control name="${wheel_link_name}_controller" type="system">
+    <hardware>
+      <plugin>gazebo_ros2_control/GazeboSystem</plugin>
+    </hardware>
+    <joint name="${wheel_joint_name}">
+      <state_interface name="position" />
+      <command_interface name="velocity" />
+    </joint>
   </ros2_control>
 
 </xacro:macro>
