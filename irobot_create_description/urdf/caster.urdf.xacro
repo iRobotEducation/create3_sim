@@ -25,7 +25,7 @@
         <sphere radius="${radius}"/>
       </geometry>
     </collision>
-    <xacro:inertial_sphere mass="${mass}" diameter="${2*radius}"/>
+    <xacro:inertial_sphere mass="${mass}" radius="${radius}"/>
   </link>
 
   <gazebo reference="${name}_joint">

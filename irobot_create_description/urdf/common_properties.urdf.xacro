@@ -34,12 +34,12 @@
     </xacro:inertial_cylinder_with_pose>
   </xacro:macro>
 
-  <xacro:macro name="inertial_sphere" params="mass diameter">
+  <xacro:macro name="inertial_sphere" params="mass radius">
     <inertial>
       <mass value="${mass}" />
-      <inertia ixx="${(2/5) * mass * ( (diameter*0.5) * (diameter*0.5) )}" ixy="0.0" ixz="0.0"
-	             iyy="${(2/5) * mass * ( (diameter*0.5) * (diameter*0.5) )}" iyz="0.0"
-	             izz="${(2/5) * mass * ( (diameter*0.5) * (diameter*0.5) )}" />
+      <inertia ixx="${(2/5) * mass * radius * radius}" ixy="0.0" ixz="0.0"
+	             iyy="${(2/5) * mass * radius * radius}" iyz="0.0"
+	             izz="${(2/5) * mass * radius * radius}" />
     </inertial>
   </xacro:macro>
 
