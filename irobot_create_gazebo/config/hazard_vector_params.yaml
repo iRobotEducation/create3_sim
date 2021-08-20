@@ -11,6 +11,6 @@ hazards_vector_node:
       - /cliff_front_right/event
       - /cliff_side_left/event
       - /cliff_side_right/event
-      # Wheeldrop topics
+      # Wheel drop topics
       - /wheel_drop/left_wheel/event
       - /wheel_drop/right_wheel/event
