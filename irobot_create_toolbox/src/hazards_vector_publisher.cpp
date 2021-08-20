@@ -24,9 +24,9 @@ HazardsVectorPublisher::HazardsVectorPublisher() : rclcpp::Node("hazard_detectio
   // Subscription topics
   subscription_topics_ = declare_parameter("subscription_topics").get<std::vector<std::string>>();
 
-  publisher_ = create_publisher<irobot_create_msgs::msg::HazardDetectionVector>(publisher_topic_, rclcpp::SensorDataQoS());
-  RCLCPP_INFO_STREAM(
-      get_logger(), "Advertised topic: " << publisher_topic_);
+  publisher_ = create_publisher<irobot_create_msgs::msg::HazardDetectionVector>(
+    publisher_topic_, rclcpp::SensorDataQoS());
+  RCLCPP_INFO_STREAM(get_logger(), "Advertised topic: " << publisher_topic_);
 
   const double frequency{62.0};  // Hz
   timer_ = create_wall_timer(
@@ -34,10 +34,11 @@ HazardsVectorPublisher::HazardsVectorPublisher() : rclcpp::Node("hazard_detectio
     std::bind(&HazardsVectorPublisher::publisher_callback, this));
 
   // Create subscriptions
-  for(std::string topic : subscription_topics_){
-    subs_vector_.push_back((create_subscription<irobot_create_msgs::msg::HazardDetection>(topic, rclcpp::SensorDataQoS(), std::bind(&HazardsVectorPublisher::subscription_callback, this, std::placeholders::_1))));
-    RCLCPP_INFO_STREAM(
-      get_logger(), "Subscription to topic: " << topic);
+  for (std::string topic : subscription_topics_) {
+    subs_vector_.push_back((create_subscription<irobot_create_msgs::msg::HazardDetection>(
+      topic, rclcpp::SensorDataQoS(),
+      std::bind(&HazardsVectorPublisher::subscription_callback, this, std::placeholders::_1))));
+    RCLCPP_INFO_STREAM(get_logger(), "Subscription to topic: " << topic);
   }
 }
 
@@ -50,7 +51,8 @@ void HazardsVectorPublisher::subscription_callback(
   }
 }
 
-void HazardsVectorPublisher::publisher_callback() {
+void HazardsVectorPublisher::publisher_callback()
+{
   {  // Limit the scope of the mutex for good practice.
     std::lock_guard<std::mutex> lock{mutex_};
 

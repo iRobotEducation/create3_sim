@@ -16,8 +16,8 @@
 
 #pragma once
 
-#include <irobot_create_msgs/msg/hazard_detection_vector.hpp>
 #include <irobot_create_msgs/msg/hazard_detection.hpp>
+#include <irobot_create_msgs/msg/hazard_detection_vector.hpp>
 #include <rclcpp/rclcpp.hpp>
 #include <string>
 #include <vector>
@@ -42,7 +42,8 @@ private:
   std::shared_ptr<rclcpp::Publisher<irobot_create_msgs::msg::HazardDetectionVector>> publisher_;
 
   // Vector of subscriptions
-  std::vector<std::shared_ptr<rclcpp::Subscription<irobot_create_msgs::msg::HazardDetection>>> subs_vector_;
+  std::vector<std::shared_ptr<rclcpp::Subscription<irobot_create_msgs::msg::HazardDetection>>>
+    subs_vector_;
 
   // Mutex to protect access to subs_vector_ from different threads
   std::mutex mutex_;
