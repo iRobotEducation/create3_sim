@@ -19,17 +19,10 @@
 HazardsVectorPublisher::HazardsVectorPublisher() : rclcpp::Node("hazard_detection_vector_node")
 {
   // Topic to publish hazards vector to
-  declare_parameter("publisher_topic");
+  publisher_topic_ = declare_parameter("publisher_topic").get<std::string>();
 
   // Subscription topics
-  declare_parameter("subscription_topics");
-
-  rclcpp::Parameter publisher_topic_param = get_parameter("publisher_topic");
-  rclcpp::Parameter subscription_topics_param = get_parameter("subscription_topics");
-
-  // Store values from parameters
-  publisher_topic_ = publisher_topic_param.as_string();
-  subscription_topics_ = subscription_topics_param.as_string_array();
+  subscription_topics_ = declare_parameter("subscription_topics").get<std::vector<std::string>>();
 
   publisher_ = create_publisher<irobot_create_msgs::msg::HazardDetectionVector>(publisher_topic_, rclcpp::SensorDataQoS());
 
