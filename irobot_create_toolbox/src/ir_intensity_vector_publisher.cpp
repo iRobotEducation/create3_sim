@@ -16,32 +16,45 @@
 
 #include <irobot_create_toolbox/ir_intensity_vector_publisher.hpp>
 
-IrIntensityVectorPublisher::IrIntensityVectorPublisher() : rclcpp::Node("ir_intensity_readings_vector_node")
+IrIntensityVectorPublisher::IrIntensityVectorPublisher()
+: rclcpp::Node("ir_intensity_readings_vector_node")
 {
   // Topic to publish IR intensity vector to
-  this->declare_parameter("publisher_topic");
+  publisher_topic_ = declare_parameter("publisher_topic").get<std::string>();
 
   // Subscription topics
-  this->declare_parameter("subscription_topics");
+  subscription_topics_ = declare_parameter("subscription_topics").get<std::vector<std::string>>();
 
-  rclcpp::Parameter publisher_topic_param = this->get_parameter("publisher_topic");
-  rclcpp::Parameter subscription_topics_param = this->get_parameter("subscription_topics");
+  publisher_ = create_publisher<irobot_create_msgs::msg::IrIntensityVector>(
+    publisher_topic_, rclcpp::SensorDataQoS());
+  RCLCPP_INFO_STREAM(get_logger(), "Advertised topic: " << publisher_topic_);
 
-  // Store values from parameters
-  publisher_topic_ = publisher_topic_param.as_string();
-  subscription_topics_ = subscription_topics_param.as_string_array();
+  const double frequency{62.0};  // Hz
+  timer_ = create_wall_timer(
+    std::chrono::duration<double>(1 / frequency),
+    std::bind(&IrIntensityVectorPublisher::publisher_callback, this));
 
-  RCLCPP_DEBUG(this->get_logger(), publisher_topic_);
-
+  // Create subscriptions
   for (std::string topic : subscription_topics_) {
-    RCLCPP_DEBUG(this->get_logger(), topic);
+    subs_vector_.push_back((create_subscription<irobot_create_msgs::msg::IrIntensity>(
+      topic, rclcpp::SensorDataQoS(),
+      std::bind(&IrIntensityVectorPublisher::subscription_callback, this, std::placeholders::_1))));
+    RCLCPP_INFO_STREAM(get_logger(), "Subscription to topic: " << topic);
   }
 }
 
-void IrIntensityVectorPublisher::add_msg(
+void IrIntensityVectorPublisher::subscription_callback(
   const std::shared_ptr<irobot_create_msgs::msg::IrIntensity> msg)
 {
+  std::lock_guard<std::mutex> lock{mutex_};
   msg_.readings.push_back(*msg);
 }
 
-void IrIntensityVectorPublisher::clear_msgs() { msg_.readings.clear(); }
+void IrIntensityVectorPublisher::publisher_callback()
+{
+  std::lock_guard<std::mutex> lock{mutex_};
+
+  // Publish detected vector.
+  publisher_->publish(this->msg_);
+  msg_.readings.clear();
+}

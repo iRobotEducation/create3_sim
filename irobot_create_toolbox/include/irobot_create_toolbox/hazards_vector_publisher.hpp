@@ -29,10 +29,10 @@ public:
   /// \brief Constructor
   HazardsVectorPublisher();
 
-  // Callback to be called upon receiving a message
+  /// \brief Callback to be called upon receiving a message
   void subscription_callback(const std::shared_ptr<irobot_create_msgs::msg::HazardDetection> msg);
 
-  // Callback to be called periodically to publish the vector message
+  /// \brief Callback to be called periodically to publish the vector message
   void publisher_callback();
 
 private:

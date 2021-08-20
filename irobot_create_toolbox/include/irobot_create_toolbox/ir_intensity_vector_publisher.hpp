@@ -16,6 +16,7 @@
 
 #pragma once
 
+#include <irobot_create_msgs/msg/ir_intensity.hpp>
 #include <irobot_create_msgs/msg/ir_intensity_vector.hpp>
 #include <rclcpp/rclcpp.hpp>
 #include <string>
@@ -27,13 +28,26 @@ public:
   /// \brief Constructor
   IrIntensityVectorPublisher();
 
-  /// \brief Add an IR intensity reading message to the msg_ vector
-  void add_msg(const std::shared_ptr<irobot_create_msgs::msg::IrIntensity> msg);
+  /// \brief Callback to be called upon receiving a message
+  void subscription_callback(const std::shared_ptr<irobot_create_msgs::msg::IrIntensity> msg);
 
-  /// \brief Clear the detected IR intensity messages stored in the msg_ vector
-  void clear_msgs();
+  /// \brief Callback to be called periodically to publish the vector message
+  void publisher_callback();
 
 protected:
+  // Publish aggregated detections on timer_'s frequency
+  rclcpp::TimerBase::SharedPtr timer_;
+
+  // Detection vector publisher
+  std::shared_ptr<rclcpp::Publisher<irobot_create_msgs::msg::IrIntensityVector>> publisher_;
+
+  // Vector of subscriptions
+  std::vector<std::shared_ptr<rclcpp::Subscription<irobot_create_msgs::msg::IrIntensity>>>
+    subs_vector_;
+
+  // Mutex to protect access to subs_vector_ from different threads
+  std::mutex mutex_;
+
   // Topic to publish IR intensity vector to
   std::string publisher_topic_;
 

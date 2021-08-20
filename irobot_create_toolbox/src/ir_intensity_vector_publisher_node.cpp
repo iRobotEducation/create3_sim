@@ -14,20 +14,11 @@
 //
 // @author Rodrigo Jose Causarano Nunez (rcausaran@irobot.com)
 
-#include <irobot_create_msgs/msg/ir_intensity.hpp>
-#include <irobot_create_msgs/msg/ir_intensity_vector.hpp>
 #include <irobot_create_toolbox/ir_intensity_vector_publisher.hpp>
-#include <irobot_create_toolbox/vector_publisher.hpp>
 
 int main(int argc, char * argv[])
 {
-  using IrIntensityVectorPublisher = VectorPublisher<
-    irobot_create_msgs::msg::IrIntensity, irobot_create_msgs::msg::IrIntensityVector,
-    IrIntensityVectorPublisher>;
-
   rclcpp::init(argc, argv);
-  // Instantiate a VectorPublisher node specialized to handle IR intensity readings and pass that
-  // node to spin().
   rclcpp::spin(std::make_shared<IrIntensityVectorPublisher>());
   rclcpp::shutdown();
   return 0;
