@@ -39,7 +39,7 @@ private:
   rclcpp::TimerBase::SharedPtr timer_;
 
   // Detection vector publisher
-  std::shared_ptr<rclcpp::Publisher<irobot_create_msgs::msg::HazardDetectionVector>> publisher_;
+  rclcpp::Publisher<irobot_create_msgs::msg::HazardDetectionVector>::SharedPtr publisher_;
 
   // Vector of subscriptions
   using HazardVectorSubscriptionPtr = std::vector<rclcpp::Subscription<irobot_create_msgs::msg::HazardDetection>::SharedPtr>;
