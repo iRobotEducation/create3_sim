@@ -43,7 +43,7 @@ HazardsVectorPublisher::HazardsVectorPublisher() : rclcpp::Node("hazard_detectio
 }
 
 void HazardsVectorPublisher::subscription_callback(
-  const std::shared_ptr<irobot_create_msgs::msg::HazardDetection> msg)
+  const irobot_create_msgs::msg::HazardDetection::SharedPtr msg)
 {
   std::lock_guard<std::mutex> lock{mutex_};
   msg_.detections.push_back(*msg);
