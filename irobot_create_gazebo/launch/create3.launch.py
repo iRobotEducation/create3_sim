@@ -130,7 +130,7 @@ def generate_launch_description():
         package='irobot_create_toolbox',
         name='ir_intensity_vector_node',
         executable='ir_intensity_vector_publisher_node',
-        parameters=[params_yaml_file],
+        parameters=[ir_intensity_params_yaml_file],
         output='screen',
     )
 
