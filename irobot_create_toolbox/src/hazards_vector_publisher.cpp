@@ -33,14 +33,9 @@ HazardsVectorPublisher::HazardsVectorPublisher() : rclcpp::Node("hazard_detectio
     std::chrono::duration<double>(1 / publish_rate),
     std::bind(&HazardsVectorPublisher::publisher_callback, this));
 
-  // Vector of subscriptions
-  using HazardVectorSubscriptionPtr =
-    std::vector<rclcpp::Subscription<irobot_create_msgs::msg::HazardDetection>::SharedPtr>;
-  HazardVectorSubscriptionPtr subs_vector;
-
   // Create subscriptions
   for (std::string topic : subscription_topics_) {
-    subs_vector.push_back((create_subscription<irobot_create_msgs::msg::HazardDetection>(
+    subs_vector_.push_back((create_subscription<irobot_create_msgs::msg::HazardDetection>(
       topic, rclcpp::SensorDataQoS(),
       std::bind(&HazardsVectorPublisher::subscription_callback, this, std::placeholders::_1))));
     RCLCPP_INFO_STREAM(get_logger(), "Subscription to topic: " << topic);
