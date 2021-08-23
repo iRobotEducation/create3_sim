@@ -18,17 +18,34 @@
 
 HazardsVectorPublisher::HazardsVectorPublisher() : rclcpp::Node("hazard_detection_vector_node")
 {
-  // Topic to publish hazards vector to
-  publisher_topic_ = declare_parameter("publisher_topic").get<std::string>();
+  // Topic parameter to publish hazards vector to
+  rclcpp::ParameterValue publisher_topic_param = declare_parameter("publisher_topic");
+  // Unset parameters have a type: rclcpp::ParameterType::PARAMETER_NOT_SET
+  if(publisher_topic_param.get_type() != rclcpp::ParameterType::PARAMETER_STRING){
+    throw rclcpp::exceptions::InvalidParameterTypeException("publisher_topic", "Not of type string or was not set");
+  }
+  publisher_topic_ = publisher_topic_param.get<std::string>();
 
-  // Subscription topics
-  subscription_topics_ = declare_parameter("subscription_topics").get<std::vector<std::string>>();
+  // Subscription topics parameter
+  rclcpp::ParameterValue subscription_topics_param = declare_parameter("subscription_topics");
+  // Unset parameters have a type: rclcpp::ParameterType::PARAMETER_NOT_SET
+  if(subscription_topics_param.get_type() != rclcpp::ParameterType::PARAMETER_STRING_ARRAY){
+    throw rclcpp::exceptions::InvalidParameterTypeException("subscription_topics", "Not of type string array or was not set");
+  }
+  subscription_topics_ = subscription_topics_param.get<std::vector<std::string>>();
+
+  // Publish rate parameter
+  rclcpp::ParameterValue publish_rate_param = declare_parameter("publish_rate");
+  // Unset parameters have a type: rclcpp::ParameterType::PARAMETER_NOT_SET
+  if(publish_rate_param.get_type() != rclcpp::ParameterType::PARAMETER_DOUBLE){
+    throw rclcpp::exceptions::InvalidParameterTypeException("publish_rate", "Not of type double or was not set");
+  }
+  double publish_rate = publish_rate_param.get<double>();  // Hz
 
   publisher_ = create_publisher<irobot_create_msgs::msg::HazardDetectionVector>(
     publisher_topic_, rclcpp::SensorDataQoS());
   RCLCPP_INFO_STREAM(get_logger(), "Advertised topic: " << publisher_topic_);
 
-  double publish_rate = declare_parameter("publish_rate").get<double>();  // Hz
   timer_ = create_wall_timer(
     std::chrono::duration<double>(1 / publish_rate),
     std::bind(&HazardsVectorPublisher::publisher_callback, this));
