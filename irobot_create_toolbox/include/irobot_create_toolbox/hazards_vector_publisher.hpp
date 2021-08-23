@@ -18,8 +18,8 @@
 
 #include <irobot_create_msgs/msg/hazard_detection.hpp>
 #include <irobot_create_msgs/msg/hazard_detection_vector.hpp>
-#include <rclcpp/rclcpp.hpp>
 #include <rclcpp/exceptions/exceptions.hpp>
+#include <rclcpp/rclcpp.hpp>
 #include <string>
 #include <vector>
 
