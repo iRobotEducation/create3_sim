@@ -19,19 +19,39 @@
 IrIntensityVectorPublisher::IrIntensityVectorPublisher()
 : rclcpp::Node("ir_intensity_readings_vector_node")
 {
-  // Topic to publish IR intensity vector to
-  publisher_topic_ = declare_parameter("publisher_topic").get<std::string>();
+  // Topic parameter to publish IR intensity vector to
+  rclcpp::ParameterValue publisher_topic_param = declare_parameter("publisher_topic");
+  // Unset parameters have a type: rclcpp::ParameterType::PARAMETER_NOT_SET
+  if (publisher_topic_param.get_type() != rclcpp::ParameterType::PARAMETER_STRING) {
+    throw rclcpp::exceptions::InvalidParameterTypeException(
+      "publisher_topic", "Not of type string or was not set");
+  }
+  publisher_topic_ = publisher_topic_param.get<std::string>();
 
-  // Subscription topics
-  subscription_topics_ = declare_parameter("subscription_topics").get<std::vector<std::string>>();
+  // Subscription topics parameter
+  rclcpp::ParameterValue subscription_topics_param = declare_parameter("subscription_topics");
+  // Unset parameters have a type: rclcpp::ParameterType::PARAMETER_NOT_SET
+  if (subscription_topics_param.get_type() != rclcpp::ParameterType::PARAMETER_STRING_ARRAY) {
+    throw rclcpp::exceptions::InvalidParameterTypeException(
+      "subscription_topics", "Not of type string array or was not set");
+  }
+  subscription_topics_ = subscription_topics_param.get<std::vector<std::string>>();
+
+  // Publish rate parameter
+  rclcpp::ParameterValue publish_rate_param = declare_parameter("publish_rate");
+  // Unset parameters have a type: rclcpp::ParameterType::PARAMETER_NOT_SET
+  if (publish_rate_param.get_type() != rclcpp::ParameterType::PARAMETER_DOUBLE) {
+    throw rclcpp::exceptions::InvalidParameterTypeException(
+      "publish_rate", "Not of type double or was not set");
+  }
+  double publish_rate = publish_rate_param.get<double>();  // Hz
 
   publisher_ = create_publisher<irobot_create_msgs::msg::IrIntensityVector>(
     publisher_topic_, rclcpp::SensorDataQoS());
   RCLCPP_INFO_STREAM(get_logger(), "Advertised topic: " << publisher_topic_);
 
-  const double frequency{62.0};  // Hz
   timer_ = create_wall_timer(
-    std::chrono::duration<double>(1 / frequency),
+    std::chrono::duration<double>(1 / publish_rate),
     std::bind(&IrIntensityVectorPublisher::publisher_callback, this));
 
   // Create subscriptions
@@ -44,7 +64,7 @@ IrIntensityVectorPublisher::IrIntensityVectorPublisher()
 }
 
 void IrIntensityVectorPublisher::subscription_callback(
-  const std::shared_ptr<irobot_create_msgs::msg::IrIntensity> msg)
+  const irobot_create_msgs::msg::IrIntensity::SharedPtr msg)
 {
   std::lock_guard<std::mutex> lock{mutex_};
   msg_.readings.push_back(*msg);

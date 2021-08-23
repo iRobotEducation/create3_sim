@@ -18,6 +18,7 @@
 
 #include <irobot_create_msgs/msg/ir_intensity.hpp>
 #include <irobot_create_msgs/msg/ir_intensity_vector.hpp>
+#include <rclcpp/exceptions/exceptions.hpp>
 #include <rclcpp/rclcpp.hpp>
 #include <string>
 #include <vector>
@@ -42,8 +43,9 @@ protected:
   std::shared_ptr<rclcpp::Publisher<irobot_create_msgs::msg::IrIntensityVector>> publisher_;
 
   // Vector of subscriptions
-  std::vector<std::shared_ptr<rclcpp::Subscription<irobot_create_msgs::msg::IrIntensity>>>
-    subs_vector_;
+  using IrIntensityVectorSubscriptionPtr =
+    std::vector<rclcpp::Subscription<irobot_create_msgs::msg::IrIntensity>::SharedPtr>;
+  IrIntensityVectorSubscriptionPtr subs_vector_;
 
   // Mutex to protect access to subs_vector_ from different threads
   std::mutex mutex_;

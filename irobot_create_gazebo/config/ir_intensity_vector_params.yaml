@@ -3,6 +3,7 @@ ir_intensity_vector_node:
   ros__parameters:
     # IR intensity publisher topic
     publisher_topic: /ir_intensity
+    publish_rate: 62.0
     subscription_topics:
       # IR intensity topics
       - /ir_intensity_front_center_left
