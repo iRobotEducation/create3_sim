@@ -41,10 +41,6 @@ private:
   // Detection vector publisher
   rclcpp::Publisher<irobot_create_msgs::msg::HazardDetectionVector>::SharedPtr publisher_;
 
-  // Vector of subscriptions
-  using HazardVectorSubscriptionPtr = std::vector<rclcpp::Subscription<irobot_create_msgs::msg::HazardDetection>::SharedPtr>;
-  HazardVectorSubscriptionPtr subs_vector_;
-
   // Mutex to protect access to subs_vector_ from different threads
   std::mutex mutex_;
 
