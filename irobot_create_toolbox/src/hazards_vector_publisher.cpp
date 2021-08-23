@@ -34,7 +34,8 @@ HazardsVectorPublisher::HazardsVectorPublisher() : rclcpp::Node("hazard_detectio
     std::bind(&HazardsVectorPublisher::publisher_callback, this));
 
   // Vector of subscriptions
-  using HazardVectorSubscriptionPtr = std::vector<rclcpp::Subscription<irobot_create_msgs::msg::HazardDetection>::SharedPtr>;
+  using HazardVectorSubscriptionPtr =
+    std::vector<rclcpp::Subscription<irobot_create_msgs::msg::HazardDetection>::SharedPtr>;
   HazardVectorSubscriptionPtr subs_vector;
 
   // Create subscriptions
