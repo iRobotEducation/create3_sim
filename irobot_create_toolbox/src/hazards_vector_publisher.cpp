@@ -28,9 +28,9 @@ HazardsVectorPublisher::HazardsVectorPublisher() : rclcpp::Node("hazard_detectio
     publisher_topic_, rclcpp::SensorDataQoS());
   RCLCPP_INFO_STREAM(get_logger(), "Advertised topic: " << publisher_topic_);
 
-  const double frequency{62.0};  // Hz
+  double publish_rate = declare_parameter("publish_rate").get<double>();  // Hz
   timer_ = create_wall_timer(
-    std::chrono::duration<double>(1 / frequency),
+    std::chrono::duration<double>(1 / publish_rate),
     std::bind(&HazardsVectorPublisher::publisher_callback, this));
 
   // Vector of subscriptions
