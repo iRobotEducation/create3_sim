@@ -44,6 +44,7 @@ def generate_launch_description():
     # Directories
     pkg_create3_control = get_package_share_directory('irobot_create_control')
     pkg_create3_description = get_package_share_directory('irobot_create_description')
+    pkg_create3_gazebo = get_package_share_directory('irobot_create_gazebo')
 
     # Paths
     control_launch_file = PathJoinSubstitution(
@@ -52,6 +53,8 @@ def generate_launch_description():
         [pkg_create3_description, 'launch', 'rviz2.launch.py'])
     dock_launch_file = PathJoinSubstitution(
         [pkg_create3_description, 'launch', 'dock.launch.py'])
+    params_yaml_file = PathJoinSubstitution(
+        [pkg_create3_gazebo, 'config', 'hazard_vector_params.yaml'])
 
     # Launch configurations
     x, y, z = LaunchConfiguration('x'), LaunchConfiguration('y'), LaunchConfiguration('z')
@@ -102,6 +105,15 @@ def generate_launch_description():
         output='screen',
     )
 
+    # Publish hazards vector
+    hazards_vector_node = Node(
+        package='irobot_create_toolbox',
+        name='hazards_vector_node',
+        executable='hazards_vector_publisher_node',
+        parameters=[params_yaml_file],
+        output='screen',
+    )
+
     # Define LaunchDescription variable
     ld = LaunchDescription(ARGUMENTS)
     # Include robot description
@@ -112,5 +124,6 @@ def generate_launch_description():
     ld.add_action(gzclient)
     ld.add_action(spawn_robot)
     ld.add_action(spawn_dock)
+    ld.add_action(hazards_vector_node)
 
     return ld

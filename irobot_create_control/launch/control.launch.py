@@ -47,7 +47,7 @@ def generate_launch_description():
     cmd_vel_republish_node = Node(
         package='irobot_create_toolbox',
         name='republish_node',
-        executable='topic_republisher',
+        executable='topic_republisher.py',
         parameters=[
             {'current_topic': 'cmd_vel'},
             {'new_topic': 'diffdrive_controller/cmd_vel_unstamped'},
