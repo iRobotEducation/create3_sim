@@ -18,47 +18,74 @@
 
 WheelsPublisher::WheelsPublisher() : rclcpp::Node("wheels_publisher_node")
 {
-  angular_vels_publisher_ = this->create_publisher<irobot_create_msgs::msg::WheelVels>("wheel_vels", rclcpp::SystemDefaultsQoS());
-  wheel_ticks_publisher_ = this->create_publisher<irobot_create_msgs::msg::WheelTicks>("wheel_ticks", rclcpp::SystemDefaultsQoS());
+  // Topic parameter to publish angular velocity to
+  rclcpp::ParameterValue vels_topic_param = declare_parameter("velocity_topic");
+  // Unset parameters have a type: rclcpp::ParameterType::PARAMETER_NOT_SET
+  if (vels_topic_param.get_type() != rclcpp::ParameterType::PARAMETER_STRING) {
+    throw rclcpp::exceptions::InvalidParameterTypeException(
+      "velocity_topic", "Not of type string or was not set");
+  }
+  std::string velocity_topic = vels_topic_param.get<std::string>();
 
-  const double frequency{62.0};  // Hz
+  // Topic parameter to publish wheel ticks to
+  rclcpp::ParameterValue ticks_topic_param = declare_parameter("ticks_topic");
+  // Unset parameters have a type: rclcpp::ParameterType::PARAMETER_NOT_SET
+  if (ticks_topic_param.get_type() != rclcpp::ParameterType::PARAMETER_STRING) {
+    throw rclcpp::exceptions::InvalidParameterTypeException(
+      "ticks_topic", "Not of type string or was not set");
+  }
+  std::string ticks_topic = ticks_topic_param.get<std::string>();
+
+  // Publish rate parameter
+  rclcpp::ParameterValue publish_rate_param = declare_parameter("publish_rate");
+  // Unset parameters have a type: rclcpp::ParameterType::PARAMETER_NOT_SET
+  if (publish_rate_param.get_type() != rclcpp::ParameterType::PARAMETER_DOUBLE) {
+    throw rclcpp::exceptions::InvalidParameterTypeException(
+      "publish_rate", "Not of type double or was not set");
+  }
+  double publish_rate = publish_rate_param.get<double>();  // Hz
+
+  angular_vels_publisher_ = this->create_publisher<irobot_create_msgs::msg::WheelVels>(
+    velocity_topic, rclcpp::SystemDefaultsQoS());
+  wheel_ticks_publisher_ = this->create_publisher<irobot_create_msgs::msg::WheelTicks>(
+    ticks_topic, rclcpp::SystemDefaultsQoS());
+
   timer_ = this->create_wall_timer(
-    std::chrono::duration<double>(1 / frequency),
+    std::chrono::duration<double>(1 / publish_rate),
     std::bind(&WheelsPublisher::publisher_callback, this));
 
-  subscription_ = this->create_subscription<control_msgs::msg::DynamicJointState>("dynamic_joint_states", rclcpp::SystemDefaultsQoS(), std::bind(&WheelsPublisher::subscription_callback, this, std::placeholders::_1));
+  subscription_ = this->create_subscription<control_msgs::msg::DynamicJointState>(
+    "dynamic_joint_states", rclcpp::SystemDefaultsQoS(),
+    std::bind(&WheelsPublisher::subscription_callback, this, std::placeholders::_1));
 }
 
-void WheelsPublisher::subscription_callback(const control_msgs::msg::DynamicJointState::SharedPtr msg){
-  RCLCPP_DEBUG(this->get_logger(), "Updating wheel interface variables");
-
-  {  // Limit the scope of the mutex for good practice.
-    std::lock_guard<std::mutex> lock{mutex_};
-    // TODO: Make sure the indexes below are not error prone, if they are then find a way to always obtain
-    // the desired wheel independent of the indexes.
-    last_right_angular_vel_ = msg->interface_values[0].values[1];  // index [0].[1] refers to the right wheel angular velocity
-    last_left_angular_vel_ = msg->interface_values[1].values[1];  // index [1].[1] refers to the left wheel angular velocity
-    last_right_displacement_ = msg->interface_values[0].values[2];  // index [0].[2] refers to the right wheel displacement
-    last_left_displacement_ = msg->interface_values[1].values[2];  // index [1].[2] refers to the left wheel displacement
-  }
+void WheelsPublisher::subscription_callback(
+  const control_msgs::msg::DynamicJointState::SharedPtr msg)
+{
+  std::lock_guard<std::mutex> lock{mutex_};
+  last_right_angular_vel_ =
+    msg->interface_values[0].values[1];  // index [0].[1] refers to the right wheel angular velocity
+  last_left_angular_vel_ =
+    msg->interface_values[1].values[1];  // index [1].[1] refers to the left wheel angular velocity
+  last_right_displacement_ =
+    msg->interface_values[0].values[2];  // index [0].[2] refers to the right wheel displacement
+  last_left_displacement_ =
+    msg->interface_values[1].values[2];  // index [1].[2] refers to the left wheel displacement
 }
 
-void WheelsPublisher::publisher_callback(){
-  RCLCPP_INFO(this->get_logger(), "publisher is working");
+void WheelsPublisher::publisher_callback()
+{
+  std::lock_guard<std::mutex> lock{mutex_};
 
-  {  // Limit the scope of the mutex for good practice.
-    std::lock_guard<std::mutex> lock{mutex_};
+  // Publish WheelVels
+  angular_vels_msg_.velocity_left = last_left_angular_vel_;
+  angular_vels_msg_.velocity_right = last_right_angular_vel_;
+  angular_vels_publisher_->publish(angular_vels_msg_);
 
-    // Publish WheelVels
-    angular_vels_msg_.velocity_left = last_left_angular_vel_;
-    angular_vels_msg_.velocity_right = last_right_angular_vel_;
-    angular_vels_publisher_->publish(angular_vels_msg_);
-
-    // Calculate and publish WheelTicks
-    double left_ticks = (last_left_displacement_ / WHEEL_CIRCUMFERENCE) * ENCODER_RESOLUTION;
-    double right_ticks = (last_right_displacement_ / WHEEL_CIRCUMFERENCE) * ENCODER_RESOLUTION;
-    wheel_ticks_msg_.ticks_left = round(left_ticks);
-    wheel_ticks_msg_.ticks_right = round(right_ticks);
-    wheel_ticks_publisher_->publish(wheel_ticks_msg_);
-  }
+  // Calculate and publish WheelTicks
+  double left_ticks = (last_left_displacement_ / WHEEL_CIRCUMFERENCE) * ENCODER_RESOLUTION;
+  double right_ticks = (last_right_displacement_ / WHEEL_CIRCUMFERENCE) * ENCODER_RESOLUTION;
+  wheel_ticks_msg_.ticks_left = round(left_ticks);
+  wheel_ticks_msg_.ticks_right = round(right_ticks);
+  wheel_ticks_publisher_->publish(wheel_ticks_msg_);
 }

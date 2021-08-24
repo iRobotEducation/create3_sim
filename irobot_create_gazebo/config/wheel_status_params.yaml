@@ -1,0 +1,9 @@
+---
+wheel_status_publisher_node:
+  ros__parameters:
+    # Publish rate
+    publish_rate: 62.0
+    # Wheels angular velocity topic
+    velocity_topic: /wheel_vels
+    # Wheels' net encoder ticks topic
+    ticks_topic: /wheel_ticks

@@ -16,13 +16,14 @@
 
 #pragma once
 
+#include <math.h>
+
+#include <cmath>
+#include <control_msgs/msg/dynamic_joint_state.hpp>
 #include <irobot_create_msgs/msg/wheel_ticks.hpp>
 #include <irobot_create_msgs/msg/wheel_vels.hpp>
-#include <control_msgs/msg/dynamic_joint_state.hpp>
-#include <std_msgs/msg/string.hpp>
 #include <rclcpp/rclcpp.hpp>
-#include <math.h>
-#include <cmath>
+#include <std_msgs/msg/string.hpp>
 
 // TODO set these via parameters
 // Set encoder resolution
@@ -55,5 +56,4 @@ private:
   std::shared_ptr<rclcpp::Subscription<control_msgs::msg::DynamicJointState>> subscription_;
   // Mutex
   std::mutex mutex_;
-
 };

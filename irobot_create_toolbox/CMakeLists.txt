@@ -13,8 +13,8 @@ endif()
 find_package(ament_cmake_auto REQUIRED)
 find_package(ament_cmake REQUIRED)
 find_package(ament_cmake_python REQUIRED)
-find_package(irobot_create_msgs REQUIRED)
 find_package(control_msgs REQUIRED)
+find_package(irobot_create_msgs REQUIRED)
 find_package(rclcpp REQUIRED)
 find_package(rclpy REQUIRED)
 
@@ -23,6 +23,15 @@ ament_auto_add_library(vector_publishers_lib SHARED
   src/ir_intensity_vector_publisher.cpp
 )
 ament_target_dependencies(vector_publishers_lib
+  "irobot_create_msgs"
+  "rclcpp"
+)
+
+ament_auto_add_library(wheel_status_publisher_lib SHARED
+  src/wheels_publisher.cpp
+)
+ament_target_dependencies(wheel_status_publisher_lib
+  "control_msgs"
   "irobot_create_msgs"
   "rclcpp"
 )
@@ -39,6 +48,12 @@ ament_auto_add_executable(ir_intensity_vector_publisher_node
 )
 target_link_libraries(ir_intensity_vector_publisher_node vector_publishers_lib)
 
+# Wheel status publisher
+ament_auto_add_executable(wheel_status_publisher_node
+  src/wheels_publisher_node.cpp
+)
+target_link_libraries(wheel_status_publisher_node wheel_status_publisher_lib)
+
 install(DIRECTORY include/
         DESTINATION include)
 
@@ -46,6 +61,7 @@ install(DIRECTORY include/
 install(TARGETS
   hazards_vector_publisher_node
   ir_intensity_vector_publisher_node
+  wheel_status_publisher_node
   DESTINATION lib/${PROJECT_NAME}
 )
 

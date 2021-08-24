@@ -19,7 +19,6 @@
 int main(int argc, char * argv[])
 {
   rclcpp::init(argc, argv);
-  // TODO: Add description
   rclcpp::spin(std::make_shared<WheelsPublisher>());
   rclcpp::shutdown();
   return 0;
