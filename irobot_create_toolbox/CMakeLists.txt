@@ -17,28 +17,35 @@ find_package(irobot_create_msgs REQUIRED)
 find_package(rclcpp REQUIRED)
 find_package(rclpy REQUIRED)
 
-ament_auto_add_library(hazards_vector_publisher_lib SHARED
+ament_auto_add_library(vector_publishers_lib SHARED
   src/hazards_vector_publisher.cpp
+  src/ir_intensity_vector_publisher.cpp
 )
-ament_target_dependencies(hazards_vector_publisher_lib
+ament_target_dependencies(vector_publishers_lib
   "irobot_create_msgs"
   "rclcpp"
 )
 
+# Hazards vector
 ament_auto_add_executable(hazards_vector_publisher_node
   src/hazards_vector_publisher_node.cpp
 )
-target_link_libraries(hazards_vector_publisher_node hazards_vector_publisher_lib)
+target_link_libraries(hazards_vector_publisher_node vector_publishers_lib)
+
+# IR intensity vector
+ament_auto_add_executable(ir_intensity_vector_publisher_node
+  src/ir_intensity_vector_publisher_node.cpp
+)
+target_link_libraries(ir_intensity_vector_publisher_node vector_publishers_lib)
 
 install(DIRECTORY include/
         DESTINATION include)
 
 # Install CPP libraries and executables
 install(TARGETS
-  hazards_vector_publisher_lib
   hazards_vector_publisher_node
-  LIBRARY DESTINATION lib
-  RUNTIME DESTINATION lib/${PROJECT_NAME}
+  ir_intensity_vector_publisher_node
+  DESTINATION lib/${PROJECT_NAME}
 )
 
 # Install Python modules

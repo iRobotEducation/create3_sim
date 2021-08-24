@@ -53,8 +53,10 @@ def generate_launch_description():
         [pkg_create3_description, 'launch', 'rviz2.launch.py'])
     dock_launch_file = PathJoinSubstitution(
         [pkg_create3_description, 'launch', 'dock.launch.py'])
-    params_yaml_file = PathJoinSubstitution(
+    hazards_params_yaml_file = PathJoinSubstitution(
         [pkg_create3_gazebo, 'config', 'hazard_vector_params.yaml'])
+    ir_intensity_params_yaml_file = PathJoinSubstitution(
+        [pkg_create3_gazebo, 'config', 'ir_intensity_vector_params.yaml'])
 
     # Launch configurations
     x, y, z = LaunchConfiguration('x'), LaunchConfiguration('y'), LaunchConfiguration('z')
@@ -110,7 +112,25 @@ def generate_launch_description():
         package='irobot_create_toolbox',
         name='hazards_vector_node',
         executable='hazards_vector_publisher_node',
-        parameters=[params_yaml_file],
+        parameters=[hazards_params_yaml_file],
+        output='screen',
+    )
+
+    # Publish IR intensity vector
+    ir_intensity_vector_node = Node(
+        package='irobot_create_toolbox',
+        name='ir_intensity_vector_node',
+        executable='ir_intensity_vector_publisher_node',
+        parameters=[ir_intensity_params_yaml_file],
+        output='screen',
+    )
+
+    # Publish IR intensity vector
+    ir_intensity_vector_node = Node(
+        package='irobot_create_toolbox',
+        name='ir_intensity_vector_node',
+        executable='ir_intensity_vector_publisher_node',
+        parameters=[ir_intensity_params_yaml_file],
         output='screen',
     )
 
@@ -125,5 +145,6 @@ def generate_launch_description():
     ld.add_action(spawn_robot)
     ld.add_action(spawn_dock)
     ld.add_action(hazards_vector_node)
+    ld.add_action(ir_intensity_vector_node)
 
     return ld
