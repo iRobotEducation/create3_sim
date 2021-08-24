@@ -47,8 +47,10 @@ WheelsPublisher::WheelsPublisher() : rclcpp::Node("wheels_publisher_node")
 
   angular_vels_publisher_ = this->create_publisher<irobot_create_msgs::msg::WheelVels>(
     velocity_topic, rclcpp::SystemDefaultsQoS());
+  RCLCPP_INFO_STREAM(get_logger(), "Advertised topic: " << velocity_topic);
   wheel_ticks_publisher_ = this->create_publisher<irobot_create_msgs::msg::WheelTicks>(
     ticks_topic, rclcpp::SystemDefaultsQoS());
+  RCLCPP_INFO_STREAM(get_logger(), "Advertised topic: " << ticks_topic);
 
   timer_ = this->create_wall_timer(
     std::chrono::duration<double>(1 / publish_rate),
