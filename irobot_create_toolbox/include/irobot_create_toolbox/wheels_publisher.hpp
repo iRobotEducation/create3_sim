@@ -52,9 +52,9 @@ private:
 
   irobot_create_msgs::msg::WheelVels angular_vels_msg_;
   irobot_create_msgs::msg::WheelTicks wheel_ticks_msg_;
-  std::shared_ptr<rclcpp::Publisher<irobot_create_msgs::msg::WheelVels>> angular_vels_publisher_;
-  std::shared_ptr<rclcpp::Publisher<irobot_create_msgs::msg::WheelTicks>> wheel_ticks_publisher_;
-  std::shared_ptr<rclcpp::Subscription<control_msgs::msg::DynamicJointState>> subscription_;
+  rclcpp::Publisher<irobot_create_msgs::msg::WheelVels>::SharedPtr angular_vels_publisher_;
+  rclcpp::Publisher<irobot_create_msgs::msg::WheelTicks>::SharedPtr wheel_ticks_publisher_;
+  rclcpp::Subscription<control_msgs::msg::DynamicJointState>::SharedPtr subscription_;
   // Mutex
   std::mutex mutex_;
 };
