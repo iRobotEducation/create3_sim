@@ -97,23 +97,28 @@ void WheelsPublisher::publisher_callback()
     return;
   }
 
-  std::lock_guard<std::mutex> lock{mutex_};
+  {  // Mutex scope
+    std::lock_guard<std::mutex> lock{mutex_};
+    // Write WheelVels msg
+    angular_vels_msg_.velocity_left =
+      last_interface_values_[WheelSide::LEFT].values[WheelState::VELOCITY];
+    angular_vels_msg_.velocity_right =
+      last_interface_values_[WheelSide::RIGHT].values[WheelState::VELOCITY];
 
-  // Publish WheelVels
-  angular_vels_msg_.velocity_left =
-    last_interface_values_[WheelSide::LEFT].values[WheelState::VELOCITY];
-  angular_vels_msg_.velocity_right =
-    last_interface_values_[WheelSide::RIGHT].values[WheelState::VELOCITY];
+    // Calculate and write WheelTicks msg
+    double left_ticks = (last_interface_values_[WheelSide::LEFT].values[WheelState::DISPLACEMENT] /
+                         wheel_circumference_) *
+                        encoder_resolution_;
+    double right_ticks =
+      (last_interface_values_[WheelSide::RIGHT].values[WheelState::DISPLACEMENT] /
+       wheel_circumference_) *
+      encoder_resolution_;
+
+    wheel_ticks_msg_.ticks_left = round(left_ticks);
+    wheel_ticks_msg_.ticks_right = round(right_ticks);
+  }
+
+  // Publish messages
   angular_vels_publisher_->publish(angular_vels_msg_);
-
-  // Calculate and publish WheelTicks
-  double left_ticks = (last_interface_values_[WheelSide::LEFT].values[WheelState::DISPLACEMENT] /
-                       wheel_circumference_) *
-                      encoder_resolution_;
-  double right_ticks = (last_interface_values_[WheelSide::RIGHT].values[WheelState::DISPLACEMENT] /
-                        wheel_circumference_) *
-                       encoder_resolution_;
-  wheel_ticks_msg_.ticks_left = round(left_ticks);
-  wheel_ticks_msg_.ticks_right = round(right_ticks);
   wheel_ticks_publisher_->publish(wheel_ticks_msg_);
 }
