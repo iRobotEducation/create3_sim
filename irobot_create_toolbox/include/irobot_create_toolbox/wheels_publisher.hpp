@@ -27,27 +27,34 @@ class WheelsPublisher : public rclcpp::Node
 public:
   /// \brief Constructor
   WheelsPublisher();
+
+  /// \brief Callback to be called upon receiving a message
   void subscription_callback(const control_msgs::msg::DynamicJointState::SharedPtr msg);
+
+  /// \brief Callback to be called periodically to publish the vector message
   void publisher_callback();
 
 private:
-  // Vector indeces
+  // Vector wheel side indeces
   enum WheelSide { RIGHT = 0, LEFT };
 
+  // Vector wheel state indeces
   enum WheelState { VELOCITY = 1, DISPLACEMENT };
 
+  // Encoder parameters
   double encoder_resolution_;
   double wheel_radius_;
   double wheel_circumference_;
 
+  // Handling wheel ticks and wheel velocity messages
   rclcpp::TimerBase::SharedPtr timer_;
   std::vector<control_msgs::msg::InterfaceValue> last_interface_values_;
-
   irobot_create_msgs::msg::WheelVels angular_vels_msg_;
   irobot_create_msgs::msg::WheelTicks wheel_ticks_msg_;
   rclcpp::Publisher<irobot_create_msgs::msg::WheelVels>::SharedPtr angular_vels_publisher_;
   rclcpp::Publisher<irobot_create_msgs::msg::WheelTicks>::SharedPtr wheel_ticks_publisher_;
   rclcpp::Subscription<control_msgs::msg::DynamicJointState>::SharedPtr subscription_;
+
   // Mutex
   std::mutex mutex_;
 };
