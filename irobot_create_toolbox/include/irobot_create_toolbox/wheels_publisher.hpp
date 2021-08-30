@@ -23,15 +23,6 @@
 #include <rclcpp/rclcpp.hpp>
 #include <std_msgs/msg/string.hpp>
 
-// TODO set these via parameters
-// Set encoder resolution
-constexpr double ENCODER_RESOLUTION = 508.8;
-// Set wheel radius in meters
-constexpr double WHEEL_RADIUS = 0.03575;
-
-// Set wheel circumference
-constexpr double WHEEL_CIRCUMFERENCE = 2 * M_PI * WHEEL_RADIUS;
-
 class WheelsPublisher : public rclcpp::Node
 {
 public:
@@ -41,6 +32,10 @@ public:
   void publisher_callback();
 
 private:
+  double encoder_resolution_;
+  double wheel_radius_;
+  double wheel_circumference_;
+
   rclcpp::TimerBase::SharedPtr timer_;
   double last_right_angular_vel_;
   double last_left_angular_vel_;

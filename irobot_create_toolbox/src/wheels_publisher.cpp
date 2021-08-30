@@ -45,6 +45,27 @@ WheelsPublisher::WheelsPublisher() : rclcpp::Node("wheels_publisher_node")
   }
   double publish_rate = publish_rate_param.get<double>();  // Hz
 
+  // Encoder resolution
+  rclcpp::ParameterValue encoder_resolution_param = declare_parameter("encoder_resolution");
+  // Unset parameters have a type: rclcpp::ParameterType::PARAMETER_NOT_SET
+  if (encoder_resolution_param.get_type() != rclcpp::ParameterType::PARAMETER_DOUBLE) {
+    throw rclcpp::exceptions::InvalidParameterTypeException(
+      "encoder_resolution", "Not of type double or was not set");
+  }
+  encoder_resolution_ = encoder_resolution_param.get<double>();  // Ticks per revolution
+
+  // Wheel radius parameter
+  rclcpp::ParameterValue wheel_radius_param = declare_parameter("wheel_radius");
+  // Unset parameters have a type: rclcpp::ParameterType::PARAMETER_NOT_SET
+  if (wheel_radius_param.get_type() != rclcpp::ParameterType::PARAMETER_DOUBLE) {
+    throw rclcpp::exceptions::InvalidParameterTypeException(
+      "wheel_radius", "Not of type double or was not set");
+  }
+  wheel_radius_ = wheel_radius_param.get<double>();  // Meters
+
+  // Set wheel circumference
+  wheel_circumference_ = 2 * M_PI * wheel_radius_;
+
   angular_vels_publisher_ = this->create_publisher<irobot_create_msgs::msg::WheelVels>(
     velocity_topic, rclcpp::SystemDefaultsQoS());
   RCLCPP_INFO_STREAM(get_logger(), "Advertised topic: " << velocity_topic);
@@ -85,8 +106,8 @@ void WheelsPublisher::publisher_callback()
   angular_vels_publisher_->publish(angular_vels_msg_);
 
   // Calculate and publish WheelTicks
-  double left_ticks = (last_left_displacement_ / WHEEL_CIRCUMFERENCE) * ENCODER_RESOLUTION;
-  double right_ticks = (last_right_displacement_ / WHEEL_CIRCUMFERENCE) * ENCODER_RESOLUTION;
+  double left_ticks = (last_left_displacement_ / wheel_circumference_) * encoder_resolution_;
+  double right_ticks = (last_right_displacement_ / wheel_circumference_) * encoder_resolution_;
   wheel_ticks_msg_.ticks_left = round(left_ticks);
   wheel_ticks_msg_.ticks_right = round(right_ticks);
   wheel_ticks_publisher_->publish(wheel_ticks_msg_);
