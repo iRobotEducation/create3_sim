@@ -16,7 +16,6 @@
 
 #pragma once
 
-#include <cmath>
 #include <control_msgs/msg/dynamic_joint_state.hpp>
 #include <irobot_create_msgs/msg/wheel_ticks.hpp>
 #include <irobot_create_msgs/msg/wheel_vels.hpp>

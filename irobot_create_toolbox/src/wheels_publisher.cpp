@@ -106,16 +106,17 @@ void WheelsPublisher::publisher_callback()
       last_interface_values_[WheelSide::RIGHT].values[WheelState::VELOCITY];
 
     // Calculate and write WheelTicks msg
-    double left_ticks = (last_interface_values_[WheelSide::LEFT].values[WheelState::DISPLACEMENT] /
-                         wheel_circumference_) *
-                        encoder_resolution_;
-    double right_ticks =
+    const double left_ticks =
+      (last_interface_values_[WheelSide::LEFT].values[WheelState::DISPLACEMENT] /
+       wheel_circumference_) *
+      encoder_resolution_;
+    const double right_ticks =
       (last_interface_values_[WheelSide::RIGHT].values[WheelState::DISPLACEMENT] /
        wheel_circumference_) *
       encoder_resolution_;
 
-    wheel_ticks_msg_.ticks_left = round(left_ticks);
-    wheel_ticks_msg_.ticks_right = round(right_ticks);
+    wheel_ticks_msg_.ticks_left = std::round(left_ticks);
+    wheel_ticks_msg_.ticks_right = std::round(right_ticks);
   }
 
   // Publish messages
