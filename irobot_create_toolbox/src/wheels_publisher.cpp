@@ -52,6 +52,7 @@ WheelsPublisher::WheelsPublisher() : rclcpp::Node("wheels_publisher_node")
     throw rclcpp::exceptions::InvalidParameterTypeException(
       "encoder_resolution", "Not of type double or was not set");
   }
+
   encoder_resolution_ = encoder_resolution_param.get<double>();  // Ticks per revolution
 
   // Wheel radius parameter
@@ -86,28 +87,26 @@ void WheelsPublisher::subscription_callback(
   const control_msgs::msg::DynamicJointState::SharedPtr msg)
 {
   std::lock_guard<std::mutex> lock{mutex_};
-  last_right_angular_vel_ =
-    msg->interface_values[0].values[1];  // index [0].[1] refers to the right wheel angular velocity
-  last_left_angular_vel_ =
-    msg->interface_values[1].values[1];  // index [1].[1] refers to the left wheel angular velocity
-  last_right_displacement_ =
-    msg->interface_values[0].values[2];  // index [0].[2] refers to the right wheel displacement
-  last_left_displacement_ =
-    msg->interface_values[1].values[2];  // index [1].[2] refers to the left wheel displacement
+  last_interface_values_ = msg->interface_values;
 }
 
 void WheelsPublisher::publisher_callback()
 {
+  // Should not proceed if vector is empty
+  if(last_interface_values_.empty()){
+    return;
+  }
+
   std::lock_guard<std::mutex> lock{mutex_};
 
   // Publish WheelVels
-  angular_vels_msg_.velocity_left = last_left_angular_vel_;
-  angular_vels_msg_.velocity_right = last_right_angular_vel_;
+  angular_vels_msg_.velocity_left = last_interface_values_[WheelSide::LEFT].values[WheelState::VELOCITY];
+  angular_vels_msg_.velocity_right = last_interface_values_[WheelSide::RIGHT].values[WheelState::VELOCITY];
   angular_vels_publisher_->publish(angular_vels_msg_);
 
   // Calculate and publish WheelTicks
-  double left_ticks = (last_left_displacement_ / wheel_circumference_) * encoder_resolution_;
-  double right_ticks = (last_right_displacement_ / wheel_circumference_) * encoder_resolution_;
+  double left_ticks = (last_interface_values_[WheelSide::LEFT].values[WheelState::DISPLACEMENT] / wheel_circumference_) * encoder_resolution_;
+  double right_ticks = (last_interface_values_[WheelSide::RIGHT].values[WheelState::DISPLACEMENT] / wheel_circumference_) * encoder_resolution_;
   wheel_ticks_msg_.ticks_left = round(left_ticks);
   wheel_ticks_msg_.ticks_right = round(right_ticks);
   wheel_ticks_publisher_->publish(wheel_ticks_msg_);

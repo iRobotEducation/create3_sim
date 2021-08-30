@@ -32,15 +32,23 @@ public:
   void publisher_callback();
 
 private:
+  // Vector indeces
+  enum WheelSide {
+    RIGHT = 0,
+    LEFT
+  };
+
+  enum WheelState{
+    VELOCITY = 1,
+    DISPLACEMENT
+  };
+
   double encoder_resolution_;
   double wheel_radius_;
   double wheel_circumference_;
 
   rclcpp::TimerBase::SharedPtr timer_;
-  double last_right_angular_vel_;
-  double last_left_angular_vel_;
-  double last_right_displacement_;
-  double last_left_displacement_;
+  std::vector<control_msgs::msg::InterfaceValue> last_interface_values_;
 
   irobot_create_msgs::msg::WheelVels angular_vels_msg_;
   irobot_create_msgs::msg::WheelTicks wheel_ticks_msg_;
