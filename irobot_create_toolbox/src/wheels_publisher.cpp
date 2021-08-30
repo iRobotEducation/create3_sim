@@ -62,10 +62,9 @@ WheelsPublisher::WheelsPublisher() : rclcpp::Node("wheels_publisher_node")
     throw rclcpp::exceptions::InvalidParameterTypeException(
       "wheel_radius", "Not of type double or was not set");
   }
-  wheel_radius_ = wheel_radius_param.get<double>();  // Meters
 
   // Set wheel circumference
-  wheel_circumference_ = 2 * M_PI * wheel_radius_;
+  wheel_circumference_ = 2 * M_PI * wheel_radius_param.get<double>();  // wheel radius in meters
 
   angular_vels_publisher_ = this->create_publisher<irobot_create_msgs::msg::WheelVels>(
     velocity_topic, rclcpp::SystemDefaultsQoS());

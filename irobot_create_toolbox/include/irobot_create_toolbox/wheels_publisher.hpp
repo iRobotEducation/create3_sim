@@ -43,7 +43,6 @@ private:
 
   // Encoder parameters
   double encoder_resolution_;
-  double wheel_radius_;
   double wheel_circumference_;
 
   // Handling wheel ticks and wheel velocity messages
