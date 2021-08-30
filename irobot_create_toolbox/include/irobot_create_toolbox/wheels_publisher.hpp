@@ -33,15 +33,9 @@ public:
 
 private:
   // Vector indeces
-  enum WheelSide {
-    RIGHT = 0,
-    LEFT
-  };
+  enum WheelSide { RIGHT = 0, LEFT };
 
-  enum WheelState{
-    VELOCITY = 1,
-    DISPLACEMENT
-  };
+  enum WheelState { VELOCITY = 1, DISPLACEMENT };
 
   double encoder_resolution_;
   double wheel_radius_;

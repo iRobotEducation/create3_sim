@@ -93,20 +93,26 @@ void WheelsPublisher::subscription_callback(
 void WheelsPublisher::publisher_callback()
 {
   // Should not proceed if vector is empty
-  if(last_interface_values_.empty()){
+  if (last_interface_values_.empty()) {
     return;
   }
 
   std::lock_guard<std::mutex> lock{mutex_};
 
   // Publish WheelVels
-  angular_vels_msg_.velocity_left = last_interface_values_[WheelSide::LEFT].values[WheelState::VELOCITY];
-  angular_vels_msg_.velocity_right = last_interface_values_[WheelSide::RIGHT].values[WheelState::VELOCITY];
+  angular_vels_msg_.velocity_left =
+    last_interface_values_[WheelSide::LEFT].values[WheelState::VELOCITY];
+  angular_vels_msg_.velocity_right =
+    last_interface_values_[WheelSide::RIGHT].values[WheelState::VELOCITY];
   angular_vels_publisher_->publish(angular_vels_msg_);
 
   // Calculate and publish WheelTicks
-  double left_ticks = (last_interface_values_[WheelSide::LEFT].values[WheelState::DISPLACEMENT] / wheel_circumference_) * encoder_resolution_;
-  double right_ticks = (last_interface_values_[WheelSide::RIGHT].values[WheelState::DISPLACEMENT] / wheel_circumference_) * encoder_resolution_;
+  double left_ticks = (last_interface_values_[WheelSide::LEFT].values[WheelState::DISPLACEMENT] /
+                       wheel_circumference_) *
+                      encoder_resolution_;
+  double right_ticks = (last_interface_values_[WheelSide::RIGHT].values[WheelState::DISPLACEMENT] /
+                        wheel_circumference_) *
+                       encoder_resolution_;
   wheel_ticks_msg_.ticks_left = round(left_ticks);
   wheel_ticks_msg_.ticks_right = round(right_ticks);
   wheel_ticks_publisher_->publish(wheel_ticks_msg_);
