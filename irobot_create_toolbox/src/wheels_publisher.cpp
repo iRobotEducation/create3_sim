@@ -19,34 +19,34 @@
 WheelsPublisher::WheelsPublisher() : rclcpp::Node("wheels_publisher_node")
 {
   // Topic parameter to publish angular velocity to
-  rclcpp::ParameterValue vels_topic_param = declare_parameter("velocity_topic");
+  const rclcpp::ParameterValue vels_topic_param = declare_parameter("velocity_topic");
   // Unset parameters have a type: rclcpp::ParameterType::PARAMETER_NOT_SET
   if (vels_topic_param.get_type() != rclcpp::ParameterType::PARAMETER_STRING) {
     throw rclcpp::exceptions::InvalidParameterTypeException(
       "velocity_topic", "Not of type string or was not set");
   }
-  std::string velocity_topic = vels_topic_param.get<std::string>();
+  const std::string velocity_topic = vels_topic_param.get<std::string>();
 
   // Topic parameter to publish wheel ticks to
-  rclcpp::ParameterValue ticks_topic_param = declare_parameter("ticks_topic");
+  const rclcpp::ParameterValue ticks_topic_param = declare_parameter("ticks_topic");
   // Unset parameters have a type: rclcpp::ParameterType::PARAMETER_NOT_SET
   if (ticks_topic_param.get_type() != rclcpp::ParameterType::PARAMETER_STRING) {
     throw rclcpp::exceptions::InvalidParameterTypeException(
       "ticks_topic", "Not of type string or was not set");
   }
-  std::string ticks_topic = ticks_topic_param.get<std::string>();
+  const std::string ticks_topic = ticks_topic_param.get<std::string>();
 
   // Publish rate parameter
-  rclcpp::ParameterValue publish_rate_param = declare_parameter("publish_rate");
+  const rclcpp::ParameterValue publish_rate_param = declare_parameter("publish_rate");
   // Unset parameters have a type: rclcpp::ParameterType::PARAMETER_NOT_SET
   if (publish_rate_param.get_type() != rclcpp::ParameterType::PARAMETER_DOUBLE) {
     throw rclcpp::exceptions::InvalidParameterTypeException(
       "publish_rate", "Not of type double or was not set");
   }
-  double publish_rate = publish_rate_param.get<double>();  // Hz
+  const double publish_rate = publish_rate_param.get<double>();  // Hz
 
   // Encoder resolution
-  rclcpp::ParameterValue encoder_resolution_param = declare_parameter("encoder_resolution");
+  const rclcpp::ParameterValue encoder_resolution_param = declare_parameter("encoder_resolution");
   // Unset parameters have a type: rclcpp::ParameterType::PARAMETER_NOT_SET
   if (encoder_resolution_param.get_type() != rclcpp::ParameterType::PARAMETER_DOUBLE) {
     throw rclcpp::exceptions::InvalidParameterTypeException(
