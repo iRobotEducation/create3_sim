@@ -59,7 +59,7 @@
         <plugin filename="libgazebo_ros_create_ir_intensity_sensor.so" name="${link_name}">
           <ros>
             <namespace>/</namespace>
-            <remapping>~/out:=${link_name}</remapping>
+            <remapping>~/out:=_internal/${link_name}</remapping>
           </ros>
         </plugin>
       </sensor>

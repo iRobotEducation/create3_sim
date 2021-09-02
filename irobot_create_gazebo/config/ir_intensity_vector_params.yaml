@@ -6,10 +6,10 @@ ir_intensity_vector_node:
     publish_rate: 62.0
     subscription_topics:
       # IR intensity topics
-      - /ir_intensity_front_center_left
-      - /ir_intensity_front_center_right
-      - /ir_intensity_front_left
-      - /ir_intensity_front_right
-      - /ir_intensity_left
-      - /ir_intensity_right
-      - /ir_intensity_side_left
+      - _internal/ir_intensity_front_center_left
+      - _internal/ir_intensity_front_center_right
+      - _internal/ir_intensity_front_left
+      - _internal/ir_intensity_front_right
+      - _internal/ir_intensity_left
+      - _internal/ir_intensity_right
+      - _internal/ir_intensity_side_left
