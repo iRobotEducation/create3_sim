@@ -91,12 +91,12 @@ void WheelsPublisher::subscription_callback(
 
 void WheelsPublisher::publisher_callback()
 {
-  // Should not proceed if vector is empty
-  if (last_interface_values_.empty()) {
-    return;
-  }
-
   {  // Mutex scope
+    // Should not proceed if vector is empty
+    if (last_interface_values_.empty()) {
+      return;
+    }
+
     std::lock_guard<std::mutex> lock{mutex_};
     // Write WheelVels msg
     angular_vels_msg_.velocity_left =
