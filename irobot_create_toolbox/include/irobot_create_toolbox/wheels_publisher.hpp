@@ -39,7 +39,7 @@ private:
   enum WheelSide { RIGHT = 0, LEFT };
 
   // Vector wheel state indeces
-  enum WheelState { VELOCITY = 1, DISPLACEMENT };
+  enum WheelState { EFFORT = 0, VELOCITY, DISPLACEMENT };
 
   // Encoder parameters
   double encoder_resolution_;
