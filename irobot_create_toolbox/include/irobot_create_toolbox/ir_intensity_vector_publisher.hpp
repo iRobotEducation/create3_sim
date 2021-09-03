@@ -29,12 +29,6 @@ public:
   /// \brief Constructor
   IrIntensityVectorPublisher();
 
-  /// \brief Callback to be called upon receiving a message
-  void subscription_callback(const std::shared_ptr<irobot_create_msgs::msg::IrIntensity> msg);
-
-  /// \brief Callback to be called periodically to publish the vector message
-  void publisher_callback();
-
 protected:
   // Publish aggregated detections on timer_'s frequency
   rclcpp::TimerBase::SharedPtr timer_;

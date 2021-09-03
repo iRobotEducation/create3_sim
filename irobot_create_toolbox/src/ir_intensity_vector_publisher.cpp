@@ -50,31 +50,22 @@ IrIntensityVectorPublisher::IrIntensityVectorPublisher()
     publisher_topic_, rclcpp::SensorDataQoS());
   RCLCPP_INFO_STREAM(get_logger(), "Advertised topic: " << publisher_topic_);
 
-  timer_ = create_wall_timer(
-    std::chrono::duration<double>(1 / publish_rate),
-    std::bind(&IrIntensityVectorPublisher::publisher_callback, this));
+  timer_ = create_wall_timer(std::chrono::duration<double>(1 / publish_rate), [this]() {
+    std::lock_guard<std::mutex> lock{mutex_};
+
+    // Publish detected vector.
+    publisher_->publish(this->msg_);
+    msg_.readings.clear();
+  });
 
   // Create subscriptions
   for (std::string topic : subscription_topics_) {
     subs_vector_.push_back((create_subscription<irobot_create_msgs::msg::IrIntensity>(
       topic, rclcpp::SensorDataQoS(),
-      std::bind(&IrIntensityVectorPublisher::subscription_callback, this, std::placeholders::_1))));
+      [this](const irobot_create_msgs::msg::IrIntensity::SharedPtr msg) {
+        std::lock_guard<std::mutex> lock{mutex_};
+        msg_.readings.push_back(*msg);
+      })));
     RCLCPP_INFO_STREAM(get_logger(), "Subscription to topic: " << topic);
   }
-}
-
-void IrIntensityVectorPublisher::subscription_callback(
-  const irobot_create_msgs::msg::IrIntensity::SharedPtr msg)
-{
-  std::lock_guard<std::mutex> lock{mutex_};
-  msg_.readings.push_back(*msg);
-}
-
-void IrIntensityVectorPublisher::publisher_callback()
-{
-  std::lock_guard<std::mutex> lock{mutex_};
-
-  // Publish detected vector.
-  publisher_->publish(this->msg_);
-  msg_.readings.clear();
 }

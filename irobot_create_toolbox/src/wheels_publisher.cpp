@@ -79,11 +79,10 @@ WheelsPublisher::WheelsPublisher() : rclcpp::Node("wheels_publisher_node")
 
   subscription_ = this->create_subscription<control_msgs::msg::DynamicJointState>(
     "dynamic_joint_states", rclcpp::SystemDefaultsQoS(),
-    [this](const control_msgs::msg::DynamicJointState::SharedPtr msg){
+    [this](const control_msgs::msg::DynamicJointState::SharedPtr msg) {
       std::lock_guard<std::mutex> lock{mutex_};
       last_joint_state_ = *msg;
-    }
-  );
+    });
 }
 
 void WheelsPublisher::publisher_callback()
@@ -101,12 +100,10 @@ void WheelsPublisher::publisher_callback()
 
     // Calculate and write WheelTicks msg
     const double left_ticks =
-      (get_dynamic_state_value("left_wheel_joint", "position") /
-       wheel_circumference_) *
+      (get_dynamic_state_value("left_wheel_joint", "position") / wheel_circumference_) *
       encoder_resolution_;
     const double right_ticks =
-      (get_dynamic_state_value("right_wheel_joint", "position") /
-       wheel_circumference_) *
+      (get_dynamic_state_value("right_wheel_joint", "position") / wheel_circumference_) *
       encoder_resolution_;
 
     wheel_ticks_msg_.ticks_left = std::round(left_ticks);
@@ -118,9 +115,10 @@ void WheelsPublisher::publisher_callback()
   wheel_ticks_publisher_->publish(wheel_ticks_msg_);
 }
 
-int WheelsPublisher::get_joint_index(std::string joint_name){
-  for(int k=0 ; k < (int)last_joint_state_.joint_names.size() ; k++){
-    if(last_joint_state_.joint_names[k] == joint_name){
+int WheelsPublisher::get_joint_index(std::string joint_name)
+{
+  for (int k = 0; k < (int)last_joint_state_.joint_names.size(); k++) {
+    if (last_joint_state_.joint_names[k] == joint_name) {
       return k;
     }
   }
@@ -128,9 +126,11 @@ int WheelsPublisher::get_joint_index(std::string joint_name){
   return -1;
 }
 
-int WheelsPublisher::get_interface_index(std::string interface_name, int joint_index){
-  for(int k=0 ; k < (int)last_joint_state_.interface_values[joint_index].interface_names.size() ; k++){
-    if(last_joint_state_.interface_values[joint_index].interface_names[k] == interface_name){
+int WheelsPublisher::get_interface_index(std::string interface_name, int joint_index)
+{
+  for (int k = 0; k < (int)last_joint_state_.interface_values[joint_index].interface_names.size();
+       k++) {
+    if (last_joint_state_.interface_values[joint_index].interface_names[k] == interface_name) {
       return k;
     }
   }
@@ -138,7 +138,8 @@ int WheelsPublisher::get_interface_index(std::string interface_name, int joint_i
   return -1;
 }
 
-double WheelsPublisher::get_dynamic_state_value(std::string joint_name, std::string interface_name){
+double WheelsPublisher::get_dynamic_state_value(std::string joint_name, std::string interface_name)
+{
   int joint_index = get_joint_index(joint_name);
   int interface_index = get_interface_index(interface_name, joint_index);
 
