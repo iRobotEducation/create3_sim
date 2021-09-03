@@ -15,6 +15,8 @@
 #
 # Launch Create3 in Gazebo and optionally also in RViz.
 
+import os
+
 from ament_index_python.packages import get_package_share_directory
 from launch import LaunchDescription
 from launch.actions import DeclareLaunchArgument, ExecuteProcess, IncludeLaunchDescription
@@ -33,6 +35,8 @@ ARGUMENTS = [
     DeclareLaunchArgument('dock', default_value='true',
                           choices=['true', 'false'],
                           description='Spawn the standard dock model.'),
+    DeclareLaunchArgument('world_path', default_value='',
+                          description='Set world path, by default is empty.world'),
 ]
 
 for pose_element in ['x', 'y', 'z', 'yaw']:
@@ -61,6 +65,7 @@ def generate_launch_description():
     # Launch configurations
     x, y, z = LaunchConfiguration('x'), LaunchConfiguration('y'), LaunchConfiguration('z')
     yaw = LaunchConfiguration('yaw')
+    world_path = LaunchConfiguration('world_path')
 
     # Includes
     robot_description = IncludeLaunchDescription(
@@ -80,7 +85,8 @@ def generate_launch_description():
     gzserver = ExecuteProcess(
         cmd=['gzserver',
              '-s', 'libgazebo_ros_init.so',
-             '-s', 'libgazebo_ros_factory.so'],
+             '-s', 'libgazebo_ros_factory.so',
+             world_path],
         output='screen',
     )
 
