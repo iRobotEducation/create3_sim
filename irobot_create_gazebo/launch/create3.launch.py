@@ -48,11 +48,11 @@ def generate_launch_description():
 
     # Paths
     control_launch_file = PathJoinSubstitution(
-        [pkg_create3_control, 'launch', 'control.launch.py'])
+        [pkg_create3_control, 'launch', 'include', 'control.py'])
     description_launch_file = PathJoinSubstitution(
-        [pkg_create3_description, 'launch', 'rviz2.launch.py'])
+        [pkg_create3_description, 'launch', 'include', 'rviz2.py'])
     dock_launch_file = PathJoinSubstitution(
-        [pkg_create3_description, 'launch', 'dock.launch.py'])
+        [pkg_create3_description, 'launch', 'include', 'dock.py'])
     hazards_params_yaml_file = PathJoinSubstitution(
         [pkg_create3_gazebo, 'config', 'hazard_vector_params.yaml'])
     ir_intensity_params_yaml_file = PathJoinSubstitution(
