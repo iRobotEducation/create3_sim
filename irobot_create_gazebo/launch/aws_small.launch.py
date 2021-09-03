@@ -14,6 +14,7 @@
 # @author Luis Enrique Chico Capistrano (lchico@irobot.com)
 #
 # Launch Create3 in Gazebo and optionally also in RViz.
+
 import os
 
 from ament_index_python.packages import get_package_share_directory
@@ -28,9 +29,10 @@ ARGUMENTS = [
                           description='Update "x" component of the robot pose.')
 ]
 
+
 def generate_launch_description():
     # Directories
-    pkg_create3_aws_house_dir = get_package_share_directory('aws_robomaker_small_house_world')
+    pkg_aws_house_dir = get_package_share_directory('aws_robomaker_small_house_world')
     pkg_create3_gazebo = get_package_share_directory('irobot_create_gazebo')
 
     # Paths
@@ -38,7 +40,7 @@ def generate_launch_description():
         [pkg_create3_gazebo, 'launch', 'create3.launch.py'])
 
     world_name_str = 'small_house.world'
-    world_path = os.path.join(pkg_create3_aws_house_dir, 'worlds', world_name_str)
+    world_path = os.path.join(pkg_aws_house_dir, 'worlds', world_name_str)
 
     # Includes
     # Disable gui and gzserver because they launch on AWS Small world
@@ -52,6 +54,6 @@ def generate_launch_description():
     # Add nodes to LaunchDescription
     ld.add_action(create3_gazebo)
     # Add models AWS models to gazebo path
-    os.environ['GAZEBO_MODEL_PATH'] += os.pathsep + os.path.join(pkg_create3_aws_house_dir, 'models')
+    os.environ['GAZEBO_MODEL_PATH'] += os.pathsep + os.path.join(pkg_aws_house_dir, 'models')
 
     return ld
