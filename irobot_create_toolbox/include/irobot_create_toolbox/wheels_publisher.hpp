@@ -32,11 +32,12 @@ public:
   void publisher_callback();
 
 private:
-  // Get vector index based on joint name. This is necessary because the index is not fixed but the name is.
+  // Get vector index based on joint name.
   int get_joint_index(std::string joint_name);
-  // Get vector index based on interface name. This is necessary because the index is not fixed but the name is.
+  // Get vector index based on interface name.
   int get_interface_index(std::string interface_name, int joint_index);
-
+  // Retrieve dynamic state values from last_joint_state_.
+  // This is necessary because the indeces are not fixed but the names are.
   double get_dynamic_state_value(std::string joint_name, std::string interface_name);
 
   // Encoder parameters
