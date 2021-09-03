@@ -28,9 +28,6 @@ public:
   /// \brief Constructor
   WheelsPublisher();
 
-  /// \brief Callback to be called upon receiving a message
-  void subscription_callback(const control_msgs::msg::DynamicJointState::SharedPtr msg);
-
   /// \brief Callback to be called periodically to publish the vector message
   void publisher_callback();
 

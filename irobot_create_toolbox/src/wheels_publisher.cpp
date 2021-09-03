@@ -79,14 +79,11 @@ WheelsPublisher::WheelsPublisher() : rclcpp::Node("wheels_publisher_node")
 
   subscription_ = this->create_subscription<control_msgs::msg::DynamicJointState>(
     "dynamic_joint_states", rclcpp::SystemDefaultsQoS(),
-    std::bind(&WheelsPublisher::subscription_callback, this, std::placeholders::_1));
-}
-
-void WheelsPublisher::subscription_callback(
-  const control_msgs::msg::DynamicJointState::SharedPtr msg)
-{
-  std::lock_guard<std::mutex> lock{mutex_};
-  last_interface_values_ = msg->interface_values;
+    [this](const control_msgs::msg::DynamicJointState::SharedPtr msg){
+      std::lock_guard<std::mutex> lock{mutex_};
+      last_interface_values_ = msg->interface_values;
+    }
+  );
 }
 
 void WheelsPublisher::publisher_callback()
