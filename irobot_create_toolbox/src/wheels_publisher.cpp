@@ -81,7 +81,7 @@ WheelsPublisher::WheelsPublisher() : rclcpp::Node("wheels_publisher_node")
     "dynamic_joint_states", rclcpp::SystemDefaultsQoS(),
     [this](const control_msgs::msg::DynamicJointState::SharedPtr msg){
       std::lock_guard<std::mutex> lock{mutex_};
-      last_interface_values_ = msg->interface_values;
+      last_joint_state_ = *msg;
     }
   );
 }
@@ -90,24 +90,22 @@ void WheelsPublisher::publisher_callback()
 {
   {  // Mutex scope
     // Should not proceed if vector is empty
-    if (last_interface_values_.empty()) {
+    if (last_joint_state_.joint_names.empty()) {
       return;
     }
 
     std::lock_guard<std::mutex> lock{mutex_};
     // Write WheelVels msg
-    angular_vels_msg_.velocity_left =
-      last_interface_values_[WheelSide::LEFT].values[WheelState::VELOCITY];
-    angular_vels_msg_.velocity_right =
-      last_interface_values_[WheelSide::RIGHT].values[WheelState::VELOCITY];
+    angular_vels_msg_.velocity_left = get_dynamic_state_value("left_wheel_joint", "velocity");
+    angular_vels_msg_.velocity_right = get_dynamic_state_value("right_wheel_joint", "velocity");
 
     // Calculate and write WheelTicks msg
     const double left_ticks =
-      (last_interface_values_[WheelSide::LEFT].values[WheelState::DISPLACEMENT] /
+      (get_dynamic_state_value("left_wheel_joint", "position") /
        wheel_circumference_) *
       encoder_resolution_;
     const double right_ticks =
-      (last_interface_values_[WheelSide::RIGHT].values[WheelState::DISPLACEMENT] /
+      (get_dynamic_state_value("right_wheel_joint", "position") /
        wheel_circumference_) *
       encoder_resolution_;
 
@@ -118,4 +116,31 @@ void WheelsPublisher::publisher_callback()
   // Publish messages
   angular_vels_publisher_->publish(angular_vels_msg_);
   wheel_ticks_publisher_->publish(wheel_ticks_msg_);
+}
+
+int WheelsPublisher::get_joint_index(std::string joint_name){
+  for(int k=0 ; k < (int)last_joint_state_.joint_names.size() ; k++){
+    if(last_joint_state_.joint_names[k] == joint_name){
+      return k;
+    }
+  }
+  // TODO Throw element not found exception
+  return -1;
+}
+
+int WheelsPublisher::get_interface_index(std::string interface_name, int joint_index){
+  for(int k=0 ; k < (int)last_joint_state_.interface_values[joint_index].interface_names.size() ; k++){
+    if(last_joint_state_.interface_values[joint_index].interface_names[k] == interface_name){
+      return k;
+    }
+  }
+  // TODO Throw element not found exception
+  return -1;
+}
+
+double WheelsPublisher::get_dynamic_state_value(std::string joint_name, std::string interface_name){
+  int joint_index = get_joint_index(joint_name);
+  int interface_index = get_interface_index(interface_name, joint_index);
+
+  return last_joint_state_.interface_values[joint_index].values[interface_index];
 }

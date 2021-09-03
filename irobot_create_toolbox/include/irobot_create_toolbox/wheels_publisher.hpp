@@ -32,11 +32,12 @@ public:
   void publisher_callback();
 
 private:
-  // Vector wheel side indeces
-  enum WheelSide { RIGHT = 0, LEFT };
+  // Get vector index based on joint name. This is necessary because the index is not fixed but the name is.
+  int get_joint_index(std::string joint_name);
+  // Get vector index based on interface name. This is necessary because the index is not fixed but the name is.
+  int get_interface_index(std::string interface_name, int joint_index);
 
-  // Vector wheel state indeces
-  enum WheelState { EFFORT = 0, VELOCITY, DISPLACEMENT };
+  double get_dynamic_state_value(std::string joint_name, std::string interface_name);
 
   // Encoder parameters
   double encoder_resolution_;
@@ -44,7 +45,7 @@ private:
 
   // Handling wheel ticks and wheel velocity messages
   rclcpp::TimerBase::SharedPtr timer_;
-  std::vector<control_msgs::msg::InterfaceValue> last_interface_values_;
+  control_msgs::msg::DynamicJointState last_joint_state_;
   irobot_create_msgs::msg::WheelVels angular_vels_msg_;
   irobot_create_msgs::msg::WheelTicks wheel_ticks_msg_;
   rclcpp::Publisher<irobot_create_msgs::msg::WheelVels>::SharedPtr angular_vels_publisher_;
