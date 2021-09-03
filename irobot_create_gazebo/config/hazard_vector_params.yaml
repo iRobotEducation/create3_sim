@@ -6,12 +6,12 @@ hazards_vector_node:
     publish_rate: 62.0
     subscription_topics:
       # Bumper topic
-      - /bumper/event
+      - _internal/bumper/event
       # Cliff topics
-      - /cliff_front_left/event
-      - /cliff_front_right/event
-      - /cliff_side_left/event
-      - /cliff_side_right/event
+      - _internal/cliff_front_left/event
+      - _internal/cliff_front_right/event
+      - _internal/cliff_side_left/event
+      - _internal/cliff_side_right/event
       # Wheel drop topics
-      - /wheel_drop/left_wheel/event
-      - /wheel_drop/right_wheel/event
+      - _internal/wheel_drop/left_wheel/event
+      - _internal/wheel_drop/right_wheel/event

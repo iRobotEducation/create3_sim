@@ -39,7 +39,7 @@
       <plugin name="${name}_plugin" filename="libgazebo_ros_create_bumper.so">
         <ros>
           <namespace>/</namespace>
-          <remapping>~/out:=bumper/event</remapping>
+          <remapping>~/out:=_internal/bumper/event</remapping>
         </ros>
       </plugin>
 

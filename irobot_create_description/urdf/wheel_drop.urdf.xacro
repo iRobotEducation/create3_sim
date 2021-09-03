@@ -41,7 +41,7 @@
     <plugin name="${wd_link_name}_plugin" filename="libgazebo_ros_create_wheel_drop.so">
       <ros>
         <namespace>wheel_drop</namespace>
-        <remapping>~/out:=${name}_wheel/event</remapping>
+        <remapping>~/out:=_internal/${name}_wheel/event</remapping>
       </ros>
       <update_rate>${update_rate}</update_rate>
       <detection_threshold>${detection_threshold}</detection_threshold>
