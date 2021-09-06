@@ -43,7 +43,6 @@ def generate_launch_description():
     world_path = os.path.join(pkg_aws_house_dir, 'worlds', world_name_str)
 
     # Includes
-    # Disable gui and gzserver because they launch on AWS Small world
     create3_gazebo = IncludeLaunchDescription(
         PythonLaunchDescriptionSource([create3_launch_file]),
         launch_arguments={'world_path': world_path}.items()
@@ -53,7 +52,7 @@ def generate_launch_description():
     ld = LaunchDescription(ARGUMENTS)
     # Add nodes to LaunchDescription
     ld.add_action(create3_gazebo)
-    # Add models AWS models to gazebo path
+    # Add AWS models to gazebo path
     os.environ['GAZEBO_MODEL_PATH'] += os.pathsep + os.path.join(pkg_aws_house_dir, 'models')
 
     return ld
