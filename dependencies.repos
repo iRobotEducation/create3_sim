@@ -1,0 +1,5 @@
+repositories:
+  aws-robomaker-small-house-world:
+    type: git
+    url: https://github.com/aws-robotics/aws-robomaker-small-house-world.git
+    version: ros2
