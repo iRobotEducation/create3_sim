@@ -19,21 +19,25 @@
 WheelsPublisher::WheelsPublisher() : rclcpp::Node("wheels_publisher_node")
 {
   // Topic parameter to publish angular velocity to
-  const std::string velocity_topic = declare_and_get_parameter<std::string>("velocity_topic", this);
+  const std::string velocity_topic =
+    declare_and_get_parameter<std::string>("velocity_topic", shared_from_this());
 
   // Topic parameter to publish wheel ticks to
-  const std::string ticks_topic = declare_and_get_parameter<std::string>("ticks_topic", this);
+  const std::string ticks_topic =
+    declare_and_get_parameter<std::string>("ticks_topic", shared_from_this());
 
   // Publish rate parameter
-  const double publish_rate = declare_and_get_parameter<double>("publish_rate", this);  // Hz
+  const double publish_rate =
+    declare_and_get_parameter<double>("publish_rate", shared_from_this());  // Hz
 
   // Encoder resolution
-  encoder_resolution_ =
-    declare_and_get_parameter<double>("encoder_resolution", this);  // Ticks per revolution
+  encoder_resolution_ = declare_and_get_parameter<double>(
+    "encoder_resolution", shared_from_this());  // Ticks per revolution
 
   // Set wheel circumference from wheel radius parameter
-  wheel_circumference_ =
-    2 * M_PI * declare_and_get_parameter<double>("wheel_radius", this);  // wheel radius in meters
+  wheel_circumference_ = 2 * M_PI *
+                         declare_and_get_parameter<double>(
+                           "wheel_radius", shared_from_this());  // wheel radius in meters
 
   angular_vels_publisher_ = this->create_publisher<irobot_create_msgs::msg::WheelVels>(
     velocity_topic, rclcpp::SystemDefaultsQoS());
@@ -84,9 +88,9 @@ void WheelsPublisher::publisher_callback()
   wheel_ticks_publisher_->publish(wheel_ticks_msg_);
 }
 
-int WheelsPublisher::get_joint_index(std::string joint_name)
+size_t WheelsPublisher::get_joint_index(std::string joint_name)
 {
-  for (int k = 0; k < (int)last_joint_state_.joint_names.size(); k++) {
+  for (size_t k = 0; k < last_joint_state_.joint_names.size(); k++) {
     if (last_joint_state_.joint_names[k] == joint_name) {
       return k;
     }
@@ -95,9 +99,9 @@ int WheelsPublisher::get_joint_index(std::string joint_name)
   throw std::out_of_range(joint_name + " is not a joint name in joint_names vector");
 }
 
-int WheelsPublisher::get_interface_index(std::string interface_name, int joint_index)
+size_t WheelsPublisher::get_interface_index(std::string interface_name, size_t joint_index)
 {
-  for (int k = 0; k < (int)last_joint_state_.interface_values[joint_index].interface_names.size();
+  for (size_t k = 0; k < last_joint_state_.interface_values[joint_index].interface_names.size();
        k++) {
     if (last_joint_state_.interface_values[joint_index].interface_names[k] == interface_name) {
       return k;
@@ -109,8 +113,8 @@ int WheelsPublisher::get_interface_index(std::string interface_name, int joint_i
 
 double WheelsPublisher::get_dynamic_state_value(std::string joint_name, std::string interface_name)
 {
-  int joint_index = get_joint_index(joint_name);
-  int interface_index = get_interface_index(interface_name, joint_index);
+  const size_t joint_index = get_joint_index(joint_name);
+  const size_t interface_index = get_interface_index(interface_name, joint_index);
 
   return last_joint_state_.interface_values[joint_index].values[interface_index];
 }

@@ -35,9 +35,9 @@ public:
 
 private:
   // Get vector index based on joint name.
-  int get_joint_index(std::string joint_name);
+  size_t get_joint_index(std::string joint_name);
   // Get vector index based on interface name.
-  int get_interface_index(std::string interface_name, int joint_index);
+  size_t get_interface_index(std::string interface_name, size_t joint_index);
   // Retrieve dynamic state values from last_joint_state_.
   // This is necessary because the indeces are not fixed but the names are.
   double get_dynamic_state_value(std::string joint_name, std::string interface_name);

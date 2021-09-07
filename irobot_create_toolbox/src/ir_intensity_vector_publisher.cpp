@@ -20,14 +20,15 @@ IrIntensityVectorPublisher::IrIntensityVectorPublisher()
 : rclcpp::Node("ir_intensity_readings_vector_node")
 {
   // Topic parameter to publish IR intensity vector to
-  publisher_topic_ = declare_and_get_parameter<std::string>("publisher_topic", this);
+  publisher_topic_ = declare_and_get_parameter<std::string>("publisher_topic", shared_from_this());
 
   // Subscription topics parameter
   subscription_topics_ =
-    declare_and_get_parameter<std::vector<std::string>>("subscription_topics", this);
+    declare_and_get_parameter<std::vector<std::string>>("subscription_topics", shared_from_this());
 
   // Publish rate parameter
-  double publish_rate = declare_and_get_parameter<double>("publish_rate", this);  // Hz
+  const double publish_rate =
+    declare_and_get_parameter<double>("publish_rate", shared_from_this());  // Hz
 
   publisher_ = create_publisher<irobot_create_msgs::msg::IrIntensityVector>(
     publisher_topic_, rclcpp::SensorDataQoS());
