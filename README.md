@@ -6,9 +6,9 @@ This is a [ROS 2](https://docs.ros.org/en/foxy/index.html) simulation stack for 
 
 ## Prerequisite
 
-1. Ros ([foxy](https://docs.ros.org/en/foxy/Installation/Ubuntu-Install-Debians.html) or [galactic](https://docs.ros.org/en/galactic/Installation/Ubuntu-Install-Debians.html)): it's recommended to install the desktop version of the distribution of your choosing, this will also intall RViz, so step 3 will not be necessary. Bare in mind that if other version is installed some dependencies may be missing.
+1. Ros 2 ([foxy](https://docs.ros.org/en/foxy/Installation/Ubuntu-Install-Debians.html) or [galactic](https://docs.ros.org/en/galactic/Installation/Ubuntu-Install-Debians.html)): it's recommended to install the desktop version of the distribution of your choosing, this will also install RViz 2. Bare in mind that if another version is installed, some dependencies may be missing.
 2. [Gazebo](http://gazebosim.org/tutorials?tut=install_ubuntu)
-3. [RViz](http://wiki.ros.org/rviz/UserGuide#:~:text=prefer%20the%20install%3A-,Install%20from%20debian%20repository,-Until%20fuerte%3A)
+3. RViz 2: this is included as part of the rosdep dependecies.
 
 ## Build
 
