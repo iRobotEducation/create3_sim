@@ -28,10 +28,12 @@ WheelsPublisher::WheelsPublisher() : rclcpp::Node("wheels_publisher_node")
   const double publish_rate = declare_and_get_parameter<double>("publish_rate", this);  // Hz
 
   // Encoder resolution
-  encoder_resolution_ = declare_and_get_parameter<double>("encoder_resolution", this);  // Ticks per revolution
+  encoder_resolution_ =
+    declare_and_get_parameter<double>("encoder_resolution", this);  // Ticks per revolution
 
   // Set wheel circumference from wheel radius parameter
-  wheel_circumference_ = 2 * M_PI * declare_and_get_parameter<double>("wheel_radius", this);  // wheel radius in meters
+  wheel_circumference_ =
+    2 * M_PI * declare_and_get_parameter<double>("wheel_radius", this);  // wheel radius in meters
 
   angular_vels_publisher_ = this->create_publisher<irobot_create_msgs::msg::WheelVels>(
     velocity_topic, rclcpp::SystemDefaultsQoS());

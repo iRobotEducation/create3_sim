@@ -22,7 +22,8 @@ HazardsVectorPublisher::HazardsVectorPublisher() : rclcpp::Node("hazard_detectio
   publisher_topic_ = declare_and_get_parameter<std::string>("publisher_topic", this);
 
   // Subscription topics parameter
-  subscription_topics_ = declare_and_get_parameter<std::vector<std::string>>("subscription_topics", this);
+  subscription_topics_ =
+    declare_and_get_parameter<std::vector<std::string>>("subscription_topics", this);
 
   // Publish rate parameter
   double publish_rate = declare_and_get_parameter<double>("publish_rate", this);  // Hz

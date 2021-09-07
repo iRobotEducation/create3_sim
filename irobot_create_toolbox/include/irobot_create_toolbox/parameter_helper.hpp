@@ -16,12 +16,12 @@
 
 #pragma once
 
-// #include <rclcpp/exceptions/exceptions.hpp>
 #include <rclcpp/rclcpp.hpp>
 #include <string>
 
-template<typename T>
-T declare_and_get_parameter(std::string param_name, rclcpp::Node* node){
+template <typename T>
+T declare_and_get_parameter(std::string param_name, rclcpp::Node * node)
+{
   const rclcpp::ParameterValue param = node->declare_parameter(param_name);
   return param.get<T>();
 }
