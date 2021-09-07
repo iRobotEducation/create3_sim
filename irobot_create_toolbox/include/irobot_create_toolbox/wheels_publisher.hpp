@@ -47,6 +47,14 @@ private:
 
   // Handling wheel ticks and wheel velocity messages
   rclcpp::TimerBase::SharedPtr timer_;
+
+  /*
+  * This variable holds the last message sent by the topic /dynamic_joint_states which
+  * is published by the diff_drive_controller. This variable holds information about the
+  * wheels' effort, velocity and position in a vector but the order in which these appear
+  * in the vector is not guaranteed, which is why we rely on the get_dynamic_state_value()
+  * method to retrieve information from the vectors.
+  */
   control_msgs::msg::DynamicJointState last_joint_state_;
   irobot_create_msgs::msg::WheelVels angular_vels_msg_;
   irobot_create_msgs::msg::WheelTicks wheel_ticks_msg_;
