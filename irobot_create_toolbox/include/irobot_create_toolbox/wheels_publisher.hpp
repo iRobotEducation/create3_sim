@@ -22,6 +22,7 @@
 #include <irobot_create_toolbox/parameter_helper.hpp>
 #include <rclcpp/rclcpp.hpp>
 #include <std_msgs/msg/string.hpp>
+#include <stdexcept>
 
 class WheelsPublisher : public rclcpp::Node
 {

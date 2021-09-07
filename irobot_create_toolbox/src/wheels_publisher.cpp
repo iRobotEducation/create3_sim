@@ -91,8 +91,8 @@ int WheelsPublisher::get_joint_index(std::string joint_name)
       return k;
     }
   }
-  // TODO Throw element not found exception
-  return -1;
+
+  throw std::out_of_range(joint_name + " is not a joint name in joint_names vector");
 }
 
 int WheelsPublisher::get_interface_index(std::string interface_name, int joint_index)
@@ -103,8 +103,8 @@ int WheelsPublisher::get_interface_index(std::string interface_name, int joint_i
       return k;
     }
   }
-  // TODO Throw element not found exception
-  return -1;
+
+  throw std::out_of_range(interface_name + " is not an interface name in interface_names vector");
 }
 
 double WheelsPublisher::get_dynamic_state_value(std::string joint_name, std::string interface_name)
