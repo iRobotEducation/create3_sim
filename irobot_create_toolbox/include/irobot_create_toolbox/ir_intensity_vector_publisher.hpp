@@ -18,7 +18,7 @@
 
 #include <irobot_create_msgs/msg/ir_intensity.hpp>
 #include <irobot_create_msgs/msg/ir_intensity_vector.hpp>
-#include <rclcpp/exceptions/exceptions.hpp>
+#include <irobot_create_toolbox/parameter_helper.hpp>
 #include <rclcpp/rclcpp.hpp>
 #include <string>
 #include <vector>

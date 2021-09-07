@@ -19,52 +19,19 @@
 WheelsPublisher::WheelsPublisher() : rclcpp::Node("wheels_publisher_node")
 {
   // Topic parameter to publish angular velocity to
-  const rclcpp::ParameterValue vels_topic_param = declare_parameter("velocity_topic");
-  // Unset parameters have a type: rclcpp::ParameterType::PARAMETER_NOT_SET
-  if (vels_topic_param.get_type() != rclcpp::ParameterType::PARAMETER_STRING) {
-    throw rclcpp::exceptions::InvalidParameterTypeException(
-      "velocity_topic", "Not of type string or was not set");
-  }
-  const std::string velocity_topic = vels_topic_param.get<std::string>();
+  const std::string velocity_topic = declare_and_get_parameter<std::string>("velocity_topic", this);
 
   // Topic parameter to publish wheel ticks to
-  const rclcpp::ParameterValue ticks_topic_param = declare_parameter("ticks_topic");
-  // Unset parameters have a type: rclcpp::ParameterType::PARAMETER_NOT_SET
-  if (ticks_topic_param.get_type() != rclcpp::ParameterType::PARAMETER_STRING) {
-    throw rclcpp::exceptions::InvalidParameterTypeException(
-      "ticks_topic", "Not of type string or was not set");
-  }
-  const std::string ticks_topic = ticks_topic_param.get<std::string>();
+  const std::string ticks_topic = declare_and_get_parameter<std::string>("ticks_topic", this);
 
   // Publish rate parameter
-  const rclcpp::ParameterValue publish_rate_param = declare_parameter("publish_rate");
-  // Unset parameters have a type: rclcpp::ParameterType::PARAMETER_NOT_SET
-  if (publish_rate_param.get_type() != rclcpp::ParameterType::PARAMETER_DOUBLE) {
-    throw rclcpp::exceptions::InvalidParameterTypeException(
-      "publish_rate", "Not of type double or was not set");
-  }
-  const double publish_rate = publish_rate_param.get<double>();  // Hz
+  const double publish_rate = declare_and_get_parameter<double>("publish_rate", this);  // Hz
 
   // Encoder resolution
-  const rclcpp::ParameterValue encoder_resolution_param = declare_parameter("encoder_resolution");
-  // Unset parameters have a type: rclcpp::ParameterType::PARAMETER_NOT_SET
-  if (encoder_resolution_param.get_type() != rclcpp::ParameterType::PARAMETER_DOUBLE) {
-    throw rclcpp::exceptions::InvalidParameterTypeException(
-      "encoder_resolution", "Not of type double or was not set");
-  }
+  encoder_resolution_ = declare_and_get_parameter<double>("encoder_resolution", this);  // Ticks per revolution
 
-  encoder_resolution_ = encoder_resolution_param.get<double>();  // Ticks per revolution
-
-  // Wheel radius parameter
-  rclcpp::ParameterValue wheel_radius_param = declare_parameter("wheel_radius");
-  // Unset parameters have a type: rclcpp::ParameterType::PARAMETER_NOT_SET
-  if (wheel_radius_param.get_type() != rclcpp::ParameterType::PARAMETER_DOUBLE) {
-    throw rclcpp::exceptions::InvalidParameterTypeException(
-      "wheel_radius", "Not of type double or was not set");
-  }
-
-  // Set wheel circumference
-  wheel_circumference_ = 2 * M_PI * wheel_radius_param.get<double>();  // wheel radius in meters
+  // Set wheel circumference from wheel radius parameter
+  wheel_circumference_ = 2 * M_PI * declare_and_get_parameter<double>("wheel_radius", this);  // wheel radius in meters
 
   angular_vels_publisher_ = this->create_publisher<irobot_create_msgs::msg::WheelVels>(
     velocity_topic, rclcpp::SystemDefaultsQoS());
