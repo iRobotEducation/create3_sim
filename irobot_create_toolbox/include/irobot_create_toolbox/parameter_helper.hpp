@@ -20,7 +20,7 @@
 #include <string>
 
 template <typename T>
-T declare_and_get_parameter(std::string param_name, rclcpp::Node::SharedPtr node)
+T declare_and_get_parameter(std::string param_name, rclcpp::Node * node)
 {
   return node->declare_parameter(param_name).get<T>();
 }

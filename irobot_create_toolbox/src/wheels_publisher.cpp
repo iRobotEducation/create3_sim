@@ -19,42 +19,38 @@
 WheelsPublisher::WheelsPublisher() : rclcpp::Node("wheels_publisher_node")
 {
   // Topic parameter to publish angular velocity to
-  const std::string velocity_topic =
-    declare_and_get_parameter<std::string>("velocity_topic", shared_from_this());
+  const std::string velocity_topic = declare_and_get_parameter<std::string>("velocity_topic", this);
 
   // Topic parameter to publish wheel ticks to
-  const std::string ticks_topic =
-    declare_and_get_parameter<std::string>("ticks_topic", shared_from_this());
+  const std::string ticks_topic = declare_and_get_parameter<std::string>("ticks_topic", this);
 
   // Publish rate parameter
-  const double publish_rate =
-    declare_and_get_parameter<double>("publish_rate", shared_from_this());  // Hz
+  const double publish_rate = declare_and_get_parameter<double>("publish_rate", this);  // Hz
 
   // Encoder resolution
-  encoder_resolution_ = declare_and_get_parameter<double>(
-    "encoder_resolution", shared_from_this());  // Ticks per revolution
+  encoder_resolution_ =
+    declare_and_get_parameter<double>("encoder_resolution", this);  // Ticks per revolution
 
   // Set wheel circumference from wheel radius parameter
-  wheel_circumference_ = 2 * M_PI *
-                         declare_and_get_parameter<double>(
-                           "wheel_radius", shared_from_this());  // wheel radius in meters
+  wheel_circumference_ =
+    2 * M_PI * declare_and_get_parameter<double>("wheel_radius", this);  // wheel radius in meters
 
-  angular_vels_publisher_ = this->create_publisher<irobot_create_msgs::msg::WheelVels>(
+  angular_vels_publisher_ = create_publisher<irobot_create_msgs::msg::WheelVels>(
     velocity_topic, rclcpp::SystemDefaultsQoS());
   RCLCPP_INFO_STREAM(get_logger(), "Advertised topic: " << velocity_topic);
-  wheel_ticks_publisher_ = this->create_publisher<irobot_create_msgs::msg::WheelTicks>(
-    ticks_topic, rclcpp::SystemDefaultsQoS());
+  wheel_ticks_publisher_ =
+    create_publisher<irobot_create_msgs::msg::WheelTicks>(ticks_topic, rclcpp::SystemDefaultsQoS());
   RCLCPP_INFO_STREAM(get_logger(), "Advertised topic: " << ticks_topic);
 
-  timer_ = this->create_wall_timer(
+  timer_ = create_wall_timer(
     std::chrono::duration<double>(1 / publish_rate),
     std::bind(&WheelsPublisher::publisher_callback, this));
 
-  subscription_ = this->create_subscription<control_msgs::msg::DynamicJointState>(
+  subscription_ = create_subscription<control_msgs::msg::DynamicJointState>(
     "dynamic_joint_states", rclcpp::SystemDefaultsQoS(),
     [this](const control_msgs::msg::DynamicJointState::SharedPtr msg) {
-      std::lock_guard<std::mutex> lock{mutex_};
-      last_joint_state_ = *msg;
+      std::lock_guard<std::mutex> lock{this->mutex_};
+      this->last_joint_state_ = *msg;
     });
 }
 

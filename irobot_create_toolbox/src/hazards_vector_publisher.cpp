@@ -19,26 +19,25 @@
 HazardsVectorPublisher::HazardsVectorPublisher() : rclcpp::Node("hazard_detection_vector_node")
 {
   // Topic parameter to publish hazards vector to
-  publisher_topic_ = declare_and_get_parameter<std::string>("publisher_topic", shared_from_this());
+  publisher_topic_ = declare_and_get_parameter<std::string>("publisher_topic", this);
 
   // Subscription topics parameter
   subscription_topics_ =
-    declare_and_get_parameter<std::vector<std::string>>("subscription_topics", shared_from_this());
+    declare_and_get_parameter<std::vector<std::string>>("subscription_topics", this);
 
   // Publish rate parameter
-  const double publish_rate =
-    declare_and_get_parameter<double>("publish_rate", shared_from_this());  // Hz
+  const double publish_rate = declare_and_get_parameter<double>("publish_rate", this);  // Hz
 
   publisher_ = create_publisher<irobot_create_msgs::msg::HazardDetectionVector>(
     publisher_topic_, rclcpp::SensorDataQoS());
   RCLCPP_INFO_STREAM(get_logger(), "Advertised topic: " << publisher_topic_);
 
   timer_ = create_wall_timer(std::chrono::duration<double>(1 / publish_rate), [this]() {
-    std::lock_guard<std::mutex> lock{mutex_};
+    std::lock_guard<std::mutex> lock{this->mutex_};
 
     // Publish detected vector.
-    publisher_->publish(this->msg_);
-    msg_.detections.clear();
+    this->publisher_->publish(this->msg_);
+    this->msg_.detections.clear();
   });
 
   // Create subscriptions
@@ -46,8 +45,8 @@ HazardsVectorPublisher::HazardsVectorPublisher() : rclcpp::Node("hazard_detectio
     subs_vector_.push_back((create_subscription<irobot_create_msgs::msg::HazardDetection>(
       topic, rclcpp::SensorDataQoS(),
       [this](const irobot_create_msgs::msg::HazardDetection::SharedPtr msg) {
-        std::lock_guard<std::mutex> lock{mutex_};
-        msg_.detections.push_back(*msg);
+        std::lock_guard<std::mutex> lock{this->mutex_};
+        this->msg_.detections.push_back(*msg);
       })));
     RCLCPP_INFO_STREAM(get_logger(), "Subscription to topic: " << topic);
   }
