@@ -59,6 +59,8 @@ def generate_launch_description():
         [pkg_create3_gazebo, 'config', 'hazard_vector_params.yaml'])
     ir_intensity_params_yaml_file = PathJoinSubstitution(
         [pkg_create3_gazebo, 'config', 'ir_intensity_vector_params.yaml'])
+    wheel_status_params_yaml_file = PathJoinSubstitution(
+        [pkg_create3_gazebo, 'config', 'wheel_status_params.yaml'])
 
     # Launch configurations
     x, y, z = LaunchConfiguration('x'), LaunchConfiguration('y'), LaunchConfiguration('z')
@@ -138,6 +140,24 @@ def generate_launch_description():
         output='screen',
     )
 
+    # Publish IR intensity vector
+    ir_intensity_vector_node = Node(
+        package='irobot_create_toolbox',
+        name='ir_intensity_vector_node',
+        executable='ir_intensity_vector_publisher_node',
+        parameters=[ir_intensity_params_yaml_file],
+        output='screen',
+    )
+
+    # Publish wheel status
+    wheel_status_node = Node(
+        package='irobot_create_toolbox',
+        name='wheel_status_publisher_node',
+        executable='wheel_status_publisher_node',
+        parameters=[wheel_status_params_yaml_file],
+        output='screen',
+    )
+
     # Define LaunchDescription variable
     ld = LaunchDescription(ARGUMENTS)
     # Include robot description
@@ -150,5 +170,6 @@ def generate_launch_description():
     ld.add_action(spawn_dock)
     ld.add_action(hazards_vector_node)
     ld.add_action(ir_intensity_vector_node)
+    ld.add_action(wheel_status_node)
 
     return ld

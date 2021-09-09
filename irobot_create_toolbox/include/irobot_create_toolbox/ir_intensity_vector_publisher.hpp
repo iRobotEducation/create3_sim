@@ -18,7 +18,7 @@
 
 #include <irobot_create_msgs/msg/ir_intensity.hpp>
 #include <irobot_create_msgs/msg/ir_intensity_vector.hpp>
-#include <rclcpp/exceptions/exceptions.hpp>
+#include <irobot_create_toolbox/parameter_helper.hpp>
 #include <rclcpp/rclcpp.hpp>
 #include <string>
 #include <vector>
@@ -28,12 +28,6 @@ class IrIntensityVectorPublisher : public rclcpp::Node
 public:
   /// \brief Constructor
   IrIntensityVectorPublisher();
-
-  /// \brief Callback to be called upon receiving a message
-  void subscription_callback(const std::shared_ptr<irobot_create_msgs::msg::IrIntensity> msg);
-
-  /// \brief Callback to be called periodically to publish the vector message
-  void publisher_callback();
 
 protected:
   // Publish aggregated detections on timer_'s frequency
