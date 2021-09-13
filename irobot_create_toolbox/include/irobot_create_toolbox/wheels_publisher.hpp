@@ -24,6 +24,8 @@
 #include <std_msgs/msg/string.hpp>
 #include <stdexcept>
 
+namespace irobot_create_toolbox
+{
 class WheelsPublisher : public rclcpp::Node
 {
 public:
@@ -66,3 +68,5 @@ private:
   // Mutex
   std::mutex mutex_;
 };
+
+}  // namespace irobot_create_toolbox

@@ -16,6 +16,8 @@
 
 #include <irobot_create_toolbox/wheels_publisher.hpp>
 
+namespace irobot_create_toolbox
+{
 WheelsPublisher::WheelsPublisher() : rclcpp::Node("wheels_publisher_node")
 {
   // Topic parameter to publish angular velocity to
@@ -114,3 +116,5 @@ double WheelsPublisher::get_dynamic_state_value(std::string joint_name, std::str
 
   return last_joint_state_.interface_values[joint_index].values[interface_index];
 }
+
+}  // namespace irobot_create_toolbox

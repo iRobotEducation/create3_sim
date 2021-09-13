@@ -16,6 +16,8 @@
 
 #include <irobot_create_toolbox/ir_intensity_vector_publisher.hpp>
 
+namespace irobot_create_toolbox
+{
 IrIntensityVectorPublisher::IrIntensityVectorPublisher()
 : rclcpp::Node("ir_intensity_readings_vector_node")
 {
@@ -52,3 +54,5 @@ IrIntensityVectorPublisher::IrIntensityVectorPublisher()
     RCLCPP_INFO_STREAM(get_logger(), "Subscription to topic: " << topic);
   }
 }
+
+}  // namespace irobot_create_toolbox

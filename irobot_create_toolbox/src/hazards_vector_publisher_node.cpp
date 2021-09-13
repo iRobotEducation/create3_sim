@@ -19,7 +19,7 @@
 int main(int argc, char * argv[])
 {
   rclcpp::init(argc, argv);
-  rclcpp::spin(std::make_shared<HazardsVectorPublisher>());
+  rclcpp::spin(std::make_shared<irobot_create_toolbox::HazardsVectorPublisher>());
   rclcpp::shutdown();
   return 0;
 }
