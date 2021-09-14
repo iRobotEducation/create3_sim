@@ -23,6 +23,8 @@
 #include <string>
 #include <vector>
 
+namespace irobot_create_toolbox
+{
 class HazardsVectorPublisher : public rclcpp::Node
 {
 public:
@@ -53,3 +55,5 @@ private:
   // Message containing a vector to store detected hazards
   irobot_create_msgs::msg::HazardDetectionVector msg_;
 };
+
+}  // namespace irobot_create_toolbox

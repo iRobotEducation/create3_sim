@@ -16,6 +16,8 @@
 
 #include <irobot_create_toolbox/hazards_vector_publisher.hpp>
 
+namespace irobot_create_toolbox
+{
 HazardsVectorPublisher::HazardsVectorPublisher() : rclcpp::Node("hazard_detection_vector_node")
 {
   // Topic parameter to publish hazards vector to
@@ -51,3 +53,5 @@ HazardsVectorPublisher::HazardsVectorPublisher() : rclcpp::Node("hazard_detectio
     RCLCPP_INFO_STREAM(get_logger(), "Subscription to topic: " << topic);
   }
 }
+
+}  // namespace irobot_create_toolbox

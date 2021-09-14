@@ -23,6 +23,8 @@
 #include <string>
 #include <vector>
 
+namespace irobot_create_toolbox
+{
 class IrIntensityVectorPublisher : public rclcpp::Node
 {
 public:
@@ -53,3 +55,5 @@ protected:
   // Message containing a vector to store IR intensity reasings
   irobot_create_msgs::msg::IrIntensityVector msg_;
 };
+
+}  // namespace irobot_create_toolbox
