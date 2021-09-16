@@ -15,6 +15,7 @@
 // @author Rodrigo Jose Causarano Nunez (rcausaran@irobot.com)
 
 #include <irobot_create_toolbox/hazards_vector_publisher.hpp>
+#include <ratio>
 
 namespace irobot_create_toolbox
 {
@@ -38,8 +39,10 @@ HazardsVectorPublisher::HazardsVectorPublisher() : rclcpp::Node("hazard_detectio
     std::lock_guard<std::mutex> lock{this->mutex_};
 
     // Set header timestamp.
-    this->msg_.header.stamp.sec = (now() - start_time_).nanoseconds() / 1000000000;
-    this->msg_.header.stamp.nanosec = (now() - start_time_).nanoseconds() % 1000000000;
+    auto duration_nanosec = (now() - start_time_).nanoseconds();
+    int billion = 1000000000;
+    this->msg_.header.stamp.sec = duration_nanosec / billion;
+    this->msg_.header.stamp.nanosec = duration_nanosec % billion;
 
     // Publish detected vector.
     this->publisher_->publish(this->msg_);

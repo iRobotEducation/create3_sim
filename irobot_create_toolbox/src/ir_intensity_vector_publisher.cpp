@@ -39,8 +39,10 @@ IrIntensityVectorPublisher::IrIntensityVectorPublisher()
     std::lock_guard<std::mutex> lock{this->mutex_};
 
     // Set header timestamp.
-    this->msg_.header.stamp.sec = (now() - start_time_).nanoseconds() / 1000000000;
-    this->msg_.header.stamp.nanosec = (now() - start_time_).nanoseconds() % 1000000000;
+    auto duration_nanosec = (now() - start_time_).nanoseconds();
+    int billion = 1000000000;
+    this->msg_.header.stamp.sec = duration_nanosec / billion;
+    this->msg_.header.stamp.nanosec = duration_nanosec % billion;
 
     // Publish detected vector.
     this->publisher_->publish(this->msg_);

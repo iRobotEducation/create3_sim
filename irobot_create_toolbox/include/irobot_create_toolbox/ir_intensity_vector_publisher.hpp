@@ -16,11 +16,12 @@
 
 #pragma once
 
-#include <time.h>
+#include <rclcpp/time.hpp>
 #include <irobot_create_msgs/msg/ir_intensity.hpp>
 #include <irobot_create_msgs/msg/ir_intensity_vector.hpp>
 #include <irobot_create_toolbox/parameter_helper.hpp>
 #include <rclcpp/rclcpp.hpp>
+#include <ratio>
 #include <string>
 #include <vector>
 
@@ -34,7 +35,8 @@ public:
 
 protected:
 
-  rclcpp::Time  start_time_;
+  // Starting time of the simulation.
+  rclcpp::Time start_time_;
 
   // Publish aggregated detections on timer_'s frequency
   rclcpp::TimerBase::SharedPtr timer_;
