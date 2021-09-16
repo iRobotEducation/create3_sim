@@ -62,7 +62,7 @@ IrIntensityVectorPublisher::IrIntensityVectorPublisher()
   }
 
   // Defines the starting time.
-  start_time_ = now()
+  start_time_ = now();
 }
 
 }  // namespace irobot_create_toolbox
