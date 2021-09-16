@@ -39,8 +39,8 @@ class TopicRepublisher(Node):
         self.declare_parameters(
             namespace='',
             parameters=[
-                ('current_topic', None),
-                ('new_topic', None),
+                ('current_topic', ''),
+                ('new_topic', ''),
             ])
 
         self.timer = self.create_timer(2.0, self.check_published_topic)

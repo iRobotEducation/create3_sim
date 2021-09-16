@@ -24,7 +24,7 @@ namespace irobot_create_toolbox
 template <typename T>
 const T declare_and_get_parameter(std::string param_name, rclcpp::Node * node)
 {
-  return node->declare_parameter(param_name).get<T>();
+  return node->declare_parameter<T>(param_name);
 }
 
 }  // namespace irobot_create_toolbox
