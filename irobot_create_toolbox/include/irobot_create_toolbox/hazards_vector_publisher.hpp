@@ -32,7 +32,6 @@ public:
   HazardsVectorPublisher();
 
 private:
-
   // Publish aggregated detections on timer_'s frequency
   rclcpp::TimerBase::SharedPtr timer_;
 

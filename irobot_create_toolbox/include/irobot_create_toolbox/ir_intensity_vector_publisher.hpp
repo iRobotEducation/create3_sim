@@ -19,8 +19,8 @@
 #include <irobot_create_msgs/msg/ir_intensity.hpp>
 #include <irobot_create_msgs/msg/ir_intensity_vector.hpp>
 #include <irobot_create_toolbox/parameter_helper.hpp>
-#include <rclcpp/rclcpp.hpp>
 #include <ratio>
+#include <rclcpp/rclcpp.hpp>
 #include <string>
 #include <vector>
 
@@ -33,7 +33,6 @@ public:
   IrIntensityVectorPublisher();
 
 protected:
-
   // Publish aggregated detections on timer_'s frequency
   rclcpp::TimerBase::SharedPtr timer_;
 
