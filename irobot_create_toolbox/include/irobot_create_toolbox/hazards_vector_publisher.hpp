@@ -16,7 +16,6 @@
 
 #pragma once
 
-#include <rclcpp/time.hpp>
 #include <irobot_create_msgs/msg/hazard_detection.hpp>
 #include <irobot_create_msgs/msg/hazard_detection_vector.hpp>
 #include <irobot_create_toolbox/parameter_helper.hpp>
@@ -33,9 +32,6 @@ public:
   HazardsVectorPublisher();
 
 private:
-
-  // Starting time of the simulation.
-  rclcpp::Time start_time_;
 
   // Publish aggregated detections on timer_'s frequency
   rclcpp::TimerBase::SharedPtr timer_;
