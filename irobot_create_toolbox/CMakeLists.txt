@@ -57,8 +57,6 @@ target_link_libraries(wheel_status_publisher_node wheel_status_publisher_lib)
 install(
   DIRECTORY
     include
-  DESTINATION
-    include
 )
 
 install(
