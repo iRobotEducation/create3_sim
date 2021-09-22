@@ -15,7 +15,6 @@
 // @author Rodrigo Jose Causarano Nunez (rcausaran@irobot.com)
 
 #include <irobot_create_toolbox/hazards_vector_publisher.hpp>
-#include <ratio>
 
 namespace irobot_create_toolbox
 {
