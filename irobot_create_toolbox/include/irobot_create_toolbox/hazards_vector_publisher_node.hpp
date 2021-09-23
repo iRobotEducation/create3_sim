@@ -16,8 +16,8 @@
 
 #pragma once
 
-#include <irobot_create_msgs/msg/ir_intensity.hpp>
-#include <irobot_create_msgs/msg/ir_intensity_vector.hpp>
+#include <irobot_create_msgs/msg/hazard_detection.hpp>
+#include <irobot_create_msgs/msg/hazard_detection_vector.hpp>
 #include <irobot_create_toolbox/parameter_helper.hpp>
 #include <rclcpp/rclcpp.hpp>
 #include <string>
@@ -25,35 +25,35 @@
 
 namespace irobot_create_toolbox
 {
-class IrIntensityVectorPublisher : public rclcpp::Node
+class HazardsVectorPublisherNode : public rclcpp::Node
 {
 public:
   /// \brief Constructor
-  IrIntensityVectorPublisher();
+  HazardsVectorPublisherNode();
 
-protected:
+private:
   // Publish aggregated detections on timer_'s frequency
   rclcpp::TimerBase::SharedPtr timer_;
 
   // Detection vector publisher
-  std::shared_ptr<rclcpp::Publisher<irobot_create_msgs::msg::IrIntensityVector>> publisher_;
+  rclcpp::Publisher<irobot_create_msgs::msg::HazardDetectionVector>::SharedPtr publisher_;
 
   // Vector of subscriptions
-  using IrIntensityVectorSubscriptionPtr =
-    std::vector<rclcpp::Subscription<irobot_create_msgs::msg::IrIntensity>::SharedPtr>;
-  IrIntensityVectorSubscriptionPtr subs_vector_;
+  using HazardVectorSubscriptionPtr =
+    std::vector<rclcpp::Subscription<irobot_create_msgs::msg::HazardDetection>::SharedPtr>;
+  HazardVectorSubscriptionPtr subs_vector_;
 
   // Mutex to protect access to subs_vector_ from different threads
   std::mutex mutex_;
 
-  // Topic to publish IR intensity vector to
+  // Topic to publish hazards vector to
   std::string publisher_topic_;
 
-  // Topics from where IR intensity messages will be received from
+  // Topics from where hazard messages will be received from
   std::vector<std::string> subscription_topics_;
 
-  // Message containing a vector to store IR intensity reasings
-  irobot_create_msgs::msg::IrIntensityVector msg_;
+  // Message containing a vector to store detected hazards
+  irobot_create_msgs::msg::HazardDetectionVector msg_;
 };
 
 }  // namespace irobot_create_toolbox

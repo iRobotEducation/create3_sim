@@ -14,12 +14,45 @@
 //
 // @author Rodrigo Jose Causarano Nunez (rcausaran@irobot.com)
 
-#include <irobot_create_toolbox/ir_intensity_vector_publisher.hpp>
+#include <irobot_create_toolbox/ir_intensity_vector_publisher_node.hpp>
 
-int main(int argc, char * argv[])
+namespace irobot_create_toolbox
 {
-  rclcpp::init(argc, argv);
-  rclcpp::spin(std::make_shared<irobot_create_toolbox::IrIntensityVectorPublisher>());
-  rclcpp::shutdown();
-  return 0;
+IrIntensityVectorPublisherNode::IrIntensityVectorPublisherNode()
+: rclcpp::Node("ir_intensity_readings_vector")
+{
+  // Topic parameter to publish IR intensity vector to
+  publisher_topic_ = declare_and_get_parameter<std::string>("publisher_topic", this);
+
+  // Subscription topics parameter
+  subscription_topics_ =
+    declare_and_get_parameter<std::vector<std::string>>("subscription_topics", this);
+
+  // Publish rate parameter
+  const double publish_rate = declare_and_get_parameter<double>("publish_rate", this);  // Hz
+
+  publisher_ = create_publisher<irobot_create_msgs::msg::IrIntensityVector>(
+    publisher_topic_, rclcpp::SensorDataQoS());
+  RCLCPP_INFO_STREAM(get_logger(), "Advertised topic: " << publisher_topic_);
+
+  timer_ = create_wall_timer(std::chrono::duration<double>(1 / publish_rate), [this]() {
+    std::lock_guard<std::mutex> lock{this->mutex_};
+
+    // Publish detected vector.
+    this->publisher_->publish(this->msg_);
+    this->msg_.readings.clear();
+  });
+
+  // Create subscriptions
+  for (std::string topic : subscription_topics_) {
+    subs_vector_.push_back((create_subscription<irobot_create_msgs::msg::IrIntensity>(
+      topic, rclcpp::SensorDataQoS(),
+      [this](const irobot_create_msgs::msg::IrIntensity::SharedPtr msg) {
+        std::lock_guard<std::mutex> lock{this->mutex_};
+        this->msg_.readings.push_back(*msg);
+      })));
+    RCLCPP_INFO_STREAM(get_logger(), "Subscription to topic: " << topic);
+  }
 }
+
+}  // namespace irobot_create_toolbox

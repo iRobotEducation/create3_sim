@@ -26,16 +26,15 @@
 
 namespace irobot_create_toolbox
 {
-class WheelsPublisher : public rclcpp::Node
+class WheelsPublisherNode : public rclcpp::Node
 {
 public:
   /// \brief Constructor
-  WheelsPublisher();
-
-  /// \brief Callback to be called periodically to publish the vector message
-  void publisher_callback();
+  WheelsPublisherNode();
 
 private:
+  /// \brief Callback to be called periodically to publish the vector message
+  void publisher_callback();
   // Get vector index based on joint name.
   size_t get_joint_index(std::string joint_name);
   // Get vector index based on interface name.

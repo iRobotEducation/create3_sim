@@ -1,5 +1,5 @@
 ---
-wheel_status_publisher_node:
+wheel_status_publisher:
   ros__parameters:
     # Publish rate
     publish_rate: 62.0

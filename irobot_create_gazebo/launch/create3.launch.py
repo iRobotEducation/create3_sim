@@ -116,8 +116,8 @@ def generate_launch_description():
     # Publish hazards vector
     hazards_vector_node = Node(
         package='irobot_create_toolbox',
-        name='hazards_vector_node',
-        executable='hazards_vector_publisher_node',
+        name='hazards_vector_publisher',
+        executable='hazards_vector_publisher',
         parameters=[hazards_params_yaml_file],
         output='screen',
     )
@@ -125,26 +125,8 @@ def generate_launch_description():
     # Publish IR intensity vector
     ir_intensity_vector_node = Node(
         package='irobot_create_toolbox',
-        name='ir_intensity_vector_node',
-        executable='ir_intensity_vector_publisher_node',
-        parameters=[ir_intensity_params_yaml_file],
-        output='screen',
-    )
-
-    # Publish IR intensity vector
-    ir_intensity_vector_node = Node(
-        package='irobot_create_toolbox',
-        name='ir_intensity_vector_node',
-        executable='ir_intensity_vector_publisher_node',
-        parameters=[ir_intensity_params_yaml_file],
-        output='screen',
-    )
-
-    # Publish IR intensity vector
-    ir_intensity_vector_node = Node(
-        package='irobot_create_toolbox',
-        name='ir_intensity_vector_node',
-        executable='ir_intensity_vector_publisher_node',
+        name='ir_intensity_vector_publisher',
+        executable='ir_intensity_vector_publisher',
         parameters=[ir_intensity_params_yaml_file],
         output='screen',
     )
@@ -152,8 +134,8 @@ def generate_launch_description():
     # Publish wheel status
     wheel_status_node = Node(
         package='irobot_create_toolbox',
-        name='wheel_status_publisher_node',
-        executable='wheel_status_publisher_node',
+        name='wheel_status_publisher',
+        executable='wheel_status_publisher',
         parameters=[wheel_status_params_yaml_file],
         output='screen',
     )
