@@ -109,7 +109,8 @@ size_t WheelsPublisherNode::get_interface_index(std::string interface_name, size
   throw std::out_of_range(interface_name + " is not an interface name in interface_names vector");
 }
 
-double WheelsPublisherNode::get_dynamic_state_value(std::string joint_name, std::string interface_name)
+double WheelsPublisherNode::get_dynamic_state_value(
+  std::string joint_name, std::string interface_name)
 {
   const size_t joint_index = get_joint_index(joint_name);
   const size_t interface_index = get_interface_index(interface_name, joint_index);
