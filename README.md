@@ -6,7 +6,7 @@ This is a [ROS 2](https://docs.ros.org/en/foxy/index.html) simulation stack for 
 
 ## Prerequisites
 
-1. At the moment there are some packages that need to be installed from source for Galactic because they aren't fully supported yet. Please install these via ([vcs](https://github.com/dirk-thomas/vcstool)).
+1. At the moment there are some packages that need to be installed from source for Galactic because they aren't fully supported yet. Please install these via [vcs](https://github.com/dirk-thomas/vcstool).
 - If vcs is not yet intalled on your machine do it with:
 ```bash
 sudo apt-get install python3-vcstool
