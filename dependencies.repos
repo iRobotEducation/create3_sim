@@ -3,16 +3,3 @@ repositories:
     type: git
     url: https://github.com/aws-robotics/aws-robomaker-small-house-world.git
     version: ros2
-  gazebo-ros2-control:
-    type: git
-    url: https://github.com/rjcausarano/gazebo_ros2_control.git
-    version: master
-  ros2_controllers:
-    type: git
-    url: https://github.com/rjcausarano/ros2_controllers.git
-    version: master
-  ros2_control:
-    type: git
-    url: https://github.com/rjcausarano/ros2_control.git
-    version: master
-
