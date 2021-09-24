@@ -49,6 +49,7 @@
       <plugin>gazebo_ros2_control/GazeboSystem</plugin>
     </hardware>
     <joint name="${wheel_joint_name}">
+      <state_interface name="velocity" />
       <state_interface name="position" />
       <command_interface name="velocity" />
     </joint>
