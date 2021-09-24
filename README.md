@@ -9,6 +9,8 @@ This is a [ROS 2](https://docs.ros.org/en/foxy/index.html) simulation stack for 
 1. Ros 2 ([foxy](https://docs.ros.org/en/foxy/Installation/Ubuntu-Install-Debians.html) or [galactic](https://docs.ros.org/en/galactic/Installation/Ubuntu-Install-Debians.html)): it's recommended to install the desktop version of the distribution of your choosing, this will also install RViz 2. Bare in mind that if another version is installed, some dependencies may be missing.
 2. [Gazebo](http://gazebosim.org/tutorials?tut=install_ubuntu)
 3. [RViz2](https://github.com/ros2/rviz): this is included as part of the rosdep dependecies.
+4. [xterm](https://manpages.ubuntu.com/manpages/xenial/man1/xterm.1.html): Used to teleoperate the robot with the keyboard.
+5. [vcs](https://github.com/dirk-thomas/vcstool): Used to clone extra packages such as the AWS small house environment.
 
 ## Build
 
