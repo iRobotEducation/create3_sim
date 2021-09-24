@@ -54,8 +54,18 @@ ament_auto_add_executable(wheel_status_publisher_node
 )
 target_link_libraries(wheel_status_publisher_node wheel_status_publisher_lib)
 
-install(DIRECTORY include/
-        DESTINATION include)
+install(
+  DIRECTORY
+    include
+  DESTINATION include
+)
+
+install(
+  DIRECTORY
+    launch
+  DESTINATION
+    share/${PROJECT_NAME}
+)
 
 # Install CPP libraries and executables
 install(TARGETS
