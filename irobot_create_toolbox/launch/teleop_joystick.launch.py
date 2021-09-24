@@ -29,7 +29,6 @@ from launch_ros.actions import Node
 def generate_launch_description():
     joy_config = LaunchConfiguration('joy_config')
     joy_dev = LaunchConfiguration('joy_dev')
-    config_filepath = LaunchConfiguration('config_filepath')
 
     # Invokes a node that interfaces a generic joystick to ROS2.
     joy_node = Node(package='joy', executable='joy_node', name='joy_node',
@@ -39,18 +38,22 @@ def generate_launch_description():
                         'autorepeat_rate': 20.0,
                     }])
 
+    # Retrieve the path to the correct configuration .yaml depending on
+    # the joy_config argument
+    config_filepath = [TextSubstitution(text=os.path.join(
+        get_package_share_directory('teleop_twist_joy'), 'config', '')),
+        joy_config, TextSubstitution(text='.config.yaml')]
+
     # Publish unstamped Twist message from an attached USB Joystick.
     teleop_node = Node(package='teleop_twist_joy', executable='teleop_node',
                        name='teleop_twist_joy_node', parameters=[config_filepath])
 
     # Declare launchfile arguments
-    ld_args = [DeclareLaunchArgument('joy_config', default_value='xbox'),
-               DeclareLaunchArgument(
-        'joy_dev', default_value='/dev/input/js0'),
-        DeclareLaunchArgument('config_filepath', default_value=[
-            TextSubstitution(text=os.path.join(
-                get_package_share_directory('teleop_twist_joy'), 'config', '')),
-            joy_config, TextSubstitution(text='.config.yaml')])]
+    ld_args = []
+    ld_args.append(DeclareLaunchArgument('joy_config',
+                                         default_value='xbox'))
+    ld_args.append(DeclareLaunchArgument('joy_dev',
+                                         default_value='/dev/input/js0'))
 
     # Define LaunchDescription variable
     ld = LaunchDescription(ld_args)
