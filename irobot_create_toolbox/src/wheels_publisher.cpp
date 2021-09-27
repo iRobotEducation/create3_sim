@@ -54,6 +54,10 @@ WheelsPublisher::WheelsPublisher() : rclcpp::Node("wheels_publisher_node")
       std::lock_guard<std::mutex> lock{this->mutex_};
       this->last_joint_state_ = *msg;
     });
+
+  // Set header frame_id.
+  this->angular_vels_msg_.header.frame_id = "base_link";
+  this->wheel_ticks_msg_.header.frame_id = "base_link";
 }
 
 void WheelsPublisher::publisher_callback()
@@ -85,9 +89,6 @@ void WheelsPublisher::publisher_callback()
   this->angular_vels_msg_.header.stamp = now();
   this->wheel_ticks_msg_.header.stamp = now();
 
-  // Set header frame_id.
-  this->angular_vels_msg_.header.frame_id = "base_link";
-  this->wheel_ticks_msg_.header.frame_id = "base_link";
 
   // Publish messages
   angular_vels_publisher_->publish(angular_vels_msg_);
