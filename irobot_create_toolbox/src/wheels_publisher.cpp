@@ -89,7 +89,6 @@ void WheelsPublisher::publisher_callback()
   this->angular_vels_msg_.header.stamp = now();
   this->wheel_ticks_msg_.header.stamp = now();
 
-
   // Publish messages
   angular_vels_publisher_->publish(angular_vels_msg_);
   wheel_ticks_publisher_->publish(wheel_ticks_msg_);
