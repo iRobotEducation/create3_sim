@@ -54,7 +54,6 @@ WheelsPublisher::WheelsPublisher() : rclcpp::Node("wheels_publisher_node")
       std::lock_guard<std::mutex> lock{this->mutex_};
       this->last_joint_state_ = *msg;
     });
-
 }
 
 void WheelsPublisher::publisher_callback()
