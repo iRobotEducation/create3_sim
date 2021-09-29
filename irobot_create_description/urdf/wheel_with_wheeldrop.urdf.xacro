@@ -11,7 +11,7 @@
   </xacro:wheel_drop>
 
   <!-- Wheel definition -->
-  <xacro:wheel name="${name}" parent_link="wheel_drop_${name}">
+  <xacro:wheel name="${name}" parent_link="${name}_wheel">
     <origin xyz="0 0 0" rpy="0 0 0"/>
   </xacro:wheel>
 

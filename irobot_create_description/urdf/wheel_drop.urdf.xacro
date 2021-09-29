@@ -10,7 +10,7 @@
   <xacro:property name="wd_mass" value="0.05"/>
 
   <xacro:property name="update_rate"   value="62" />
-  <xacro:property name="wd_link_name"  value="wheel_drop_${name}"/>
+  <xacro:property name="wd_link_name"  value="${name}_wheel"/>
   <xacro:property name="wd_joint_name" value="${wd_link_name}_joint"/>
 
   <joint name="${wd_joint_name}" type="prismatic">

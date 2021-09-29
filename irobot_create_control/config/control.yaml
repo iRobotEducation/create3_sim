@@ -10,8 +10,8 @@ controller_manager:
 
 diffdrive_controller:
   ros__parameters:
-    left_wheel_names: ["left_wheel_joint"]
-    right_wheel_names: ["right_wheel_joint"]
+    left_wheel_names: ["_left_wheel_joint"]
+    right_wheel_names: ["_right_wheel_joint"]
 
     wheel_separation: 0.233
     wheel_radius: 0.03575
@@ -27,7 +27,7 @@ diffdrive_controller:
 
     publish_rate: 62.0
     odom_frame_id: odom
-    base_frame_id: base_footprint
+    base_frame_id: base_link
     pose_covariance_diagonal : [0.001, 0.001, 0.001, 0.001, 0.001, 0.01]
     twist_covariance_diagonal: [0.001, 0.001, 0.001, 0.001, 0.001, 0.01]
 

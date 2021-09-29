@@ -1,15 +1,30 @@
 <?xml version="1.0"?>
 <robot xmlns:xacro="http://ros.org/wiki/xacro">
+<!--
+  The robot has 5 bumper sensors in the front but for the simulation
+  only the center one is being used, so the remaining 4 bumpers are
+  created as 'dummy bumpers'.
+ -->
+<xacro:macro name="dummy_bumper" params="name parent_link:=base_link *origin">
+  <joint name="${name}_joint" type="fixed">
+    <parent link="${parent_link}"/>
+    <child link="${name}"/>
+    <xacro:insert_block name="origin"/>
+  </joint>
+  <link name="${name}">
+    <xacro:inertial_dummy/>
+  </link>
+</xacro:macro>
 
-<xacro:macro name="bumper" params="name:=bumper parent_link update_rate:=62.0 visual_mesh collision_mesh
+<xacro:macro name="bumper" params="name parent_link:=base_link update_rate:=62.0 visual_mesh collision_mesh
   *origin *inertial">
 
   <joint name="${name}_joint" type="fixed">
     <parent link="${parent_link}"/>
-    <child link="${name}_link"/>
+    <child link="${name}"/>
     <xacro:insert_block name="origin"/>
   </joint>
-  <link name="${name}_link">
+  <link name="${name}">
     <visual>
       <geometry>
         <mesh filename="${visual_mesh}"/>
@@ -23,7 +38,7 @@
     <xacro:insert_block name="inertial"/>
   </link>
 
-  <gazebo reference="${name}_link" >
+  <gazebo reference="${name}" >
     <mu1>0.1</mu1>
     <mu2>0.1</mu2>
     <maxVel>0.01</maxVel>
@@ -49,6 +64,26 @@
   <gazebo reference="${name}_joint">
     <preserveFixedJoint>true</preserveFixedJoint>
   </gazebo>
+
+  <xacro:dummy_bumper
+      name="bump_front_left">
+      <origin xyz="0.02345 -0.0875 0.025" rpy="0 0 0.5235985"/>
+  </xacro:dummy_bumper>
+
+  <xacro:dummy_bumper
+      name="bump_front_right">
+      <origin xyz="0.02345 0.0875 0.025" rpy="0 0 -0.5235985"/>
+  </xacro:dummy_bumper>
+
+  <xacro:dummy_bumper
+      name="bump_left">
+      <origin xyz="0.0875 -0.15155 0.025" rpy="0 0 1.047193"/>
+  </xacro:dummy_bumper>
+
+  <xacro:dummy_bumper
+      name="bump_right">
+      <origin xyz="0.0875 0.15155 0.025" rpy="0 0 -1.047193"/>
+  </xacro:dummy_bumper>
 
 </xacro:macro>
 

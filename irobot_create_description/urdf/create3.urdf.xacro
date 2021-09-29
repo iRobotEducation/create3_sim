@@ -1,6 +1,7 @@
 <?xml version="1.0" ?>
 <robot name="create3" xmlns:xacro="http://ros.org/wiki/xacro">
   <xacro:include filename="$(find irobot_create_description)/urdf/bumper.urdf.xacro" />
+  <xacro:include filename="$(find irobot_create_description)/urdf/button.urdf.xacro" />
   <xacro:include filename="$(find irobot_create_description)/urdf/caster.urdf.xacro" />
   <xacro:include filename="$(find irobot_create_description)/urdf/common_properties.urdf.xacro"/>
   <xacro:include filename="$(find irobot_create_description)/urdf/sensors/cliff_sensor.urdf.xacro"/>
@@ -10,35 +11,27 @@
   <xacro:include filename="$(find irobot_create_description)/urdf/wheel_with_wheeldrop.urdf.xacro" />
 
   <!-- MECHANICAL PROPERTIES -->
-  <xacro:property name="body_z_offset"           value="${-2.5*cm2m}" />
-  <xacro:property name="body_collision_z_offset" value="${-1*cm2m}" />
+  <xacro:property name="body_z_offset"           value="${4.1*cm2m}" />
+  <xacro:property name="body_collision_z_offset" value="${1*cm2m}" />
   <xacro:property name="body_mass"               value="2.300" />
   <xacro:property name="body_radius"             value="${16.4*cm2m}" />
   <xacro:property name="body_length"             value="${6*cm2m}" />
 
   <xacro:property name="bumper_mass"             value="0.1" />
-  <xacro:property name="bumper_offset_z"         value="${-2.5*cm2m}" />
+  <xacro:property name="bumper_offset_z"         value="${4.1*cm2m}" />
   <xacro:property name="bumber_inertial_x"       value="${8*cm2m}" />
   <xacro:property name="bumper_inertial_z"       value="${2*cm2m}"/>
 
-  <xacro:property name="wheel_height"            value="${-2.75*cm2m}" />
+  <xacro:property name="wheel_height"            value="${3.85*cm2m}" />
   <xacro:property name="distance_between_wheels" value="${23.3*cm2m}" />
 
   <xacro:property name="caster_position_x"       value="${12.5*cm2m}" />
-  <xacro:property name="caster_position_z"       value="${-5.4*cm2m}" />
+  <xacro:property name="caster_position_z"       value="${1.2*cm2m}" />
 
-  <xacro:property name="wheel_drop_offset_z"     value="${3.5*mm2m}"/>
+  <xacro:property name="wheel_drop_offset_z"     value="${3.1*mm2m}"/>
   <xacro:property name="wheel_drop_z"            value="${wheel_height + wheel_drop_offset_z}"/>
 
-  <!-- Create 3 base definitions-->
-  <link name="base_footprint"/>
-
-  <joint name="base_footprint_joint" type="fixed">
-    <origin xyz="0 0 0.066" rpy="0 0.013 0"/>
-    <parent link="base_footprint"/>
-    <child link="base_link" />
-  </joint>
-
+  <!-- Create 3 base definition-->
   <link name="base_link">
     <visual>
       <origin xyz="0 0 ${body_z_offset}" rpy="0 0 ${pi/2}"/>
@@ -47,7 +40,7 @@
       </geometry>
     </visual>
     <collision name="create3_base_collision">
-      <origin xyz="0 0 ${body_collision_z_offset}" rpy="0 0 ${pi/2}"/>
+      <origin xyz="0 0 ${body_z_offset + body_collision_z_offset}" rpy="0 0 ${pi/2}"/>
       <geometry>
         <cylinder length="${body_length}" radius="${body_radius}"/>
       </geometry>
@@ -59,7 +52,7 @@
 
   <!-- Bumper -->
   <xacro:bumper
-      parent_link="base_link"
+      name="bump_front_center"
       visual_mesh="file://$(find irobot_create_description)/meshes/bumper_visual.dae"
       collision_mesh="file://$(find irobot_create_description)/meshes/bumper_collision.dae">
     <origin xyz="0 0 ${bumper_offset_z}"/>
@@ -82,7 +75,7 @@
 
   <!-- Caster wheel -->
   <xacro:caster name="front_caster" parent_link="base_link">
-    <origin xyz="${caster_position_x} 0 ${caster_position_z}" rpy="${-pi/2} 0 0"/>
+    <origin xyz="${caster_position_x} 0 ${caster_position_z}" rpy="${-pi/2} ${pi} 0"/>
   </xacro:caster>
 
   <!-- IMU -->
@@ -172,5 +165,19 @@
   <xacro:ir_intensity name="side_left">
     <origin xyz="0.0399 0.1488 ${ir_intensity_z_pos}" rpy="0 0 1.309"/>
   </xacro:ir_intensity>
+
+  <!-- Buttons -->
+  <xacro:button
+      name="button_1">
+      <origin xyz="0.06 0.37 0.08" rpy="0 -1.5707963 0"/>
+  </xacro:button>
+  <xacro:button
+      name="button_2">
+      <origin xyz="0.06 -0.37 0.08" rpy="0 -1.5707963 0"/>
+  </xacro:button>
+  <xacro:button
+      name="button_power">
+      <origin xyz="0.06 0 0.08" rpy="0 -1.5707963 0"/>
+  </xacro:button>
 
 </robot>
