@@ -45,6 +45,14 @@ add_library(gazebo_ros_create_optical_mouse SHARED
   src/gazebo_ros_optical_mouse.cpp
 )
 
+add_library(gazebo_ros_create_ir_opcodes SHARED
+  src/gazebo_ros_ir_opcode.cpp
+)
+
+add_library(docking_manager SHARED
+  src/docking_manager.cpp
+)
+
 add_library(gazebo_ros_create_wheel_drop SHARED
   src/gazebo_ros_wheel_drop.cpp
 )
@@ -114,6 +122,27 @@ ament_target_dependencies(gazebo_ros_create_optical_mouse
 ament_export_libraries(gazebo_ros_create_optical_mouse)
 target_link_libraries(gazebo_ros_create_optical_mouse gazebo_ros_create_helpers)
 
+## gazebo_ros_create_ir_opcodes
+target_include_directories(gazebo_ros_create_ir_opcodes PUBLIC include)
+ament_target_dependencies(gazebo_ros_create_ir_opcodes
+  "gazebo_dev"
+  "gazebo_ros"
+  "irobot_create_msgs"
+  "rclcpp"
+)
+ament_export_libraries(gazebo_ros_create_ir_opcodes)
+target_link_libraries(gazebo_ros_create_ir_opcodes gazebo_ros_create_helpers docking_manager)
+
+## docking_manager
+target_include_directories(docking_manager PUBLIC include)
+ament_target_dependencies(docking_manager
+  "gazebo_dev"
+  "gazebo_ros"
+  "rclcpp"
+)
+ament_export_libraries(docking_manager)
+target_link_libraries(docking_manager gazebo_ros_create_helpers)
+
 ## gazebo_ros_create_wheel_drop
 target_include_directories(gazebo_ros_create_wheel_drop PUBLIC include)
 ament_target_dependencies(gazebo_ros_create_wheel_drop
@@ -141,6 +170,8 @@ install(TARGETS
     gazebo_ros_create_imu
     gazebo_ros_create_ir_intensity_sensor
     gazebo_ros_create_optical_mouse
+    gazebo_ros_create_ir_opcodes
+    docking_manager
     gazebo_ros_create_wheel_drop
   ARCHIVE DESTINATION lib
   LIBRARY DESTINATION lib

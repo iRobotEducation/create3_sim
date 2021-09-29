@@ -1,0 +1,98 @@
+<?xml version="1.0"?>
+
+<robot xmlns:xacro="http://ros.org/wiki/xacro">
+
+  <xacro:macro name="ir_opcode_receivers" params="name:=ir_omni
+                                                  parent:=base_link
+                                                  sensor_0_fov
+                                                  sensor_0_range
+                                                  sensor_1_fov
+                                                  sensor_1_range
+                                                  samples
+                                                  min_range:=0.015
+                                                  update_rate:=31
+                                                  visualize:=false
+                                                  *origin" >
+
+    <xacro:property name="joint_name" value="${name}_joint" />
+    <xacro:property name="link_name" value="${name}" />
+
+    <joint name="${joint_name}" type="fixed">
+      <xacro:insert_block name="origin" />
+      <parent link="${parent}"/>
+      <child link="${link_name}"/>
+    </joint>
+
+    <link name="${link_name}">
+      <xacro:inertial_dummy />
+    </link>
+
+    <!-- Sensor 0 visualization -->
+    <gazebo reference="${link_name}">
+      <sensor type="ray" name="sensor_0">
+          <always_on>true</always_on>
+          <update_rate>1</update_rate>
+          <visualize>${visualize}</visualize>
+          <ray>
+              <scan>
+                  <horizontal>
+                      <samples>${samples}</samples>
+                      <resolution>1</resolution>
+                      <min_angle>${-sensor_0_fov/2}</min_angle>
+                      <max_angle>${sensor_0_fov/2}</max_angle>
+                  </horizontal>
+              </scan>
+              <range>
+                  <min>${min_range}</min>
+                  <max>${sensor_0_range}</max>
+                  <resolution>0.01</resolution>
+              </range>
+          </ray>
+      </sensor>
+    </gazebo>
+
+    <!-- Sensor 1 visualization -->
+    <gazebo reference="${link_name}">
+      <sensor type="ray" name="sensor_1">
+          <always_on>true</always_on>
+          <update_rate>1</update_rate>
+          <visualize>${visualize}</visualize>
+          <ray>
+              <scan>
+                  <horizontal>
+                      <samples>${samples}</samples>
+                      <resolution>1</resolution>
+                      <min_angle>${-sensor_1_fov/2}</min_angle>
+                      <max_angle>${sensor_1_fov/2}</max_angle>
+                  </horizontal>
+              </scan>
+              <range>
+                  <min>${min_range}</min>
+                  <max>${sensor_1_range}</max>
+                  <resolution>0.01</resolution>
+              </range>
+          </ray>
+      </sensor>
+    </gazebo>
+
+    <gazebo>
+      <plugin name="${name}_plugin" filename="libgazebo_ros_create_ir_opcodes.so">
+        <ros>
+          <namespace>/</namespace>
+          <remapping>~/out:=ir_opcode</remapping>
+        </ros>
+        <update_rate>${update_rate}</update_rate>
+        <link_name>${link_name}</link_name>
+        <sensor_0_fov>${sensor_0_fov}</sensor_0_fov>
+        <sensor_0_range>${sensor_0_range}</sensor_0_range>
+        <sensor_1_fov>${sensor_1_fov}</sensor_1_fov>
+        <sensor_1_range>${sensor_1_range}</sensor_1_range>
+      </plugin>
+    </gazebo>
+
+    <gazebo reference="${joint_name}" >
+      <preserveFixedJoint>true</preserveFixedJoint>
+    </gazebo>
+
+  </xacro:macro>
+</robot>

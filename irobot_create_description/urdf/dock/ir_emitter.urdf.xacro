@@ -1,9 +1,10 @@
 <?xml version="1.0"?>
 <robot xmlns:xacro="http://ros.org/wiki/xacro">
   <xacro:macro name="ir_emitter" params="name parent:=base_link *origin
-                                         range code aperture
-                                         update_rate:=20 broadcast_rate:=64
-                                         ros_topic:=ir_emitter min_range:=0.50
+                                         range
+                                         aperture
+                                         update_rate:=1
+                                         min_range:=${7*cm2m}
                                          visualize:=false" >
 
     <!-- Physical link properties -->
@@ -30,7 +31,6 @@
     </link>
 
     <gazebo reference="${name}_link">
-      <preserveFixedJoint>true</preserveFixedJoint>
       <sensor type="ray" name="${name}">
         <always_on>true</always_on>
         <update_rate>${update_rate}</update_rate>
@@ -51,23 +51,10 @@
           </range>
         </ray>
       </sensor>
-      <material>Gazebo/Red</material>
-      <static>true</static>
     </gazebo>
 
-    <gazebo>
-      <static>true</static>
-      <!-- MOVE TO SENSOR PLUGIN -->
-      <!-- <plugin name="${name}_ir_emitter" filename="libgazebo_ros_irobot_ir_emitter.so">
-        <link>${name}_link</link>
-        <topicName>${ros_topic}</topicName>
-        <emitterName>${name}</emitterName>
-        <emitterCode>${code}</emitterCode>
-        <rayAperture>${aperture}</rayAperture>
-        <rayRange>${range}</rayRange>
-        <updateRate>${update_rate}</updateRate>
-        <broadcastRate>${broadcast_rate}</broadcastRate>
-      </plugin> -->
+    <gazebo reference="${name}_joint" >
+      <preserveFixedJoint>true</preserveFixedJoint>
     </gazebo>
 
   </xacro:macro>
