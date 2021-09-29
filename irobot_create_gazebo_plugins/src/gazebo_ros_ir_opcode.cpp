@@ -15,6 +15,7 @@
 // @author Rodrigo Jose Causarano Nunez (rcausaran@irobot.com)
 
 #include <irobot_create_gazebo_plugins/gazebo_ros_ir_opcode.hpp>
+
 #include <memory>
 #include <string>
 
@@ -35,7 +36,10 @@ void GazeboRosIrOpcode::Load(gazebo::physics::ModelPtr model, sdf::ElementPtr sd
   GZ_ASSERT(world_, "World pointer is invalid!");
 
   double update_rate{31.0};
-  std::string link_name{""};
+  std::string robot_model_name{""};
+  std::string receiver_link_name{""};
+  std::string dock_model_name{""};
+  std::string emitter_link_name{""};
   double sensor_0_fov{1.0};
   double sensor_0_range{1.0};
   double sensor_1_fov{1.0};
@@ -43,7 +47,10 @@ void GazeboRosIrOpcode::Load(gazebo::physics::ModelPtr model, sdf::ElementPtr sd
 
   // Get plugin parameters
   utils::initialize(update_rate, sdf, "update_rate", 31.0);
-  utils::initialize(link_name, sdf, "link_name", "");
+  utils::initialize(robot_model_name, sdf, "robot_model_name", "");
+  utils::initialize(receiver_link_name, sdf, "receiver_link_name", "");
+  utils::initialize(dock_model_name, sdf, "dock_model_name", "");
+  utils::initialize(emitter_link_name, sdf, "emitter_link_name", "");
   utils::initialize(sensor_0_fov, sdf, "sensor_0_fov", 1.0);
   utils::initialize(sensor_0_range, sdf, "sensor_0_range", 1.0);
   utils::initialize(sensor_1_fov, sdf, "sensor_1_fov", 1.0);
@@ -54,14 +61,16 @@ void GazeboRosIrOpcode::Load(gazebo::physics::ModelPtr model, sdf::ElementPtr sd
   sensors_[irobot_create_msgs::msg::IrOpcode::SENSOR_DIRECTIONAL_FRONT] = {
     sensor_1_fov, sensor_1_range};
 
-  dock_manager_ = std::make_shared<DockingManager>(world_, "create3", "standard_dock");
+  dock_manager_ = std::make_shared<DockingManager>(
+    world_, robot_model_name, receiver_link_name,
+    dock_model_name, emitter_link_name);
 
   // Initialize ROS publisher
   pub_ = ros_node_->create_publisher<irobot_create_msgs::msg::IrOpcode>(
     "~/out", rclcpp::SensorDataQoS());
 
   // Set message frame_id
-  msg_.header.frame_id = link_name;
+  msg_.header.frame_id = receiver_link_name;
 
   // Rate enforcer
   update_rate_enforcer_.load(update_rate);

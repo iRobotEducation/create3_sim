@@ -3,6 +3,9 @@
 <robot xmlns:xacro="http://ros.org/wiki/xacro">
 
   <xacro:macro name="ir_opcode_receivers" params="name:=ir_omni
+                                                  robot_model_name
+                                                  dock_model_name
+                                                  emitter_link_name
                                                   parent:=base_link
                                                   sensor_0_fov
                                                   sensor_0_range
@@ -15,15 +18,15 @@
                                                   *origin" >
 
     <xacro:property name="joint_name" value="${name}_joint" />
-    <xacro:property name="link_name" value="${name}" />
+    <xacro:property name="receiver_link_name" value="${name}" />
 
     <joint name="${joint_name}" type="fixed">
       <xacro:insert_block name="origin" />
       <parent link="${parent}"/>
-      <child link="${link_name}"/>
+      <child link="${receiver_link_name}"/>
     </joint>
 
-    <link name="${link_name}">
+    <link name="${receiver_link_name}">
       <xacro:inertial_dummy />
     </link>
 
@@ -31,7 +34,7 @@
     This there is no need for high update rates. -->
     <xacro:if value="${visualize}">
       <!-- Sensor 0 visualization -->
-      <gazebo reference="${link_name}">
+      <gazebo reference="${receiver_link_name}">
         <sensor type="ray" name="sensor_0">
             <always_on>true</always_on>
             <update_rate>1</update_rate>
@@ -55,7 +58,7 @@
       </gazebo>
 
       <!-- Sensor 1 visualization -->
-      <gazebo reference="${link_name}">
+      <gazebo reference="${receiver_link_name}">
         <sensor type="ray" name="sensor_1">
             <always_on>true</always_on>
             <update_rate>1</update_rate>
@@ -86,7 +89,10 @@
           <remapping>~/out:=ir_opcode</remapping>
         </ros>
         <update_rate>${update_rate}</update_rate>
-        <link_name>${link_name}</link_name>
+        <robot_model_name>${robot_model_name}</robot_model_name>
+        <receiver_link_name>${receiver_link_name}</receiver_link_name>
+        <dock_model_name>${dock_model_name}</dock_model_name>
+        <emitter_link_name>${emitter_link_name}</emitter_link_name>
         <sensor_0_fov>${sensor_0_fov}</sensor_0_fov>
         <sensor_0_range>${sensor_0_range}</sensor_0_range>
         <sensor_1_fov>${sensor_1_fov}</sensor_1_fov>

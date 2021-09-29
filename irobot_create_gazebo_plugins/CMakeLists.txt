@@ -29,6 +29,10 @@ add_library(gazebo_ros_create_cliff_sensor SHARED
   src/gazebo_ros_cliff_sensor.cpp
 )
 
+add_library(gazebo_ros_create_docking_status SHARED
+  src/gazebo_ros_docking_status.cpp
+)
+
 add_library(gazebo_ros_create_helpers SHARED
   src/gazebo_ros_helpers.cpp
 )
@@ -58,17 +62,6 @@ add_library(gazebo_ros_create_wheel_drop SHARED
 )
 
 # Linking
-## gazebo_ros_cliff_sensor
-target_include_directories(gazebo_ros_create_cliff_sensor PUBLIC include)
-ament_target_dependencies(gazebo_ros_create_cliff_sensor
-  "gazebo_dev"
-  "gazebo_ros"
-  "irobot_create_msgs"
-  "rclcpp"
-)
-ament_export_libraries(gazebo_ros_create_cliff_sensor)
-target_link_libraries(gazebo_ros_create_cliff_sensor gazebo_ros_create_helpers)
-
 ## gazebo_ros_create_bumper
 target_include_directories(gazebo_ros_create_bumper PUBLIC include)
 ament_target_dependencies(gazebo_ros_create_bumper
@@ -79,6 +72,28 @@ ament_target_dependencies(gazebo_ros_create_bumper
 )
 ament_export_libraries(gazebo_ros_create_bumper)
 target_link_libraries(gazebo_ros_create_bumper gazebo_ros_create_helpers)
+
+## gazebo_ros_create_cliff_sensor
+target_include_directories(gazebo_ros_create_cliff_sensor PUBLIC include)
+ament_target_dependencies(gazebo_ros_create_cliff_sensor
+  "gazebo_dev"
+  "gazebo_ros"
+  "irobot_create_msgs"
+  "rclcpp"
+)
+ament_export_libraries(gazebo_ros_create_cliff_sensor)
+target_link_libraries(gazebo_ros_create_cliff_sensor gazebo_ros_create_helpers)
+
+## gazebo_ros_create_docking_status
+target_include_directories(gazebo_ros_create_docking_status PUBLIC include)
+ament_target_dependencies(gazebo_ros_create_docking_status
+  "gazebo_dev"
+  "gazebo_ros"
+  "irobot_create_msgs"
+  "rclcpp"
+)
+ament_export_libraries(gazebo_ros_create_docking_status)
+target_link_libraries(gazebo_ros_create_docking_status gazebo_ros_create_helpers)
 
 ## gazebo_ros_create_helpers
 target_include_directories(gazebo_ros_create_helpers PUBLIC include)
@@ -166,6 +181,7 @@ install(DIRECTORY include/
 install(TARGETS
     gazebo_ros_create_bumper
     gazebo_ros_create_cliff_sensor
+    gazebo_ros_create_docking_status
     gazebo_ros_create_helpers
     gazebo_ros_create_imu
     gazebo_ros_create_ir_intensity_sensor

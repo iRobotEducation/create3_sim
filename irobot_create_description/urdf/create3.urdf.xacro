@@ -11,7 +11,7 @@
   <xacro:include filename="$(find irobot_create_description)/urdf/sensors/optical_mouse.urdf.xacro"/>
   <xacro:include filename="$(find irobot_create_description)/urdf/wheel_with_wheeldrop.urdf.xacro" />
 
-  <!-- MECHANICAL PROPERTIES -->
+  <!-- Mechanical properties -->
   <xacro:property name="body_z_offset"           value="${-2.5*cm2m}" />
   <xacro:property name="body_collision_z_offset" value="${1*cm2m}" />
   <xacro:property name="body_mass"               value="2.300" />
@@ -31,6 +31,12 @@
 
   <xacro:property name="wheel_drop_offset_z"     value="${3.5*mm2m}"/>
   <xacro:property name="wheel_drop_z"            value="${wheel_height + wheel_drop_offset_z}"/>
+
+  <!-- Docking properties -->
+  <xacro:property name="robot_model_name" value="create3"/>
+  <xacro:property name="receiver_link_name" value="ir_omni"/>
+  <xacro:property name="dock_model_name" value="standard_dock"/>
+  <xacro:property name="emitter_link_name" value="halo_link"/>
 
   <!-- Create 3 base definition-->
   <origin xyz="0 0 0.064171"/>
@@ -184,9 +190,24 @@
   <!-- Omni IR receiver (sensor 0) parameters and Front-facing IR receiver (sensor 1) parameters -->
   <xacro:property name="ir_omni_fov_rad" value="${220.0*deg2rad}"/>
   <xacro:property name="ir_front_facing_fov_rad" value="${pi/2}"/>
-  <xacro:ir_opcode_receivers sensor_0_range="0.01" sensor_0_fov="${ir_omni_fov_rad}"
+  <xacro:ir_opcode_receivers robot_model_name="${robot_model_name}" dock_model_name="${dock_model_name}" emitter_link_name="${emitter_link_name}" sensor_0_range="0.01" sensor_0_fov="${ir_omni_fov_rad}"
     sensor_1_range="0.5" sensor_1_fov="${ir_front_facing_fov_rad}" visualize="true" >
     <origin xyz="0.153 0 0.035"/>
   </xacro:ir_opcode_receivers>
+
+  <!-- Dock status -->
+  <gazebo>
+    <plugin name="dock_status_publisher" filename="libgazebo_ros_create_docking_status.so">
+      <ros>
+        <namespace>/</namespace>
+        <remapping>~/out:=dock</remapping>
+      </ros>
+      <update_rate>1.0</update_rate>
+      <robot_model_name>${robot_model_name}</robot_model_name>
+      <receiver_link_name>${receiver_link_name}</receiver_link_name>
+      <dock_model_name>${dock_model_name}</dock_model_name>
+      <emitter_link_name>${emitter_link_name}</emitter_link_name>
+    </plugin>
+  </gazebo>
 
 </robot>
