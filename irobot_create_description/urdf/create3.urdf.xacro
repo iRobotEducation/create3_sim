@@ -51,8 +51,8 @@
   </link>
 
   <!-- Bumper -->
+  <!-- name="bump_front_center" -->
   <xacro:bumper
-      name="bump_front_center"
       visual_mesh="file://$(find irobot_create_description)/meshes/bumper_visual.dae"
       collision_mesh="file://$(find irobot_create_description)/meshes/bumper_collision.dae">
     <origin xyz="0 0 ${bumper_offset_z}"/>
@@ -75,7 +75,7 @@
 
   <!-- Caster wheel -->
   <xacro:caster name="front_caster" parent_link="base_link">
-    <origin xyz="${caster_position_x} 0 ${caster_position_z}" rpy="${-pi/2} ${pi} 0"/>
+    <origin xyz="${caster_position_x} 0 ${caster_position_z}" rpy="${-pi/2} 0 0"/>
   </xacro:caster>
 
   <!-- IMU -->
@@ -169,15 +169,15 @@
   <!-- Buttons -->
   <xacro:button
       name="button_1">
-      <origin xyz="0.06 0.37 0.08" rpy="0 -1.5707963 0"/>
+      <origin xyz="0.06 0.37 0.08" rpy="0 ${-pi/2} 0"/>
   </xacro:button>
   <xacro:button
       name="button_2">
-      <origin xyz="0.06 -0.37 0.08" rpy="0 -1.5707963 0"/>
+      <origin xyz="0.06 -0.37 0.08" rpy="0 ${-pi/2} 0"/>
   </xacro:button>
   <xacro:button
       name="button_power">
-      <origin xyz="0.06 0 0.08" rpy="0 -1.5707963 0"/>
+      <origin xyz="0.06 0 0.08" rpy="0 ${-pi/2} 0"/>
   </xacro:button>
 
 </robot>

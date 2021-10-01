@@ -8,7 +8,7 @@
     <xacro:insert_block name="origin"/>
   </joint>
   <link name="${name}">
-    <xacro:inertial_dummy/>
+    <!-- <xacro:inertial_dummy/> -->
   </link>
 </xacro:macro>
 
