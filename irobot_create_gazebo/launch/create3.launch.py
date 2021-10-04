@@ -138,7 +138,8 @@ def generate_launch_description():
         package='irobot_create_toolbox',
         name='wheel_status_publisher_node',
         executable='wheel_status_publisher_node',
-        parameters=[wheel_status_params_yaml_file],
+        parameters=[wheel_status_params_yaml_file,
+                    {'use_sim_time': True}],
         output='screen',
     )
 
