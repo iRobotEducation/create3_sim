@@ -51,7 +51,6 @@
   </link>
 
   <!-- Bumper -->
-  <!-- name="bump_front_center" -->
   <xacro:bumper
       visual_mesh="file://$(find irobot_create_description)/meshes/bumper_visual.dae"
       collision_mesh="file://$(find irobot_create_description)/meshes/bumper_collision.dae">

@@ -7,9 +7,7 @@
     <child link="${name}"/>
     <xacro:insert_block name="origin"/>
   </joint>
-  <link name="${name}">
-    <!-- <xacro:inertial_dummy/> -->
-  </link>
+  <link name="${name}"/>
 </xacro:macro>
 
 </robot>
