@@ -1,7 +1,0 @@
-# Request
----
-# Result
-bool is_docked
----
-# Feedback
-bool sees_dock

@@ -1,4 +1,0 @@
-bool power_off # true cuts power from the battery to the system, powering off robot and all accessories, false is ignored as robot is powered on in default state
----
-bool success   # indicate successful application of command, robot may power down before response is transmitted
-string message # informational for result, robot may power down before response is transmitted
