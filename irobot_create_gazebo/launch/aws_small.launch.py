@@ -19,6 +19,8 @@ from launch.actions import DeclareLaunchArgument, IncludeLaunchDescription, SetE
 from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch.substitutions import EnvironmentVariable, PathJoinSubstitution
 
+import os
+
 ARGUMENTS = []
 
 # Set the robot and dock pose close to the wall by default
@@ -44,9 +46,15 @@ def generate_launch_description():
         launch_arguments={'world_path': world_path}.items())
 
     # Add AWS models to gazebo path
-    set_gazebo_model_path_env = SetEnvironmentVariable(
-        name='GAZEBO_MODEL_PATH',
-        value=[EnvironmentVariable('GAZEBO_MODEL_PATH'), model_path])
+    gazebo_model_path = os.getenv('GAZEBO_MODEL_PATH')
+    if gazebo_model_path is None:
+        set_gazebo_model_path_env = SetEnvironmentVariable(
+            name='GAZEBO_MODEL_PATH',
+            value=[model_path])
+    else:
+        set_gazebo_model_path_env = SetEnvironmentVariable(
+            name='GAZEBO_MODEL_PATH',
+            value=[EnvironmentVariable('GAZEBO_MODEL_PATH'), model_path])
 
     # Define LaunchDescription variable
     ld = LaunchDescription(ARGUMENTS)
