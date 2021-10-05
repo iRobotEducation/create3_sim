@@ -94,15 +94,15 @@
   </xacro:optical_mouse>
 
   <!-- Cliffs sensors -->
-  <xacro:property name="cliff_z"  value="${-4.5*cm2m}" />
+  <xacro:property name="cliff_z"  value="${2.1*cm2m}" />
 
-  <xacro:property name="cliff_center_x" value="${5.9*cm2m}"/>
-  <xacro:property name="cliff_center_y" value="${14.6*cm2m}"/>
+  <xacro:property name="cliff_center_x" value="${4.5*cm2m}"/>
+  <xacro:property name="cliff_center_y" value="${16*cm2m}"/>
   <xacro:property name="cliff_center_pitch" value="${80*deg2rad}"/>
   <xacro:property name="cliff_center_yaw" value="${65.3*deg2rad}"/>
 
-  <xacro:property name="cliff_back_x" value="${-6.5*cm2m}"/>
-  <xacro:property name="cliff_back_y" value="${14.5*cm2m}"/>
+  <xacro:property name="cliff_back_x" value="${-14.5*cm2m}"/>
+  <xacro:property name="cliff_back_y" value="${6*cm2m}"/>
   <xacro:property name="cliff_back_pitch" value="${80*deg2rad}"/>
   <xacro:property name="cliff_back_yaw" value="${167.4*deg2rad}"/>
 
