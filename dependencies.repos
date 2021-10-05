@@ -3,7 +3,3 @@ repositories:
     type: git
     url: https://github.com/aws-robotics/aws-robomaker-small-house-world.git
     version: ros2
-
-  irobot_create_msgs:
-    type: git
-    url: https://github.com/iRobotEducation/irobot_create_msgs.git

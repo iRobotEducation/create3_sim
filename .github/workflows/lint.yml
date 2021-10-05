@@ -33,6 +33,7 @@ jobs:
         with:
           distribution: foxy
           linter: ${{ matrix.linter }}
+          vcs-repo-file-url: /msgs.repos
           package-name:
             irobot_create_control
             irobot_create_description
