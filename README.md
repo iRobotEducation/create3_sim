@@ -28,7 +28,12 @@ mkdir -p ~/colcon_ws/src
 cd ~/colcon_ws
 rosdep install --from-path src -yi
 ```
+- Inside the create3_sim folder clone the dependecies with:
 
+```bash
+vcs import ~/colcon_ws/src/ < ~/colcon_ws/src/create3_sim/dependencies.repos
+cd ~/colcon_ws
+```
 - Build the workspace with:
 
 ```bash
