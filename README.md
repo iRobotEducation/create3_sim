@@ -31,7 +31,7 @@ rosdep install --from-path src -yi
 - Inside the create3_sim folder clone the dependecies with:
 
 ```bash
-vcs import ~/colcon_ws/src/ < ~/colcon_ws/src/create3_sim/dependencies.repos
+vcs import ~/colcon_ws/src/ < ~/colcon_ws/src/create3_sim/msgs.repos
 cd ~/colcon_ws
 ```
 - Build the workspace with:

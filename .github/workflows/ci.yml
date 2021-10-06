@@ -20,7 +20,7 @@ jobs:
         with:
           target-ros2-distro: foxy
           import-token: ${{ secrets.REPO_TOKEN }}
-          vcs-repo-file-url: /msgs.repos
+          vcs-repo-file-url: msgs.repos
           package-name:
             irobot_create_control
             irobot_create_description
