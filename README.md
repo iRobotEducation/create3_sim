@@ -17,7 +17,7 @@ This is a [ROS 2](https://docs.ros.org/en/foxy/index.html) simulation stack for 
 - Create a workspace if you don't already have one:
 
 ```bash
-mkdir -p ~/colcon_ws/src
+mkdir -p ~/create3_ws/src
 ```
 
 - Clone this repository into the src directory from above.
@@ -25,7 +25,7 @@ mkdir -p ~/colcon_ws/src
 - Navigate to the workspace and install ros2 dependencies with:
 
 ```bash
-cd ~/colcon_ws
+cd ~/create3_ws
 rosdep install --from-path src -yi
 ```
 
