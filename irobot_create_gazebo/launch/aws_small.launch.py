@@ -19,7 +19,6 @@ from launch.actions import DeclareLaunchArgument, IncludeLaunchDescription, SetE
 from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch.substitutions import EnvironmentVariable, PathJoinSubstitution
 
-import os
 
 ARGUMENTS = []
 
@@ -38,7 +37,7 @@ def generate_launch_description():
     create3_launch_file = PathJoinSubstitution(
         [irobot_create_gazebo_dir, 'launch', 'create3.launch.py'])
     world_path = PathJoinSubstitution([aws_small_house_dir, 'worlds', 'small_house.world'])
-    model_path = PathJoinSubstitution([aws_small_house_dir, 'models'])
+    aws_model_path = PathJoinSubstitution([aws_small_house_dir, 'models'])
 
     # Includes
     world_spawn = IncludeLaunchDescription(
@@ -46,15 +45,11 @@ def generate_launch_description():
         launch_arguments={'world_path': world_path}.items())
 
     # Add AWS models to gazebo path
-    gazebo_model_path = os.getenv('GAZEBO_MODEL_PATH')
-    if gazebo_model_path is None:
-        set_gazebo_model_path_env = SetEnvironmentVariable(
-            name='GAZEBO_MODEL_PATH',
-            value=[model_path])
-    else:
-        set_gazebo_model_path_env = SetEnvironmentVariable(
-            name='GAZEBO_MODEL_PATH',
-            value=[EnvironmentVariable('GAZEBO_MODEL_PATH'), model_path])
+    # On the EnvironmentVariable, I had to set a default_value that is needed
+    # because if not exist the EnvironmentVariable fails
+    set_gazebo_model_path_env = SetEnvironmentVariable(
+        name='GAZEBO_MODEL_PATH',
+        value=[EnvironmentVariable('GAZEBO_MODEL_PATH', default_value=""), aws_model_path])
 
     # Define LaunchDescription variable
     ld = LaunchDescription(ARGUMENTS)
