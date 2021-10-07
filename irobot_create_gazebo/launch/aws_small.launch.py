@@ -49,7 +49,7 @@ def generate_launch_description():
     # because if not exist the EnvironmentVariable fails
     set_gazebo_model_path_env = SetEnvironmentVariable(
         name='GAZEBO_MODEL_PATH',
-        value=[EnvironmentVariable('GAZEBO_MODEL_PATH', default_value=""), aws_model_path])
+        value=[EnvironmentVariable('GAZEBO_MODEL_PATH', default_value=''), aws_model_path])
 
     # Define LaunchDescription variable
     ld = LaunchDescription(ARGUMENTS)
