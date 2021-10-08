@@ -14,6 +14,8 @@
 //
 // @author Rodrigo Jose Causarano Nunez (rcausaran@irobot.com)
 
+#include <memory>
+
 #include <irobot_create_toolbox/wheels_publisher.hpp>
 
 int main(int argc, char * argv[])

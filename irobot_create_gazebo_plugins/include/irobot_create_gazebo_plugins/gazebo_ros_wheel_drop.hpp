@@ -14,7 +14,10 @@
 //
 // @author Emiliano Javier Borghi Orue (creativa_eborghi@irobot.com)
 
-#pragma once
+#ifndef IROBOT_CREATE_GAZEBO_PLUGINS__GAZEBO_ROS_WHEEL_DROP_HPP_
+
+#include <memory>
+#include <string>
 
 #include <gazebo/common/Assert.hh>
 #include <gazebo/common/Plugin.hh>
@@ -24,9 +27,7 @@
 #include <gazebo_ros/node.hpp>
 #include <irobot_create_gazebo_plugins/gazebo_ros_helpers.hpp>
 #include <irobot_create_msgs/msg/hazard_detection.hpp>
-#include <memory>
 #include <rclcpp/rclcpp.hpp>
-#include <string>
 
 namespace irobot_create_gazebo_plugins
 {
@@ -96,3 +97,5 @@ private:
   gazebo::physics::WorldPtr world_{nullptr};
 };
 }  // namespace irobot_create_gazebo_plugins
+
+#endif  // IROBOT_CREATE_GAZEBO_PLUGINS__GAZEBO_ROS_WHEEL_DROP_HPP_

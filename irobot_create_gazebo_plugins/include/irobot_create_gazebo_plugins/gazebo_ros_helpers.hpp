@@ -14,13 +14,14 @@
 //
 // @author Emiliano Javier Borghi Orue (creativa_eborghi@irobot.com)
 
-#pragma once
+#ifndef IROBOT_CREATE_GAZEBO_PLUGINS__GAZEBO_ROS_HELPERS_HPP_
 
 #include <algorithm>
-#include <gazebo_ros/node.hpp>
 #include <limits>
-#include <sdf/sdf.hh>
 #include <vector>
+
+#include <gazebo_ros/node.hpp>
+#include <sdf/sdf.hh>
 
 namespace irobot_create_gazebo_plugins
 {
@@ -51,7 +52,7 @@ private:
   double next_update_period_;
 };
 
-template <typename T, typename V>
+template<typename T, typename V>
 inline bool initialize(T & var, sdf::ElementPtr sdf, const char * str, V default_value)
 {
   if (sdf->HasElement(str)) {
@@ -67,10 +68,10 @@ inline bool initialize(T & var, sdf::ElementPtr sdf, const char * str, V default
 }
 
 /// \brief Convert radians to degrees
-inline int Rad2Deg(double radians) { return radians / M_PI * 180; }
+inline int Rad2Deg(double radians) {return radians / M_PI * 180;}
 
 /// \brief Wrap angle between (-pi, pi]
-inline double WrapAngle(double angle) { return atan2(sin(angle), cos(angle)); }
+inline double WrapAngle(double angle) {return atan2(sin(angle), cos(angle));}
 
 /// \brief Calculate if a provided angle in radians is within the arc formed by two other angles.
 /// \param target angle to test
@@ -97,10 +98,14 @@ double FindMinimumRange(std::vector<double> & ranges)
   std::vector<double>::iterator detection_ptr =
     std::min_element(std::begin(ranges), std::end(ranges));
   // If a minimum range was found, return it
-  if (detection_ptr != std::end(ranges)) return *detection_ptr;
+  if (detection_ptr != std::end(ranges)) {
+    return *detection_ptr;
+  }
   // Otherwise, return a maximum range
   return std::numeric_limits<double>::max();
 }
 
 }  // namespace utils
 }  // namespace irobot_create_gazebo_plugins
+
+#endif  // IROBOT_CREATE_GAZEBO_PLUGINS__GAZEBO_ROS_HELPERS_HPP_

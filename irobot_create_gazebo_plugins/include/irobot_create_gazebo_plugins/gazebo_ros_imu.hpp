@@ -14,7 +14,7 @@
 //
 // @author Rodrigo Jose Causarano Nunez (rcausaran@irobot.com)
 
-#pragma once
+#ifndef IROBOT_CREATE_GAZEBO_PLUGINS__GAZEBO_ROS_IMU_HPP_
 
 #include <gazebo/common/Assert.hh>
 #include <gazebo/plugins/ImuSensorPlugin.hh>
@@ -58,3 +58,5 @@ private:
 };
 
 }  // namespace irobot_create_gazebo_plugins
+
+#endif  // IROBOT_CREATE_GAZEBO_PLUGINS__GAZEBO_ROS_IMU_HPP_

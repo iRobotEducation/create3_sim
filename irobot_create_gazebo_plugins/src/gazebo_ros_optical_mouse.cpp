@@ -14,11 +14,14 @@
 //
 // @author Rodrigo Jose Causarano Nunez (rcausaran@irobot.com)
 
+#include <string>
+
 #include <irobot_create_gazebo_plugins/gazebo_ros_optical_mouse.hpp>
 
 namespace irobot_create_gazebo_plugins
 {
-GazeboRosOpticalMouse::GazeboRosOpticalMouse() : ModelPlugin() {}
+GazeboRosOpticalMouse::GazeboRosOpticalMouse()
+: ModelPlugin() {}
 
 GazeboRosOpticalMouse::~GazeboRosOpticalMouse() {}
 
@@ -90,7 +93,9 @@ void GazeboRosOpticalMouse::OnUpdate(const gazebo::common::UpdateInfo & info)
   const double time_elapsed = (current_time - last_time_).Double();
 
   // Check if on this iteration corresponds to send the message
-  if (!update_rate_enforcer_.shouldUpdate(time_elapsed)) return;
+  if (!update_rate_enforcer_.shouldUpdate(time_elapsed)) {
+    return;
+  }
 
   // Get pose
   const ignition::math::Pose3d current_pose = link_->WorldPose();

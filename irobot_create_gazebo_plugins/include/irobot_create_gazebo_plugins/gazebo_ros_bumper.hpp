@@ -14,9 +14,14 @@
 //
 // @author Alexis Pojomovsky (apojomovsky@irobot.com)
 
-#pragma once
+#ifndef IROBOT_CREATE_GAZEBO_PLUGINS__GAZEBO_ROS_BUMPER_HPP_
 
 #include <cmath>
+#include <map>
+#include <memory>
+#include <string>
+#include <tuple>
+
 #include <gazebo/common/Assert.hh>
 #include <gazebo/common/Plugin.hh>
 #include <gazebo/gazebo.hh>
@@ -28,9 +33,6 @@
 #include <gazebo_ros/node.hpp>
 #include <irobot_create_gazebo_plugins/gazebo_ros_helpers.hpp>
 #include <irobot_create_msgs/msg/hazard_detection.hpp>
-#include <memory>
-#include <string>
-#include <tuple>
 
 namespace irobot_create_gazebo_plugins
 {
@@ -102,3 +104,5 @@ private:
 };
 
 }  // namespace irobot_create_gazebo_plugins
+
+# endif  // IROBOT_CREATE_GAZEBO_PLUGINS__GAZEBO_ROS_BUMPER_HPP_

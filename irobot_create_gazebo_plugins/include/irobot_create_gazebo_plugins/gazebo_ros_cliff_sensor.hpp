@@ -14,7 +14,9 @@
 //
 // @author Luis Enrique Chico Capistrano (lchico@irobot.com)
 
-#pragma once
+#ifndef IROBOT_CREATE_GAZEBO_PLUGINS__GAZEBO_ROS_CLIFF_SENSOR_HPP_
+
+#include <limits>
 
 #include <gazebo/common/Assert.hh>
 #include <gazebo/gazebo.hh>
@@ -26,7 +28,6 @@
 #include <gazebo_ros/utils.hpp>
 #include <irobot_create_gazebo_plugins/gazebo_ros_helpers.hpp>
 #include <irobot_create_msgs/msg/hazard_detection.hpp>
-#include <limits>
 #include <rclcpp/node.hpp>
 
 namespace irobot_create_gazebo_plugins
@@ -69,3 +70,5 @@ private:
 };
 
 }  // namespace irobot_create_gazebo_plugins
+
+#endif  // IROBOT_CREATE_GAZEBO_PLUGINS__GAZEBO_ROS_CLIFF_SENSOR_HPP_

@@ -14,7 +14,10 @@
 //
 // @author Emiliano Javier Borghi Orue (creativa_eborghi@irobot.com)
 
-#pragma once
+#ifndef IROBOT_CREATE_GAZEBO_PLUGINS__GAZEBO_ROS_IR_INTENSITY_SENSOR_HPP_
+
+#include <limits>
+#include <vector>
 
 #include <gazebo/common/Plugin.hh>
 #include <gazebo/physics/MultiRayShape.hh>
@@ -26,10 +29,8 @@
 #include <gazebo_ros/utils.hpp>
 #include <irobot_create_gazebo_plugins/gazebo_ros_helpers.hpp>
 #include <irobot_create_msgs/msg/ir_intensity.hpp>
-#include <limits>
 #include <rclcpp/rclcpp.hpp>
 #include <std_msgs/msg/bool.hpp>
-#include <vector>
 
 namespace irobot_create_gazebo_plugins
 {
@@ -70,3 +71,5 @@ private:
   double max_range_{std::numeric_limits<double>::max()};
 };
 }  // namespace irobot_create_gazebo_plugins
+
+#endif  // IROBOT_CREATE_GAZEBO_PLUGINS__GAZEBO_ROS_IR_INTENSITY_SENSOR_HPP_

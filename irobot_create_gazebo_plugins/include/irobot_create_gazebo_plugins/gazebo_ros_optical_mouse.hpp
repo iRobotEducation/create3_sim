@@ -14,7 +14,7 @@
 //
 // @author Rodrigo Jose Causarano Nunez (rcausaran@irobot.com)
 
-#pragma once
+#ifndef IROBOT_CREATE_GAZEBO_PLUGINS__GAZEBO_ROS_OPTICAL_MOUSE_HPP_
 
 #include <gazebo/common/Plugin.hh>
 #include <gazebo/physics/Link.hh>
@@ -88,3 +88,5 @@ private:
   utils::UpdateRateEnforcer update_rate_enforcer_;
 };
 }  // namespace irobot_create_gazebo_plugins
+
+#endif  // IROBOT_CREATE_GAZEBO_PLUGINS__GAZEBO_ROS_OPTICAL_MOUSE_HPP_

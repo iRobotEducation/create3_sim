@@ -87,15 +87,16 @@ void GazeboRosBumper::GzPoseCallback(ConstPosesStampedPtr & msg)
   // Find in the message's vector a pose element corresponding to the mobile base's absolute pose
   // identified under the "create3" name.
   const auto i = std::find_if(
-    poses.begin(), poses.end(), [](const auto & pose) -> bool { return pose.name() == "create3"; });
+    poses.begin(), poses.end(), [](const auto & pose) -> bool {return pose.name() == "create3";});
   // If not matches are found, return immediately.
   if (i == poses.end()) {
     return;
     //  Otherwise, update global pose with the new value.
   } else {
-    r_tf_w_ = ignition::math::Matrix4d(ignition::math::Pose3d(
-      i->position().x(), i->position().y(), i->position().z(), i->orientation().w(),
-      i->orientation().x(), i->orientation().y(), i->orientation().z()));
+    r_tf_w_ = ignition::math::Matrix4d(
+      ignition::math::Pose3d(
+        i->position().x(), i->position().y(), i->position().z(), i->orientation().w(),
+        i->orientation().x(), i->orientation().y(), i->orientation().z()));
     return;
   }
 }
