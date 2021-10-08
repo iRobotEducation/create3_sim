@@ -15,28 +15,22 @@
 // @author Alberto Soragna (asoragna@irobot.com)
 
 #include <irobot_create_toolbox/motion_control_node.hpp>
+#include <memory>
+#include <string>
+#include <vector>
 
 namespace irobot_create_toolbox
 {
-
 using namespace std::placeholders;
 
 MotionControlNode::MotionControlNode() : rclcpp::Node("motion_control")
 {
   // These names must match the parameter names used by the real robot.
   m_reflex_enabled_param_name = "reflexes_enabled";
-  m_reflex_names = {
-    "REFLEX_BUMP",
-    "REFLEX_CLIFF",
-    "REFLEX_DOCK_AVOID",
-    "REFLEX_GYRO_CAL",
-    "REFLEX_PANIC",
-    "REFLEX_PROXIMITY_SLOWDOWN",
-    "REFLEX_STUCK",
-    "REFLEX_VIRTUAL_WALL",
-    "REFLEX_WHEEL_DROP"
-  };
-  
+  m_reflex_names = {"REFLEX_BUMP",     "REFLEX_CLIFF",        "REFLEX_DOCK_AVOID",
+                    "REFLEX_GYRO_CAL", "REFLEX_PANIC",        "REFLEX_PROXIMITY_SLOWDOWN",
+                    "REFLEX_STUCK",    "REFLEX_VIRTUAL_WALL", "REFLEX_WHEEL_DROP"};
+
   // Declare ROS 2 parameters for controlling robot reflexes.
   this->declare_reflex_parameters();
 
@@ -54,32 +48,33 @@ void MotionControlNode::declare_reflex_parameters()
   // Declare individual reflexes parameters.
   // Eventually reflexes will be enabled, but now this is just a stub implementation
   // so we set them to false and we enforce that users do not change them.
-  for (const std::string& reflex_name : m_reflex_names) {
+  for (const std::string & reflex_name : m_reflex_names) {
     std::string param_name = std::string("reflexes.") + reflex_name;
     ret = this->declare_parameter(param_name, rclcpp::ParameterValue(false), descriptor);
 
     // Make sure user is not trying to enable reflexes at startup: this is not supported.
     if (ret.get<bool>()) {
-      RCLCPP_ERROR(this->get_logger(), "Trying to enable reflex: '%s'. This is not supported yet.",
+      RCLCPP_ERROR(
+        this->get_logger(), "Trying to enable reflex: '%s'. This is not supported yet.",
         param_name.c_str());
       throw std::runtime_error("User tried to enable reflexes. This are not supported yet.");
     }
   }
 
   // Declare parameter to control all reflexes.
-  ret = this->declare_parameter(
-    m_reflex_enabled_param_name,
-    rclcpp::ParameterValue(false), descriptor);
+  ret =
+    this->declare_parameter(m_reflex_enabled_param_name, rclcpp::ParameterValue(false), descriptor);
   // Make sure user is not trying to enable reflexes at startup: this is not supported.
   if (ret.get<bool>()) {
-    RCLCPP_ERROR(this->get_logger(), "Trying to enable: '%s'. This is not supported yet.",
+    RCLCPP_ERROR(
+      this->get_logger(), "Trying to enable: '%s'. This is not supported yet.",
       m_reflex_enabled_param_name.c_str());
     throw std::runtime_error("User tried to enable reflexes. This are not supported yet.");
   }
 }
 
-rcl_interfaces::msg::SetParametersResult
-MotionControlNode::set_parameters_callback(const std::vector<rclcpp::Parameter>& parameters)
+rcl_interfaces::msg::SetParametersResult MotionControlNode::set_parameters_callback(
+  const std::vector<rclcpp::Parameter> & parameters)
 {
   // This is just a stub implementation. Reflexes are permanently disabled
   // and user can't enable them. We reject all changes.
@@ -87,9 +82,9 @@ MotionControlNode::set_parameters_callback(const std::vector<rclcpp::Parameter>&
   result.successful = false;
   result.reason = "reflexes can't be enabled yet.";
 
-  for (const rclcpp::Parameter &parameter : parameters) {
-    RCLCPP_WARN(this->get_logger(), "Can't modify reflex parameter %s.",
-      parameter.get_name().c_str());
+  for (const rclcpp::Parameter & parameter : parameters) {
+    RCLCPP_WARN(
+      this->get_logger(), "Can't modify reflex parameter %s.", parameter.get_name().c_str());
   }
 
   return result;

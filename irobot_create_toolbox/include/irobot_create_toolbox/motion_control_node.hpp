@@ -14,7 +14,7 @@
 //
 // @author Alberto Soragna (asoragna@irobot.com)
 
-#pragma once
+#ifndef IROBOT_CREATE_TOOLBOX__MOTION_CONTROL_NODE_HPP_
 
 #include <irobot_create_toolbox/parameter_helper.hpp>
 #include <rclcpp/rclcpp.hpp>
@@ -23,7 +23,6 @@
 
 namespace irobot_create_toolbox
 {
-
 class MotionControlNode : public rclcpp::Node
 {
 public:
@@ -35,8 +34,8 @@ private:
   void declare_reflex_parameters();
 
   /// \brief Helper function to validate changes to parameters
-  rcl_interfaces::msg::SetParametersResult
-  set_parameters_callback(const std::vector<rclcpp::Parameter>& parameters);
+  rcl_interfaces::msg::SetParametersResult set_parameters_callback(
+    const std::vector<rclcpp::Parameter> & parameters);
 
   /// \brief Name of parameter for enabling/disabling all reflexes
   std::string m_reflex_enabled_param_name;
@@ -47,3 +46,5 @@ private:
 };
 
 }  // namespace irobot_create_toolbox
+
+#endif  // IROBOT_CREATE_TOOLBOX__MOTION_CONTROL_NODE_HPP_
