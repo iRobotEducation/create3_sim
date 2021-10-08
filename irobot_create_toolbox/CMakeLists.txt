@@ -10,7 +10,6 @@ if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
   add_compile_options(-Wall -Wextra -Wpedantic)
 endif()
 
-find_package(ament_cmake_auto REQUIRED)
 find_package(ament_cmake REQUIRED)
 find_package(ament_cmake_python REQUIRED)
 find_package(control_msgs REQUIRED)
@@ -18,61 +17,102 @@ find_package(irobot_create_msgs REQUIRED)
 find_package(rclcpp REQUIRED)
 find_package(rclpy REQUIRED)
 
-ament_auto_add_library(vector_publishers_lib SHARED
-  src/hazards_vector_publisher.cpp
-  src/ir_intensity_vector_publisher.cpp
-)
-ament_target_dependencies(vector_publishers_lib
-  "irobot_create_msgs"
-  "rclcpp"
+#### Libraries
+
+set(dependencies
+  control_msgs
+  irobot_create_msgs
+  rclcpp
 )
 
-ament_auto_add_library(wheel_status_publisher_lib SHARED
-  src/wheels_publisher.cpp
+add_library(hazard_publisher_lib SHARED)
+target_sources(
+  hazard_publisher_lib
+  PRIVATE
+    src/hazards_vector_publisher.cpp
 )
+target_include_directories(hazard_publisher_lib PUBLIC include)
+ament_target_dependencies(hazard_publisher_lib
+  ${dependencies}
+)
+
+add_library(ir_intensity_publisher_lib SHARED)
+target_sources(
+  ir_intensity_publisher_lib
+  PRIVATE
+    src/ir_intensity_vector_publisher.cpp
+)
+target_include_directories(ir_intensity_publisher_lib PUBLIC include)
+ament_target_dependencies(ir_intensity_publisher_lib
+  ${dependencies}
+)
+
+add_library(wheel_status_publisher_lib SHARED)
+target_sources(
+  wheel_status_publisher_lib
+  PRIVATE
+    src/wheels_publisher.cpp
+)
+target_include_directories(wheel_status_publisher_lib PUBLIC include)
 ament_target_dependencies(wheel_status_publisher_lib
-  "control_msgs"
-  "irobot_create_msgs"
-  "rclcpp"
+  ${dependencies}
 )
 
-# Hazards vector
-ament_auto_add_executable(hazards_vector_publisher_node
-  src/hazards_vector_publisher_node.cpp
+set(libraries_names
+  hazard_publisher_lib
+  ir_intensity_publisher_lib
+  wheel_status_publisher_lib
 )
-target_link_libraries(hazards_vector_publisher_node vector_publishers_lib)
 
-# IR intensity vector
-ament_auto_add_executable(ir_intensity_vector_publisher_node
-  src/ir_intensity_vector_publisher_node.cpp
+#### Executables
+
+# Hazards vector publisher
+add_executable(hazards_vector_publisher_node)
+target_sources(
+  hazards_vector_publisher_node
+  PRIVATE
+    src/hazards_vector_publisher_node.cpp
 )
-target_link_libraries(ir_intensity_vector_publisher_node vector_publishers_lib)
+target_link_libraries(hazards_vector_publisher_node hazard_publisher_lib)
+
+# IR intensity vector publisher
+add_executable(ir_intensity_vector_publisher_node)
+target_sources(
+  ir_intensity_vector_publisher_node
+  PRIVATE
+    src/ir_intensity_vector_publisher_node.cpp
+)
+target_link_libraries(ir_intensity_vector_publisher_node ir_intensity_publisher_lib)
 
 # Wheel status publisher
-ament_auto_add_executable(wheel_status_publisher_node
-  src/wheels_publisher_node.cpp
+add_executable(wheel_status_publisher_node)
+target_sources(
+  wheel_status_publisher_node
+  PRIVATE
+    src/wheels_publisher_node.cpp
 )
 target_link_libraries(wheel_status_publisher_node wheel_status_publisher_lib)
 
-install(
-  DIRECTORY
-    include
-  DESTINATION include
-)
-
-install(
-  DIRECTORY
-    launch
-  DESTINATION
-    share/${PROJECT_NAME}
-)
-
-# Install CPP libraries and executables
-install(TARGETS
+set(executables_names
   hazards_vector_publisher_node
   ir_intensity_vector_publisher_node
   wheel_status_publisher_node
+)
+
+#### Install
+
+install(TARGETS ${libraries_names}
+  ARCHIVE DESTINATION lib
+  LIBRARY DESTINATION lib
+  RUNTIME DESTINATION bin
+)
+
+install(TARGETS ${executables_names}
   DESTINATION lib/${PROJECT_NAME}
+)
+
+install(DIRECTORY include/
+  DESTINATION include
 )
 
 # Install Python modules
@@ -83,5 +123,9 @@ install(PROGRAMS
   scripts/topic_republisher.py
   DESTINATION lib/${PROJECT_NAME}
 )
+
+ament_export_include_directories(include)
+ament_export_libraries(${libraries_names})
+ament_export_dependencies(${dependencies})
 
 ament_package()
