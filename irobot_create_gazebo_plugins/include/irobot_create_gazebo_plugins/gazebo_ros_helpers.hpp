@@ -15,13 +15,14 @@
 // @author Emiliano Javier Borghi Orue (creativa_eborghi@irobot.com)
 
 #ifndef IROBOT_CREATE_GAZEBO_PLUGINS__GAZEBO_ROS_HELPERS_HPP_
+#define IROBOT_CREATE_GAZEBO_PLUGINS__GAZEBO_ROS_HELPERS_HPP_
 
 #include <algorithm>
 #include <limits>
 #include <vector>
 
-#include <gazebo_ros/node.hpp>
-#include <sdf/sdf.hh>
+#include "gazebo_ros/node.hpp"
+#include "sdf/sdf.hh"
 
 namespace irobot_create_gazebo_plugins
 {

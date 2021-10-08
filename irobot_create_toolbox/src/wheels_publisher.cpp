@@ -14,9 +14,10 @@
 //
 // @author Rodrigo Jose Causarano Nunez (rcausaran@irobot.com)
 
-#include <string>
+#include "irobot_create_toolbox/wheels_publisher.hpp"
 
-#include <irobot_create_toolbox/wheels_publisher.hpp>
+#include <string>
+#include <vector>
 
 namespace irobot_create_toolbox
 {

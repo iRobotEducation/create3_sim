@@ -14,11 +14,11 @@
 //
 // @author Luis Enrique Chico Capistrano (lchico@irobot.com)
 
+#include "irobot_create_gazebo_plugins/gazebo_ros_cliff_sensor.hpp"
+
 #include <algorithm>
 #include <string>
 #include <vector>
-
-#include <irobot_create_gazebo_plugins/gazebo_ros_cliff_sensor.hpp>
 
 namespace irobot_create_gazebo_plugins
 {

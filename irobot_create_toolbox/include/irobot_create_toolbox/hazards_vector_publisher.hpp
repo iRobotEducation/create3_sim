@@ -15,6 +15,7 @@
 // @author Rodrigo Jose Causarano Nunez (rcausaran@irobot.com)
 
 #ifndef IROBOT_CREATE_TOOLBOX__HAZARDS_VECTOR_PUBLISHER_HPP_
+#define IROBOT_CREATE_TOOLBOX__HAZARDS_VECTOR_PUBLISHER_HPP_
 
 #include <irobot_create_msgs/msg/hazard_detection.hpp>
 #include <irobot_create_msgs/msg/hazard_detection_vector.hpp>

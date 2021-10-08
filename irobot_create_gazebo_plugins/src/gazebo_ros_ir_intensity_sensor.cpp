@@ -14,10 +14,10 @@
 //
 // @author Emiliano Javier Borghi Orue (creativa_eborghi@irobot.com)
 
+#include "irobot_create_gazebo_plugins/gazebo_ros_ir_intensity_sensor.hpp"
+
 #include <algorithm>
 #include <vector>
-
-#include <irobot_create_gazebo_plugins/gazebo_ros_ir_intensity_sensor.hpp>
 
 namespace irobot_create_gazebo_plugins
 {

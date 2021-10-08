@@ -15,6 +15,7 @@
 // @author Alexis Pojomovsky (apojomovsky@irobot.com)
 
 #ifndef IROBOT_CREATE_GAZEBO_PLUGINS__GAZEBO_ROS_BUMPER_HPP_
+#define IROBOT_CREATE_GAZEBO_PLUGINS__GAZEBO_ROS_BUMPER_HPP_
 
 #include <cmath>
 #include <map>
@@ -22,17 +23,17 @@
 #include <string>
 #include <tuple>
 
-#include <gazebo/common/Assert.hh>
-#include <gazebo/common/Plugin.hh>
-#include <gazebo/gazebo.hh>
-#include <gazebo/msgs/msgs.hh>
-#include <gazebo/physics/Model.hh>
-#include <gazebo/sensors/sensors.hh>
-#include <gazebo/transport/transport.hh>
-#include <gazebo_ros/conversions/builtin_interfaces.hpp>
-#include <gazebo_ros/node.hpp>
-#include <irobot_create_gazebo_plugins/gazebo_ros_helpers.hpp>
-#include <irobot_create_msgs/msg/hazard_detection.hpp>
+#include "gazebo/common/Assert.hh"
+#include "gazebo/common/Plugin.hh"
+#include "gazebo/gazebo.hh"
+#include "gazebo/msgs/msgs.hh"
+#include "gazebo/physics/Model.hh"
+#include "gazebo/sensors/sensors.hh"
+#include "gazebo/transport/transport.hh"
+#include "gazebo_ros/conversions/builtin_interfaces.hpp"
+#include "gazebo_ros/node.hpp"
+#include "irobot_create_gazebo_plugins/gazebo_ros_helpers.hpp"
+#include "irobot_create_msgs/msg/hazard_detection.hpp"
 
 namespace irobot_create_gazebo_plugins
 {
@@ -105,4 +106,4 @@ private:
 
 }  // namespace irobot_create_gazebo_plugins
 
-# endif  // IROBOT_CREATE_GAZEBO_PLUGINS__GAZEBO_ROS_BUMPER_HPP_
+#endif  // IROBOT_CREATE_GAZEBO_PLUGINS__GAZEBO_ROS_BUMPER_HPP_

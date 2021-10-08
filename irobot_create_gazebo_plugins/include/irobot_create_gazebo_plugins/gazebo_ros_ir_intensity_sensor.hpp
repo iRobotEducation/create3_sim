@@ -15,22 +15,23 @@
 // @author Emiliano Javier Borghi Orue (creativa_eborghi@irobot.com)
 
 #ifndef IROBOT_CREATE_GAZEBO_PLUGINS__GAZEBO_ROS_IR_INTENSITY_SENSOR_HPP_
+#define IROBOT_CREATE_GAZEBO_PLUGINS__GAZEBO_ROS_IR_INTENSITY_SENSOR_HPP_
 
 #include <limits>
 #include <vector>
 
-#include <gazebo/common/Plugin.hh>
-#include <gazebo/physics/MultiRayShape.hh>
-#include <gazebo/plugins/RayPlugin.hh>
-#include <gazebo/sensors/RaySensor.hh>
-#include <gazebo/sensors/SensorTypes.hh>
-#include <gazebo_ros/conversions/builtin_interfaces.hpp>
-#include <gazebo_ros/node.hpp>
-#include <gazebo_ros/utils.hpp>
-#include <irobot_create_gazebo_plugins/gazebo_ros_helpers.hpp>
-#include <irobot_create_msgs/msg/ir_intensity.hpp>
-#include <rclcpp/rclcpp.hpp>
-#include <std_msgs/msg/bool.hpp>
+#include "gazebo/common/Plugin.hh"
+#include "gazebo/physics/MultiRayShape.hh"
+#include "gazebo/plugins/RayPlugin.hh"
+#include "gazebo/sensors/RaySensor.hh"
+#include "gazebo/sensors/SensorTypes.hh"
+#include "gazebo_ros/conversions/builtin_interfaces.hpp"
+#include "gazebo_ros/node.hpp"
+#include "gazebo_ros/utils.hpp"
+#include "irobot_create_gazebo_plugins/gazebo_ros_helpers.hpp"
+#include "irobot_create_msgs/msg/ir_intensity.hpp"
+#include "rclcpp/rclcpp.hpp"
+#include "std_msgs/msg/bool.hpp"
 
 namespace irobot_create_gazebo_plugins
 {

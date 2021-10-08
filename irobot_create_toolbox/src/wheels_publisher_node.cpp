@@ -16,7 +16,7 @@
 
 #include <memory>
 
-#include <irobot_create_toolbox/wheels_publisher.hpp>
+#include "irobot_create_toolbox/wheels_publisher.hpp"
 
 int main(int argc, char * argv[])
 {

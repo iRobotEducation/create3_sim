@@ -15,20 +15,21 @@
 // @author Luis Enrique Chico Capistrano (lchico@irobot.com)
 
 #ifndef IROBOT_CREATE_GAZEBO_PLUGINS__GAZEBO_ROS_CLIFF_SENSOR_HPP_
+#define IROBOT_CREATE_GAZEBO_PLUGINS__GAZEBO_ROS_CLIFF_SENSOR_HPP_
 
 #include <limits>
 
-#include <gazebo/common/Assert.hh>
-#include <gazebo/gazebo.hh>
-#include <gazebo/physics/physics.hh>
-#include <gazebo/sensors/RaySensor.hh>
-#include <gazebo/sensors/SensorTypes.hh>
-#include <gazebo_ros/conversions/builtin_interfaces.hpp>
-#include <gazebo_ros/node.hpp>
-#include <gazebo_ros/utils.hpp>
-#include <irobot_create_gazebo_plugins/gazebo_ros_helpers.hpp>
-#include <irobot_create_msgs/msg/hazard_detection.hpp>
-#include <rclcpp/node.hpp>
+#include "gazebo/common/Assert.hh"
+#include "gazebo/gazebo.hh"
+#include "gazebo/physics/physics.hh"
+#include "gazebo/sensors/RaySensor.hh"
+#include "gazebo/sensors/SensorTypes.hh"
+#include "gazebo_ros/conversions/builtin_interfaces.hpp"
+#include "gazebo_ros/node.hpp"
+#include "gazebo_ros/utils.hpp"
+#include "irobot_create_gazebo_plugins/gazebo_ros_helpers.hpp"
+#include "irobot_create_msgs/msg/hazard_detection.hpp"
+#include "rclcpp/node.hpp"
 
 namespace irobot_create_gazebo_plugins
 {

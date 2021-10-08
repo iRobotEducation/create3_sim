@@ -14,10 +14,10 @@
 //
 // @author Rodrigo Jose Causarano Nunez (rcausaran@irobot.com)
 
+#include "irobot_create_toolbox/ir_intensity_vector_publisher.hpp"
+
 #include <string>
 #include <vector>
-
-#include <irobot_create_toolbox/ir_intensity_vector_publisher.hpp>
 
 namespace irobot_create_toolbox
 {

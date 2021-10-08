@@ -14,9 +14,9 @@
 //
 // @author Emiliano Javier Borghi Orue (creativa_eborghi@irobot.com)
 
-#include <string>
+#include "irobot_create_gazebo_plugins/gazebo_ros_wheel_drop.hpp"
 
-#include <irobot_create_gazebo_plugins/gazebo_ros_wheel_drop.hpp>
+#include <string>
 
 namespace irobot_create_gazebo_plugins
 {

@@ -14,9 +14,9 @@
 //
 // @author Rodrigo Jose Causarano Nunez (rcausaran@irobot.com)
 
-#include <string>
+#include "irobot_create_gazebo_plugins/gazebo_ros_optical_mouse.hpp"
 
-#include <irobot_create_gazebo_plugins/gazebo_ros_optical_mouse.hpp>
+#include <string>
 
 namespace irobot_create_gazebo_plugins
 {

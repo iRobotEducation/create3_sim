@@ -15,15 +15,16 @@
 // @author Rodrigo Jose Causarano Nunez (rcausaran@irobot.com)
 
 #ifndef IROBOT_CREATE_TOOLBOX__IR_INTENSITY_VECTOR_PUBLISHER_HPP_
+#define IROBOT_CREATE_TOOLBOX__IR_INTENSITY_VECTOR_PUBLISHER_HPP_
 
 #include <memory>
 #include <string>
 #include <vector>
 
-#include <irobot_create_msgs/msg/ir_intensity.hpp>
-#include <irobot_create_msgs/msg/ir_intensity_vector.hpp>
-#include <irobot_create_toolbox/parameter_helper.hpp>
-#include <rclcpp/rclcpp.hpp>
+#include "irobot_create_msgs/msg/ir_intensity.hpp"
+#include "irobot_create_msgs/msg/ir_intensity_vector.hpp"
+#include "irobot_create_toolbox/parameter_helper.hpp"
+#include "rclcpp/rclcpp.hpp"
 
 namespace irobot_create_toolbox
 {
