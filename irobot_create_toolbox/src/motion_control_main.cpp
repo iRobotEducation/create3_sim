@@ -14,7 +14,9 @@
 //
 // @author Alberto Soragna (asoragna@irobot.com)
 
-#include <irobot_create_toolbox/motion_control_node.hpp>
+#include <memory>
+
+#include "irobot_create_toolbox/motion_control_node.hpp"
 
 int main(int argc, char * argv[])
 {

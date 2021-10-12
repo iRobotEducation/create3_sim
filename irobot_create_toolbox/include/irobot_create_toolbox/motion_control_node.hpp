@@ -15,6 +15,7 @@
 // @author Alberto Soragna (asoragna@irobot.com)
 
 #ifndef IROBOT_CREATE_TOOLBOX__MOTION_CONTROL_NODE_HPP_
+#define IROBOT_CREATE_TOOLBOX__MOTION_CONTROL_NODE_HPP_
 
 #include <irobot_create_toolbox/parameter_helper.hpp>
 #include <rclcpp/rclcpp.hpp>
@@ -38,11 +39,15 @@ private:
     const std::vector<rclcpp::Parameter> & parameters);
 
   /// \brief Name of parameter for enabling/disabling all reflexes
-  std::string m_reflex_enabled_param_name;
+  const std::string reflex_enabled_param_name_ {"reflexes_enabled"};
   /// \brief Vector of reflex names (these corresponds to exposed parameters)
-  std::vector<std::string> m_reflex_names;
+  const std::vector<std::string> reflex_names_ {
+    "REFLEX_BUMP", "REFLEX_CLIFF", "REFLEX_DOCK_AVOID",
+    "REFLEX_GYRO_CAL", "REFLEX_PANIC", "REFLEX_PROXIMITY_SLOWDOWN",
+    "REFLEX_STUCK", "REFLEX_VIRTUAL_WALL", "REFLEX_WHEEL_DROP"};
   /// \brief Storage for custom parameter validation callbacks
-  rclcpp::node_interfaces::OnSetParametersCallbackHandle::SharedPtr m_params_callback_handle;
+  rclcpp::node_interfaces::OnSetParametersCallbackHandle::SharedPtr
+    m_params_callback_handle {nullptr};
 };
 
 }  // namespace irobot_create_toolbox
