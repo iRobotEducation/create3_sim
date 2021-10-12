@@ -14,17 +14,21 @@
 //
 // @author Rodrigo Jose Causarano Nunez (rcausaran@irobot.com)
 
-#pragma once
+#ifndef IROBOT_CREATE_TOOLBOX__PARAMETER_HELPER_HPP_
+#define IROBOT_CREATE_TOOLBOX__PARAMETER_HELPER_HPP_
 
-#include <rclcpp/rclcpp.hpp>
 #include <string>
+
+#include "rclcpp/rclcpp.hpp"
 
 namespace irobot_create_toolbox
 {
-template <typename T>
+template<typename T>
 const T declare_and_get_parameter(std::string param_name, rclcpp::Node * node)
 {
   return node->declare_parameter(param_name).get<T>();
 }
 
 }  // namespace irobot_create_toolbox
+
+#endif  // IROBOT_CREATE_TOOLBOX__PARAMETER_HELPER_HPP_

@@ -14,7 +14,9 @@
 //
 // @author Emiliano Javier Borghi Orue (creativa_eborghi@irobot.com)
 
-#include <irobot_create_gazebo_plugins/gazebo_ros_wheel_drop.hpp>
+#include "irobot_create_gazebo_plugins/gazebo_ros_wheel_drop.hpp"
+
+#include <string>
 
 namespace irobot_create_gazebo_plugins
 {
@@ -73,7 +75,9 @@ void GazeboRosWheelDrop::OnUpdate()
 {
   const gazebo::common::Time current_time = world_->SimTime();
   const double time_elapsed = (current_time - last_time_).Double();
-  if (!rate_enforcer_.shouldUpdate(time_elapsed)) return;
+  if (!rate_enforcer_.shouldUpdate(time_elapsed)) {
+    return;
+  }
 
   const double displacement{joint_->Position()};
   if ((wheel_drop_detected_ == false) && (displacement >= upper_limit_)) {
