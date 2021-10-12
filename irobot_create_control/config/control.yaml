@@ -53,19 +53,20 @@ diffdrive_controller:
     linear.x.has_jerk_limits: false
     linear.x.max_velocity: 0.306
     linear.x.min_velocity: -0.306
-    linear.x.max_acceleration: 0.9
+    linear.x.max_acceleration: 0.6
     # Not using jerk limits yet
     # linear.x.max_jerk: 0.0
     # linear.x.min_jerk: 0.0
 
     angular.z.has_velocity_limits: true
-    angular.z.has_acceleration_limits: false
+    angular.z.has_acceleration_limits: true
     angular.z.has_jerk_limits: false
     angular.z.max_velocity: 1.9
     angular.z.min_velocity: -1.9
-    # Not using angular acceleration limits yet
-    # angular.z.max_acceleration: 1.0
-    # angular.z.min_acceleration: -1.0
+    # Using 0.6 linear for each wheel, assuming one wheel accel to 600 
+    # and other to -600 with wheelbase leads to 5.15 rad/s^2
+    angular.z.max_acceleration: 5.15
+    angular.z.min_acceleration: -5.15
     # Not using jerk limits yet
     # angular.z.max_jerk: 0.0
     # angular.z.min_jerk: 0.0
