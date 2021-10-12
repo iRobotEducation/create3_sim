@@ -133,6 +133,15 @@ def generate_launch_description():
         output='screen',
     )
 
+    # Motion Control
+    motion_control_node = Node(
+        package='irobot_create_toolbox',
+        name='motion_control',
+        executable='motion_control',
+        parameters=[{'use_sim_time': True}],
+        output='screen',
+    )
+
     # Publish wheel status
     wheel_status_node = Node(
         package='irobot_create_toolbox',
@@ -155,6 +164,7 @@ def generate_launch_description():
     ld.add_action(spawn_dock)
     ld.add_action(hazards_vector_node)
     ld.add_action(ir_intensity_vector_node)
+    ld.add_action(motion_control_node)
     ld.add_action(wheel_status_node)
 
     return ld

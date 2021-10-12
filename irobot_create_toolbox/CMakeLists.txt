@@ -47,6 +47,17 @@ ament_target_dependencies(ir_intensity_publisher_lib
   ${dependencies}
 )
 
+add_library(motion_control_lib SHARED)
+target_sources(
+  motion_control_lib
+  PRIVATE
+    src/motion_control_node.cpp
+)
+target_include_directories(motion_control_lib PUBLIC include)
+ament_target_dependencies(motion_control_lib
+  ${dependencies}
+)
+
 add_library(wheel_status_publisher_lib SHARED)
 target_sources(
   wheel_status_publisher_lib
@@ -61,6 +72,7 @@ ament_target_dependencies(wheel_status_publisher_lib
 set(libraries_names
   hazard_publisher_lib
   ir_intensity_publisher_lib
+  motion_control_lib
   wheel_status_publisher_lib
 )
 
@@ -84,6 +96,15 @@ target_sources(
 )
 target_link_libraries(ir_intensity_vector_publisher_node ir_intensity_publisher_lib)
 
+# Motion control node
+add_executable(motion_control)
+target_sources(
+  motion_control
+  PRIVATE
+    src/motion_control_main.cpp
+)
+target_link_libraries(motion_control motion_control_lib)
+
 # Wheel status publisher
 add_executable(wheel_status_publisher_node)
 target_sources(
@@ -96,6 +117,7 @@ target_link_libraries(wheel_status_publisher_node wheel_status_publisher_lib)
 set(executables_names
   hazards_vector_publisher_node
   ir_intensity_vector_publisher_node
+  motion_control
   wheel_status_publisher_node
 )
 
