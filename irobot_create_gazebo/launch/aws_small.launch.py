@@ -45,8 +45,7 @@ def generate_launch_description():
         launch_arguments={'world_path': world_path}.items())
 
     # Add AWS models to gazebo path
-    # On the EnvironmentVariable, I had to set a default_value that is needed
-    # because if not exist the EnvironmentVariable fails
+    # This environment variable needs to be set, otherwise code fails
     set_gazebo_model_path_env = SetEnvironmentVariable(
         name='GAZEBO_MODEL_PATH',
         value=[EnvironmentVariable('GAZEBO_MODEL_PATH', default_value=''), aws_model_path])
