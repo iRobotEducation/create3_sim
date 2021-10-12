@@ -14,7 +14,9 @@
 //
 // @author Rodrigo Jose Causarano Nunez (rcausaran@irobot.com)
 
-#include <irobot_create_gazebo_plugins/gazebo_ros_imu.hpp>
+#include "irobot_create_gazebo_plugins/gazebo_ros_imu.hpp"
+
+#include <memory>
 
 namespace irobot_create_gazebo_plugins
 {

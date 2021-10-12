@@ -14,15 +14,18 @@
 //
 // @author Rodrigo Jose Causarano Nunez (rcausaran@irobot.com)
 
-#pragma once
+#ifndef IROBOT_CREATE_TOOLBOX__WHEELS_PUBLISHER_HPP_
+#define IROBOT_CREATE_TOOLBOX__WHEELS_PUBLISHER_HPP_
 
-#include <control_msgs/msg/dynamic_joint_state.hpp>
-#include <irobot_create_msgs/msg/wheel_ticks.hpp>
-#include <irobot_create_msgs/msg/wheel_vels.hpp>
-#include <irobot_create_toolbox/parameter_helper.hpp>
-#include <rclcpp/rclcpp.hpp>
-#include <std_msgs/msg/string.hpp>
 #include <stdexcept>
+#include <string>
+
+#include "control_msgs/msg/dynamic_joint_state.hpp"
+#include "irobot_create_msgs/msg/wheel_ticks.hpp"
+#include "irobot_create_msgs/msg/wheel_vels.hpp"
+#include "irobot_create_toolbox/parameter_helper.hpp"
+#include "rclcpp/rclcpp.hpp"
+#include "std_msgs/msg/string.hpp"
 
 namespace irobot_create_toolbox
 {
@@ -70,3 +73,5 @@ private:
 };
 
 }  // namespace irobot_create_toolbox
+
+#endif  // IROBOT_CREATE_TOOLBOX__WHEELS_PUBLISHER_HPP_

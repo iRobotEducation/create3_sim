@@ -14,15 +14,19 @@
 //
 // @author Emiliano Javier Borghi Orue (creativa_eborghi@irobot.com)
 
-#include <irobot_create_gazebo_plugins/gazebo_ros_ir_intensity_sensor.hpp>
+#include "irobot_create_gazebo_plugins/gazebo_ros_ir_intensity_sensor.hpp"
+
+#include <algorithm>
+#include <vector>
 
 namespace irobot_create_gazebo_plugins
 {
 // Constructor
-GazeboRosIrIntensitySensor::GazeboRosIrIntensitySensor() : SensorPlugin() {}
+GazeboRosIrIntensitySensor::GazeboRosIrIntensitySensor()
+: SensorPlugin() {}
 
 // Destructor
-GazeboRosIrIntensitySensor::~GazeboRosIrIntensitySensor() { new_laser_scans_connection_.reset(); }
+GazeboRosIrIntensitySensor::~GazeboRosIrIntensitySensor() {new_laser_scans_connection_.reset();}
 
 // Load the controller
 void GazeboRosIrIntensitySensor::Load(gazebo::sensors::SensorPtr sensor, sdf::ElementPtr sdf)

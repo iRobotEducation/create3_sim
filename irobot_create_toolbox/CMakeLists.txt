@@ -128,4 +128,9 @@ ament_export_include_directories(include)
 ament_export_libraries(${libraries_names})
 ament_export_dependencies(${dependencies})
 
+if(BUILD_TESTING)
+  find_package(ament_lint_auto REQUIRED)
+  ament_lint_auto_find_test_dependencies()
+endif()
+
 ament_package()

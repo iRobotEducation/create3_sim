@@ -14,7 +14,9 @@
 //
 // @author Rodrigo Jose Causarano Nunez (rcausaran@irobot.com)
 
-#include <irobot_create_toolbox/hazards_vector_publisher.hpp>
+#include <memory>
+
+#include "irobot_create_toolbox/hazards_vector_publisher.hpp"
 
 int main(int argc, char * argv[])
 {

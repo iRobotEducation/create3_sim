@@ -14,15 +14,16 @@
 //
 // @author Rodrigo Jose Causarano Nunez (rcausaran@irobot.com)
 
-#pragma once
+#ifndef IROBOT_CREATE_GAZEBO_PLUGINS__GAZEBO_ROS_IMU_HPP_
+#define IROBOT_CREATE_GAZEBO_PLUGINS__GAZEBO_ROS_IMU_HPP_
 
-#include <gazebo/common/Assert.hh>
-#include <gazebo/plugins/ImuSensorPlugin.hh>
-#include <gazebo_ros/conversions/builtin_interfaces.hpp>
-#include <gazebo_ros/conversions/geometry_msgs.hpp>
-#include <gazebo_ros/utils.hpp>
-#include <irobot_create_gazebo_plugins/gazebo_ros_helpers.hpp>
-#include <sensor_msgs/msg/imu.hpp>
+#include "gazebo/common/Assert.hh"
+#include "gazebo/plugins/ImuSensorPlugin.hh"
+#include "gazebo_ros/conversions/builtin_interfaces.hpp"
+#include "gazebo_ros/conversions/geometry_msgs.hpp"
+#include "gazebo_ros/utils.hpp"
+#include "irobot_create_gazebo_plugins/gazebo_ros_helpers.hpp"
+#include "sensor_msgs/msg/imu.hpp"
 
 namespace irobot_create_gazebo_plugins
 {
@@ -58,3 +59,5 @@ private:
 };
 
 }  // namespace irobot_create_gazebo_plugins
+
+#endif  // IROBOT_CREATE_GAZEBO_PLUGINS__GAZEBO_ROS_IMU_HPP_

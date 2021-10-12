@@ -14,7 +14,11 @@
 //
 // @author Luis Enrique Chico Capistrano (lchico@irobot.com)
 
-#include <irobot_create_gazebo_plugins/gazebo_ros_cliff_sensor.hpp>
+#include "irobot_create_gazebo_plugins/gazebo_ros_cliff_sensor.hpp"
+
+#include <algorithm>
+#include <string>
+#include <vector>
 
 namespace irobot_create_gazebo_plugins
 {
@@ -53,7 +57,7 @@ void GazeboRosCliffSensor::Load(gazebo::sensors::SensorPtr parent, sdf::ElementP
 }
 
 // Function is called when the world is resetted
-void GazeboRosCliffSensor::Reset() { new_laser_scans_connection_.reset(); }
+void GazeboRosCliffSensor::Reset() {new_laser_scans_connection_.reset();}
 
 // Update the plugin
 void GazeboRosCliffSensor::OnNewLaserScans()

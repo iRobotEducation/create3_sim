@@ -14,11 +14,15 @@
 //
 // @author Rodrigo Jose Causarano Nunez (rcausaran@irobot.com)
 
-#include <irobot_create_toolbox/wheels_publisher.hpp>
+#include "irobot_create_toolbox/wheels_publisher.hpp"
+
+#include <string>
+#include <vector>
 
 namespace irobot_create_toolbox
 {
-WheelsPublisher::WheelsPublisher() : rclcpp::Node("wheels_publisher_node")
+WheelsPublisher::WheelsPublisher()
+: rclcpp::Node("wheels_publisher_node")
 {
   // Topic parameter to publish angular velocity to
   const std::string velocity_topic = declare_and_get_parameter<std::string>("velocity_topic", this);
@@ -107,9 +111,10 @@ size_t WheelsPublisher::get_joint_index(std::string joint_name)
 
 size_t WheelsPublisher::get_interface_index(std::string interface_name, size_t joint_index)
 {
-  for (size_t k = 0; k < last_joint_state_.interface_values[joint_index].interface_names.size();
-       k++) {
-    if (last_joint_state_.interface_values[joint_index].interface_names[k] == interface_name) {
+  const std::vector<std::string> & interface_names =
+    last_joint_state_.interface_values[joint_index].interface_names;
+  for (size_t k = 0; k < interface_names.size(); k++) {
+    if (interface_names[k] == interface_name) {
       return k;
     }
   }
