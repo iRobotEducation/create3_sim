@@ -19,6 +19,7 @@ from launch.actions import DeclareLaunchArgument, IncludeLaunchDescription, SetE
 from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch.substitutions import EnvironmentVariable, PathJoinSubstitution
 
+
 ARGUMENTS = []
 
 # Set the robot and dock pose close to the wall by default
@@ -36,7 +37,7 @@ def generate_launch_description():
     create3_launch_file = PathJoinSubstitution(
         [irobot_create_gazebo_dir, 'launch', 'create3.launch.py'])
     world_path = PathJoinSubstitution([aws_small_house_dir, 'worlds', 'small_house.world'])
-    model_path = PathJoinSubstitution([aws_small_house_dir, 'models'])
+    aws_model_path = PathJoinSubstitution([aws_small_house_dir, 'models'])
 
     # Includes
     world_spawn = IncludeLaunchDescription(
@@ -44,9 +45,10 @@ def generate_launch_description():
         launch_arguments={'world_path': world_path}.items())
 
     # Add AWS models to gazebo path
+    # This environment variable needs to be set, otherwise code fails
     set_gazebo_model_path_env = SetEnvironmentVariable(
         name='GAZEBO_MODEL_PATH',
-        value=[EnvironmentVariable('GAZEBO_MODEL_PATH'), model_path])
+        value=[EnvironmentVariable('GAZEBO_MODEL_PATH', default_value=''), aws_model_path])
 
     # Define LaunchDescription variable
     ld = LaunchDescription(ARGUMENTS)
