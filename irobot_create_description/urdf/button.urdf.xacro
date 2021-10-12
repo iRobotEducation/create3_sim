@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://ros.org/wiki/xacro">
+
+<xacro:macro name="button" params="name parent_link:=base_link *origin">
+  <joint name="${name}_joint" type="fixed">
+    <parent link="${parent_link}"/>
+    <child link="${name}"/>
+    <xacro:insert_block name="origin"/>
+  </joint>
+  <link name="${name}"/>
+</xacro:macro>
+
+</robot>
