@@ -26,13 +26,18 @@ mkdir -p ~/create3_ws/src
 
 - Clone this repository into the src directory from above.
 
+- Inside the create3_sim folder clone the messages package with:
+
+```bash
+vcs import ~/colcon_ws/src/ < ~/colcon_ws/src/create3_sim/msgs.repos
+```
+
 - Navigate to the workspace and install ros2 dependencies with:
 
 ```bash
 cd ~/create3_ws
 rosdep install --from-path src -yi
 ```
-
 - Build the workspace with:
 
 ```bash
