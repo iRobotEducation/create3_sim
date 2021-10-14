@@ -31,7 +31,7 @@ MotionControlNode::MotionControlNode()
   this->declare_reflex_parameters();
 
   // Register a callback to handle parameter changes
-  m_params_callback_handle = this->add_on_set_parameters_callback(
+  params_callback_handle_ = this->add_on_set_parameters_callback(
     std::bind(&MotionControlNode::set_parameters_callback, this, _1));
 }
 

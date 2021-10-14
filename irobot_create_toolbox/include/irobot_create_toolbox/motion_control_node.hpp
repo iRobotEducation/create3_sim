@@ -46,7 +46,7 @@ private:
     "REFLEX_GYRO_CAL", "REFLEX_PANIC", "REFLEX_PROXIMITY_SLOWDOWN",
     "REFLEX_STUCK", "REFLEX_VIRTUAL_WALL", "REFLEX_WHEEL_DROP"};
   /// \brief Storage for custom parameter validation callbacks
-  rclcpp::node_interfaces::OnSetParametersCallbackHandle::SharedPtr m_params_callback_handle{
+  rclcpp::node_interfaces::OnSetParametersCallbackHandle::SharedPtr params_callback_handle_{
     nullptr};
 };
 
