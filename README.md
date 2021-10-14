@@ -13,8 +13,7 @@ This is a [ROS 2](https://docs.ros.org/en/foxy/index.html) simulation stack for 
 5. ROS 2 dev tools:
     - [colcon-common-extensions](https://pypi.org/project/colcon-common-extensions/)
     - [rosdep](https://pypi.org/project/rosdep/): Used to install dependencies when building from sources
-    - [vcs](https://github.com/dirk-thomas/vcstool): Used to clone extra packages such as the AWS small house environment.
-
+    - [vcs](https://github.com/dirk-thomas/vcstool): Automates cloning of git repositories declared on a YAML file.
 
 ## Build
 
@@ -26,10 +25,10 @@ mkdir -p ~/create3_ws/src
 
 - Clone this repository into the src directory from above.
 
-- Inside the create3_sim folder clone the messages package with:
+- Inside the create3_sim folder, clone the required git repositories with:
 
 ```bash
-vcs import ~/colcon_ws/src/ < ~/colcon_ws/src/create3_sim/msgs.repos
+vcs import ~/create3_ws/src/ < ~/create3_ws/src/create3_sim/dependencies.repos
 ```
 
 - Navigate to the workspace and install ros2 dependencies with:
