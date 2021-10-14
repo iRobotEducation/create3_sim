@@ -17,12 +17,11 @@
 #ifndef IROBOT_CREATE_GAZEBO_PLUGINS__DOCKING_MANAGER_HPP_
 #define IROBOT_CREATE_GAZEBO_PLUGINS__DOCKING_MANAGER_HPP_
 
+#include <cmath>
 #include <gazebo/common/Plugin.hh>
 #include <gazebo/physics/Link.hh>
 #include <gazebo/physics/Model.hh>
 #include <gazebo/physics/World.hh>
-
-#include <cmath>
 #include <memory>
 #include <string>
 

@@ -50,9 +50,9 @@ void GazeboRosIrOpcode::Load(gazebo::physics::ModelPtr model, sdf::ElementPtr sd
   utils::initialize(sensor_1_range, sdf, "sensor_1_range", 1.0);
 
   // Fill the SensorParams array for Sensor 0 and Sensor 1
-  sensors_[0] = {irobot_create_msgs::msg::IrOpcode::SENSOR_OMNI, sensor_0_fov, sensor_0_range};
-  sensors_[1] = {
-    irobot_create_msgs::msg::IrOpcode::SENSOR_DIRECTIONAL_FRONT, sensor_1_fov, sensor_1_range};
+  sensors_[irobot_create_msgs::msg::IrOpcode::SENSOR_OMNI] = {sensor_0_fov, sensor_0_range};
+  sensors_[irobot_create_msgs::msg::IrOpcode::SENSOR_DIRECTIONAL_FRONT] = {
+    sensor_1_fov, sensor_1_range};
 
   dock_manager_ = std::make_shared<DockingManager>(world_, "create3", "standard_dock");
 
@@ -100,13 +100,21 @@ void GazeboRosIrOpcode::OnUpdate(const gazebo::common::UpdateInfo & info)
 
   // Array to hold detected opcodes from force field
   const std::array<int, 2> detected_forcefield_opcodes = {
-    CheckForceFieldDetection(sensors_[0].fov, sensors_[0].range),
-    CheckForceFieldDetection(sensors_[1].fov, sensors_[1].range)};
+    CheckForceFieldDetection(
+      sensors_[irobot_create_msgs::msg::IrOpcode::SENSOR_OMNI].fov,
+      sensors_[irobot_create_msgs::msg::IrOpcode::SENSOR_OMNI].range),
+    CheckForceFieldDetection(
+      sensors_[irobot_create_msgs::msg::IrOpcode::SENSOR_DIRECTIONAL_FRONT].fov,
+      sensors_[irobot_create_msgs::msg::IrOpcode::SENSOR_DIRECTIONAL_FRONT].range)};
 
   // Array to hold detected opcodes from buoys
   const std::array<int, 2> detected_buoys_opcodes = {
-    CheckBuoysDetection(sensors_[0].fov, sensors_[0].range),
-    CheckBuoysDetection(sensors_[1].fov, sensors_[1].range)};
+    CheckBuoysDetection(
+      sensors_[irobot_create_msgs::msg::IrOpcode::SENSOR_OMNI].fov,
+      sensors_[irobot_create_msgs::msg::IrOpcode::SENSOR_OMNI].range),
+    CheckBuoysDetection(
+      sensors_[irobot_create_msgs::msg::IrOpcode::SENSOR_DIRECTIONAL_FRONT].fov,
+      sensors_[irobot_create_msgs::msg::IrOpcode::SENSOR_DIRECTIONAL_FRONT].range)};
 
   // Check and publish Sensors
   PublishSensors(detected_forcefield_opcodes);
@@ -115,11 +123,11 @@ void GazeboRosIrOpcode::OnUpdate(const gazebo::common::UpdateInfo & info)
 
 int GazeboRosIrOpcode::CheckBuoysDetection(const double fov, const double range)
 {
-  // Get the origin of the receiver in a polar point WRT the emitter
+  // Get the origin of the receiver as a polar point WRT the emitter
   const utils::PolarCoordinate receiver_wrt_emitter_polar =
     dock_manager_->ReceiverCartesianPointToEmitterPolarPoint({0.0, 0.0});
 
-  // Get the origin of the emitter in a polar point WRT the receiver
+  // Get the origin of the emitter as a polar point WRT the receiver
   const utils::PolarCoordinate emitter_wrt_receiver_polar =
     dock_manager_->EmitterCartesianPointToReceiverPolarPoint({0.0, 0.0});
 
@@ -186,7 +194,7 @@ int GazeboRosIrOpcode::CheckBuoysDetection(const double fov, const double range)
 
 int GazeboRosIrOpcode::CheckForceFieldDetection(const double fov, const double range)
 {
-  // Get the origin of the emitter in a polar point WRT the receiver
+  // Get the origin of the emitter as a polar point WRT the receiver
   const utils::PolarCoordinate emitter_wrt_receiver_polar =
     dock_manager_->EmitterCartesianPointToReceiverPolarPoint({0.0, 0.0});
 
