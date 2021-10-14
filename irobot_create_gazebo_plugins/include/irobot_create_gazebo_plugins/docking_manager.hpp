@@ -59,12 +59,12 @@ public:
 
   /// Change reference frame of a cartesian point WRT emitter and return in the new frame as
   /// polar point
-  utils::PolarCoordinate emitterWRTReceiverPolarPoint(
+  utils::PolarCoordinate EmitterCartesianPointToReceiverPolarPoint(
     const ignition::math::Vector2d & emitter_point);
 
   /// Change reference frame of a cartesian point WRT receiver and return in the new frame as
   /// polar point
-  utils::PolarCoordinate receiverWRTEmitterPolarPoint(
+  utils::PolarCoordinate ReceiverCartesianPointToEmitterPolarPoint(
     const ignition::math::Vector2d & receiver_point);
 };
 }  // namespace irobot_create_gazebo_plugins

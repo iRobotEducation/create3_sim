@@ -49,7 +49,7 @@ bool DockingManager::AreModelsReady()
   return models_ready;
 }
 
-utils::PolarCoordinate DockingManager::emitterWRTReceiverPolarPoint(
+utils::PolarCoordinate DockingManager::EmitterCartesianPointToReceiverPolarPoint(
   const ignition::math::Vector2d & emitter_point)
 {
   const ignition::math::Vector3d emitter_point_3d =
@@ -65,7 +65,7 @@ utils::PolarCoordinate DockingManager::emitterWRTReceiverPolarPoint(
     ignition::math::Vector2d{emitter_wrt_receiver_point.X(), emitter_wrt_receiver_point.Y()});
 }
 
-utils::PolarCoordinate DockingManager::receiverWRTEmitterPolarPoint(
+utils::PolarCoordinate DockingManager::ReceiverCartesianPointToEmitterPolarPoint(
   const ignition::math::Vector2d & receiver_point)
 {
   const ignition::math::Vector3d receiver_point_3d =

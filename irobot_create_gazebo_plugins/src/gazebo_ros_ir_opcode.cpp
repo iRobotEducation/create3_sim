@@ -117,11 +117,11 @@ int GazeboRosIrOpcode::CheckBuoysDetection(const double fov, const double range)
 {
   // Get the origin of the receiver in a polar point WRT the emitter
   const utils::PolarCoordinate receiver_wrt_emitter_polar =
-    dock_manager_->receiverWRTEmitterPolarPoint({0.0, 0.0});
+    dock_manager_->ReceiverCartesianPointToEmitterPolarPoint({0.0, 0.0});
 
   // Get the origin of the emitter in a polar point WRT the receiver
   const utils::PolarCoordinate emitter_wrt_receiver_polar =
-    dock_manager_->emitterWRTReceiverPolarPoint({0.0, 0.0});
+    dock_manager_->EmitterCartesianPointToReceiverPolarPoint({0.0, 0.0});
 
   bool receiver_sees_emitter = false;
   bool in_front_of_buoys = false;
@@ -188,7 +188,7 @@ int GazeboRosIrOpcode::CheckForceFieldDetection(const double fov, const double r
 {
   // Get the origin of the emitter in a polar point WRT the receiver
   const utils::PolarCoordinate emitter_wrt_receiver_polar =
-    dock_manager_->emitterWRTReceiverPolarPoint({0.0, 0.0});
+    dock_manager_->EmitterCartesianPointToReceiverPolarPoint({0.0, 0.0});
 
   bool force_field_in_range = false;
   bool receiver_sees_emitter = false;
