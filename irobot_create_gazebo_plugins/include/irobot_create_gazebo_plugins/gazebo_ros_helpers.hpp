@@ -120,8 +120,8 @@ PolarCoordinate toPolar(const ignition::math::Vector2d & cartesian)
 
 ignition::math::Vector2d fromPolar(const PolarCoordinate & polar)
 {
-  ignition::math::Vector2d cartesian{polar.radius * cos(polar.azimuth), polar.radius * sin(
-      polar.azimuth)};
+  ignition::math::Vector2d cartesian{
+    polar.radius * cos(polar.azimuth), polar.radius * sin(polar.azimuth)};
   return cartesian;
 }
 

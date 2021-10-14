@@ -14,11 +14,11 @@
 //
 // @author Alberto Soragna (asoragna@irobot.com)
 
+#include "irobot_create_toolbox/motion_control_node.hpp"
+
 #include <memory>
 #include <string>
 #include <vector>
-
-#include "irobot_create_toolbox/motion_control_node.hpp"
 
 namespace irobot_create_toolbox
 {

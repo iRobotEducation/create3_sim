@@ -15,7 +15,6 @@
 // @author Rodrigo Jose Causarano Nunez (rcausaran@irobot.com)
 
 #include <irobot_create_gazebo_plugins/docking_manager.hpp>
-
 #include <string>
 
 namespace irobot_create_gazebo_plugins
@@ -32,18 +31,18 @@ void DockingManager::initLinks(
 {
   // Retrieve receiver link and assert it.
   receiver_link_ = robot_model->GetLink("ir_omni");
-  GZ_ASSERT(receiver_link_, "World pointer is invalid!");
+  GZ_ASSERT(receiver_link_, "Receiver link pointer is invalid!");
 
   // Retrieve emitter link and assert it.
   emitter_link_ = dock_model->GetLink("halo_link");
-  GZ_ASSERT(emitter_link_, "World pointer is invalid!");
+  GZ_ASSERT(emitter_link_, "Emitter link pointer is invalid!");
 }
 
-bool DockingManager::checkIfModelsReady()
+bool DockingManager::AreModelsReady()
 {
   const gazebo::physics::ModelPtr dock_model = world_->ModelByName(dock_model_name_);
   const gazebo::physics::ModelPtr robot_model = world_->ModelByName(robot_model_name_);
-  bool models_ready = dock_model != nullptr && robot_model != nullptr;
+  const bool models_ready = dock_model != nullptr && robot_model != nullptr;
   if (models_ready && (receiver_link_ == nullptr || emitter_link_ == nullptr)) {
     initLinks(dock_model, robot_model);
   }

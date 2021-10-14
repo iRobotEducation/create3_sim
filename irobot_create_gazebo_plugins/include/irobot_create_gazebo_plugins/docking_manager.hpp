@@ -21,15 +21,15 @@
 #include <gazebo/physics/Link.hh>
 #include <gazebo/physics/Model.hh>
 #include <gazebo/physics/World.hh>
-#include "irobot_create_gazebo_plugins/gazebo_ros_helpers.hpp"
 
 #include <cmath>
 #include <memory>
 #include <string>
 
+#include "irobot_create_gazebo_plugins/gazebo_ros_helpers.hpp"
+
 namespace irobot_create_gazebo_plugins
 {
-
 class DockingManager
 {
 private:
@@ -55,15 +55,17 @@ public:
 
   /// Use this method to check that the models are ready in gazebo before dereferencing their
   /// pointers
-  bool checkIfModelsReady();
+  bool AreModelsReady();
 
   /// Change reference frame of a cartesian point WRT emitter and return in the new frame as
   /// polar point
-  utils::PolarCoordinate emitterWRTReceiverPolarPoint(const ignition::math::Vector2d & emitter_point);
+  utils::PolarCoordinate emitterWRTReceiverPolarPoint(
+    const ignition::math::Vector2d & emitter_point);
 
   /// Change reference frame of a cartesian point WRT receiver and return in the new frame as
   /// polar point
-  utils::PolarCoordinate receiverWRTEmitterPolarPoint(const ignition::math::Vector2d & receiver_point);
+  utils::PolarCoordinate receiverWRTEmitterPolarPoint(
+    const ignition::math::Vector2d & receiver_point);
 };
 }  // namespace irobot_create_gazebo_plugins
 

@@ -80,7 +80,7 @@
     </xacro:if>
 
     <gazebo>
-      <plugin name="${name}_plugin" filename="libgazebo_ros_create_ir_opcodes.so">
+      <plugin name="${name}_plugin" filename="libgazebo_ros_create_ir_opcode.so">
         <ros>
           <namespace>/</namespace>
           <remapping>~/out:=ir_opcode</remapping>

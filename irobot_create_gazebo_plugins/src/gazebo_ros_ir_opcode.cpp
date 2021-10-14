@@ -15,9 +15,8 @@
 // @author Rodrigo Jose Causarano Nunez (rcausaran@irobot.com)
 
 #include <irobot_create_gazebo_plugins/gazebo_ros_ir_opcode.hpp>
-
-#include <string>
 #include <memory>
+#include <string>
 
 namespace irobot_create_gazebo_plugins
 {
@@ -52,10 +51,10 @@ void GazeboRosIrOpcode::Load(gazebo::physics::ModelPtr model, sdf::ElementPtr sd
 
   // Fill the SensorParams array for Sensor 0 and Sensor 1
   sensors_[0] = {irobot_create_msgs::msg::IrOpcode::SENSOR_OMNI, sensor_0_fov, sensor_0_range};
-  sensors_[1] = {irobot_create_msgs::msg::IrOpcode::SENSOR_DIRECTIONAL_FRONT, sensor_1_fov,
-    sensor_1_range};
+  sensors_[1] = {
+    irobot_create_msgs::msg::IrOpcode::SENSOR_DIRECTIONAL_FRONT, sensor_1_fov, sensor_1_range};
 
-  dock_manager_ptr_ = std::make_shared<DockingManager>(world_, "create3", "standard_dock");
+  dock_manager_ = std::make_shared<DockingManager>(world_, "create3", "standard_dock");
 
   // Initialize ROS publisher
   pub_ = ros_node_->create_publisher<irobot_create_msgs::msg::IrOpcode>(
@@ -87,25 +86,27 @@ void GazeboRosIrOpcode::OnUpdate(const gazebo::common::UpdateInfo & info)
   const double time_elapsed = (current_time - last_time_).Double();
 
   // Check if on this iteration corresponds to send the message
-  if (!update_rate_enforcer_.shouldUpdate(time_elapsed)) {return;}
+  if (!update_rate_enforcer_.shouldUpdate(time_elapsed)) {
+    return;
+  }
 
   // Update time
   last_time_ = current_time;
 
-  if (!dock_manager_ptr_->checkIfModelsReady()) {
+  if (!dock_manager_->AreModelsReady()) {
     RCLCPP_DEBUG(ros_node_->get_logger(), "standard_dock model is not ready yet");
     return;
   }
 
   // Array to hold detected opcodes from force field
-  const int detected_forcefield_opcodes[] = {CheckForceFieldDetection(
-      sensors_[0].fov,
-      sensors_[0].range), CheckForceFieldDetection(sensors_[1].fov, sensors_[1].range)};
+  const std::array<int, 2> detected_forcefield_opcodes = {
+    CheckForceFieldDetection(sensors_[0].fov, sensors_[0].range),
+    CheckForceFieldDetection(sensors_[1].fov, sensors_[1].range)};
 
   // Array to hold detected opcodes from buoys
-  const int detected_buoys_opcodes[] = {CheckBuoysDetection(
-      sensors_[0].fov,
-      sensors_[0].range), CheckBuoysDetection(sensors_[1].fov, sensors_[1].range)};
+  const std::array<int, 2> detected_buoys_opcodes = {
+    CheckBuoysDetection(sensors_[0].fov, sensors_[0].range),
+    CheckBuoysDetection(sensors_[1].fov, sensors_[1].range)};
 
   // Check and publish Sensors
   PublishSensors(detected_forcefield_opcodes);
@@ -116,11 +117,11 @@ int GazeboRosIrOpcode::CheckBuoysDetection(const double fov, const double range)
 {
   // Get the origin of the receiver in a polar point WRT the emitter
   const utils::PolarCoordinate receiver_wrt_emitter_polar =
-    dock_manager_ptr_->receiverWRTEmitterPolarPoint({0.0, 0.0});
+    dock_manager_->receiverWRTEmitterPolarPoint({0.0, 0.0});
 
   // Get the origin of the emitter in a polar point WRT the receiver
   const utils::PolarCoordinate emitter_wrt_receiver_polar =
-    dock_manager_ptr_->emitterWRTReceiverPolarPoint({0.0, 0.0});
+    dock_manager_->emitterWRTReceiverPolarPoint({0.0, 0.0});
 
   bool receiver_sees_emitter = false;
   bool in_front_of_buoys = false;
@@ -130,14 +131,15 @@ int GazeboRosIrOpcode::CheckBuoysDetection(const double fov, const double range)
   int detected_opcode = 0;
 
   // Check emitter fov
-  if (emitter_wrt_receiver_polar.azimuth > -fov / 2 &&
-    emitter_wrt_receiver_polar.azimuth < fov / 2)
+  if (
+    emitter_wrt_receiver_polar.azimuth > -fov / 2 && emitter_wrt_receiver_polar.azimuth < fov / 2)
   {
     receiver_sees_emitter = true;
   }
 
   // Check that receiver is in front of emitter
-  if (receiver_wrt_emitter_polar.azimuth > -M_PI / 2 &&
+  if (
+    receiver_wrt_emitter_polar.azimuth > -M_PI / 2 &&
     receiver_wrt_emitter_polar.azimuth < M_PI / 2)
   {
     in_front_of_buoys = true;
@@ -151,7 +153,8 @@ int GazeboRosIrOpcode::CheckBuoysDetection(const double fov, const double range)
   // Check if receiver within red fov
   // Red fov angle is DOCK_BUOY_FOV_RATIO_*DOCK_BUOYS_FOV_ but is offset from DOCK_BUOYS_FOV_/2
   // pointing towards the left of the dock
-  if (receiver_wrt_emitter_polar.azimuth < DOCK_BUOYS_FOV_ / 2 &&
+  if (
+    receiver_wrt_emitter_polar.azimuth < DOCK_BUOYS_FOV_ / 2 &&
     receiver_wrt_emitter_polar.azimuth >
     DOCK_BUOYS_FOV_ / 2 - DOCK_BUOY_FOV_RATIO_ * DOCK_BUOYS_FOV_)
   {
@@ -161,7 +164,8 @@ int GazeboRosIrOpcode::CheckBuoysDetection(const double fov, const double range)
   // Check if receiver within green fov
   // Green fov angle is DOCK_BUOY_FOV_RATIO_*DOCK_BUOYS_FOV_ but is offset from -DOCK_BUOYS_FOV_/2
   // pointing towards the right of the dock
-  if (receiver_wrt_emitter_polar.azimuth > -DOCK_BUOYS_FOV_ / 2 &&
+  if (
+    receiver_wrt_emitter_polar.azimuth > -DOCK_BUOYS_FOV_ / 2 &&
     receiver_wrt_emitter_polar.azimuth <
     DOCK_BUOY_FOV_RATIO_ * DOCK_BUOYS_FOV_ - DOCK_BUOYS_FOV_ / 2)
   {
@@ -184,7 +188,7 @@ int GazeboRosIrOpcode::CheckForceFieldDetection(const double fov, const double r
 {
   // Get the origin of the emitter in a polar point WRT the receiver
   const utils::PolarCoordinate emitter_wrt_receiver_polar =
-    dock_manager_ptr_->emitterWRTReceiverPolarPoint({0.0, 0.0});
+    dock_manager_->emitterWRTReceiverPolarPoint({0.0, 0.0});
 
   bool force_field_in_range = false;
   bool receiver_sees_emitter = false;
@@ -209,11 +213,10 @@ int GazeboRosIrOpcode::CheckForceFieldDetection(const double fov, const double r
   return detected_opcode;
 }
 
-
-void GazeboRosIrOpcode::PublishSensors(const int detected_opcodes[2])
+void GazeboRosIrOpcode::PublishSensors(const std::array<int, 2> detected_opcodes)
 {
   // First for sensor 0 then sensor 1
-  for (int k = 0; k < 2; k++) {
+  for (size_t k = 0; k < detected_opcodes.size(); k++) {
     const int detected_opcode = detected_opcodes[k];
     if (detected_opcode > 0) {
       // Fill msg for this iteration
