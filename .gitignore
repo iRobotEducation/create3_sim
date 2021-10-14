@@ -1,7 +1,2 @@
-# VCS cloned directories
-aws-robomaker-small-house-world/
-irobot_create_msgs/
-
-# Development files
 .vscode
 __pycache__

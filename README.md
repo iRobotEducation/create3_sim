@@ -28,7 +28,7 @@ mkdir -p ~/create3_ws/src
 - Inside the create3_sim folder, clone the required git repositories with:
 
 ```bash
-vcs import ~/colcon_ws/src/ < ~/colcon_ws/src/create3_sim/dependencies.repos
+vcs import ~/create3_ws/src/ < ~/create3_ws/src/create3_sim/dependencies.repos
 ```
 
 - Navigate to the workspace and install ros2 dependencies with:
