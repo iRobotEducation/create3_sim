@@ -106,6 +106,25 @@ double FindMinimumRange(std::vector<double> & ranges)
   return std::numeric_limits<double>::max();
 }
 
+// Very useful Polar Coordinates tools when working with Fields of views and distances.
+struct PolarCoordinate
+{
+  double radius;
+  double azimuth;
+};
+
+PolarCoordinate toPolar(const ignition::math::Vector2d & cartesian)
+{
+  return PolarCoordinate{cartesian.Length(), atan2(cartesian.Y(), cartesian.X())};
+}
+
+ignition::math::Vector2d fromPolar(const PolarCoordinate & polar)
+{
+  ignition::math::Vector2d cartesian{polar.radius * cos(polar.azimuth), polar.radius * sin(
+      polar.azimuth)};
+  return cartesian;
+}
+
 }  // namespace utils
 }  // namespace irobot_create_gazebo_plugins
 

@@ -21,6 +21,7 @@
 #include <gazebo/physics/Link.hh>
 #include <gazebo/physics/Model.hh>
 #include <gazebo/physics/World.hh>
+#include "irobot_create_gazebo_plugins/gazebo_ros_helpers.hpp"
 
 #include <cmath>
 #include <memory>
@@ -28,11 +29,6 @@
 
 namespace irobot_create_gazebo_plugins
 {
-struct PolarCoordinate
-{
-  double radius;
-  double azimuth;
-};
 
 class DockingManager
 {
@@ -46,10 +42,6 @@ private:
   // Model names
   std::string robot_model_name_;
   std::string dock_model_name_;
-
-  // Convert from one system to the other
-  PolarCoordinate toPolar(const ignition::math::Vector2d & cartesian);
-  ignition::math::Vector2d fromPolar(const PolarCoordinate & polar);
 
   // Once models are ready, initialize their link pointers
   void initLinks(
@@ -67,11 +59,11 @@ public:
 
   /// Change reference frame of a cartesian point WRT emitter and return in the new frame as
   /// polar point
-  PolarCoordinate emitterWRTReceiverPolarPoint(const ignition::math::Vector2d & emitter_point);
+  utils::PolarCoordinate emitterWRTReceiverPolarPoint(const ignition::math::Vector2d & emitter_point);
 
   /// Change reference frame of a cartesian point WRT receiver and return in the new frame as
   /// polar point
-  PolarCoordinate receiverWRTEmitterPolarPoint(const ignition::math::Vector2d & receiver_point);
+  utils::PolarCoordinate receiverWRTEmitterPolarPoint(const ignition::math::Vector2d & receiver_point);
 };
 }  // namespace irobot_create_gazebo_plugins
 

@@ -115,11 +115,11 @@ void GazeboRosIrOpcode::OnUpdate(const gazebo::common::UpdateInfo & info)
 int GazeboRosIrOpcode::CheckBuoysDetection(const double fov, const double range)
 {
   // Get the origin of the receiver in a polar point WRT the emitter
-  const PolarCoordinate receiver_wrt_emitter_polar =
+  const utils::PolarCoordinate receiver_wrt_emitter_polar =
     dock_manager_ptr_->receiverWRTEmitterPolarPoint({0.0, 0.0});
 
   // Get the origin of the emitter in a polar point WRT the receiver
-  const PolarCoordinate emitter_wrt_receiver_polar =
+  const utils::PolarCoordinate emitter_wrt_receiver_polar =
     dock_manager_ptr_->emitterWRTReceiverPolarPoint({0.0, 0.0});
 
   bool receiver_sees_emitter = false;
@@ -183,7 +183,7 @@ int GazeboRosIrOpcode::CheckBuoysDetection(const double fov, const double range)
 int GazeboRosIrOpcode::CheckForceFieldDetection(const double fov, const double range)
 {
   // Get the origin of the emitter in a polar point WRT the receiver
-  const PolarCoordinate emitter_wrt_receiver_polar =
+  const utils::PolarCoordinate emitter_wrt_receiver_polar =
     dock_manager_ptr_->emitterWRTReceiverPolarPoint({0.0, 0.0});
 
   bool force_field_in_range = false;

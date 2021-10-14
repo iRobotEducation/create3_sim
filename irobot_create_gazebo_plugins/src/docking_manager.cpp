@@ -27,18 +27,6 @@ DockingManager::DockingManager(
 {
 }
 
-PolarCoordinate DockingManager::toPolar(const ignition::math::Vector2d & cartesian)
-{
-  return PolarCoordinate{cartesian.Length(), atan2(cartesian.Y(), cartesian.X())};
-}
-
-ignition::math::Vector2d DockingManager::fromPolar(const PolarCoordinate & polar)
-{
-  ignition::math::Vector2d cartesian{polar.radius * cos(polar.azimuth), polar.radius * sin(
-      polar.azimuth)};
-  return cartesian;
-}
-
 void DockingManager::initLinks(
   const gazebo::physics::ModelPtr & dock_model, const gazebo::physics::ModelPtr & robot_model)
 {
@@ -62,7 +50,7 @@ bool DockingManager::checkIfModelsReady()
   return models_ready;
 }
 
-PolarCoordinate DockingManager::emitterWRTReceiverPolarPoint(
+utils::PolarCoordinate DockingManager::emitterWRTReceiverPolarPoint(
   const ignition::math::Vector2d & emitter_point)
 {
   const ignition::math::Vector3d emitter_point_3d =
@@ -74,11 +62,11 @@ PolarCoordinate DockingManager::emitterWRTReceiverPolarPoint(
   // Convert emitter point to a receiver point
   const ignition::math::Vector3d emitter_wrt_receiver_point =
     emitter_wrt_receiver_pose.CoordPositionAdd(emitter_point_3d);
-  return toPolar(
+  return utils::toPolar(
     ignition::math::Vector2d{emitter_wrt_receiver_point.X(), emitter_wrt_receiver_point.Y()});
 }
 
-PolarCoordinate DockingManager::receiverWRTEmitterPolarPoint(
+utils::PolarCoordinate DockingManager::receiverWRTEmitterPolarPoint(
   const ignition::math::Vector2d & receiver_point)
 {
   const ignition::math::Vector3d receiver_point_3d =
@@ -90,7 +78,7 @@ PolarCoordinate DockingManager::receiverWRTEmitterPolarPoint(
   // Convert receiver point to an emitter point
   const ignition::math::Vector3d receiver_wrt_emitter_point =
     receiver_wrt_emitter_pose.CoordPositionAdd(receiver_point_3d);
-  return toPolar(
+  return utils::toPolar(
     ignition::math::Vector2d{receiver_wrt_emitter_point.X(), receiver_wrt_emitter_point.Y()});
 }
 }  // namespace irobot_create_gazebo_plugins

@@ -3,7 +3,7 @@
   <xacro:macro name="ir_emitter" params="name parent:=base_link *origin
                                          range
                                          aperture
-                                         update_rate:=1
+                                         update_rate:=1.0
                                          min_range:=${7*cm2m}
                                          visualize:=false" >
 
@@ -20,38 +20,35 @@
     </joint>
 
     <link name="${name}_link">
-      <xacro:if value="${visualize}">
-        <visual>
-          <geometry>
-            <box size="${x} ${y} ${z}" />
-          </geometry>
-        </visual>
-      </xacro:if>
       <xacro:inertial_cuboid mass="${mass}" x="${x}" y="${y}" z="${z}" />
     </link>
 
-    <gazebo reference="${name}_link">
-      <sensor type="ray" name="${name}">
-        <always_on>true</always_on>
-        <update_rate>${update_rate}</update_rate>
-        <visualize>${visualize}</visualize>
-        <ray>
-          <scan>
-            <horizontal>
-              <samples>50</samples>
-              <resolution>1</resolution>
-              <min_angle>-${aperture/2}</min_angle>
-              <max_angle>${aperture/2}</max_angle>
-              </horizontal>
-          </scan>
-            <range>
-            <min>${min_range}</min>
-            <max>${range}</max>
-            <resolution>0.01</resolution>
-          </range>
-        </ray>
-      </sensor>
-    </gazebo>
+    <!-- This ray is not attached to any plugin, it is only used for aesthetic and debugging purposes
+    only when the visualize flag is set. No need for high update rates. -->
+    <xacro:if value="${visualize}">
+      <gazebo reference="${name}_link">
+        <sensor type="ray" name="${name}">
+          <always_on>true</always_on>
+          <update_rate>${update_rate}</update_rate>
+          <visualize>${visualize}</visualize>
+          <ray>
+            <scan>
+              <horizontal>
+                <samples>50</samples>
+                <resolution>1</resolution>
+                <min_angle>-${aperture/2}</min_angle>
+                <max_angle>${aperture/2}</max_angle>
+                </horizontal>
+            </scan>
+              <range>
+              <min>${min_range}</min>
+              <max>${range}</max>
+              <resolution>0.01</resolution>
+            </range>
+          </ray>
+        </sensor>
+      </gazebo>
+    </xacro:if>
 
     <gazebo reference="${name}_joint" >
       <preserveFixedJoint>true</preserveFixedJoint>

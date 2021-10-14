@@ -8,7 +8,7 @@
                                                   sensor_0_range
                                                   sensor_1_fov
                                                   sensor_1_range
-                                                  samples
+                                                  samples:=50
                                                   min_range:=0.015
                                                   update_rate:=31
                                                   visualize:=false
@@ -27,53 +27,57 @@
       <xacro:inertial_dummy />
     </link>
 
-    <!-- Sensor 0 visualization -->
-    <gazebo reference="${link_name}">
-      <sensor type="ray" name="sensor_0">
-          <always_on>true</always_on>
-          <update_rate>1</update_rate>
-          <visualize>${visualize}</visualize>
-          <ray>
-              <scan>
-                  <horizontal>
-                      <samples>${samples}</samples>
-                      <resolution>1</resolution>
-                      <min_angle>${-sensor_0_fov/2}</min_angle>
-                      <max_angle>${sensor_0_fov/2}</max_angle>
-                  </horizontal>
-              </scan>
-              <range>
-                  <min>${min_range}</min>
-                  <max>${sensor_0_range}</max>
-                  <resolution>0.01</resolution>
-              </range>
-          </ray>
-      </sensor>
-    </gazebo>
+    <!-- These rays are only used for aesthetic and debugging purposes only when the visualize flag is set.
+    This there is no need for high update rates. -->
+    <xacro:if value="${visualize}">
+      <!-- Sensor 0 visualization -->
+      <gazebo reference="${link_name}">
+        <sensor type="ray" name="sensor_0">
+            <always_on>true</always_on>
+            <update_rate>1</update_rate>
+            <visualize>${visualize}</visualize>
+            <ray>
+                <scan>
+                    <horizontal>
+                        <samples>${samples}</samples>
+                        <resolution>1</resolution>
+                        <min_angle>${-sensor_0_fov/2}</min_angle>
+                        <max_angle>${sensor_0_fov/2}</max_angle>
+                    </horizontal>
+                </scan>
+                <range>
+                    <min>${min_range}</min>
+                    <max>${sensor_0_range}</max>
+                    <resolution>0.01</resolution>
+                </range>
+            </ray>
+        </sensor>
+      </gazebo>
 
-    <!-- Sensor 1 visualization -->
-    <gazebo reference="${link_name}">
-      <sensor type="ray" name="sensor_1">
-          <always_on>true</always_on>
-          <update_rate>1</update_rate>
-          <visualize>${visualize}</visualize>
-          <ray>
-              <scan>
-                  <horizontal>
-                      <samples>${samples}</samples>
-                      <resolution>1</resolution>
-                      <min_angle>${-sensor_1_fov/2}</min_angle>
-                      <max_angle>${sensor_1_fov/2}</max_angle>
-                  </horizontal>
-              </scan>
-              <range>
-                  <min>${min_range}</min>
-                  <max>${sensor_1_range}</max>
-                  <resolution>0.01</resolution>
-              </range>
-          </ray>
-      </sensor>
-    </gazebo>
+      <!-- Sensor 1 visualization -->
+      <gazebo reference="${link_name}">
+        <sensor type="ray" name="sensor_1">
+            <always_on>true</always_on>
+            <update_rate>1</update_rate>
+            <visualize>${visualize}</visualize>
+            <ray>
+                <scan>
+                    <horizontal>
+                        <samples>${samples}</samples>
+                        <resolution>1</resolution>
+                        <min_angle>${-sensor_1_fov/2}</min_angle>
+                        <max_angle>${sensor_1_fov/2}</max_angle>
+                    </horizontal>
+                </scan>
+                <range>
+                    <min>${min_range}</min>
+                    <max>${sensor_1_range}</max>
+                    <resolution>0.01</resolution>
+                </range>
+            </ray>
+        </sensor>
+      </gazebo>
+    </xacro:if>
 
     <gazebo>
       <plugin name="${name}_plugin" filename="libgazebo_ros_create_ir_opcodes.so">
