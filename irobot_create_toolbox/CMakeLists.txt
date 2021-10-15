@@ -137,6 +137,10 @@ install(DIRECTORY include/
   DESTINATION include
 )
 
+install(DIRECTORY launch
+  DESTINATION share/${PROJECT_NAME}
+)
+
 # Install Python modules
 ament_python_install_package(${PROJECT_NAME})
 
@@ -144,12 +148,6 @@ ament_python_install_package(${PROJECT_NAME})
 install(PROGRAMS
   scripts/topic_republisher.py
   DESTINATION lib/${PROJECT_NAME}
-)
-
-# Install launch files
-install(DIRECTORY
-  launch
-  DESTINATION share/${PROJECT_NAME}
 )
 
 ament_export_include_directories(include)
