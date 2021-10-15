@@ -1,0 +1,26 @@
+---
+mock_publisher_node:
+  ros__parameters:
+    # Mock buttons publisher topic
+    button_topic: /interface_buttons
+    # Mock slip status publisher topic
+    slip_status_topic: /slip_status
+    # Mock kidnap status publisher topic
+    kidnap_status_topic: /kidnap_status
+    # Mock battery state publisher topic
+    battery_state_topic: /battery_state
+    # Mock stop status publisher topic
+    stop_status_topic: /stop_status
+    # Publishers rate
+    buttons_publish_rate: 1.0
+    slip_status_publish_rate: 62.0
+    kidnap_status_publish_rate: 1.0
+    battery_state_publish_rate: 1.0
+    stop_status_publish_rate: 62.0
+    # Subscription topics
+    hazard_topic: /hazard_detection
+    wheel_vels_topic: /odom
+    lightring_topic: /cmd_lightring
+    # Stop status position difference tolerance
+    linear_velocity_tolerance: 0.01
+    angular_velocity_tolerance: 0.1

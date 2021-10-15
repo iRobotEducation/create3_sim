@@ -61,6 +61,8 @@ def generate_launch_description():
         [pkg_create3_gazebo, 'config', 'ir_intensity_vector_params.yaml'])
     wheel_status_params_yaml_file = PathJoinSubstitution(
         [pkg_create3_gazebo, 'config', 'wheel_status_params.yaml'])
+    mock_params_yaml_file = PathJoinSubstitution(
+        [pkg_create3_gazebo, 'config', 'mock_params.yaml'])
 
     # Launch configurations
     x, y, z = LaunchConfiguration('x'), LaunchConfiguration('y'), LaunchConfiguration('z')
@@ -152,6 +154,16 @@ def generate_launch_description():
         output='screen',
     )
 
+    # Publish wheel status
+    mock_topics_node = Node(
+        package='irobot_create_toolbox',
+        name='mock_publisher_node',
+        executable='mock_publisher_node',
+        parameters=[mock_params_yaml_file,
+                    {'use_sim_time': True}],
+        output='screen',
+    )
+
     # Define LaunchDescription variable
     ld = LaunchDescription(ARGUMENTS)
     # Include robot description
@@ -166,5 +178,6 @@ def generate_launch_description():
     ld.add_action(ir_intensity_vector_node)
     ld.add_action(motion_control_node)
     ld.add_action(wheel_status_node)
+    ld.add_action(mock_topics_node)
 
     return ld
