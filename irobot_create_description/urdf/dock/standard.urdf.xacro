@@ -39,7 +39,7 @@
   <xacro:ir_emitter name="${green_buoy_name}"
                     parent="${link_name}"
                     aperture="${buoy_lateral_aperture}"
-                    range="1.524"
+                    range="1.0"
                     visualize="true">
     <origin xyz="${buoy_x} 0 ${buoy_z}"
             rpy="0 0 ${- buoy_lateral_angle_yaw}"/>
@@ -49,7 +49,7 @@
   <xacro:ir_emitter name="${red_buoy_name}"
                     parent="${link_name}"
                     aperture="${buoy_lateral_aperture}"
-                    range="1.524"
+                    range="1.0"
                     visualize="true">
     <origin xyz="${buoy_x} 0 ${buoy_z}"
             rpy="0 0 ${buoy_lateral_angle_yaw}"/>
@@ -59,7 +59,7 @@
   <xacro:ir_emitter name="${yellow_buoy_name}"
                     parent="${link_name}"
                     aperture="${10*deg2rad}"
-                    range="1.2192"
+                    range="1.0"
                     visualize="true">
     <origin xyz="${buoy_x} 0 ${buoy_z}"/>
   </xacro:ir_emitter>
