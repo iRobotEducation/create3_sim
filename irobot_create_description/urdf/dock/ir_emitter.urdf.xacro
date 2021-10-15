@@ -1,9 +1,10 @@
 <?xml version="1.0"?>
 <robot xmlns:xacro="http://ros.org/wiki/xacro">
   <xacro:macro name="ir_emitter" params="name parent:=base_link *origin
-                                         range code aperture
-                                         update_rate:=20 broadcast_rate:=64
-                                         ros_topic:=ir_emitter min_range:=0.50
+                                         range
+                                         aperture
+                                         update_rate:=1.0
+                                         min_range:=${7*cm2m}
                                          visualize:=false" >
 
     <!-- Physical link properties -->
@@ -19,55 +20,38 @@
     </joint>
 
     <link name="${name}_link">
-      <xacro:if value="${visualize}">
-        <visual>
-          <geometry>
-            <box size="${x} ${y} ${z}" />
-          </geometry>
-        </visual>
-      </xacro:if>
       <xacro:inertial_cuboid mass="${mass}" x="${x}" y="${y}" z="${z}" />
     </link>
 
-    <gazebo reference="${name}_link">
-      <preserveFixedJoint>true</preserveFixedJoint>
-      <sensor type="ray" name="${name}">
-        <always_on>true</always_on>
-        <update_rate>${update_rate}</update_rate>
-        <visualize>${visualize}</visualize>
-        <ray>
-          <scan>
-            <horizontal>
-              <samples>50</samples>
-              <resolution>1</resolution>
-              <min_angle>-${aperture/2}</min_angle>
-              <max_angle>${aperture/2}</max_angle>
-              </horizontal>
-          </scan>
-            <range>
-            <min>${min_range}</min>
-            <max>${range}</max>
-            <resolution>0.01</resolution>
-          </range>
-        </ray>
-      </sensor>
-      <material>Gazebo/Red</material>
-      <static>true</static>
-    </gazebo>
+    <!-- This ray is not attached to any plugin, it is only used for aesthetic and debugging purposes
+    only when the visualize flag is set. No need for high update rates. -->
+    <xacro:if value="${visualize}">
+      <gazebo reference="${name}_link">
+        <sensor type="ray" name="${name}">
+          <always_on>true</always_on>
+          <update_rate>${update_rate}</update_rate>
+          <visualize>${visualize}</visualize>
+          <ray>
+            <scan>
+              <horizontal>
+                <samples>50</samples>
+                <resolution>1</resolution>
+                <min_angle>-${aperture/2}</min_angle>
+                <max_angle>${aperture/2}</max_angle>
+                </horizontal>
+            </scan>
+              <range>
+              <min>${min_range}</min>
+              <max>${range}</max>
+              <resolution>0.01</resolution>
+            </range>
+          </ray>
+        </sensor>
+      </gazebo>
+    </xacro:if>
 
-    <gazebo>
-      <static>true</static>
-      <!-- MOVE TO SENSOR PLUGIN -->
-      <!-- <plugin name="${name}_ir_emitter" filename="libgazebo_ros_irobot_ir_emitter.so">
-        <link>${name}_link</link>
-        <topicName>${ros_topic}</topicName>
-        <emitterName>${name}</emitterName>
-        <emitterCode>${code}</emitterCode>
-        <rayAperture>${aperture}</rayAperture>
-        <rayRange>${range}</rayRange>
-        <updateRate>${update_rate}</updateRate>
-        <broadcastRate>${broadcast_rate}</broadcastRate>
-      </plugin> -->
+    <gazebo reference="${name}_joint" >
+      <preserveFixedJoint>true</preserveFixedJoint>
     </gazebo>
 
   </xacro:macro>

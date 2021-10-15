@@ -7,31 +7,33 @@
   <xacro:include filename="$(find irobot_create_description)/urdf/sensors/cliff_sensor.urdf.xacro"/>
   <xacro:include filename="$(find irobot_create_description)/urdf/sensors/imu.urdf.xacro" />
   <xacro:include filename="$(find irobot_create_description)/urdf/sensors/ir_intensity.urdf.xacro" />
+  <xacro:include filename="$(find irobot_create_description)/urdf/sensors/ir_opcode_receivers.urdf.xacro" />
   <xacro:include filename="$(find irobot_create_description)/urdf/sensors/optical_mouse.urdf.xacro"/>
   <xacro:include filename="$(find irobot_create_description)/urdf/wheel_with_wheeldrop.urdf.xacro" />
 
   <!-- MECHANICAL PROPERTIES -->
-  <xacro:property name="body_z_offset"           value="${4.1*cm2m}" />
+  <xacro:property name="body_z_offset"           value="${-2.5*cm2m}" />
   <xacro:property name="body_collision_z_offset" value="${1*cm2m}" />
   <xacro:property name="body_mass"               value="2.300" />
   <xacro:property name="body_radius"             value="${16.4*cm2m}" />
   <xacro:property name="body_length"             value="${6*cm2m}" />
 
   <xacro:property name="bumper_mass"             value="0.1" />
-  <xacro:property name="bumper_offset_z"         value="${4.1*cm2m}" />
+  <xacro:property name="bumper_offset_z"         value="${-2.5*cm2m}" />
   <xacro:property name="bumber_inertial_x"       value="${8*cm2m}" />
   <xacro:property name="bumper_inertial_z"       value="${2*cm2m}"/>
 
-  <xacro:property name="wheel_height"            value="${3.85*cm2m}" />
+  <xacro:property name="wheel_height"            value="${-2.75*cm2m}" />
   <xacro:property name="distance_between_wheels" value="${23.3*cm2m}" />
 
   <xacro:property name="caster_position_x"       value="${12.5*cm2m}" />
-  <xacro:property name="caster_position_z"       value="${1.2*cm2m}" />
+  <xacro:property name="caster_position_z"       value="${-5.55*cm2m}" />
 
-  <xacro:property name="wheel_drop_offset_z"     value="${3.1*mm2m}"/>
+  <xacro:property name="wheel_drop_offset_z"     value="${3.5*mm2m}"/>
   <xacro:property name="wheel_drop_z"            value="${wheel_height + wheel_drop_offset_z}"/>
 
   <!-- Create 3 base definition-->
+  <origin xyz="0 0 0.064171"/>
   <link name="base_link">
     <visual>
       <origin xyz="0 0 ${body_z_offset}" rpy="0 0 ${pi/2}"/>
@@ -178,5 +180,13 @@
       name="button_power">
       <origin xyz="0.06 0 0.08" rpy="0 ${-pi/2} 0"/>
   </xacro:button>
+
+  <!-- Omni IR receiver (sensor 0) parameters and Front-facing IR receiver (sensor 1) parameters -->
+  <xacro:property name="ir_omni_fov_rad" value="${2*pi}"/>
+  <xacro:property name="ir_front_facing_fov_rad" value="${pi/2}"/>
+  <xacro:ir_opcode_receivers sensor_0_range="1" sensor_0_fov="${ir_omni_fov_rad}"
+    sensor_1_range="5" sensor_1_fov="${ir_front_facing_fov_rad}" visualize="true" >
+    <origin xyz="0.153 0 0.035"/>
+  </xacro:ir_opcode_receivers>
 
 </robot>

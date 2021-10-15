@@ -14,11 +14,11 @@
 //
 // @author Alberto Soragna (asoragna@irobot.com)
 
+#include "irobot_create_toolbox/motion_control_node.hpp"
+
 #include <memory>
 #include <string>
 #include <vector>
-
-#include "irobot_create_toolbox/motion_control_node.hpp"
 
 namespace irobot_create_toolbox
 {
@@ -31,7 +31,7 @@ MotionControlNode::MotionControlNode()
   this->declare_reflex_parameters();
 
   // Register a callback to handle parameter changes
-  m_params_callback_handle = this->add_on_set_parameters_callback(
+  params_callback_handle_ = this->add_on_set_parameters_callback(
     std::bind(&MotionControlNode::set_parameters_callback, this, _1));
 }
 

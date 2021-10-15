@@ -3,12 +3,12 @@
   <xacro:include filename="$(find irobot_create_description)/urdf/common_properties.urdf.xacro"/>
   <xacro:include filename="$(find irobot_create_description)/urdf/dock/ir_emitter.urdf.xacro"/>
 
-  <xacro:property name="z_offset_mm" value="4.6"/>
+  <xacro:property name="z_offset"  value="${4.6*mm2m}"/>
   <xacro:property name="link_name" value="std_dock_link"/>
 
   <link name="${link_name}">
     <visual>
-      <origin xyz="0 0 ${z_offset_mm*mm2m}"/>
+      <origin xyz="0 0 ${z_offset}"/>
       <geometry>
         <mesh filename="file://$(find irobot_create_description)/meshes/dock/visual.dae"/>
       </geometry>
@@ -20,19 +20,12 @@
         <box size="0.04 0.13 0.1"/>
       </geometry>
     </collision>
+    <xacro:inertial_dummy />
   </link>
 
-  <gazebo reference="${link_name}">
-    <mu1>1.0</mu1>
-    <mu2>1.0</mu2>
-    <kp>1000000.0</kp>
-    <kd>1.0</kd>
-  </gazebo>
-
   <!-- Parameters for IR emitters -->
-  <xacro:property name="buoy_x" value="-0.037"/>
-  <xacro:property name="buoy_y" value="0.005"/>
-  <xacro:property name="buoy_z" value="${0.065 - (z_offset_mm*mm2m)}"/>
+  <xacro:property name="buoy_x" value="${-6*cm2m}"/>
+  <xacro:property name="buoy_z" value="${0.065 - z_offset}"/>
 
   <xacro:property name="halo_name"        value="halo"/>
   <xacro:property name="green_buoy_name"  value="green_buoy"/>
@@ -45,51 +38,42 @@
   <!-- Green IR emitter -->
   <xacro:ir_emitter name="${green_buoy_name}"
                     parent="${link_name}"
-                    code="164"
                     aperture="${buoy_lateral_aperture}"
-                    range="1.524">
-    <origin xyz="${buoy_x} ${- buoy_y} ${buoy_z}"
+                    range="1.524"
+                    visualize="true">
+    <origin xyz="${buoy_x} 0 ${buoy_z}"
             rpy="0 0 ${- buoy_lateral_angle_yaw}"/>
   </xacro:ir_emitter>
 
   <!-- Red IR emitter -->
   <xacro:ir_emitter name="${red_buoy_name}"
                     parent="${link_name}"
-                    code="168"
                     aperture="${buoy_lateral_aperture}"
-                    range="1.524">
-    <origin xyz="${buoy_x} ${buoy_y} ${buoy_z}"
+                    range="1.524"
+                    visualize="true">
+    <origin xyz="${buoy_x} 0 ${buoy_z}"
             rpy="0 0 ${buoy_lateral_angle_yaw}"/>
   </xacro:ir_emitter>
 
   <!-- Yellow IR emitter -->
   <xacro:ir_emitter name="${yellow_buoy_name}"
                     parent="${link_name}"
-                    code="172"
                     aperture="${10*deg2rad}"
-                    range="1.2192">
+                    range="1.2192"
+                    visualize="true">
     <origin xyz="${buoy_x} 0 ${buoy_z}"/>
   </xacro:ir_emitter>
 
   <!-- Halo IR emitter -->
   <xacro:ir_emitter name="${halo_name}"
                     parent="${link_name}"
-                    code="161"
                     aperture="360"
-                    range="0.6096">
-    <origin xyz="-0.052 0 ${0.095 - (z_offset_mm*mm2m)}"/>
+                    range="0.6096"
+                    visualize="true">
+    <origin xyz="${buoy_x} 0 ${0.095 - z_offset}"/>
   </xacro:ir_emitter>
 
-  <xacro:property name="real_behavior" value="$(arg real_behavior)"/>
   <gazebo>
-      <static>true</static>
-      <!-- <plugin name="gazebo_ros_dock_manager" filename="libgazebo_ros_irobot_dock_manager.so">
-        <halo>${halo_name}</halo>
-        <greenBuoy>${green_buoy_name}</greenBuoy>
-        <redBuoy>${red_buoy_name}</redBuoy>
-        <yellowBuoy>${yellow_buoy_name}</yellowBuoy>
-        <realBehavior>${real_behavior}</realBehavior>
-      </plugin> -->
-    </gazebo>
-
+    <static>true</static>
+  </gazebo>
 </robot>

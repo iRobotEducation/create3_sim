@@ -39,15 +39,15 @@ private:
     const std::vector<rclcpp::Parameter> & parameters);
 
   /// \brief Name of parameter for enabling/disabling all reflexes
-  const std::string reflex_enabled_param_name_ {"reflexes_enabled"};
+  const std::string reflex_enabled_param_name_{"reflexes_enabled"};
   /// \brief Vector of reflex names (these corresponds to exposed parameters)
-  const std::vector<std::string> reflex_names_ {
+  const std::vector<std::string> reflex_names_{
     "REFLEX_BUMP", "REFLEX_CLIFF", "REFLEX_DOCK_AVOID",
     "REFLEX_GYRO_CAL", "REFLEX_PANIC", "REFLEX_PROXIMITY_SLOWDOWN",
     "REFLEX_STUCK", "REFLEX_VIRTUAL_WALL", "REFLEX_WHEEL_DROP"};
   /// \brief Storage for custom parameter validation callbacks
-  rclcpp::node_interfaces::OnSetParametersCallbackHandle::SharedPtr
-    m_params_callback_handle {nullptr};
+  rclcpp::node_interfaces::OnSetParametersCallbackHandle::SharedPtr params_callback_handle_{
+    nullptr};
 };
 
 }  // namespace irobot_create_toolbox
