@@ -34,6 +34,9 @@ private:
   /// \brief Helper function to declare ROS 2 reflex parameters
   void declare_reflex_parameters();
 
+  /// \brief Helper function to declare ROS 2 safety parameters
+  void declare_safety_parameters();
+
   /// \brief Helper function to validate changes to parameters
   rcl_interfaces::msg::SetParametersResult set_parameters_callback(
     const std::vector<rclcpp::Parameter> & parameters);
