@@ -3,8 +3,8 @@
   <xacro:include filename="$(find irobot_create_description)/urdf/common_properties.urdf.xacro"/>
   <xacro:include filename="$(find irobot_create_description)/urdf/dock/ir_emitter.urdf.xacro"/>
 
-  <xacro:property name="z_offset" value="${4.6*mm2m}"/>
-  <xacro:property name="link_name"   value="std_dock_link"/>
+  <xacro:property name="z_offset"  value="${4.6*mm2m}"/>
+  <xacro:property name="link_name" value="std_dock_link"/>
 
   <link name="${link_name}">
     <visual>

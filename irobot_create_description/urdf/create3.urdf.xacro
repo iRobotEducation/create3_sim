@@ -27,12 +27,13 @@
   <xacro:property name="distance_between_wheels" value="${23.3*cm2m}" />
 
   <xacro:property name="caster_position_x"       value="${12.5*cm2m}" />
-  <xacro:property name="caster_position_z"       value="${-5.4*cm2m}" />
+  <xacro:property name="caster_position_z"       value="${-5.55*cm2m}" />
 
   <xacro:property name="wheel_drop_offset_z"     value="${3.5*mm2m}"/>
   <xacro:property name="wheel_drop_z"            value="${wheel_height + wheel_drop_offset_z}"/>
 
   <!-- Create 3 base definition-->
+  <origin xyz="0 0 0.064171"/>
   <link name="base_link">
     <visual>
       <origin xyz="0 0 ${body_z_offset}" rpy="0 0 ${pi/2}"/>
@@ -181,8 +182,8 @@
   </xacro:button>
 
   <!-- Omni IR receiver (sensor 0) parameters and Front-facing IR receiver (sensor 1) parameters -->
-  <xacro:property name="ir_omni_fov_rad" value="${360*deg2rad}"/>
-  <xacro:property name="ir_front_facing_fov_rad" value="${90*deg2rad}"/>
+  <xacro:property name="ir_omni_fov_rad" value="${2*pi}"/>
+  <xacro:property name="ir_front_facing_fov_rad" value="${pi/2}"/>
   <xacro:ir_opcode_receivers sensor_0_range="1" sensor_0_fov="${ir_omni_fov_rad}"
     sensor_1_range="5" sensor_1_fov="${ir_front_facing_fov_rad}" visualize="true" >
     <origin xyz="0.153 0 0.035"/>

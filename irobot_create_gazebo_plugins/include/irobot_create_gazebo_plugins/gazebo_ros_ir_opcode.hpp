@@ -41,14 +41,14 @@ public:
   virtual ~GazeboRosIrOpcode();
 
   /// Gazebo calls this when the plugin is loaded.
-  /// @param[in] model Pointer to parent model. Other plugin types will expose different entities,
+  /// @param model Pointer to parent model. Other plugin types will expose different entities,
   /// such as `gazebo::sensors::SensorPtr`, `gazebo::physics::WorldPtr`,
   /// `gazebo::rendering::VisualPtr`, etc.
-  /// @param[in] sdf SDF element containing user-defined parameters.
+  /// @param sdf SDF element containing user-defined parameters.
   void Load(gazebo::physics::ModelPtr model, sdf::ElementPtr sdf) override;
 
   /// Callback to be called at every simulation iteration.
-  /// @param[in] info Object containing the world name, sim time and the real time of simulation.
+  /// @param info Object containing the world name, sim time and the real time of simulation.
   void OnUpdate(const gazebo::common::UpdateInfo & info);
 
 private:
@@ -95,6 +95,8 @@ private:
   // Check dock visibility and return the associated opcode
   int CheckBuoysDetection(const double fov, const double range);
   int CheckForceFieldDetection(const double fov, const double range);
+
+  // Publish the detected opcodes for Sensor 0 and Sensor 1
   void PublishSensors(const std::array<int, 2> detected_opcodes);
 };
 }  // namespace irobot_create_gazebo_plugins
