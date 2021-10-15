@@ -13,7 +13,7 @@
 
   <!-- MECHANICAL PROPERTIES -->
   <xacro:property name="body_z_offset"           value="${-2.5*cm2m}" />
-  <xacro:property name="body_collision_z_offset" value="${-1*cm2m}" />
+  <xacro:property name="body_collision_z_offset" value="${1*cm2m}" />
   <xacro:property name="body_mass"               value="2.300" />
   <xacro:property name="body_radius"             value="${16.4*cm2m}" />
   <xacro:property name="body_length"             value="${6*cm2m}" />
