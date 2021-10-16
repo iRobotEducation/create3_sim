@@ -13,16 +13,20 @@ endif()
 find_package(ament_cmake REQUIRED)
 find_package(ament_cmake_python REQUIRED)
 find_package(control_msgs REQUIRED)
+find_package(geometry_msgs REQUIRED)
 find_package(irobot_create_msgs REQUIRED)
 find_package(rclcpp REQUIRED)
+find_package(rclcpp_action REQUIRED)
 find_package(rclpy REQUIRED)
 
 #### Libraries
 
 set(dependencies
   control_msgs
+  geometry_msgs
   irobot_create_msgs
   rclcpp
+  rclcpp_action
 )
 
 add_library(hazard_publisher_lib SHARED)
@@ -52,6 +56,7 @@ target_sources(
   motion_control_lib
   PRIVATE
     src/motion_control_node.cpp
+    src/docking_behavior.cpp
 )
 target_include_directories(motion_control_lib PUBLIC include)
 ament_target_dependencies(motion_control_lib

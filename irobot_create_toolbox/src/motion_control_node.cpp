@@ -15,26 +15,58 @@
 // @author Alberto Soragna (asoragna@irobot.com)
 
 #include "irobot_create_toolbox/motion_control_node.hpp"
+#include <irobot_create_toolbox/behaviors_scheduler.hpp>
+#include <irobot_create_toolbox/docking_behavior.hpp>
 
 #include <memory>
 #include <string>
+#include <utility>
 #include <vector>
 
 namespace irobot_create_toolbox
 {
 using namespace std::placeholders;
+using namespace std::chrono_literals;
 
 MotionControlNode::MotionControlNode()
-: rclcpp::Node("motion_control")
+: rclcpp::Node("motion_control"),
+  m_wheels_stop_threshold(1s)
 {
   // Declare ROS 2 parameters for controlling robot reflexes.
   this->declare_reflex_parameters();
   // Declare ROS 2 parameters for robot safety.
   this->declare_safety_parameters();
 
+  // Create behaviors scheduler
+  m_scheduler = std::make_shared<BehaviorsScheduler>();
+  // Create Docking Behavior manager
+  m_docking_behavior = std::make_shared<DockingBehavior>(
+    this->get_node_base_interface(),
+    this->get_node_clock_interface(),
+    this->get_node_logging_interface(),
+    this->get_node_topics_interface(),
+    this->get_node_waitables_interface(),
+    m_scheduler);
+  // Create subscription to let other applications drive the robot
+  m_teleop_subscription = this->create_subscription<geometry_msgs::msg::Twist>(
+    "cmd_vel", rclcpp::SensorDataQoS(),
+    std::bind(&MotionControlNode::commanded_velocity_callback, this, _1));
+
+  m_cmd_vel_out_pub = this->create_publisher<geometry_msgs::msg::Twist>(
+    "diffdrive_controller/cmd_vel_unstamped", rclcpp::SensorDataQoS());
+
   // Register a callback to handle parameter changes
   params_callback_handle_ = this->add_on_set_parameters_callback(
     std::bind(&MotionControlNode::set_parameters_callback, this, _1));
+
+  m_last_teleop_ts = this->now();
+  // Create timer to periodically execute behaviors and control the robot
+  constexpr auto period = 25ms;
+  m_timer = rclcpp::create_timer(
+    this,
+    this->get_clock(),
+    rclcpp::Duration(period),
+    std::bind(&MotionControlNode::control_robot, this));
 }
 
 void MotionControlNode::declare_reflex_parameters()
@@ -141,6 +173,70 @@ rcl_interfaces::msg::SetParametersResult MotionControlNode::set_parameters_callb
   }
 
   return result;
+}
+
+void MotionControlNode::control_robot()
+{
+  // Handle behaviors
+  BehaviorsScheduler::optional_output_t command;
+  if (m_scheduler->has_behavior()) {
+    command = m_scheduler->run_behavior();
+    // Reset last teleoperation command if we are executing a behavior
+    this->reset_last_teleop_cmd();
+  } else {
+    // If we don't have any behavior, let's drive the robot using teleoperation command
+    // After m_wheels_stop_threshold has passed without receiving new velocity commands
+    // we stop the wheels.
+    rclcpp::Duration time_diff(rclcpp::Duration::max());
+    {
+      const std::lock_guard<std::mutex> lock(m_mutex);
+      time_diff = (this->now() - m_last_teleop_ts);
+    }
+    if (time_diff > m_wheels_stop_threshold) {
+      this->reset_last_teleop_cmd();
+    } else {
+      const std::lock_guard<std::mutex> lock(m_mutex);
+      command = m_last_teleop_cmd;
+    }
+  }
+
+  // Add reflex manager here
+
+  // Create a null command if we don't have anything.
+  // We also disable reflexes because the robot is in an idle state.
+  if (!command) {
+    command = geometry_msgs::msg::Twist();
+  }
+  auto cmd_out_msg = std::make_unique<geometry_msgs::msg::Twist>();
+  *cmd_out_msg = *command;
+  m_cmd_vel_out_pub->publish(std::move(cmd_out_msg));
+}
+
+void MotionControlNode::commanded_velocity_callback(geometry_msgs::msg::Twist::ConstSharedPtr msg)
+{
+  if (m_scheduler->has_behavior()) {
+    RCLCPP_WARN(
+      this->get_logger(),
+      "Ignoring velocities commanded while an autonomous behavior is running!");
+    return;
+  }
+
+  const std::lock_guard<std::mutex> lock(m_mutex);
+
+  m_last_teleop_cmd = *msg;
+}
+
+void MotionControlNode::reset_last_teleop_cmd()
+{
+  const std::lock_guard<std::mutex> lock(m_mutex);
+
+  m_last_teleop_cmd.linear.x = 0;
+  m_last_teleop_cmd.linear.y = 0;
+  m_last_teleop_cmd.linear.z = 0;
+  m_last_teleop_cmd.angular.x = 0;
+  m_last_teleop_cmd.angular.y = 0;
+  m_last_teleop_cmd.angular.z = 0;
+  m_last_teleop_ts = this->now();
 }
 
 }  // namespace irobot_create_toolbox
