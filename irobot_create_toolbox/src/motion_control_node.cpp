@@ -74,23 +74,31 @@ void MotionControlNode::declare_reflex_parameters()
 
 void MotionControlNode::declare_safety_parameters()
 {
-    rcl_interfaces::msg::ParameterDescriptor descriptor;
-    descriptor.read_only = false;
-    descriptor.description = "Mode to override safety options {\"none\"(default), \"backup_only\"(disable backup limits, no cliff safety driving backwards), \"full\"(disables cliffs completely and allows for higher max drive speed (0.46m/s vs 0.306m/s in other modes))}";
-    auto val = this->declare_parameter<std::string>(safety_override_param_name_, "backup_only", descriptor);
-    if (val != "backup_only") {
-        RCLCPP_ERROR(
-                this->get_logger(), "Trying to set %s. This is not supported yet on sim.",safety_override_param_name_);
-        throw std::runtime_error("User tried to set "+safety_override_param_name_+". This are not supported yet.");
-    }
+  rcl_interfaces::msg::ParameterDescriptor descriptor;
+  descriptor.read_only = false;
+  descriptor.description =
+    "Mode to override safety options {\"none\"(default), \"backup_only\"(disable backup limits, no cliff safety driving backwards), \"full\"(disables cliffs completely and allows for higher max drive speed (0.46m/s vs 0.306m/s in other modes))}";
+  auto val = this->declare_parameter<std::string>(
+    safety_override_param_name_, "backup_only",
+    descriptor);
+  if (val != "backup_only") {
+    RCLCPP_ERROR(
+      this->get_logger(), "Trying to set %s. This is not supported yet on sim.",
+      safety_override_param_name_);
+    throw std::runtime_error(
+            "User tried to set " + safety_override_param_name_ + ". This are not supported yet.");
+  }
 
-    descriptor.read_only = false;
-    descriptor.description = "Maximum speed of the system in m/s, updated by robot based on safety_override mode.  Cannot be updated externally.";
-    double default_speed = 0.306;
-    auto speed = this->declare_parameter<double>(max_speed_param_name_, default_speed, descriptor);
-    if (speed != default_speed) {
-        RCLCPP_WARN(this->get_logger(), "Ignoring user set max speed as parameter is for reporting purposes only.  Max speed is only changed by updating the \'%s\' parameter",safety_override_param_name_);
-    }
+  descriptor.read_only = false;
+  descriptor.description =
+    "Maximum speed of the system in m/s, updated by robot based on safety_override mode.  Cannot be updated externally.";
+  double default_speed = 0.306;
+  auto speed = this->declare_parameter<double>(max_speed_param_name_, default_speed, descriptor);
+  if (speed != default_speed) {
+    RCLCPP_WARN(
+      this->get_logger(), "Ignoring user set max speed as parameter is for reporting purposes only.  Max speed is only changed by updating the \'%s\' parameter",
+      safety_override_param_name_);
+  }
 }
 
 rcl_interfaces::msg::SetParametersResult MotionControlNode::set_parameters_callback(
@@ -103,17 +111,22 @@ rcl_interfaces::msg::SetParametersResult MotionControlNode::set_parameters_callb
   result.successful = false;
 
   for (const rclcpp::Parameter & parameter : parameters) {
-      if (parameter.get_name() == safety_override_param_name_) {
-          RCLCPP_WARN(
-                  this->get_logger(), "Can't modify %s.  Not implemented in sim yet", parameter.get_name().c_str());
-          result.reason = "Can't modify parameter \'"+parameter.get_name()+"\' not implemented in sim yet.";
-      } else if (parameter.get_name() == max_speed_param_name_) {
-          result.reason = "parameter \'"+parameter.get_name()+"\' cannot be set externally. Only updated from change in \'"+safety_override_param_name_+"\' parameter";
-      } else {
-          RCLCPP_WARN(
-                  this->get_logger(), "Can't modify reflex parameter %s.", parameter.get_name().c_str());
-          result.reason = "reflexes can't be enabled yet.";
-      }
+    if (parameter.get_name() == safety_override_param_name_) {
+      RCLCPP_WARN(
+        this->get_logger(), "Can't modify %s.  Not implemented in sim yet",
+        parameter.get_name().c_str());
+      result.reason = "Can't modify parameter \'" + parameter.get_name() +
+        "\' not implemented in sim yet.";
+    } else if (parameter.get_name() == max_speed_param_name_) {
+      result.reason = "parameter \'" + parameter.get_name() +
+        "\' cannot be set externally. Only updated from change in \'" +
+        safety_override_param_name_ + "\' parameter";
+    } else {
+      RCLCPP_WARN(
+        this->get_logger(), "Can't modify reflex parameter %s.",
+        parameter.get_name().c_str());
+      result.reason = "reflexes can't be enabled yet.";
+    }
   }
 
   return result;
