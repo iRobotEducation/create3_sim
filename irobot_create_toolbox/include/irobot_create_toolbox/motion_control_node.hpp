@@ -48,9 +48,11 @@ private:
     "REFLEX_BUMP", "REFLEX_CLIFF", "REFLEX_DOCK_AVOID",
     "REFLEX_GYRO_CAL", "REFLEX_PANIC", "REFLEX_PROXIMITY_SLOWDOWN",
     "REFLEX_STUCK", "REFLEX_VIRTUAL_WALL", "REFLEX_WHEEL_DROP"};
-  /// \brief Name of parameter for setting system safety mode, which dictates cliff safety and max speed
+  /// \brief Name of parameter for setting system safety mode,
+  //     which dictates cliff safety and max speed
   const std::string safety_override_param_name_{"safety_override"};
-  /// \brief Name of parameter for reporting system's max speed, this will be changed by system based on safety_override setting
+  /// \brief Name of parameter for reporting system's max speed,
+  //     this will be changed by system based on safety_override setting
   const std::string max_speed_param_name_{"max_speed"};
   /// \brief Storage for custom parameter validation callbacks
   rclcpp::node_interfaces::OnSetParametersCallbackHandle::SharedPtr params_callback_handle_{

@@ -77,7 +77,10 @@ void MotionControlNode::declare_safety_parameters()
   rcl_interfaces::msg::ParameterDescriptor descriptor;
   descriptor.read_only = false;
   descriptor.description =
-    "Mode to override safety options {\"none\"(default), \"backup_only\"(disable backup limits, no cliff safety driving backwards), \"full\"(disables cliffs completely and allows for higher max drive speed (0.46m/s vs 0.306m/s in other modes))}";
+    "Mode to override safety options {\"none\"(default), " +
+    "\"backup_only\"(disable backup limits, no cliff safety driving backwards), " +
+    "\"full\"(disables cliffs completely and allows for higher max drive speed " +
+    "(0.46m/s vs 0.306m/s in other modes))}";
   auto val = this->declare_parameter<std::string>(
     safety_override_param_name_, "backup_only",
     descriptor);
@@ -91,12 +94,15 @@ void MotionControlNode::declare_safety_parameters()
 
   descriptor.read_only = false;
   descriptor.description =
-    "Maximum speed of the system in m/s, updated by robot based on safety_override mode.  Cannot be updated externally.";
+    "Maximum speed of the system in m/s, updated by robot based on safety_override mode. " +
+    "Cannot be updated externally.";
   double default_speed = 0.306;
   auto speed = this->declare_parameter<double>(max_speed_param_name_, default_speed, descriptor);
   if (speed != default_speed) {
     RCLCPP_WARN(
-      this->get_logger(), "Ignoring user set max speed as parameter is for reporting purposes only.  Max speed is only changed by updating the \'%s\' parameter",
+      this->get_logger(),
+      "Ignoring user set max speed as parameter is for reporting purposes only. " +
+      "Max speed is only changed by updating the \'%s\' parameter",
       safety_override_param_name_);
   }
 }
