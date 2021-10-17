@@ -92,7 +92,7 @@ rclcpp_action::GoalResponse DockingBehavior::handle_dock_servo_goal(
     RCLCPP_WARN(m_logger, "Robot already docked, reject");
     return rclcpp_action::GoalResponse::REJECT;
   }
-  if (!m_sees_docked) {
+  if (!m_sees_dock) {
     RCLCPP_WARN(m_logger, "Robot doesn't see dock, reject");
     return rclcpp_action::GoalResponse::REJECT;
   }
