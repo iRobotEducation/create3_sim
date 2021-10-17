@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include "irobot_create_toolbox/docking_behavior.hpp"
+#include <irobot_create_toolbox/motion_control/docking_behavior.hpp>
 
 #include <memory>
 
@@ -38,6 +38,12 @@ DockingBehavior::DockingBehavior(
     rclcpp::SensorDataQoS(),
     std::bind(&DockingBehavior::dock_callback, this, _1));
 
+  m_odom_sub = rclcpp::create_subscription<nav_msgs::msg::Odometry>(
+    node_topics_interface,
+    "odom",
+    rclcpp::SensorDataQoS(),
+    std::bind(&DockingBehavior::odom_callback, this, _1));
+
   m_docking_action_server = rclcpp_action::create_server<irobot_create_msgs::action::DockServo>(
     node_base_interface,
     node_clock_interface,
@@ -57,6 +63,11 @@ DockingBehavior::DockingBehavior(
     std::bind(&DockingBehavior::handle_undock_goal, this, _1, _2),
     std::bind(&DockingBehavior::handle_undock_cancel, this, _1),
     std::bind(&DockingBehavior::handle_undock_accepted, this, _1));
+  // Need to get real dock pose into here, math expects orientation to face towards docked robot
+  m_dock_pose.setIdentity();
+  tf2::Quaternion dock_rotation;
+  dock_rotation.setRPY(0, 0, M_PI);
+  m_dock_pose.setRotation(dock_rotation);
 }
 
 bool DockingBehavior::docking_behavior_is_done()
@@ -100,6 +111,34 @@ void DockingBehavior::handle_dock_servo_accepted(
   // Create new Docking state machine
   m_running_dock_action = true;
 
+  // Generate point offset from dock facing dock then point at dock
+  SimpleGoalController::CmdPath dock_path;
+  tf2::Transform odom_pose;
+  {
+    const std::lock_guard<std::mutex> lock(m_odom_mutex);
+    odom_pose = m_last_odom_pose;
+  }
+  // If robot is farther than 0.5 from dock, put offset point 0.5 in front of dock,
+  // otherwise put in line with robot's current distance away from the dock
+  const tf2::Vector3 & odom_position = odom_pose.getOrigin();
+  const tf2::Vector3 & dock_position = m_dock_pose.getOrigin();
+  double dist_offset = std::hypot(
+    dock_position.getX() - odom_position.getX(),
+    dock_position.getY() - odom_position.getY());
+  if (dist_offset > 0.5) {
+    dist_offset = 0.5;
+  }
+  tf2::Transform dock_offset;
+  tf2::Quaternion dock_rotation;
+  dock_rotation.setRPY(0, 0, M_PI);
+  dock_offset.setOrigin(tf2::Vector3(dist_offset, 0, 0));
+  dock_offset.setRotation(dock_rotation);
+  dock_path.emplace_back(m_dock_pose * dock_offset, 0.05, false);
+  tf2::Transform face_dock;
+  face_dock.setRotation(dock_rotation);
+  dock_path.emplace_back(m_dock_pose * face_dock, 0.01, false);
+  m_goal_controller.initialize_goal(dock_path, M_PI / 4.0, 0.15);
+  // Setup behavior to override other commanded motion
   BehaviorsScheduler::BehaviorsData data;
   data.run_func = std::bind(&DockingBehavior::execute_dock_servo, this, goal_handle);
   data.is_done_func = std::bind(&DockingBehavior::docking_behavior_is_done, this);
@@ -119,25 +158,43 @@ BehaviorsScheduler::optional_output_t DockingBehavior::execute_dock_servo(
   const std::shared_ptr<
     rclcpp_action::ServerGoalHandle<irobot_create_msgs::action::DockServo>> goal_handle)
 {
+  BehaviorsScheduler::optional_output_t servo_cmd;
   // Handle if goal is cancelling
   if (goal_handle->is_canceling()) {
     auto result = std::make_shared<irobot_create_msgs::action::DockServo::Result>();
     result->is_docked = m_is_docked;
     goal_handle->canceled(result);
+    m_goal_controller.reset();
     m_running_dock_action = false;
-    return BehaviorsScheduler::optional_output_t();
+    return servo_cmd;
   }
 
-  // XXX Put drive to dock control code here
-
-  // Handle if protocol completed
+  // Handle if reached dock
   if (m_is_docked) {
     auto result = std::make_shared<irobot_create_msgs::action::DockServo::Result>();
     result->is_docked = true;
     RCLCPP_INFO(m_logger, "Dock Servo Goal Succeeded");
     goal_handle->succeed(result);
+    m_goal_controller.reset();
     m_running_dock_action = false;
-    return BehaviorsScheduler::optional_output_t();
+    return servo_cmd;
+  } else {
+    // Get next command
+    tf2::Transform odom_pose;
+    {
+      const std::lock_guard<std::mutex> lock(m_odom_mutex);
+      odom_pose = m_last_odom_pose;
+    }
+    servo_cmd = m_goal_controller.get_velocity_for_position(odom_pose);
+    if (!servo_cmd) {
+      auto result = std::make_shared<irobot_create_msgs::action::DockServo::Result>();
+      result->is_docked = false;
+      RCLCPP_INFO(m_logger, "Dock Servo Goal Aborted");
+      goal_handle->abort(result);
+      m_goal_controller.reset();
+      m_running_dock_action = false;
+      return servo_cmd;
+    }
   }
 
   // Publish feedback
@@ -146,7 +203,7 @@ BehaviorsScheduler::optional_output_t DockingBehavior::execute_dock_servo(
 
   goal_handle->publish_feedback(feedback);
 
-  return BehaviorsScheduler::optional_output_t();
+  return servo_cmd;
 }
 
 rclcpp_action::GoalResponse DockingBehavior::handle_undock_goal(
@@ -185,6 +242,25 @@ void DockingBehavior::handle_undock_accepted(
   // Create new Docking Action
   m_running_dock_action = true;
 
+
+  SimpleGoalController::CmdPath undock_path;
+  // Generate path with point offset from odom, have robot drive backwards to offset then turn 180
+  tf2::Transform odom_pose;
+  {
+    const std::lock_guard<std::mutex> lock(m_odom_mutex);
+    odom_pose = m_last_odom_pose;
+  }
+  double dist_offset = 0.4;
+  tf2::Transform dock_offset;
+  dock_offset.setOrigin(tf2::Vector3(-dist_offset, 0, 0));
+  undock_path.emplace_back(odom_pose * dock_offset, 0.05, true);
+  tf2::Transform face_away_dock;
+  tf2::Quaternion undock_rotation;
+  undock_rotation.setRPY(0, 0, M_PI);
+  face_away_dock.setRotation(undock_rotation);
+  undock_path.emplace_back(undock_path.back().pose * face_away_dock, 0.05, false);
+  m_goal_controller.initialize_goal(undock_path, M_PI / 4.0, 0.15);
+
   BehaviorsScheduler::BehaviorsData data;
   data.run_func = std::bind(&DockingBehavior::execute_undock, this, goal_handle);
   data.is_done_func = std::bind(&DockingBehavior::docking_behavior_is_done, this);
@@ -196,6 +272,7 @@ void DockingBehavior::handle_undock_accepted(
     auto result = std::make_shared<irobot_create_msgs::action::Undock::Result>();
     result->is_docked = m_is_docked;
     goal_handle->canceled(result);
+    m_goal_controller.reset();
     m_running_dock_action = false;
   }
 }
@@ -204,32 +281,52 @@ BehaviorsScheduler::optional_output_t DockingBehavior::execute_undock(
   const std::shared_ptr<
     rclcpp_action::ServerGoalHandle<irobot_create_msgs::action::Undock>> goal_handle)
 {
+  BehaviorsScheduler::optional_output_t servo_cmd;
   // Handle if goal is cancelling
   if (goal_handle->is_canceling()) {
     auto result = std::make_shared<irobot_create_msgs::action::Undock::Result>();
     result->is_docked = m_is_docked;
     goal_handle->canceled(result);
+    m_goal_controller.reset();
     m_running_dock_action = false;
     return BehaviorsScheduler::optional_output_t();
   }
+  // Get next command
+  tf2::Transform odom_pose;
+  {
+    const std::lock_guard<std::mutex> lock(m_odom_mutex);
+    odom_pose = m_last_odom_pose;
+  }
+  servo_cmd = m_goal_controller.get_velocity_for_position(odom_pose);
 
-  // XXX put undocking code here
-  if (!m_is_docked /* && finished undocking action*/) {
+  if (!servo_cmd) {
     auto result = std::make_shared<irobot_create_msgs::action::Undock::Result>();
-    result->is_docked = false;
-    RCLCPP_INFO(m_logger, "Undock Goal Succeeded");
-    goal_handle->succeed(result);
+    result->is_docked = m_is_docked;
+    if (!m_is_docked) {
+      RCLCPP_INFO(m_logger, "Undock Goal Succeeded");
+      goal_handle->succeed(result);
+    } else {
+      RCLCPP_INFO(m_logger, "Undock Goal Aborted");
+      goal_handle->abort(result);
+    }
+    m_goal_controller.reset();
     m_running_dock_action = false;
     return BehaviorsScheduler::optional_output_t();
   }
 
-  return BehaviorsScheduler::optional_output_t();
+  return servo_cmd;
 }
 
 void DockingBehavior::dock_callback(irobot_create_msgs::msg::Dock::ConstSharedPtr msg)
 {
   m_is_docked = msg->is_docked;
   m_sees_dock = msg->dock_visible;
+}
+
+void DockingBehavior::odom_callback(nav_msgs::msg::Odometry::ConstSharedPtr msg)
+{
+  const std::lock_guard<std::mutex> lock(m_odom_mutex);
+  tf2::convert(msg->pose.pose, m_last_odom_pose);
 }
 
 }  // namespace irobot_create_toolbox

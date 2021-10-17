@@ -19,7 +19,7 @@
 
 #include <geometry_msgs/msg/twist.hpp>
 #include <irobot_create_toolbox/parameter_helper.hpp>
-#include <irobot_create_toolbox/docking_behavior.hpp>
+#include <irobot_create_toolbox/motion_control/docking_behavior.hpp>
 #include <rclcpp/rclcpp.hpp>
 #include <memory>
 #include <string>

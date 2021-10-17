@@ -12,8 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef IROBOT_CREATE_TOOLBOX__BEHAVIORS_SCHEDULER_HPP_
-#define IROBOT_CREATE_TOOLBOX__BEHAVIORS_SCHEDULER_HPP_
+#ifndef IROBOT_CREATE_TOOLBOX__MOTION_CONTROL__BEHAVIORS_SCHEDULER_HPP_
+#define IROBOT_CREATE_TOOLBOX__MOTION_CONTROL__BEHAVIORS_SCHEDULER_HPP_
 
 #include <boost/optional.hpp>
 #include <geometry_msgs/msg/twist.hpp>
@@ -95,4 +95,4 @@ private:
 };
 
 }  // namespace irobot_create_toolbox
-#endif   // IROBOT_CREATE_TOOLBOX__BEHAVIORS_SCHEDULER_HPP_
+#endif   // IROBOT_CREATE_TOOLBOX__MOTION_CONTROL__BEHAVIORS_SCHEDULER_HPP_

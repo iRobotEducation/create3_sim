@@ -15,8 +15,6 @@
 // @author Alberto Soragna (asoragna@irobot.com)
 
 #include "irobot_create_toolbox/motion_control_node.hpp"
-#include <irobot_create_toolbox/behaviors_scheduler.hpp>
-#include <irobot_create_toolbox/docking_behavior.hpp>
 
 #include <memory>
 #include <string>

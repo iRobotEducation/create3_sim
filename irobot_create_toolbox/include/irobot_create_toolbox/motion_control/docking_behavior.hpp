@@ -12,18 +12,20 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef IROBOT_CREATE_TOOLBOX__DOCKING_BEHAVIOR_HPP_
-#define IROBOT_CREATE_TOOLBOX__DOCKING_BEHAVIOR_HPP_
+#ifndef IROBOT_CREATE_TOOLBOX__MOTION_CONTROL__DOCKING_BEHAVIOR_HPP_
+#define IROBOT_CREATE_TOOLBOX__MOTION_CONTROL__DOCKING_BEHAVIOR_HPP_
 
 #include <stdint.h>
-
 
 #include <irobot_create_msgs/action/dock_servo.hpp>
 #include <irobot_create_msgs/action/undock.hpp>
 #include <irobot_create_msgs/msg/dock.hpp>
-#include <irobot_create_toolbox/behaviors_scheduler.hpp>
+#include <irobot_create_toolbox/motion_control/behaviors_scheduler.hpp>
+#include <irobot_create_toolbox/motion_control/simple_goal_controller.hpp>
+#include <nav_msgs/msg/odometry.hpp>
 #include <rclcpp/rclcpp.hpp>
 #include <rclcpp_action/rclcpp_action.hpp>
+#include <tf2_geometry_msgs/tf2_geometry_msgs.h>
 
 #include <atomic>
 #include <memory>
@@ -51,6 +53,8 @@ private:
   bool docking_behavior_is_done();
 
   void dock_callback(irobot_create_msgs::msg::Dock::ConstSharedPtr msg);
+
+  void odom_callback(nav_msgs::msg::Odometry::ConstSharedPtr msg);
 
   rclcpp_action::GoalResponse handle_dock_servo_goal(
     const rclcpp_action::GoalUUID & uuid,
@@ -88,13 +92,18 @@ private:
   rclcpp_action::Server<irobot_create_msgs::action::Undock>::SharedPtr m_undocking_action_server;
 
   rclcpp::Subscription<irobot_create_msgs::msg::Dock>::SharedPtr m_dock_sub;
+  rclcpp::Subscription<nav_msgs::msg::Odometry>::SharedPtr m_odom_sub;
 
   rclcpp::Logger m_logger;
   std::shared_ptr<BehaviorsScheduler> m_behavior_scheduler;
   std::atomic<bool> m_is_docked {false};
   std::atomic<bool> m_sees_dock {false};
   std::atomic<bool> m_running_dock_action {false};
+  SimpleGoalController m_goal_controller;
+  std::mutex m_odom_mutex;
+  tf2::Transform m_last_odom_pose;
+  tf2::Transform m_dock_pose;
 };
 
 }  // namespace irobot_create_toolbox
-#endif  // IROBOT_CREATE_TOOLBOX__DOCKING_BEHAVIOR_HPP_
+#endif  // IROBOT_CREATE_TOOLBOX__MOTION_CONTROL__DOCKING_BEHAVIOR_HPP_
