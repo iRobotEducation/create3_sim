@@ -153,8 +153,6 @@ public:
             }
             servo_vel->linear.x = translate_velocity;
             if (abs_ang > 0.02) {
-              ang *= -1;
-              bound_rotation(ang);
               servo_vel->angular.z = ang;
             }
           }
@@ -203,9 +201,9 @@ private:
     double abs_rot = std::abs(rotation_velocity);
     if (abs_rot > m_max_rotation) {
       rotation_velocity = std::copysign(m_max_rotation, rotation_velocity);
-    } else if (abs_rot < 0.05 && abs_rot > 0.01) {
-      // min controllable if desire small non zero velocity
-      rotation_velocity = std::copysign(0.05, rotation_velocity);
+    } else if (abs_rot < 0.1 && abs_rot > 0.01) {
+      // min speed if desire small non zero velocity
+      rotation_velocity = std::copysign(0.1, rotation_velocity);
     }
   }
 

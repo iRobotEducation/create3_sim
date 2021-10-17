@@ -92,6 +92,10 @@ rclcpp_action::GoalResponse DockingBehavior::handle_dock_servo_goal(
     RCLCPP_WARN(m_logger, "Robot already docked, reject");
     return rclcpp_action::GoalResponse::REJECT;
   }
+  if (!m_sees_docked) {
+    RCLCPP_WARN(m_logger, "Robot doesn't see dock, reject");
+    return rclcpp_action::GoalResponse::REJECT;
+  }
   return rclcpp_action::GoalResponse::ACCEPT_AND_EXECUTE;
 }
 
@@ -133,7 +137,7 @@ void DockingBehavior::handle_dock_servo_accepted(
   dock_rotation.setRPY(0, 0, M_PI);
   dock_offset.setOrigin(tf2::Vector3(dist_offset, 0, 0));
   dock_offset.setRotation(dock_rotation);
-  dock_path.emplace_back(m_dock_pose * dock_offset, 0.05, false);
+  dock_path.emplace_back(m_dock_pose * dock_offset, 0.02, false);
   tf2::Transform face_dock;
   face_dock.setRotation(dock_rotation);
   dock_path.emplace_back(m_dock_pose * face_dock, 0.01, false);
