@@ -65,7 +65,7 @@ private:
   // Dock emitter parameters
   const double DOCK_BUOYS_FOV_ = 50 * M_PI / 180;  // Convert to radians
   const double DOCK_BUOY_FOV_RATIO_ = 0.6;  // Red Buoy is 0.6 times the total fov, Same for green.
-  const double DOCK_BUOYS_RANGE_ = 1.524;
+  const double DOCK_BUOYS_RANGE_ = 1.0;
   const double DOCK_HALO_RANGE_ = 0.6096;
 
   /// World pointer
