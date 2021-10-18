@@ -17,14 +17,38 @@
 # Launches a joystick teleop node.
 
 import os
+from typing import Text
 
-from ament_index_python.packages import get_package_share_directory
+from ament_index_python.packages import get_package_share_directory, PackageNotFoundError
 
-from launch import LaunchDescription
+from launch import LaunchContext, LaunchDescription, SomeSubstitutionsType, Substitution
 from launch.actions import DeclareLaunchArgument
-from launch.substitutions import LaunchConfiguration, TextSubstitution
+from launch.substitutions import LaunchConfiguration
 from launch_ros.actions import Node
 
+class JoystickConfigParser(Substitution):
+  def __init__(
+      self,
+      joystick_package_name: Text,
+      joystick_type: SomeSubstitutionsType
+  ) -> None:
+    self.__joystick_package_name = joystick_package_name
+    self.__joystick_type = joystick_type
+
+  def perform(
+      self,
+      context: LaunchContext = None,
+  ) -> Text:
+    joystick_type_str = self.__joystick_type.perform(context)
+    joystick_package_str = self.__joystick_package_name
+    joystick_share_dir = ""
+    try:
+      joystick_share_dir = get_package_share_directory(joystick_package_str)
+    except PackageNotFoundError:
+      raise PackageNotFoundError(joystick_package_str)
+    else:
+        config_filepath = [joystick_share_dir, 'config', f'{joystick_type_str}.config.yaml']
+        return os.path.join(*config_filepath)
 
 def generate_launch_description():
     joy_config = LaunchConfiguration('joy_config')
@@ -40,9 +64,7 @@ def generate_launch_description():
 
     # Retrieve the path to the correct configuration .yaml depending on
     # the joy_config argument
-    config_filepath = [TextSubstitution(text=os.path.join(
-        get_package_share_directory('teleop_twist_joy'), 'config', '')),
-        joy_config, TextSubstitution(text='.config.yaml')]
+    config_filepath = JoystickConfigParser("teleop_twist_joy", joy_config)
 
     # Publish unstamped Twist message from an attached USB Joystick.
     teleop_node = Node(package='teleop_twist_joy', executable='teleop_node',
@@ -51,7 +73,8 @@ def generate_launch_description():
     # Declare launchfile arguments
     ld_args = []
     ld_args.append(DeclareLaunchArgument('joy_config',
-                                         default_value='xbox'))
+                                         default_value='xbox',
+                                         choices=['xbox', 'ps3', 'ps3-holonomic', 'atk3', 'xd3']))
     ld_args.append(DeclareLaunchArgument('joy_dev',
                                          default_value='/dev/input/js0'))
 
