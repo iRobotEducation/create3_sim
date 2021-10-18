@@ -45,14 +45,13 @@ public:
 
   BehaviorsScheduler()
   {
-    m_has_behavior = false;
   }
 
   bool set_behavior(const BehaviorsData & data)
   {
-    std::unique_lock<std::mutex> lock(m_mutex);
+    std::unique_lock<std::mutex> lock(mutex_);
 
-    if (m_has_behavior) {
+    if (has_behavior_) {
       return false;
     }
 
@@ -60,38 +59,38 @@ public:
       return false;
     }
 
-    m_has_behavior = true;
-    m_current_behavior = data;
+    has_behavior_ = true;
+    current_behavior_ = data;
     return true;
   }
 
   bool has_behavior()
   {
-    std::unique_lock<std::mutex> lock(m_mutex);
-    return m_has_behavior;
+    std::unique_lock<std::mutex> lock(mutex_);
+    return has_behavior_;
   }
 
   optional_output_t run_behavior()
   {
-    std::unique_lock<std::mutex> lock(m_mutex);
+    std::unique_lock<std::mutex> lock(mutex_);
 
-    if (!m_has_behavior) {
+    if (!has_behavior_) {
       return optional_output_t();
     }
 
-    optional_output_t output = m_current_behavior.run_func();
+    optional_output_t output = current_behavior_.run_func();
 
-    if (m_current_behavior.is_done_func()) {
-      m_has_behavior = false;
+    if (current_behavior_.is_done_func()) {
+      has_behavior_ = false;
     }
 
     return output;
   }
 
 private:
-  std::mutex m_mutex;
-  bool m_has_behavior;
-  BehaviorsData m_current_behavior;
+  std::mutex mutex_;
+  bool has_behavior_ {false};
+  BehaviorsData current_behavior_;
 };
 
 }  // namespace irobot_create_toolbox

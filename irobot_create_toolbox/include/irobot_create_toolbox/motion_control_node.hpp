@@ -69,17 +69,17 @@ private:
   /// \brief Callback for new velocity commands
   void commanded_velocity_callback(geometry_msgs::msg::Twist::ConstSharedPtr msg);
 
-  rclcpp::Subscription<geometry_msgs::msg::Twist>::SharedPtr m_teleop_subscription;
-  rclcpp::Publisher<geometry_msgs::msg::Twist>::SharedPtr m_cmd_vel_out_pub;
-  rclcpp::TimerBase::SharedPtr m_timer;
+  rclcpp::Subscription<geometry_msgs::msg::Twist>::SharedPtr teleop_subscription_;
+  rclcpp::Publisher<geometry_msgs::msg::Twist>::SharedPtr cmd_vel_out_pub_;
+  rclcpp::TimerBase::SharedPtr timer_;
 
-  std::shared_ptr<BehaviorsScheduler> m_scheduler;
-  std::shared_ptr<DockingBehavior> m_docking_behavior;
+  std::shared_ptr<BehaviorsScheduler> scheduler_;
+  std::shared_ptr<DockingBehavior> docking_behavior_;
 
-  std::mutex m_mutex;
-  geometry_msgs::msg::Twist m_last_teleop_cmd;
-  rclcpp::Time m_last_teleop_ts;
-  rclcpp::Duration m_wheels_stop_threshold;
+  std::mutex mutex_;
+  geometry_msgs::msg::Twist last_teleop_cmd_;
+  rclcpp::Time last_teleop_ts_;
+  rclcpp::Duration wheels_stop_threshold_;
 };
 
 }  // namespace irobot_create_toolbox

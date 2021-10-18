@@ -57,12 +57,12 @@ public:
   /// \brief Set goal path for controller along with max rotation and translation speed
   void initialize_goal(const CmdPath & cmd_path, double max_rotation, double max_translation)
   {
-    const std::lock_guard<std::mutex> lock(m_mutex);
+    const std::lock_guard<std::mutex> lock(mutex_);
     // Convert path points to goal points
-    m_goal_points.clear();
-    m_goal_points.resize(cmd_path.size());
+    goal_points_.clear();
+    goal_points_.resize(cmd_path.size());
     for (size_t i = 0; i < cmd_path.size(); ++i) {
-      GoalPoint & gp = m_goal_points[i];
+      GoalPoint & gp = goal_points_[i];
       const tf2::Vector3 & pt_position = cmd_path[i].pose.getOrigin();
       gp.x = pt_position.getX();
       gp.y = pt_position.getY();
@@ -70,16 +70,16 @@ public:
       gp.radius = cmd_path[i].radius;
       gp.drive_backwards = cmd_path[i].drive_backwards;
     }
-    m_navigate_state = NavigateStates::ANGLE_TO_GOAL;
-    m_max_rotation = max_rotation;
-    m_max_translation = max_translation;
+    navigate_state_ = NavigateStates::ANGLE_TO_GOAL;
+    max_rotation_ = max_rotation;
+    max_translation_ = max_translation;
   }
 
   /// \brief Clear goal
   void reset()
   {
-    const std::lock_guard<std::mutex> lock(m_mutex);
-    m_goal_points.clear();
+    const std::lock_guard<std::mutex> lock(mutex_);
+    goal_points_.clear();
   }
 
   // \brief Generate velocity based on current position and next goal point looking for convergence
@@ -89,24 +89,24 @@ public:
     const tf2::Transform & current_pose)
   {
     BehaviorsScheduler::optional_output_t servo_vel;
-    const std::lock_guard<std::mutex> lock(m_mutex);
-    if (m_goal_points.size() == 0) {
+    const std::lock_guard<std::mutex> lock(mutex_);
+    if (goal_points_.size() == 0) {
       return servo_vel;
     }
     double current_angle = tf2::getYaw(current_pose.getRotation());
     const tf2::Vector3 & current_position = current_pose.getOrigin();
     // Generate velocity based on current position and next goal point looking for convergence
     // with goal point based on radius.
-    switch (m_navigate_state) {
+    switch (navigate_state_) {
       case NavigateStates::ANGLE_TO_GOAL:
         {
-          const GoalPoint & gp = m_goal_points.front();
+          const GoalPoint & gp = goal_points_.front();
           double dist_to_goal = std::hypot(
             gp.x - current_position.getX(),
             gp.y - current_position.getY());
           if (dist_to_goal <= gp.radius) {
             servo_vel = geometry_msgs::msg::Twist();
-            m_navigate_state = NavigateStates::GO_TO_GOAL_POSITION;
+            navigate_state_ = NavigateStates::GO_TO_GOAL_POSITION;
           } else {
             double ang = diff_angle(gp, current_position, current_angle);
             if (gp.drive_backwards) {
@@ -115,8 +115,8 @@ public:
             }
             bound_rotation(ang);
             servo_vel = geometry_msgs::msg::Twist();
-            if (std::abs(ang) < 0.03f) {
-              m_navigate_state = NavigateStates::GO_TO_GOAL_POSITION;
+            if (std::abs(ang) < TO_GOAL_ANGLE_CONVERGED) {
+              navigate_state_ = NavigateStates::GO_TO_GOAL_POSITION;
             } else {
               servo_vel->angular.z = ang;
             }
@@ -125,7 +125,7 @@ public:
         }
       case NavigateStates::GO_TO_GOAL_POSITION:
         {
-          const GoalPoint & gp = m_goal_points.front();
+          const GoalPoint & gp = goal_points_.front();
           double dist_to_goal = std::hypot(
             gp.x - current_position.getX(),
             gp.y - current_position.getY());
@@ -137,22 +137,22 @@ public:
           }
           servo_vel = geometry_msgs::msg::Twist();
           // If robot is close enough to goal, move to final stage
-          if (dist_to_goal < m_goal_points.front().radius) {
-            m_navigate_state = NavigateStates::GOAL_ANGLE;
+          if (dist_to_goal < goal_points_.front().radius) {
+            navigate_state_ = NavigateStates::GOAL_ANGLE;
             // If robot angle has deviated too much from path, reset
-          } else if (abs_ang > M_PI / 16.0) {
-            m_navigate_state = NavigateStates::ANGLE_TO_GOAL;
+          } else if (abs_ang > GO_TO_GOAL_ANGLE_TOO_FAR) {
+            navigate_state_ = NavigateStates::ANGLE_TO_GOAL;
             // If niether of above conditions met, drive towards goal
           } else {
             double translate_velocity = dist_to_goal;
-            if (translate_velocity > m_max_translation) {
-              translate_velocity = m_max_translation;
+            if (translate_velocity > max_translation_) {
+              translate_velocity = max_translation_;
             }
             if (gp.drive_backwards) {
               translate_velocity *= -1;
             }
             servo_vel->linear.x = translate_velocity;
-            if (abs_ang > 0.02) {
+            if (abs_ang > GO_TO_GOAL_APPLY_ROTATION_ANGLE) {
               servo_vel->angular.z = ang;
             }
           }
@@ -161,16 +161,16 @@ public:
       case NavigateStates::GOAL_ANGLE:
         {
           double ang =
-            angles::shortest_angular_distance(current_angle, m_goal_points.front().theta);
+            angles::shortest_angular_distance(current_angle, goal_points_.front().theta);
           bound_rotation(ang);
-          if (std::abs(ang) > 0.02f) {
+          if (std::abs(ang) > GOAL_ANGLE_CONVERGED) {
             servo_vel = geometry_msgs::msg::Twist();
             servo_vel->angular.z = ang;
           } else {
-            m_goal_points.pop_front();
-            if (m_goal_points.size() > 0) {
+            goal_points_.pop_front();
+            if (goal_points_.size() > 0) {
               servo_vel = geometry_msgs::msg::Twist();
-              m_navigate_state = NavigateStates::ANGLE_TO_GOAL;
+              navigate_state_ = NavigateStates::ANGLE_TO_GOAL;
             }
           }
           break;
@@ -199,11 +199,11 @@ private:
   void bound_rotation(double & rotation_velocity)
   {
     double abs_rot = std::abs(rotation_velocity);
-    if (abs_rot > m_max_rotation) {
-      rotation_velocity = std::copysign(m_max_rotation, rotation_velocity);
-    } else if (abs_rot < 0.1 && abs_rot > 0.01) {
+    if (abs_rot > max_rotation_) {
+      rotation_velocity = std::copysign(max_rotation_, rotation_velocity);
+    } else if (abs_rot < MIN_ROTATION && abs_rot > 0.01) {
       // min speed if desire small non zero velocity
-      rotation_velocity = std::copysign(0.1, rotation_velocity);
+      rotation_velocity = std::copysign(MIN_ROTATION, rotation_velocity);
     }
   }
 
@@ -215,11 +215,16 @@ private:
         goal_pt.x - cur_position.getX()));
   }
 
-  std::mutex m_mutex;
-  std::deque<GoalPoint> m_goal_points;
-  NavigateStates m_navigate_state;
-  double m_max_rotation;
-  double m_max_translation;
+  std::mutex mutex_;
+  std::deque<GoalPoint> goal_points_;
+  NavigateStates navigate_state_;
+  double max_rotation_;
+  double max_translation_;
+  const double MIN_ROTATION {0.1};
+  const double TO_GOAL_ANGLE_CONVERGED {0.03};
+  const double GO_TO_GOAL_ANGLE_TOO_FAR {M_PI / 16.0};
+  const double GO_TO_GOAL_APPLY_ROTATION_ANGLE {0.02};
+  const double GOAL_ANGLE_CONVERGED {0.02};
 };
 
 }  // namespace irobot_create_toolbox
