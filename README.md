@@ -52,4 +52,11 @@ Create 3 can be spawned in an empty world in Gazebo and RViz with
 ros2 launch irobot_create_gazebo create3.launch.py
 ```
 
+Create 3 can be spawned in the AWS small house in Gazebo and RViz if
+the package aws_robomaker_small_house_world is installed with
+
+```bash
+ros2 launch irobot_create_gazebo aws_small.launch.py
+```
+
 ## [Contributions](CONTRIBUTING.md)
