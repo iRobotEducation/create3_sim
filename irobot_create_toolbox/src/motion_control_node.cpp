@@ -222,6 +222,7 @@ void MotionControlNode::commanded_velocity_callback(geometry_msgs::msg::Twist::C
   const std::lock_guard<std::mutex> lock(mutex_);
 
   last_teleop_cmd_ = *msg;
+  last_teleop_ts_ = this->now();
 }
 
 void MotionControlNode::reset_last_teleop_cmd()
