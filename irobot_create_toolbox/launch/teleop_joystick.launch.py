@@ -30,28 +30,26 @@ from launch_ros.actions import Node
 class JoystickConfigParser(Substitution):
     def __init__(
         self,
-        joystick_package_name: Text,
-        joystick_type: SomeSubstitutionsType
+        package_name: Text,
+        device_type: SomeSubstitutionsType
     ) -> None:
-        self.__joystick_package_name = joystick_package_name
-        self.__joystick_type = joystick_type
+        self.__package_name = package_name
+        self.__device_type = device_type
 
     def perform(
         self,
         context: LaunchContext = None,
     ) -> Text:
-        joystick_type_str = self.__joystick_type.perform(context)
-        joystick_package_str = self.__joystick_package_name
-        joystick_share_dir = ''
+        device_type_str = self.__device_type.perform(context)
+        package_str = self.__package_name
         try:
-            joystick_share_dir = get_package_share_directory(
-                joystick_package_str)
-        except PackageNotFoundError:
-            raise PackageNotFoundError(joystick_package_str)
-        else:
-            config_filepath = [joystick_share_dir, 'config',
-                               f'{joystick_type_str}.config.yaml']
+            package_share_dir = get_package_share_directory(
+                package_str)
+            config_filepath = [package_share_dir, 'config',
+                               f'{device_type_str}.config.yaml']
             return os.path.join(*config_filepath)
+        except PackageNotFoundError:
+            raise PackageNotFoundError(package_str)
 
 
 def generate_launch_description():
