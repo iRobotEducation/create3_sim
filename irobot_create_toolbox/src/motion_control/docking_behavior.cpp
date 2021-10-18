@@ -77,7 +77,7 @@ bool DockingBehavior::docking_behavior_is_done()
 
 rclcpp_action::GoalResponse DockingBehavior::handle_dock_servo_goal(
   const rclcpp_action::GoalUUID & /*uuid*/,
-  std::shared_ptr<const irobot_create_msgs::action::DockServo::Goal> /*goal*/)
+  std::shared_ptr<const irobot_create_msgs::action::DockServo::Goal>/*goal*/)
 {
   RCLCPP_INFO(logger_, "Received new dock servo goal");
 
@@ -99,7 +99,7 @@ rclcpp_action::GoalResponse DockingBehavior::handle_dock_servo_goal(
 
 rclcpp_action::CancelResponse DockingBehavior::handle_dock_servo_cancel(
   const std::shared_ptr<
-    rclcpp_action::ServerGoalHandle<irobot_create_msgs::action::DockServo>> /*goal_handle*/)
+    rclcpp_action::ServerGoalHandle<irobot_create_msgs::action::DockServo>>/*goal_handle*/)
 {
   RCLCPP_INFO(logger_, "Received request to cancel dock servo goal");
   return rclcpp_action::CancelResponse::ACCEPT;
@@ -114,7 +114,7 @@ void DockingBehavior::handle_dock_servo_accepted(
 
   // Generate point offset from dock facing dock then point at dock
   SimpleGoalController::CmdPath dock_path;
-  tf2::Transform odom_pose;
+  tf2::Transform odom_pose(tf2::Transform::getIdentity());
   {
     const std::lock_guard<std::mutex> lock(odom_mutex_);
     odom_pose = last_odom_pose_;
@@ -129,13 +129,13 @@ void DockingBehavior::handle_dock_servo_accepted(
   if (dist_offset > MAX_DOCK_INTERMEDIATE_GOAL_OFFSET) {
     dist_offset = MAX_DOCK_INTERMEDIATE_GOAL_OFFSET;
   }
-  tf2::Transform dock_offset;
+  tf2::Transform dock_offset(tf2::Transform::getIdentity());
   tf2::Quaternion dock_rotation;
   dock_rotation.setRPY(0, 0, M_PI);
   dock_offset.setOrigin(tf2::Vector3(dist_offset, 0, 0));
   dock_offset.setRotation(dock_rotation);
   dock_path.emplace_back(dock_pose_ * dock_offset, 0.02, false);
-  tf2::Transform face_dock;
+  tf2::Transform face_dock(tf2::Transform::getIdentity());
   face_dock.setRotation(dock_rotation);
   dock_path.emplace_back(dock_pose_ * face_dock, 0.01, false);
   goal_controller_.initialize_goal(dock_path, M_PI / 4.0, 0.15);
@@ -181,7 +181,7 @@ BehaviorsScheduler::optional_output_t DockingBehavior::execute_dock_servo(
     return servo_cmd;
   } else {
     // Get next command
-    tf2::Transform odom_pose;
+    tf2::Transform odom_pose(tf2::Transform::getIdentity());
     {
       const std::lock_guard<std::mutex> lock(odom_mutex_);
       odom_pose = last_odom_pose_;
@@ -209,7 +209,7 @@ BehaviorsScheduler::optional_output_t DockingBehavior::execute_dock_servo(
 
 rclcpp_action::GoalResponse DockingBehavior::handle_undock_goal(
   const rclcpp_action::GoalUUID & /*uuid*/,
-  std::shared_ptr<const irobot_create_msgs::action::Undock::Goal> /*goal*/)
+  std::shared_ptr<const irobot_create_msgs::action::Undock::Goal>/*goal*/)
 {
   RCLCPP_INFO(logger_, "Received new undock goal");
 
@@ -227,7 +227,7 @@ rclcpp_action::GoalResponse DockingBehavior::handle_undock_goal(
 
 rclcpp_action::CancelResponse DockingBehavior::handle_undock_cancel(
   const std::shared_ptr<
-    rclcpp_action::ServerGoalHandle<irobot_create_msgs::action::Undock>> /*goal_handle*/)
+    rclcpp_action::ServerGoalHandle<irobot_create_msgs::action::Undock>>/*goal_handle*/)
 {
   RCLCPP_INFO(logger_, "Received request to cancel undock goal");
   return rclcpp_action::CancelResponse::ACCEPT;
@@ -243,19 +243,21 @@ void DockingBehavior::handle_undock_accepted(
 
   SimpleGoalController::CmdPath undock_path;
   // Generate path with point offset from odom, have robot drive backwards to offset then turn 180
-  tf2::Transform odom_pose;
+  tf2::Transform odom_pose(tf2::Transform::getIdentity());
   {
     const std::lock_guard<std::mutex> lock(odom_mutex_);
     odom_pose = last_odom_pose_;
   }
-  tf2::Transform dock_offset;
+  tf2::Transform dock_offset(tf2::Transform::getIdentity());
   dock_offset.setOrigin(tf2::Vector3(-UNDOCK_GOAL_OFFSET, 0, 0));
-  undock_path.emplace_back(odom_pose * dock_offset, 0.05, true);
-  tf2::Transform face_away_dock;
+  tf2::Transform undock_offset = odom_pose * dock_offset;
+  undock_path.emplace_back(undock_offset, 0.05, true);
+  tf2::Transform face_away_dock(tf2::Transform::getIdentity());
   tf2::Quaternion undock_rotation;
   undock_rotation.setRPY(0, 0, M_PI);
   face_away_dock.setRotation(undock_rotation);
-  undock_path.emplace_back(undock_path.back().pose * face_away_dock, 0.05, false);
+  tf2::Transform undocked_goal = undock_offset * face_away_dock;
+  undock_path.emplace_back(undocked_goal, 0.05, false);
   goal_controller_.initialize_goal(undock_path, M_PI / 4.0, 0.15);
 
   BehaviorsScheduler::BehaviorsData data;
@@ -289,7 +291,7 @@ BehaviorsScheduler::optional_output_t DockingBehavior::execute_undock(
     return BehaviorsScheduler::optional_output_t();
   }
   // Get next command
-  tf2::Transform odom_pose;
+  tf2::Transform odom_pose(tf2::Transform::getIdentity());
   {
     const std::lock_guard<std::mutex> lock(odom_mutex_);
     odom_pose = last_odom_pose_;
