@@ -26,29 +26,33 @@ from launch.actions import DeclareLaunchArgument
 from launch.substitutions import LaunchConfiguration
 from launch_ros.actions import Node
 
-class JoystickConfigParser(Substitution):
-  def __init__(
-      self,
-      joystick_package_name: Text,
-      joystick_type: SomeSubstitutionsType
-  ) -> None:
-    self.__joystick_package_name = joystick_package_name
-    self.__joystick_type = joystick_type
 
-  def perform(
-      self,
-      context: LaunchContext = None,
-  ) -> Text:
-    joystick_type_str = self.__joystick_type.perform(context)
-    joystick_package_str = self.__joystick_package_name
-    joystick_share_dir = ""
-    try:
-      joystick_share_dir = get_package_share_directory(joystick_package_str)
-    except PackageNotFoundError:
-      raise PackageNotFoundError(joystick_package_str)
-    else:
-        config_filepath = [joystick_share_dir, 'config', f'{joystick_type_str}.config.yaml']
-        return os.path.join(*config_filepath)
+class JoystickConfigParser(Substitution):
+    def __init__(
+        self,
+        joystick_package_name: Text,
+        joystick_type: SomeSubstitutionsType
+    ) -> None:
+        self.__joystick_package_name = joystick_package_name
+        self.__joystick_type = joystick_type
+
+    def perform(
+        self,
+        context: LaunchContext = None,
+    ) -> Text:
+        joystick_type_str = self.__joystick_type.perform(context)
+        joystick_package_str = self.__joystick_package_name
+        joystick_share_dir = ""
+        try:
+            joystick_share_dir = get_package_share_directory(
+                joystick_package_str)
+        except PackageNotFoundError:
+            raise PackageNotFoundError(joystick_package_str)
+        else:
+            config_filepath = [joystick_share_dir, 'config',
+                               f'{joystick_type_str}.config.yaml']
+            return os.path.join(*config_filepath)
+
 
 def generate_launch_description():
     joy_config = LaunchConfiguration('joy_config')
