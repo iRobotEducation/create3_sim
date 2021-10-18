@@ -42,7 +42,7 @@ class JoystickConfigParser(Substitution):
     ) -> Text:
         joystick_type_str = self.__joystick_type.perform(context)
         joystick_package_str = self.__joystick_package_name
-        joystick_share_dir = ""
+        joystick_share_dir = ''
         try:
             joystick_share_dir = get_package_share_directory(
                 joystick_package_str)
@@ -68,7 +68,7 @@ def generate_launch_description():
 
     # Retrieve the path to the correct configuration .yaml depending on
     # the joy_config argument
-    config_filepath = JoystickConfigParser("teleop_twist_joy", joy_config)
+    config_filepath = JoystickConfigParser('teleop_twist_joy', joy_config)
 
     # Publish unstamped Twist message from an attached USB Joystick.
     teleop_node = Node(package='teleop_twist_joy', executable='teleop_node',
