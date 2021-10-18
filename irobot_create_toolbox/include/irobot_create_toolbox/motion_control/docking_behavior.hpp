@@ -52,9 +52,11 @@ public:
 private:
   bool docking_behavior_is_done();
 
-  void dock_callback(irobot_create_msgs::msg::Dock::ConstSharedPtr msg);
+  void dock_status_callback(irobot_create_msgs::msg::Dock::ConstSharedPtr msg);
 
-  void odom_callback(nav_msgs::msg::Odometry::ConstSharedPtr msg);
+  void robot_pose_callback(nav_msgs::msg::Odometry::ConstSharedPtr msg);
+
+  void dock_pose_callback(nav_msgs::msg::Odometry::ConstSharedPtr msg);
 
   rclcpp_action::GoalResponse handle_dock_servo_goal(
     const rclcpp_action::GoalUUID & uuid,
@@ -91,8 +93,9 @@ private:
   rclcpp_action::Server<irobot_create_msgs::action::DockServo>::SharedPtr docking_action_server_;
   rclcpp_action::Server<irobot_create_msgs::action::Undock>::SharedPtr undocking_action_server_;
 
-  rclcpp::Subscription<irobot_create_msgs::msg::Dock>::SharedPtr dock_sub_;
-  rclcpp::Subscription<nav_msgs::msg::Odometry>::SharedPtr odom_sub_;
+  rclcpp::Subscription<irobot_create_msgs::msg::Dock>::SharedPtr dock_status_sub_;
+  rclcpp::Subscription<nav_msgs::msg::Odometry>::SharedPtr robot_pose_sub_;
+  rclcpp::Subscription<nav_msgs::msg::Odometry>::SharedPtr dock_pose_sub_;
 
   rclcpp::Logger logger_;
   std::shared_ptr<BehaviorsScheduler> behavior_scheduler_;
@@ -100,9 +103,10 @@ private:
   std::atomic<bool> sees_dock_ {false};
   std::atomic<bool> running_dock_action_ {false};
   SimpleGoalController goal_controller_;
-  std::mutex odom_mutex_;
-  tf2::Transform last_odom_pose_;
-  tf2::Transform dock_pose_;
+  std::mutex robot_pose_mutex_;
+  tf2::Transform last_robot_pose_;
+  std::mutex dock_pose_mutex_;
+  tf2::Transform last_dock_pose_;
   const double MAX_DOCK_INTERMEDIATE_GOAL_OFFSET {0.5};
   const double UNDOCK_GOAL_OFFSET {0.4};
 };
