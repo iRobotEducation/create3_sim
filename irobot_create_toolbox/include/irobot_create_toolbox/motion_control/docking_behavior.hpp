@@ -52,8 +52,9 @@ public:
 private:
   bool docking_behavior_is_done();
 
-  void calibrate_docked_distance_offset(const tf2::Transform& docked_robot_pose,
-          const tf2::Transform& dock_pose);
+  void calibrate_docked_distance_offset(
+    const tf2::Transform & docked_robot_pose,
+    const tf2::Transform & dock_pose);
 
   void dock_status_callback(irobot_create_msgs::msg::Dock::ConstSharedPtr msg);
 

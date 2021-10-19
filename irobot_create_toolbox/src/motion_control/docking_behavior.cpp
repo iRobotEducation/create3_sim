@@ -203,8 +203,8 @@ BehaviorsScheduler::optional_output_t DockingBehavior::execute_dock_servo(
   } else {
     bool exceeded_runtime = false;
     if (clock_->now() - action_start_time_ > max_action_runtime_) {
-        RCLCPP_INFO(logger_, "Dock Servo Goal Exceeded Runtime");
-        exceeded_runtime = true;
+      RCLCPP_INFO(logger_, "Dock Servo Goal Exceeded Runtime");
+      exceeded_runtime = true;
     }
     // Get next command
     tf2::Transform robot_pose(tf2::Transform::getIdentity());
@@ -278,8 +278,8 @@ void DockingBehavior::handle_undock_accepted(
   if (!calibrated_offset_) {
     tf2::Transform dock_pose(tf2::Transform::getIdentity());
     {
-        const std::lock_guard<std::mutex> lock(dock_pose_mutex_);
-        dock_pose = last_dock_pose_;
+      const std::lock_guard<std::mutex> lock(dock_pose_mutex_);
+      dock_pose = last_dock_pose_;
     }
     calibrate_docked_distance_offset(robot_pose, dock_pose);
   }
@@ -335,8 +335,8 @@ BehaviorsScheduler::optional_output_t DockingBehavior::execute_undock(
 
   bool exceeded_runtime = false;
   if (clock_->now() - action_start_time_ > max_action_runtime_) {
-      RCLCPP_INFO(logger_, "Undock Goal Exceeded Runtime");
-      exceeded_runtime = true;
+    RCLCPP_INFO(logger_, "Undock Goal Exceeded Runtime");
+    exceeded_runtime = true;
   }
 
   if (!servo_cmd || exceeded_runtime) {
@@ -375,13 +375,14 @@ void DockingBehavior::dock_pose_callback(nav_msgs::msg::Odometry::ConstSharedPtr
   tf2::convert(msg->pose.pose, last_dock_pose_);
 }
 
-void DockingBehavior::calibrate_docked_distance_offset(const tf2::Transform& docked_robot_pose,
-          const tf2::Transform& dock_pose)
+void DockingBehavior::calibrate_docked_distance_offset(
+  const tf2::Transform & docked_robot_pose,
+  const tf2::Transform & dock_pose)
 {
-    tf2::Vector3 pos_diff = docked_robot_pose.getOrigin() - dock_pose.getOrigin();
-    last_docked_distance_offset_ = std::hypot(pos_diff.getX(), pos_diff.getY());
-    calibrated_offset_ = true;
-    RCLCPP_DEBUG(logger_, "Setting robot dock offset to %f",last_docked_distance_offset_);
+  tf2::Vector3 pos_diff = docked_robot_pose.getOrigin() - dock_pose.getOrigin();
+  last_docked_distance_offset_ = std::hypot(pos_diff.getX(), pos_diff.getY());
+  calibrated_offset_ = true;
+  RCLCPP_DEBUG(logger_, "Setting robot dock offset to %f", last_docked_distance_offset_);
 }
 
 }  // namespace irobot_create_toolbox
