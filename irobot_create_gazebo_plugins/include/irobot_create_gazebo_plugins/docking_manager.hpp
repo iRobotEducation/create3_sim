@@ -39,9 +39,11 @@ private:
   gazebo::physics::LinkPtr emitter_link_{nullptr};
   // World pointer
   gazebo::physics::WorldPtr world_{nullptr};
-  // Model names
+  // Model and their respective link names
   std::string robot_model_name_;
+  std::string robot_receiver_link_name_;
   std::string dock_model_name_;
+  std::string dock_emitter_link_name_;
 
   // Once models are ready, initialize their link pointers
   void initLinks(
@@ -51,7 +53,8 @@ public:
   /// Constructor
   DockingManager(
     const gazebo::physics::WorldPtr & world, const std::string & robot_name,
-    const std::string & dock_name);
+    const std::string & receiver_link_name,
+    const std::string & dock_name, const std::string & emitter_link_name);
 
   /// Use this method to check that the models are ready in gazebo before dereferencing their
   /// pointers

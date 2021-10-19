@@ -150,6 +150,10 @@ install(DIRECTORY include/
   DESTINATION include
 )
 
+install(DIRECTORY launch
+  DESTINATION share/${PROJECT_NAME}
+)
+
 # Install Python modules
 ament_python_install_package(${PROJECT_NAME})
 
