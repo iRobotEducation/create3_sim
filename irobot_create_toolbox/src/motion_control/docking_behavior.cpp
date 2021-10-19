@@ -40,7 +40,7 @@ DockingBehavior::DockingBehavior(
 
   robot_pose_sub_ = rclcpp::create_subscription<nav_msgs::msg::Odometry>(
     node_topics_interface,
-    "odom",
+    "sim_ground_truth_pose",
     rclcpp::SensorDataQoS(),
     std::bind(&DockingBehavior::robot_pose_callback, this, _1));
 
@@ -70,6 +70,7 @@ DockingBehavior::DockingBehavior(
     std::bind(&DockingBehavior::handle_undock_cancel, this, _1),
     std::bind(&DockingBehavior::handle_undock_accepted, this, _1));
   // Need to get real dock pose into here, math expects orientation to face towards docked robot
+  last_robot_pose_.setIdentity();
   last_dock_pose_.setIdentity();
   tf2::Quaternion dock_rotation;
   dock_rotation.setRPY(0, 0, M_PI);
