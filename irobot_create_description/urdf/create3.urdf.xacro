@@ -189,15 +189,13 @@
     <origin xyz="0.153 0 0.035"/>
   </xacro:ir_opcode_receivers>
 
-  <!-- Add the ground truth topic -->
+  <!-- Ground truth pose -->
   <gazebo>
     <plugin name="gazebo_ros_p3d" filename="libgazebo_ros_p3d.so">
       <ros>
-        <!-- Add namespace and remap the default topic -->
         <namespace>/</namespace>
         <remapping>odom:=sim_ground_truth_pose</remapping>
       </ros>
-      <!-- Replace camelCase elements with camel_case ones -->
       <body_name>base_link</body_name>
       <frame_name>world</frame_name>
       <update_rate>2</update_rate>

@@ -75,14 +75,12 @@
 
   <gazebo>
     <static>true</static>
-    <!-- Add ground truth for the dock-->
+    <!-- Ground truth pose-->
     <plugin name="gazebo_ros_p3d" filename="libgazebo_ros_p3d.so">
       <ros>
-        <!-- Add namespace and remap the default topic -->
         <namespace>/</namespace>
         <remapping>odom:=sim_ground_truth_dock_pose</remapping>
       </ros>
-      <!-- Replace camelCase elements with camel_case ones -->
       <body_name>${link_name}</body_name>
       <frame_name>world</frame_name>
       <update_rate>1</update_rate>
