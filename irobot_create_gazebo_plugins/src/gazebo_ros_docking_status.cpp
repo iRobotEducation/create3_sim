@@ -131,7 +131,7 @@ void GazeboRosDockingStatus::OnUpdate(const gazebo::common::UpdateInfo & info)
     if (is_changed || update_rate_enforcer_.shouldUpdate(pub_time_elapsed)) {
       // Reset time
       last_pub_time_ = current_time;
-
+      msg_.header.stamp = gazebo_ros::Convert<builtin_interfaces::msg::Time>(current_time);
       msg_.dock_visible = is_dock_visible_;
       msg_.is_docked = is_docked_;
       pub_->publish(msg_);
