@@ -69,7 +69,7 @@ DockingBehavior::DockingBehavior(
     std::bind(&DockingBehavior::handle_undock_goal, this, _1, _2),
     std::bind(&DockingBehavior::handle_undock_cancel, this, _1),
     std::bind(&DockingBehavior::handle_undock_accepted, this, _1));
-  // Need to get real dock pose into here, math expects orientation to face towards docked robot
+  // Give poses default value, will be over-written by subscriptions
   last_robot_pose_.setIdentity();
   last_dock_pose_.setIdentity();
   tf2::Quaternion dock_rotation;

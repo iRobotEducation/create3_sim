@@ -153,12 +153,6 @@ install(DIRECTORY include/
 # Install Python modules
 ament_python_install_package(${PROJECT_NAME})
 
-# Install Python executables
-install(PROGRAMS
-  scripts/topic_republisher.py
-  DESTINATION lib/${PROJECT_NAME}
-)
-
 ament_export_include_directories(include)
 ament_export_libraries(${libraries_names})
 ament_export_dependencies(${dependencies})
