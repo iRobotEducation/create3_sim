@@ -81,9 +81,12 @@ void GazeboRosWheelDrop::OnUpdate()
 
   const double displacement{joint_->Position()};
   if ((wheel_drop_detected_ == false) && (displacement >= upper_limit_)) {
-    PublishState(true, displacement, current_time);
+    wheel_drop_detected_ = true;
   } else if ((wheel_drop_detected_ == true) && (displacement < lower_limit_)) {
-    PublishState(false, displacement, current_time);
+    wheel_drop_detected_ = false;
+  }
+  if(wheel_drop_detected_) {
+    PublishState(true, displacement, current_time);
   }
   last_time_ = current_time;
 }
