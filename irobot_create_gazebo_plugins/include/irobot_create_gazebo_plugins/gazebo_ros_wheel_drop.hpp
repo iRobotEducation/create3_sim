@@ -60,8 +60,7 @@ protected:
 
 private:
   /// Publish state
-  void PublishState(
-    const bool & state, const double & range, const gazebo::common::Time & common_time);
+  void PublishWheeldrop(const double & range, const gazebo::common::Time & common_time);
 
   /// Connection to world update event. Callback is called while this is alive.
   gazebo::event::ConnectionPtr update_connection_{nullptr};
