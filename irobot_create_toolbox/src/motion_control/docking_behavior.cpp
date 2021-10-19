@@ -28,7 +28,9 @@ DockingBehavior::DockingBehavior(
   rclcpp::node_interfaces::NodeTopicsInterface::SharedPtr node_topics_interface,
   rclcpp::node_interfaces::NodeWaitablesInterface::SharedPtr node_waitables_interface,
   std::shared_ptr<BehaviorsScheduler> behavior_scheduler)
-: logger_(node_logging_interface->get_logger())
+: clock_(node_clock_interface->get_clock()),
+  logger_(node_logging_interface->get_logger()),
+  max_action_runtime_(rclcpp::Duration(std::chrono::seconds(30)))
 {
   behavior_scheduler_ = behavior_scheduler;
 
@@ -75,6 +77,9 @@ DockingBehavior::DockingBehavior(
   tf2::Quaternion dock_rotation;
   dock_rotation.setRPY(0, 0, M_PI);
   last_dock_pose_.setRotation(dock_rotation);
+  // Set number from observation, but will repopulate on undock with calibrated value
+  last_docked_distance_offset_ = 0.157;
+  action_start_time_ = clock_->now();
 }
 
 bool DockingBehavior::docking_behavior_is_done()
@@ -118,6 +123,7 @@ void DockingBehavior::handle_dock_servo_accepted(
 {
   // Create new Docking state machine
   running_dock_action_ = true;
+  action_start_time_ = clock_->now();
 
   // Generate point offset from dock facing dock then point at dock
   SimpleGoalController::CmdPath dock_path;
@@ -138,8 +144,9 @@ void DockingBehavior::handle_dock_servo_accepted(
   double dist_offset = std::hypot(
     dock_position.getX() - robot_position.getX(),
     dock_position.getY() - robot_position.getY());
-  if (dist_offset > MAX_DOCK_INTERMEDIATE_GOAL_OFFSET) {
-    dist_offset = MAX_DOCK_INTERMEDIATE_GOAL_OFFSET;
+  const double max_goal_offset = MAX_DOCK_INTERMEDIATE_GOAL_OFFSET + last_docked_distance_offset_;
+  if (dist_offset > max_goal_offset) {
+    dist_offset = max_goal_offset;
   }
   tf2::Transform dock_offset(tf2::Transform::getIdentity());
   tf2::Quaternion dock_rotation;
@@ -147,9 +154,11 @@ void DockingBehavior::handle_dock_servo_accepted(
   dock_offset.setOrigin(tf2::Vector3(dist_offset, 0, 0));
   dock_offset.setRotation(dock_rotation);
   dock_path.emplace_back(dock_pose * dock_offset, 0.02, false);
+  dock_offset.setIdentity();
+  dock_offset.setOrigin(tf2::Vector3(last_docked_distance_offset_, 0, 0));
   tf2::Transform face_dock(tf2::Transform::getIdentity());
   face_dock.setRotation(dock_rotation);
-  dock_path.emplace_back(dock_pose * face_dock, 0.01, false);
+  dock_path.emplace_back(dock_pose * dock_offset * face_dock, 0.005, false);
   goal_controller_.initialize_goal(dock_path, M_PI / 4.0, 0.15);
   // Setup behavior to override other commanded motion
   BehaviorsScheduler::BehaviorsData data;
@@ -192,6 +201,11 @@ BehaviorsScheduler::optional_output_t DockingBehavior::execute_dock_servo(
     running_dock_action_ = false;
     return servo_cmd;
   } else {
+    bool exceeded_runtime = false;
+    if (clock_->now() - action_start_time_ > max_action_runtime_) {
+        RCLCPP_INFO(logger_, "Dock Servo Goal Exceeded Runtime");
+        exceeded_runtime = true;
+    }
     // Get next command
     tf2::Transform robot_pose(tf2::Transform::getIdentity());
     {
@@ -199,7 +213,7 @@ BehaviorsScheduler::optional_output_t DockingBehavior::execute_dock_servo(
       robot_pose = last_robot_pose_;
     }
     servo_cmd = goal_controller_.get_velocity_for_position(robot_pose);
-    if (!servo_cmd) {
+    if (!servo_cmd || exceeded_runtime) {
       auto result = std::make_shared<irobot_create_msgs::action::DockServo::Result>();
       result->is_docked = false;
       RCLCPP_INFO(logger_, "Dock Servo Goal Aborted");
@@ -251,7 +265,7 @@ void DockingBehavior::handle_undock_accepted(
 {
   // Create new Docking Action
   running_dock_action_ = true;
-
+  action_start_time_ = clock_->now();
 
   SimpleGoalController::CmdPath undock_path;
   // Generate path with point offset from robot pose,
@@ -260,6 +274,14 @@ void DockingBehavior::handle_undock_accepted(
   {
     const std::lock_guard<std::mutex> lock(robot_pose_mutex_);
     robot_pose = last_robot_pose_;
+  }
+  if (!calibrated_offset_) {
+    tf2::Transform dock_pose(tf2::Transform::getIdentity());
+    {
+        const std::lock_guard<std::mutex> lock(dock_pose_mutex_);
+        dock_pose = last_dock_pose_;
+    }
+    calibrate_docked_distance_offset(robot_pose, dock_pose);
   }
   tf2::Transform dock_offset(tf2::Transform::getIdentity());
   dock_offset.setOrigin(tf2::Vector3(-UNDOCK_GOAL_OFFSET, 0, 0));
@@ -311,7 +333,13 @@ BehaviorsScheduler::optional_output_t DockingBehavior::execute_undock(
   }
   servo_cmd = goal_controller_.get_velocity_for_position(robot_pose);
 
-  if (!servo_cmd) {
+  bool exceeded_runtime = false;
+  if (clock_->now() - action_start_time_ > max_action_runtime_) {
+      RCLCPP_INFO(logger_, "Undock Goal Exceeded Runtime");
+      exceeded_runtime = true;
+  }
+
+  if (!servo_cmd || exceeded_runtime) {
     auto result = std::make_shared<irobot_create_msgs::action::Undock::Result>();
     result->is_docked = is_docked_;
     if (!is_docked_) {
@@ -345,6 +373,15 @@ void DockingBehavior::dock_pose_callback(nav_msgs::msg::Odometry::ConstSharedPtr
 {
   const std::lock_guard<std::mutex> lock(dock_pose_mutex_);
   tf2::convert(msg->pose.pose, last_dock_pose_);
+}
+
+void DockingBehavior::calibrate_docked_distance_offset(const tf2::Transform& docked_robot_pose,
+          const tf2::Transform& dock_pose)
+{
+    tf2::Vector3 pos_diff = docked_robot_pose.getOrigin() - dock_pose.getOrigin();
+    last_docked_distance_offset_ = std::hypot(pos_diff.getX(), pos_diff.getY());
+    calibrated_offset_ = true;
+    RCLCPP_DEBUG(logger_, "Setting robot dock offset to %f",last_docked_distance_offset_);
 }
 
 }  // namespace irobot_create_toolbox

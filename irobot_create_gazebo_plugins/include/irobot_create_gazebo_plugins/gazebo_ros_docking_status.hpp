@@ -57,8 +57,8 @@ public:
 
 private:
   // Docked thresholds
-  const double DOCKED_DISTANCE{0.065};  // Max distance in meters.
-  const double DOCKED_YAW{0.017};       // Max Yaw between dock and robot in radians.
+  const double DOCKED_DISTANCE{0.075};  // Max distance in meters.
+  const double DOCKED_YAW{M_PI/30.0};       // Max Yaw between dock and robot in radians.
 
   // Current dock status
   bool is_dock_visible_{false};

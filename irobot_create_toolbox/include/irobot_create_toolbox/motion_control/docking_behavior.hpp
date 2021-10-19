@@ -52,6 +52,9 @@ public:
 private:
   bool docking_behavior_is_done();
 
+  void calibrate_docked_distance_offset(const tf2::Transform& docked_robot_pose,
+          const tf2::Transform& dock_pose);
+
   void dock_status_callback(irobot_create_msgs::msg::Dock::ConstSharedPtr msg);
 
   void robot_pose_callback(nav_msgs::msg::Odometry::ConstSharedPtr msg);
@@ -97,6 +100,7 @@ private:
   rclcpp::Subscription<nav_msgs::msg::Odometry>::SharedPtr robot_pose_sub_;
   rclcpp::Subscription<nav_msgs::msg::Odometry>::SharedPtr dock_pose_sub_;
 
+  rclcpp::Clock::SharedPtr clock_;
   rclcpp::Logger logger_;
   std::shared_ptr<BehaviorsScheduler> behavior_scheduler_;
   std::atomic<bool> is_docked_ {false};
@@ -107,6 +111,10 @@ private:
   tf2::Transform last_robot_pose_;
   std::mutex dock_pose_mutex_;
   tf2::Transform last_dock_pose_;
+  rclcpp::Time action_start_time_;
+  const rclcpp::Duration max_action_runtime_;
+  double last_docked_distance_offset_ {0.0};
+  bool calibrated_offset_ {false};
   const double MAX_DOCK_INTERMEDIATE_GOAL_OFFSET {0.5};
   const double UNDOCK_GOAL_OFFSET {0.4};
 };
