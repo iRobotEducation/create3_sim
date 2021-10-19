@@ -18,23 +18,53 @@
 
 #include <memory>
 #include <string>
+#include <utility>
 #include <vector>
 
 namespace irobot_create_toolbox
 {
 using namespace std::placeholders;
+using namespace std::chrono_literals;
 
 MotionControlNode::MotionControlNode()
-: rclcpp::Node("motion_control")
+: rclcpp::Node("motion_control"),
+  wheels_stop_threshold_(1s)
 {
   // Declare ROS 2 parameters for controlling robot reflexes.
   this->declare_reflex_parameters();
   // Declare ROS 2 parameters for robot safety.
   this->declare_safety_parameters();
 
+  // Create behaviors scheduler
+  scheduler_ = std::make_shared<BehaviorsScheduler>();
+  // Create Docking Behavior manager
+  docking_behavior_ = std::make_shared<DockingBehavior>(
+    this->get_node_base_interface(),
+    this->get_node_clock_interface(),
+    this->get_node_logging_interface(),
+    this->get_node_topics_interface(),
+    this->get_node_waitables_interface(),
+    scheduler_);
+  // Create subscription to let other applications drive the robot
+  teleop_subscription_ = this->create_subscription<geometry_msgs::msg::Twist>(
+    "cmd_vel", rclcpp::SensorDataQoS(),
+    std::bind(&MotionControlNode::commanded_velocity_callback, this, _1));
+
+  cmd_vel_out_pub_ = this->create_publisher<geometry_msgs::msg::Twist>(
+    "diffdrive_controller/cmd_vel_unstamped", rclcpp::SensorDataQoS());
+
   // Register a callback to handle parameter changes
   params_callback_handle_ = this->add_on_set_parameters_callback(
     std::bind(&MotionControlNode::set_parameters_callback, this, _1));
+
+  last_teleop_ts_ = this->now();
+  // Create timer to periodically execute behaviors and control the robot
+  constexpr auto period = 25ms;
+  timer_ = rclcpp::create_timer(
+    this,
+    this->get_clock(),
+    rclcpp::Duration(period),
+    std::bind(&MotionControlNode::control_robot, this));
 }
 
 void MotionControlNode::declare_reflex_parameters()
@@ -141,6 +171,71 @@ rcl_interfaces::msg::SetParametersResult MotionControlNode::set_parameters_callb
   }
 
   return result;
+}
+
+void MotionControlNode::control_robot()
+{
+  // Handle behaviors
+  BehaviorsScheduler::optional_output_t command;
+  if (scheduler_->has_behavior()) {
+    command = scheduler_->run_behavior();
+    // Reset last teleoperation command if we are executing a behavior
+    this->reset_last_teleop_cmd();
+  } else {
+    // If we don't have any behavior, let's drive the robot using teleoperation command
+    // After wheels_stop_threshold_ has passed without receiving new velocity commands
+    // we stop the wheels.
+    rclcpp::Duration time_diff(rclcpp::Duration::max());
+    {
+      const std::lock_guard<std::mutex> lock(mutex_);
+      time_diff = (this->now() - last_teleop_ts_);
+    }
+    if (time_diff > wheels_stop_threshold_) {
+      this->reset_last_teleop_cmd();
+    } else {
+      const std::lock_guard<std::mutex> lock(mutex_);
+      command = last_teleop_cmd_;
+    }
+  }
+
+  // Add reflex manager here
+
+  // Create a null command if we don't have anything.
+  // We also disable reflexes because the robot is in an idle state.
+  if (!command) {
+    command = geometry_msgs::msg::Twist();
+  }
+  auto cmd_out_msg = std::make_unique<geometry_msgs::msg::Twist>();
+  *cmd_out_msg = *command;
+  cmd_vel_out_pub_->publish(std::move(cmd_out_msg));
+}
+
+void MotionControlNode::commanded_velocity_callback(geometry_msgs::msg::Twist::ConstSharedPtr msg)
+{
+  if (scheduler_->has_behavior()) {
+    RCLCPP_WARN(
+      this->get_logger(),
+      "Ignoring velocities commanded while an autonomous behavior is running!");
+    return;
+  }
+
+  const std::lock_guard<std::mutex> lock(mutex_);
+
+  last_teleop_cmd_ = *msg;
+  last_teleop_ts_ = this->now();
+}
+
+void MotionControlNode::reset_last_teleop_cmd()
+{
+  const std::lock_guard<std::mutex> lock(mutex_);
+
+  last_teleop_cmd_.linear.x = 0;
+  last_teleop_cmd_.linear.y = 0;
+  last_teleop_cmd_.linear.z = 0;
+  last_teleop_cmd_.angular.x = 0;
+  last_teleop_cmd_.angular.y = 0;
+  last_teleop_cmd_.angular.z = 0;
+  last_teleop_ts_ = this->now();
 }
 
 }  // namespace irobot_create_toolbox

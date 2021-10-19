@@ -12,17 +12,29 @@ endif()
 
 find_package(ament_cmake REQUIRED)
 find_package(ament_cmake_python REQUIRED)
+find_package(angles REQUIRED)
 find_package(control_msgs REQUIRED)
+find_package(geometry_msgs REQUIRED)
 find_package(irobot_create_msgs REQUIRED)
+find_package(nav_msgs REQUIRED)
 find_package(rclcpp REQUIRED)
+find_package(rclcpp_action REQUIRED)
 find_package(rclpy REQUIRED)
+find_package(tf2 REQUIRED)
+find_package(tf2_geometry_msgs REQUIRED)
 
 #### Libraries
 
 set(dependencies
+  angles
   control_msgs
+  geometry_msgs
   irobot_create_msgs
+  nav_msgs
   rclcpp
+  rclcpp_action
+  tf2
+  tf2_geometry_msgs
 )
 
 add_library(hazard_publisher_lib SHARED)
@@ -52,6 +64,7 @@ target_sources(
   motion_control_lib
   PRIVATE
     src/motion_control_node.cpp
+    src/motion_control/docking_behavior.cpp
 )
 target_include_directories(motion_control_lib PUBLIC include)
 ament_target_dependencies(motion_control_lib
@@ -143,12 +156,6 @@ install(DIRECTORY launch
 
 # Install Python modules
 ament_python_install_package(${PROJECT_NAME})
-
-# Install Python executables
-install(PROGRAMS
-  scripts/topic_republisher.py
-  DESTINATION lib/${PROJECT_NAME}
-)
 
 ament_export_include_directories(include)
 ament_export_libraries(${libraries_names})

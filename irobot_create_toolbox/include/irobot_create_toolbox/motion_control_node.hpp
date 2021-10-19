@@ -17,8 +17,11 @@
 #ifndef IROBOT_CREATE_TOOLBOX__MOTION_CONTROL_NODE_HPP_
 #define IROBOT_CREATE_TOOLBOX__MOTION_CONTROL_NODE_HPP_
 
+#include <geometry_msgs/msg/twist.hpp>
 #include <irobot_create_toolbox/parameter_helper.hpp>
+#include <irobot_create_toolbox/motion_control/docking_behavior.hpp>
 #include <rclcpp/rclcpp.hpp>
+#include <memory>
 #include <string>
 #include <vector>
 
@@ -31,6 +34,11 @@ public:
   MotionControlNode();
 
 private:
+  /// \brief Function to centralize velocity command for system
+  void control_robot();
+  /// \brief Clear any cached teleop command
+  void reset_last_teleop_cmd();
+
   /// \brief Helper function to declare ROS 2 reflex parameters
   void declare_reflex_parameters();
 
@@ -57,6 +65,21 @@ private:
   /// \brief Storage for custom parameter validation callbacks
   rclcpp::node_interfaces::OnSetParametersCallbackHandle::SharedPtr params_callback_handle_{
     nullptr};
+
+  /// \brief Callback for new velocity commands
+  void commanded_velocity_callback(geometry_msgs::msg::Twist::ConstSharedPtr msg);
+
+  rclcpp::Subscription<geometry_msgs::msg::Twist>::SharedPtr teleop_subscription_;
+  rclcpp::Publisher<geometry_msgs::msg::Twist>::SharedPtr cmd_vel_out_pub_;
+  rclcpp::TimerBase::SharedPtr timer_;
+
+  std::shared_ptr<BehaviorsScheduler> scheduler_;
+  std::shared_ptr<DockingBehavior> docking_behavior_;
+
+  std::mutex mutex_;
+  geometry_msgs::msg::Twist last_teleop_cmd_;
+  rclcpp::Time last_teleop_ts_;
+  rclcpp::Duration wheels_stop_threshold_;
 };
 
 }  // namespace irobot_create_toolbox

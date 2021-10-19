@@ -43,16 +43,6 @@ def generate_launch_description():
         output='screen',
     )
 
-    cmd_vel_republish_node = Node(
-        package='irobot_create_toolbox',
-        name='republish_node',
-        executable='topic_republisher.py',
-        parameters=[
-            {'current_topic': 'cmd_vel'},
-            {'new_topic': 'diffdrive_controller/cmd_vel_unstamped'},
-        ]
-    )
-
     # Ensure diffdrive_controller_node starts after joint_state_broadcaster_spawner
     diffdrive_controller_callback = RegisterEventHandler(
         event_handler=OnProcessExit(
@@ -65,6 +55,5 @@ def generate_launch_description():
 
     ld.add_action(joint_state_broadcaster_spawner)
     ld.add_action(diffdrive_controller_callback)
-    ld.add_action(cmd_vel_republish_node)
 
     return ld
