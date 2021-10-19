@@ -70,11 +70,11 @@ private:
 
   // Data structure to hold the definitions related to bumper zones
   const std::map<ZoneType, Zone> angles_map_ = {
-    {ZoneType::RIGHT, {-M_PI / 2, -3 * M_PI / 10, "right"}},
-    {ZoneType::CENTER_RIGHT, {-3 * M_PI / 10, -M_PI / 10, "center_right"}},
-    {ZoneType::CENTER, {-M_PI / 10, M_PI / 10, "center"}},
-    {ZoneType::CENTER_LEFT, {M_PI / 10., 3 * M_PI / 10, "center_left"}},
-    {ZoneType::LEFT, {3 * M_PI / 10, M_PI / 2, "left"}}};
+    {ZoneType::RIGHT, {-M_PI / 2, -3 * M_PI / 10, "bump_right"}},
+    {ZoneType::CENTER_RIGHT, {-3 * M_PI / 10, -M_PI / 10, "bump_front_right"}},
+    {ZoneType::CENTER, {-M_PI / 10, M_PI / 10, "bump_front_center"}},
+    {ZoneType::CENTER_LEFT, {M_PI / 10., 3 * M_PI / 10, "bump_front_left"}},
+    {ZoneType::LEFT, {3 * M_PI / 10, M_PI / 2, "bump_left"}}};
 
   // Pointer to ros node
   gazebo_ros::Node::SharedPtr ros_node_{nullptr};

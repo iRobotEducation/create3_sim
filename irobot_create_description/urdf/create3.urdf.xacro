@@ -102,7 +102,7 @@
   </xacro:optical_mouse>
 
   <!-- Cliffs sensors -->
-  <xacro:property name="cliff_z"  value="${2.1*cm2m}" />
+  <xacro:property name="cliff_z"  value="${-4.5*cm2m}" />
 
   <xacro:property name="cliff_center_x" value="${16*cm2m}"/>
   <xacro:property name="cliff_center_y" value="${4.5*cm2m}"/>
@@ -190,8 +190,9 @@
   <!-- Omni IR receiver (sensor 0) parameters and Front-facing IR receiver (sensor 1) parameters -->
   <xacro:property name="ir_omni_fov_rad" value="${220.0*deg2rad}"/>
   <xacro:property name="ir_front_facing_fov_rad" value="${pi/2}"/>
-  <xacro:ir_opcode_receivers robot_model_name="${robot_model_name}" dock_model_name="${dock_model_name}" emitter_link_name="${emitter_link_name}" sensor_0_range="0.01" sensor_0_fov="${ir_omni_fov_rad}"
-    sensor_1_range="0.5" sensor_1_fov="${ir_front_facing_fov_rad}" visualize="true" >
+  <xacro:ir_opcode_receivers robot_model_name="${robot_model_name}" dock_model_name="${dock_model_name}"
+    emitter_link_name="${emitter_link_name}" sensor_0_range="0.01" sensor_0_fov="${ir_omni_fov_rad}"
+    sensor_1_range="0.5" sensor_1_fov="${ir_front_facing_fov_rad}" >
     <origin xyz="0.153 0 0.035"/>
   </xacro:ir_opcode_receivers>
 

@@ -97,9 +97,9 @@ void GazeboRosWheelDrop::PublishState(
   msg.header.frame_id = frame_id_;
   msg.type = msg.WHEEL_DROP;
   pub_->publish(msg);
-  RCLCPP_INFO_EXPRESSION(
+  RCLCPP_DEBUG_EXPRESSION(
     ros_node_->get_logger(), !state, "Wheel drop %s OFF: %.3f", name_.c_str(), displacement);
-  RCLCPP_INFO_EXPRESSION(
+  RCLCPP_DEBUG_EXPRESSION(
     ros_node_->get_logger(), state, "Wheel drop %s ON: %.3f", name_.c_str(), displacement);
 }
 

@@ -50,7 +50,7 @@ functional, while the 4 remaining ones are created as dummy links. -->
       <always_on>true</always_on>
       <update_rate>${update_rate}</update_rate>
       <contact>
-        <collision>${name}_link_collision</collision>
+        <collision>${link_name}_collision</collision>
       </contact>
       <plugin name="${name}_plugin" filename="libgazebo_ros_create_bumper.so">
         <ros>
