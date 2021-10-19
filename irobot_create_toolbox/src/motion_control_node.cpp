@@ -51,7 +51,7 @@ MotionControlNode::MotionControlNode()
     std::bind(&MotionControlNode::commanded_velocity_callback, this, _1));
 
   cmd_vel_out_pub_ = this->create_publisher<geometry_msgs::msg::Twist>(
-    "diffdrive_controller/cmd_vel_unstamped", rclcpp::SensorDataQoS());
+    "diffdrive_controller/cmd_vel_unstamped", rclcpp::SystemDefaultsQoS());
 
   // Register a callback to handle parameter changes
   params_callback_handle_ = this->add_on_set_parameters_callback(
