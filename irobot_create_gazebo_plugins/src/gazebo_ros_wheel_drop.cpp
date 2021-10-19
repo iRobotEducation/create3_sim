@@ -79,31 +79,36 @@ void GazeboRosWheelDrop::OnUpdate()
     return;
   }
 
+  // Check and update wheeldrop status
   const double displacement{joint_->Position()};
   if ((wheel_drop_detected_ == false) && (displacement >= upper_limit_)) {
     wheel_drop_detected_ = true;
   } else if ((wheel_drop_detected_ == true) && (displacement < lower_limit_)) {
     wheel_drop_detected_ = false;
   }
-  if(wheel_drop_detected_) {
-    PublishState(true, displacement, current_time);
+
+  // Publish wheeldrop only if it's in the detected state
+  if (wheel_drop_detected_) {
+    PublishWheeldrop(displacement, current_time);
   }
+
   last_time_ = current_time;
 }
 
-void GazeboRosWheelDrop::PublishState(
-  const bool & state, const double & displacement, const gazebo::common::Time & current_time)
+void GazeboRosWheelDrop::PublishWheeldrop(
+  const double & displacement, const gazebo::common::Time & current_time)
 {
-  wheel_drop_detected_ = state;
   irobot_create_msgs::msg::HazardDetection msg;
   msg.header.stamp = gazebo_ros::Convert<builtin_interfaces::msg::Time>(current_time);
   msg.header.frame_id = frame_id_;
   msg.type = msg.WHEEL_DROP;
   pub_->publish(msg);
   RCLCPP_DEBUG_EXPRESSION(
-    ros_node_->get_logger(), !state, "Wheel drop %s OFF: %.3f", name_.c_str(), displacement);
+    ros_node_->get_logger(), !wheel_drop_detected_, "Wheel drop %s OFF: %.3f",
+    name_.c_str(), displacement);
   RCLCPP_DEBUG_EXPRESSION(
-    ros_node_->get_logger(), state, "Wheel drop %s ON: %.3f", name_.c_str(), displacement);
+    ros_node_->get_logger(), wheel_drop_detected_, "Wheel drop %s ON: %.3f",
+    name_.c_str(), displacement);
 }
 
 // Register this plugin with the simulator
