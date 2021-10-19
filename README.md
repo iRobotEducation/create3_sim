@@ -53,8 +53,14 @@ ros2 launch irobot_create_gazebo create3.launch.py
 ```
 
 Create 3 can be spawned in the AWS small house in Gazebo and RViz if
-the package aws_robomaker_small_house_world is installed with
+the package aws_robomaker_small_house_world is installed.
 
+This package can be installed by doing
+```bash
+vcs import ~/create3_ws/src/ < ~/create3_ws/src/create3_sim/demo.repos
+```
+Then after the aws_robomaker_small_house_world is built in the workspace,
+you can run:
 ```bash
 ros2 launch irobot_create_gazebo aws_small.launch.py
 ```
