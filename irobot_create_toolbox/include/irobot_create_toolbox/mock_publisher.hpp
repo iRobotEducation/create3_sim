@@ -34,9 +34,11 @@
 #include <nav_msgs/msg/odometry.hpp>
 #include <geometry_msgs/msg/pose.hpp>
 
+#include <limits>
 #include <memory>
 #include <string>
 #include <vector>
+
 
 namespace irobot_create_toolbox
 {
@@ -104,8 +106,8 @@ protected:
   // Message to store the stop status
   irobot_create_msgs::msg::StopStatus stop_status_msg_;
 
-  float linear_velocity_tolerance{0};
-  float angular_velocity_tolerance{0};
+  double linear_velocity_tolerance{std::numeric_limits<double>::max()};
+  double angular_velocity_tolerance{std::numeric_limits<double>::max()};
 };
 
 }  // namespace irobot_create_toolbox
