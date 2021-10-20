@@ -32,6 +32,8 @@
   <xacro:property name="wheel_drop_offset_z"     value="${3.5*mm2m}"/>
   <xacro:property name="wheel_drop_z"            value="${wheel_height + wheel_drop_offset_z}"/>
 
+  <xacro:property name="base_link_z_offset"     value="${6.42*cm2m}"/>
+
   <!-- Docking properties -->
   <xacro:property name="robot_model_name" value="create3"/>
   <xacro:property name="receiver_link_name" value="ir_omni"/>
@@ -39,22 +41,21 @@
   <xacro:property name="emitter_link_name" value="halo_link"/>
 
   <!-- Create 3 base definition-->
-  <origin xyz="0 0 0.064171"/>
   <link name="base_link">
     <visual>
-      <origin xyz="0 0 ${body_z_offset}" rpy="0 0 ${pi/2}"/>
+      <origin xyz="0 0 ${body_z_offset + base_link_z_offset}" rpy="0 0 ${pi/2}"/>
       <geometry>
         <mesh filename="file://$(find irobot_create_description)/meshes/body_visual.dae" />
       </geometry>
     </visual>
     <collision name="create3_base_collision">
-      <origin xyz="0 0 ${body_z_offset + body_collision_z_offset}" rpy="0 0 ${pi/2}"/>
+      <origin xyz="0 0 ${body_z_offset + body_collision_z_offset  + base_link_z_offset}" rpy="0 0 ${pi/2}"/>
       <geometry>
         <cylinder length="${body_length}" radius="${body_radius}"/>
       </geometry>
     </collision>
     <xacro:inertial_cylinder_with_pose mass="${body_mass}" radius="${body_radius}" length="${body_length}">
-      <origin xyz="0 0 ${body_collision_z_offset}"/>
+      <origin xyz="0 0 ${body_collision_z_offset + base_link_z_offset}"/>
     </xacro:inertial_cylinder_with_pose>
   </link>
 
@@ -62,7 +63,7 @@
   <xacro:bumper
       visual_mesh="file://$(find irobot_create_description)/meshes/bumper_visual.dae"
       collision_mesh="file://$(find irobot_create_description)/meshes/bumper_collision.dae">
-    <origin xyz="0 0 ${bumper_offset_z}"/>
+    <origin xyz="0 0 ${bumper_offset_z  + base_link_z_offset}"/>
     <inertial>
       <origin xyz="${bumber_inertial_x} 0 ${bumper_inertial_z}"/>
       <mass value="${bumper_mass}"/>
@@ -73,21 +74,21 @@
 
   <!-- Wheels with mechanical wheel drop -->
   <xacro:wheel_with_wheeldrop name="left">
-    <origin xyz="0 ${distance_between_wheels/2} ${wheel_drop_z}" rpy="${-pi/2} 0 0"/>
+    <origin xyz="0 ${distance_between_wheels/2} ${wheel_drop_z  + base_link_z_offset}" rpy="${-pi/2} 0 0"/>
   </xacro:wheel_with_wheeldrop>
 
   <xacro:wheel_with_wheeldrop name="right">
-    <origin xyz="0 ${-distance_between_wheels/2} ${wheel_drop_z}" rpy="${-pi/2} 0 0"/>
+    <origin xyz="0 ${-distance_between_wheels/2} ${wheel_drop_z  + base_link_z_offset}" rpy="${-pi/2} 0 0"/>
   </xacro:wheel_with_wheeldrop>
 
   <!-- Caster wheel -->
   <xacro:caster name="front_caster" parent_link="base_link">
-    <origin xyz="${caster_position_x} 0 ${caster_position_z}" rpy="${-pi/2} 0 0"/>
+    <origin xyz="${caster_position_x} 0 ${caster_position_z  + base_link_z_offset}" rpy="${-pi/2} 0 0"/>
   </xacro:caster>
 
   <!-- IMU -->
   <xacro:imu_sensor>
-    <origin xyz="0.050613 0.043673 0.0202"/>
+    <origin xyz="0.050613 0.043673 ${0.0202 + base_link_z_offset}"/>
   </xacro:imu_sensor>
 
   <gazebo>
@@ -98,7 +99,7 @@
 
   <!-- Mouse -->
   <xacro:optical_mouse>
-    <origin xyz="0.1015 0.087 -0.055" rpy="0 0 ${-pi/4}"/>
+    <origin xyz="0.1015 0.087 ${-0.055 + base_link_z_offset}" rpy="0 0 ${-pi/4}"/>
   </xacro:optical_mouse>
 
   <!-- Cliffs sensors -->
@@ -115,22 +116,22 @@
   <xacro:property name="cliff_back_yaw" value="${167.4*deg2rad}"/>
 
   <xacro:cliff_sensor name="side_left">
-    <origin xyz="${cliff_back_x} ${cliff_back_y} ${cliff_z}"
+    <origin xyz="${cliff_back_x} ${cliff_back_y} ${cliff_z + base_link_z_offset}"
             rpy="0 ${cliff_back_pitch} ${cliff_back_yaw}"/>
   </xacro:cliff_sensor>
 
   <xacro:cliff_sensor name="side_right">
-    <origin xyz="${cliff_back_x} ${- cliff_back_y} ${cliff_z}"
+    <origin xyz="${cliff_back_x} ${- cliff_back_y} ${cliff_z + base_link_z_offset}"
             rpy="0 ${cliff_back_pitch} ${- cliff_back_yaw}"/>
   </xacro:cliff_sensor>
 
   <xacro:cliff_sensor name="front_left">
-    <origin xyz="${cliff_center_x} ${cliff_center_y} ${cliff_z}"
+    <origin xyz="${cliff_center_x} ${cliff_center_y} ${cliff_z + base_link_z_offset}"
             rpy="0 ${cliff_center_pitch} ${cliff_center_yaw}"/>
   </xacro:cliff_sensor>
 
   <xacro:cliff_sensor name="front_right">
-    <origin xyz="${cliff_center_x} ${- cliff_center_y} ${cliff_z}"
+    <origin xyz="${cliff_center_x} ${- cliff_center_y} ${cliff_z + base_link_z_offset}"
             rpy="0 ${cliff_center_pitch} ${- cliff_center_yaw}"/>
   </xacro:cliff_sensor>
 
@@ -152,39 +153,39 @@
   side_left                                                   right
   -->
   <xacro:ir_intensity name="front_center_left">
-    <origin xyz="0.1540 0 ${ir_intensity_z_pos}"/>
+    <origin xyz="0.1540 0 ${ir_intensity_z_pos + base_link_z_offset}"/>
   </xacro:ir_intensity>
   <xacro:ir_intensity name="front_center_right">
-    <origin xyz="0.1396 -0.0651 ${ir_intensity_z_pos}" rpy="0 0 -0.436"/>
+    <origin xyz="0.1396 -0.0651 ${ir_intensity_z_pos + base_link_z_offset}" rpy="0 0 -0.436"/>
   </xacro:ir_intensity>
   <xacro:ir_intensity name="front_left">
-    <origin xyz="0.1396 0.0651 ${ir_intensity_z_pos}" rpy="0 0 0.436"/>
+    <origin xyz="0.1396 0.0651 ${ir_intensity_z_pos + base_link_z_offset}" rpy="0 0 0.436"/>
   </xacro:ir_intensity>
   <xacro:ir_intensity name="front_right">
-    <origin xyz="0.0990 -0.1180 ${ir_intensity_z_pos}" rpy="0 0 -0.873"/>
+    <origin xyz="0.0990 -0.1180 ${ir_intensity_z_pos + base_link_z_offset}" rpy="0 0 -0.873"/>
   </xacro:ir_intensity>
   <xacro:ir_intensity name="left">
-    <origin xyz="0.0990 0.1180 ${ir_intensity_z_pos}" rpy="0 0 0.873"/>
+    <origin xyz="0.0990 0.1180 ${ir_intensity_z_pos + base_link_z_offset}" rpy="0 0 0.873"/>
   </xacro:ir_intensity>
   <xacro:ir_intensity name="right">
-    <origin xyz="0.0399 -0.1488 ${ir_intensity_z_pos}" rpy="0 0 -1.309"/>
+    <origin xyz="0.0399 -0.1488 ${ir_intensity_z_pos + base_link_z_offset}" rpy="0 0 -1.309"/>
   </xacro:ir_intensity>
   <xacro:ir_intensity name="side_left">
-    <origin xyz="0.0399 0.1488 ${ir_intensity_z_pos}" rpy="0 0 1.309"/>
+    <origin xyz="0.0399 0.1488 ${ir_intensity_z_pos + base_link_z_offset}" rpy="0 0 1.309"/>
   </xacro:ir_intensity>
 
   <!-- Buttons -->
   <xacro:button
       name="button_1">
-      <origin xyz="0.06 0.37 0.08" rpy="0 ${-pi/2} 0"/>
+      <origin xyz="0.06 0.37 ${0.08 + base_link_z_offset}" rpy="0 ${-pi/2} 0"/>
   </xacro:button>
   <xacro:button
       name="button_2">
-      <origin xyz="0.06 -0.37 0.08" rpy="0 ${-pi/2} 0"/>
+      <origin xyz="0.06 -0.37 ${0.08 + base_link_z_offset}" rpy="0 ${-pi/2} 0"/>
   </xacro:button>
   <xacro:button
       name="button_power">
-      <origin xyz="0.06 0 0.08" rpy="0 ${-pi/2} 0"/>
+      <origin xyz="0.06 0 ${0.08 + base_link_z_offset}" rpy="0 ${-pi/2} 0"/>
   </xacro:button>
 
   <!-- Omni IR receiver (sensor 0) parameters and Front-facing IR receiver (sensor 1) parameters -->
@@ -193,7 +194,7 @@
   <xacro:ir_opcode_receivers robot_model_name="${robot_model_name}" dock_model_name="${dock_model_name}"
     emitter_link_name="${emitter_link_name}" sensor_0_range="0.01" sensor_0_fov="${ir_omni_fov_rad}"
     sensor_1_range="0.5" sensor_1_fov="${ir_front_facing_fov_rad}" >
-    <origin xyz="0.153 0 0.035"/>
+    <origin xyz="0.153 0 ${0.035 + base_link_z_offset}"/>
   </xacro:ir_opcode_receivers>
 
   <!-- Ground truth pose -->
