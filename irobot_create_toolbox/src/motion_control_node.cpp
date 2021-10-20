@@ -106,7 +106,7 @@ void MotionControlNode::declare_safety_parameters()
   if (val != "backup_only") {
     RCLCPP_ERROR(
       this->get_logger(), "Trying to set %s. This is not supported yet on sim.",
-      safety_override_param_name_);
+      safety_override_param_name_.c_str());
     throw std::runtime_error(
             "User tried to set " + safety_override_param_name_ + ". This are not supported yet.");
   }
@@ -125,7 +125,7 @@ void MotionControlNode::declare_safety_parameters()
       this->get_logger(), "%s %s \'%s\' parameter",
       "Ignoring user set max speed as parameter is for reporting purposes only.",
       "Max speed is only changed by updating the",
-      safety_override_param_name_);
+      safety_override_param_name_.c_str());
   }
 }
 
