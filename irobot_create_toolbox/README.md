@@ -1,4 +1,5 @@
-# Irobot create toolbox
+# iRobot® Create® 3 toolbox
+
 This package defines a set of extra tools that one might find handy when developing its own robot application.
 
 ## Using the teleop_joystick launchfile

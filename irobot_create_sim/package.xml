@@ -3,7 +3,7 @@
 <package format="3">
   <name>irobot_create_sim</name>
   <version>0.0.1</version>
-  <description>Metapackage for the iRobot Create3 <a href="http://gazebosim.org/">Gazebo</a> simulation stack.</description>
+  <description>Metapackage for the iRobot(R) Create(R) 3 robot simulator<a href="http://gazebosim.org/">Gazebo</a> simulation stack.</description>
 
   <maintainer email="ekumen@irbt.onmicrosoft.com">Ekumen</maintainer>
 
