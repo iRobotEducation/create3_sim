@@ -195,8 +195,7 @@ void MockPublisher::stop_callback(nav_msgs::msg::Odometry::SharedPtr msg)
 
 void MockPublisher::lightring_callback(irobot_create_msgs::msg::LightringLeds::SharedPtr /*msg*/)
 {
-  RCLCPP_INFO(
-    get_logger(),
+  RCLCPP_INFO(get_logger(),
     "Lightring message received but it is not yet implemented in simulation");
 }
 }  // namespace irobot_create_toolbox
