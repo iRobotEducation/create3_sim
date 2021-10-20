@@ -28,16 +28,3 @@ jobs:
             irobot_create_gazebo_plugins
             irobot_create_sim
             irobot_create_toolbox
-
-      # ============
-      # DEPENDENCIES
-      # ============
-
-      - name: Dependencies [Ubuntu]
-        shell: bash
-        run: |
-          sudo sh -c 'echo "deb http://packages.osrfoundation.org/gazebo/ubuntu `lsb_release -cs` main" > /etc/apt/sources.list.d/gazebo-latest.list'
-          wget http://packages.osrfoundation.org/gazebo.key -O - | sudo apt-key add -
-          sudo apt-get update
-          sudo apt-get install git build-essential cmake libace-dev libeigen3-dev libopencv-dev
-          sudo apt-get install libgazebo11-dev
