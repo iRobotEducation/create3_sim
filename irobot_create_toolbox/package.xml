@@ -3,9 +3,9 @@
 <package format="3">
   <name>irobot_create_toolbox</name>
   <version>0.0.1</version>
-  <description>Helper tools for the create 3 robot.</description>
+  <description>Helper tools for the iRobot(R) Create(R) 3 Educational Robot.</description>
   <maintainer email="ekumen@irbt.onmicrosoft.com">Ekumen</maintainer>
-  <license>Apache-2.0</license>
+  <license>BSD</license>
 
   <buildtool_depend>ament_cmake</buildtool_depend>
   <buildtool_depend>ament_cmake_python</buildtool_depend>

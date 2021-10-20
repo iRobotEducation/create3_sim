@@ -3,9 +3,9 @@
 <package format="3">
   <name>irobot_create_gazebo_plugins</name>
   <version>0.0.1</version>
-  <description>Provides the Gazebo plugins for the iRobot Create 3 platform.</description>
+  <description>Provides the Gazebo plugins for the iRobot(R) Create(R) 3 Educational Robot.</description>
   <maintainer email="ekumen@irbt.onmicrosoft.com">Ekumen</maintainer>
-  <license>Apache-2.0</license>
+  <license>BSD</license>
 
   <author>iRobot</author>
 
