@@ -6,11 +6,11 @@
 
 #include <geometry_msgs/msg/twist.hpp>
 #include <irobot_create_msgs/msg/kidnap_status.hpp>
+#include <irobot_create_msgs/msg/hazard_detection.hpp>
 #include <irobot_create_toolbox/parameter_helper.hpp>
 #include <irobot_create_toolbox/motion_control/docking_behavior.hpp>
 #include <irobot_create_toolbox/motion_control/reflex_behavior.hpp>
 #include <rclcpp/rclcpp.hpp>
-#include <std_msgs/msg/bool.hpp>
 #include <tf2_ros/buffer.h>
 #include <tf2_ros/transform_listener.h>
 #include <map>
@@ -29,6 +29,8 @@ public:
 private:
   /// \brief Function to centralize velocity command for system
   void control_robot();
+  /// \brief Publish limit if backup buffer low
+  void check_backup_buffer();
   /// \brief Clear any cached teleop command
   void reset_last_teleop_cmd();
 
@@ -78,8 +80,9 @@ private:
   rclcpp::Subscription<nav_msgs::msg::Odometry>::SharedPtr odom_pose_sub_;
   rclcpp::Subscription<irobot_create_msgs::msg::KidnapStatus>::SharedPtr kidnap_sub_;
   rclcpp::Publisher<geometry_msgs::msg::Twist>::SharedPtr cmd_vel_out_pub_;
-  rclcpp::Publisher<std_msgs::msg::Bool>::SharedPtr backup_buffer_low_pub_;
-  rclcpp::TimerBase::SharedPtr timer_;
+  rclcpp::Publisher<irobot_create_msgs::msg::HazardDetection>::SharedPtr backup_limit_hazard_pub_;
+  rclcpp::TimerBase::SharedPtr control_timer_;
+  rclcpp::TimerBase::SharedPtr backup_limit_timer_;
 
   std::shared_ptr<tf2_ros::Buffer> tf_buffer_;
   std::shared_ptr<tf2_ros::TransformListener> tf_listener_;
@@ -106,6 +109,8 @@ private:
   rclcpp::Time backup_print_ts_;
   rclcpp::Time auto_override_print_ts_;
   const rclcpp::Duration repeat_print_;
+  const std::string backup_limit_frame_ {"base_link"};
+  std::atomic<bool> backup_buffer_low_ {false};
 };
 
 }  // namespace irobot_create_toolbox

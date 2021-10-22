@@ -31,13 +31,6 @@ HazardsVectorPublisher::HazardsVectorPublisher()
 
       // Set header timestamp.
       this->msg_.header.stamp = now();
-      if (backup_limit_) {
-        irobot_create_msgs::msg::HazardDetection backup_hazard;
-        backup_hazard.header.frame_id = "base_link";
-        backup_hazard.header.stamp = this->msg_.header.stamp;
-        backup_hazard.type = irobot_create_msgs::msg::HazardDetection::BACKUP_LIMIT;
-        this->msg_.detections.push_back(backup_hazard);
-      }
 
       // Publish detected vector.
       this->publisher_->publish(this->msg_);
@@ -58,11 +51,6 @@ HazardsVectorPublisher::HazardsVectorPublisher()
         })));
     RCLCPP_INFO_STREAM(get_logger(), "Subscription to topic: " << topic);
   }
-  backup_limit_subscription_ = this->create_subscription<std_msgs::msg::Bool>(
-    "_internal/backup_buffer_low", rclcpp::SensorDataQoS(),
-    [this](std_msgs::msg::Bool::ConstSharedPtr msg) {
-      backup_limit_ = msg->data;
-    });
 }
 
 }  // namespace irobot_create_toolbox

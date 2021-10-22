@@ -8,7 +8,6 @@
 #include <irobot_create_msgs/msg/hazard_detection_vector.hpp>
 #include <irobot_create_toolbox/parameter_helper.hpp>
 #include <rclcpp/rclcpp.hpp>
-#include <std_msgs/msg/bool.hpp>
 #include <string>
 #include <vector>
 
@@ -27,8 +26,6 @@ private:
   // Detection vector publisher
   rclcpp::Publisher<irobot_create_msgs::msg::HazardDetectionVector>::SharedPtr publisher_;
 
-  // Subscription to indicate BACKUP_LIMIT should be published
-  rclcpp::Subscription<std_msgs::msg::Bool>::SharedPtr backup_limit_subscription_;
   // Vector of subscriptions
   using HazardVectorSubscriptionPtr =
     std::vector<rclcpp::Subscription<irobot_create_msgs::msg::HazardDetection>::SharedPtr>;
@@ -45,8 +42,6 @@ private:
 
   // Message containing a vector to store detected hazards
   irobot_create_msgs::msg::HazardDetectionVector msg_;
-
-  std::atomic<bool> backup_limit_ {false};
 };
 
 }  // namespace irobot_create_toolbox

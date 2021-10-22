@@ -61,8 +61,8 @@ MotionControlNode::MotionControlNode()
   cmd_vel_out_pub_ = this->create_publisher<geometry_msgs::msg::Twist>(
     "diffdrive_controller/cmd_vel_unstamped", rclcpp::SystemDefaultsQoS());
 
-  backup_buffer_low_pub_ = this->create_publisher<std_msgs::msg::Bool>(
-    "_internal/backup_buffer_low", rclcpp::SensorDataQoS());
+  backup_limit_hazard_pub_ = this->create_publisher<irobot_create_msgs::msg::HazardDetection>(
+    "_internal/backup_limit", rclcpp::SensorDataQoS());
   // Register a callback to handle parameter changes
   params_callback_handle_ = this->add_on_set_parameters_callback(
     std::bind(&MotionControlNode::set_parameters_callback, this, _1));
@@ -74,12 +74,18 @@ MotionControlNode::MotionControlNode()
   last_backup_pose_.setIdentity();
   last_teleop_ts_ = this->now();
   // Create timer to periodically execute behaviors and control the robot
-  constexpr auto period = 25ms;
-  timer_ = rclcpp::create_timer(
+  constexpr auto control_period = std::chrono::duration<double>(1.0 / 40.0);
+  control_timer_ = rclcpp::create_timer(
     this,
     this->get_clock(),
-    rclcpp::Duration(period),
+    rclcpp::Duration(control_period),
     std::bind(&MotionControlNode::control_robot, this));
+  constexpr auto backup_pub_period = std::chrono::duration<double>(1.0 / 62.0);
+  backup_limit_timer_ = rclcpp::create_timer(
+    this,
+    this->get_clock(),
+    rclcpp::Duration(backup_pub_period),
+    std::bind(&MotionControlNode::check_backup_buffer, this));
 }
 
 void MotionControlNode::declare_safety_parameters()
@@ -198,13 +204,22 @@ void MotionControlNode::control_robot()
     backup_buffer_ = std::min(backup_buffer_, 0.15);
     last_backup_pose_ = last_robot_pose_;
   }
-  auto backup_buffer_low_msg = std::make_unique<std_msgs::msg::Bool>();
-  backup_buffer_low_msg->data = (safety_override_mode_ == SafetyOverrideMode::NONE) &&
+  backup_buffer_low_ = (safety_override_mode_ == SafetyOverrideMode::NONE) &&
     (backup_buffer_ <= 0.05);
-  backup_buffer_low_pub_->publish(std::move(backup_buffer_low_msg));
   auto cmd_out_msg = std::make_unique<geometry_msgs::msg::Twist>();
   *cmd_out_msg = *command;
   cmd_vel_out_pub_->publish(std::move(cmd_out_msg));
+}
+
+void MotionControlNode::check_backup_buffer()
+{
+  if (backup_buffer_low_) {
+    auto backup_limit_msg = std::make_unique<irobot_create_msgs::msg::HazardDetection>();
+    backup_limit_msg->header.frame_id = backup_limit_frame_;
+    backup_limit_msg->header.stamp = this->now();
+    backup_limit_msg->type = irobot_create_msgs::msg::HazardDetection::BACKUP_LIMIT;
+    backup_limit_hazard_pub_->publish(std::move(backup_limit_msg));
+  }
 }
 
 bool MotionControlNode::set_safety_mode(const std::string & safety_mode)
@@ -235,7 +250,7 @@ bool MotionControlNode::set_safety_mode(const std::string & safety_mode)
 void MotionControlNode::commanded_velocity_callback(geometry_msgs::msg::Twist::ConstSharedPtr msg)
 {
   if (scheduler_->has_behavior()) {
-    auto time_now = this->now();
+    const auto time_now = this->now();
     if (time_now - auto_override_print_ts_ > repeat_print_) {
       auto_override_print_ts_ = time_now;
       RCLCPP_WARN(
@@ -286,7 +301,7 @@ void MotionControlNode::bound_command_by_limits(geometry_msgs::msg::Twist & cmd)
   {
     // Robot has run out of room to backup
     cmd.linear.x = 0.0;
-    auto time_now = this->now();
+    const auto time_now = this->now();
     if (time_now - backup_print_ts_ > repeat_print_) {
       backup_print_ts_ = time_now;
       RCLCPP_WARN(
@@ -297,9 +312,9 @@ void MotionControlNode::bound_command_by_limits(geometry_msgs::msg::Twist & cmd)
   } else {
     double left_vel = cmd.linear.x - cmd.angular.z * wheel_base_ / 2.0;
     double right_vel = cmd.angular.z * wheel_base_ + left_vel;
-    double max_vel = std::max(std::abs(left_vel), std::abs(right_vel));
+    const double max_vel = std::max(std::abs(left_vel), std::abs(right_vel));
     if (max_vel > 0 && max_vel > max_speed_) {
-      double scale = max_speed_ / max_vel;
+      const double scale = max_speed_ / max_vel;
       // Scale velocity to bring them in limits
       left_vel *= scale;
       right_vel *= scale;

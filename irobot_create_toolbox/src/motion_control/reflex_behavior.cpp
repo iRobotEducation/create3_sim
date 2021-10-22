@@ -149,13 +149,12 @@ void ReflexBehavior::enable_reflex(uint8_t reflex, bool enable)
     hazard_reflex->second = enable;
     // Print reflex being enabled/disabled
     for (const auto & name : reflex_names_to_hazard_) {
-      if (name.second == reflex) {
-        if (enable) {
-          RCLCPP_INFO(logger_, "Enabling %s", name.first.c_str());
-        } else {
-          RCLCPP_INFO(logger_, "Disabling %s", name.first.c_str());
-        }
-      }
+      RCLCPP_INFO_STREAM_EXPRESSION(
+        logger_, name.second == reflex && enable,
+        "Enabling " << name.first);
+      RCLCPP_INFO_STREAM_EXPRESSION(
+        logger_, name.second == reflex && !enable,
+        "Disabling " << name.first);
     }
   }
 }
