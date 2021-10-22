@@ -13,6 +13,7 @@
 #include <std_msgs/msg/bool.hpp>
 #include <tf2_ros/buffer.h>
 #include <tf2_ros/transform_listener.h>
+#include <map>
 #include <memory>
 #include <string>
 #include <vector>
@@ -38,15 +39,16 @@ private:
   rcl_interfaces::msg::SetParametersResult set_parameters_callback(
     const std::vector<rclcpp::Parameter> & parameters);
 
-  enum class SafetyOverrideMode {
-      NONE,
-      BACKUP_ONLY,
-      FULL
+  enum class SafetyOverrideMode
+  {
+    NONE,
+    BACKUP_ONLY,
+    FULL
   };
   const std::map<std::string, SafetyOverrideMode> safety_to_str_ {
-      {"none", SafetyOverrideMode::NONE},
-      {"backup_only", SafetyOverrideMode::BACKUP_ONLY},
-      {"full", SafetyOverrideMode::FULL}
+    {"none", SafetyOverrideMode::NONE},
+    {"backup_only", SafetyOverrideMode::BACKUP_ONLY},
+    {"full", SafetyOverrideMode::FULL}
   };
   /// \brief Name of parameter for setting system safety mode,
   //     which dictates cliff safety and max speed
@@ -55,7 +57,7 @@ private:
   //     this will be changed by system based on safety_override setting
   const std::string max_speed_param_name_{"max_speed"};
 
-  bool set_safety_mode(const std::string& safety_mode);
+  bool set_safety_mode(const std::string & safety_mode);
   /// \brief Storage for custom parameter validation callbacks
   rclcpp::node_interfaces::OnSetParametersCallbackHandle::SharedPtr params_callback_handle_{
     nullptr};
@@ -70,7 +72,7 @@ private:
   void kidnap_callback(irobot_create_msgs::msg::KidnapStatus::ConstSharedPtr msg);
 
   /// \brief Given command, bound by max speed, checking each wheel
-  void bound_command_by_limits(geometry_msgs::msg::Twist& cmd);
+  void bound_command_by_limits(geometry_msgs::msg::Twist & cmd);
 
   rclcpp::Subscription<geometry_msgs::msg::Twist>::SharedPtr teleop_subscription_;
   rclcpp::Subscription<nav_msgs::msg::Odometry>::SharedPtr odom_pose_sub_;

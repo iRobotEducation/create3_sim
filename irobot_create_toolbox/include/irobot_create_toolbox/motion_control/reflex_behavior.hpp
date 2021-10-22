@@ -13,7 +13,11 @@
 #include <tf2_ros/buffer.h>
 
 #include <atomic>
+#include <limits>
+#include <map>
 #include <memory>
+#include <string>
+#include <vector>
 
 namespace irobot_create_toolbox
 {
@@ -36,7 +40,7 @@ public:
 
   /// \brief Update reflex manager information
   //  Reflexes only trigger if robot is moving
-  void update_state(const tf2::Transform& last_robot_pose, bool moving);
+  void update_state(const tf2::Transform & last_robot_pose, bool moving);
 
 private:
   /// \brief Name of parameter for enabling/disabling all reflexes
@@ -51,14 +55,14 @@ private:
     {"REFLEX_PROXIMITY_SLOWDOWN", std::numeric_limits<uint8_t>::max()},
     {"REFLEX_STUCK", irobot_create_msgs::msg::HazardDetection::STALL},
     {"REFLEX_VIRTUAL_WALL", std::numeric_limits<uint8_t>::max()},
-    {"REFLEX_WHEEL_DROP", irobot_create_msgs::msg::HazardDetection::WHEEL_DROP} };
+    {"REFLEX_WHEEL_DROP", irobot_create_msgs::msg::HazardDetection::WHEEL_DROP}};
   std::mutex hazard_reflex_mutex_;
   /// \brief Map of hazard driven reflexes with whether they are enabled
   std::map<uint8_t, bool> hazard_reflex_enabled_ {
     {irobot_create_msgs::msg::HazardDetection::BUMP, true},
     {irobot_create_msgs::msg::HazardDetection::CLIFF, true},
     {irobot_create_msgs::msg::HazardDetection::STALL, true},
-    {irobot_create_msgs::msg::HazardDetection::WHEEL_DROP, true} };
+    {irobot_create_msgs::msg::HazardDetection::WHEEL_DROP, true}};
   /// \brief Whether to use reflexes
   std::atomic<bool> reflexes_enabled_{true};
   /// \brief Helper function to declare ROS 2 reflex parameters
@@ -67,7 +71,7 @@ private:
 
   /// \brief Helper function to validate changes to parameters
   rcl_interfaces::msg::SetParametersResult set_parameters_callback(
-          std::vector<rclcpp::Parameter> parameters);
+    std::vector<rclcpp::Parameter> parameters);
 
   rclcpp::node_interfaces::OnSetParametersCallbackHandle::SharedPtr params_callback_handle_;
 
@@ -83,7 +87,8 @@ private:
 
   BehaviorsScheduler::optional_output_t execute_reflex();
 
-  rclcpp::Subscription<irobot_create_msgs::msg::HazardDetectionVector>::SharedPtr hazard_detection_sub_;
+  rclcpp::Subscription<irobot_create_msgs::msg::HazardDetectionVector>::SharedPtr
+    hazard_detection_sub_;
 
   rclcpp::Clock::SharedPtr clock_;
   std::shared_ptr<tf2_ros::Buffer> tf_buffer_;
@@ -101,7 +106,7 @@ private:
   const double MIN_REFLEX_DISTANCE {0.05};
   const double BACKUP_X_VELOCITY {-0.14};
   const double ARC_X_VELOCITY {-0.1};
-  const double ARC_ANGULAR_VELOCITY {M_PI/16.0};
+  const double ARC_ANGULAR_VELOCITY {M_PI / 16.0};
   std::atomic<bool> moving_;
   std::atomic<bool> driving_backwards_ {false};
   const std::string odom_frame_ {"odom"};

@@ -3,6 +3,8 @@
 
 #include "irobot_create_toolbox/motion_control_node.hpp"
 
+#include <algorithm>
+#include <map>
 #include <memory>
 #include <string>
 #include <utility>
@@ -21,7 +23,7 @@ MotionControlNode::MotionControlNode()
   // Declare ROS 2 parameters for robot safety.
   this->declare_safety_parameters();
   // Setup transform tools for frames at time
-  tf_buffer_  = std::make_shared<tf2_ros::Buffer>(this->get_clock());
+  tf_buffer_ = std::make_shared<tf2_ros::Buffer>(this->get_clock());
   tf_buffer_->setUsingDedicatedThread(true);
   tf_listener_ = std::make_shared<tf2_ros::TransformListener>(*tf_buffer_, this, false);
 
@@ -114,7 +116,6 @@ void MotionControlNode::declare_safety_parameters()
   if (val != "none") {
     set_safety_mode(val);
   }
-
 }
 
 rcl_interfaces::msg::SetParametersResult MotionControlNode::set_parameters_callback(
@@ -128,16 +129,18 @@ rcl_interfaces::msg::SetParametersResult MotionControlNode::set_parameters_callb
 
   for (const rclcpp::Parameter & parameter : parameters) {
     if (parameter.get_name() == safety_override_param_name_) {
-        // Handle new value for parameters
-        result.successful = set_safety_mode(parameter.get_value<std::string>());
-        if (!result.successful) {
-            result.reason = "Failed to set safety mode, see rosout for more detail";
-        }
+      // Handle new value for parameters
+      result.successful = set_safety_mode(parameter.get_value<std::string>());
+      if (!result.successful) {
+        result.reason = "Failed to set safety mode, see rosout for more detail";
+      }
     } else if (parameter.get_name() == max_speed_param_name_) {
-        result.successful = allow_speed_param_change_;
-        if (!result.successful) {
-            result.reason = "parameter \'"+parameter.get_name()+"\' cannot be set externally. Only updated from change in \'"+safety_override_param_name_+"\' parameter";
-        }
+      result.successful = allow_speed_param_change_;
+      if (!result.successful) {
+        result.reason = "parameter \'" + parameter.get_name() +
+          "\' cannot be set externally. Only updated from change in \'" +
+          safety_override_param_name_ + "\' parameter";
+      }
     }
   }
 
@@ -147,10 +150,10 @@ rcl_interfaces::msg::SetParametersResult MotionControlNode::set_parameters_callb
 void MotionControlNode::control_robot()
 {
   if (max_speed_ != this->get_parameter(max_speed_param_name_).get_value<double>()) {
-      allow_speed_param_change_ = true;
-      this->set_parameter(rclcpp::Parameter(max_speed_param_name_, max_speed_));
-      allow_speed_param_change_ = false;
-      RCLCPP_INFO(this->get_logger(), "Robot max speed is now %f m/s", max_speed_);
+    allow_speed_param_change_ = true;
+    this->set_parameter(rclcpp::Parameter(max_speed_param_name_, max_speed_));
+    allow_speed_param_change_ = false;
+    RCLCPP_INFO(this->get_logger(), "Robot max speed is now %f m/s", max_speed_);
   }
   // Handle behaviors
   BehaviorsScheduler::optional_output_t command;
@@ -174,7 +177,6 @@ void MotionControlNode::control_robot()
       command = last_teleop_cmd_;
       bound_command_by_limits(*command);
     }
-
   }
 
   // Create a null command if we don't have anything.
@@ -183,9 +185,9 @@ void MotionControlNode::control_robot()
   if (!command) {
     command = geometry_msgs::msg::Twist();
   } else {
-      // See if command is moving
-      moving = std::abs(command->linear.x) > 0.001
-              || std::abs(command->angular.z) > 0.001;
+    // See if command is moving
+    moving = std::abs(command->linear.x) > 0.001 ||
+      std::abs(command->angular.z) > 0.001;
   }
   {
     const std::lock_guard<std::mutex> lock(robot_pose_mutex_);
@@ -197,27 +199,28 @@ void MotionControlNode::control_robot()
     last_backup_pose_ = last_robot_pose_;
   }
   auto backup_buffer_low_msg = std::make_unique<std_msgs::msg::Bool>();
-  backup_buffer_low_msg->data = (safety_override_mode_ == SafetyOverrideMode::NONE)
-      && (backup_buffer_ <= 0.05);
+  backup_buffer_low_msg->data = (safety_override_mode_ == SafetyOverrideMode::NONE) &&
+    (backup_buffer_ <= 0.05);
   backup_buffer_low_pub_->publish(std::move(backup_buffer_low_msg));
   auto cmd_out_msg = std::make_unique<geometry_msgs::msg::Twist>();
   *cmd_out_msg = *command;
   cmd_vel_out_pub_->publish(std::move(cmd_out_msg));
 }
 
-bool MotionControlNode::set_safety_mode(const std::string& safety_mode)
+bool MotionControlNode::set_safety_mode(const std::string & safety_mode)
 {
-  std::map<std::string, SafetyOverrideMode>::const_iterator safety_mode_it = safety_to_str_.find(safety_mode);
+  std::map<std::string, SafetyOverrideMode>::const_iterator safety_mode_it = safety_to_str_.find(
+    safety_mode);
   if (safety_mode_it != safety_to_str_.end()) {
     safety_override_mode_ = safety_mode_it->second;
     switch (safety_override_mode_) {
-        case SafetyOverrideMode::NONE:
-        case SafetyOverrideMode::BACKUP_ONLY:
-            max_speed_ = SAFETY_ON_MAX_SPEED;
-            break;
-        case SafetyOverrideMode::FULL:
-            max_speed_ = SAFETY_OFF_MAX_SPEED;
-            break;
+      case SafetyOverrideMode::NONE:
+      case SafetyOverrideMode::BACKUP_ONLY:
+        max_speed_ = SAFETY_ON_MAX_SPEED;
+        break;
+      case SafetyOverrideMode::FULL:
+        max_speed_ = SAFETY_OFF_MAX_SPEED;
+        break;
     }
   } else {
     RCLCPP_WARN(
@@ -234,10 +237,10 @@ void MotionControlNode::commanded_velocity_callback(geometry_msgs::msg::Twist::C
   if (scheduler_->has_behavior()) {
     auto time_now = this->now();
     if (time_now - auto_override_print_ts_ > repeat_print_) {
-        auto_override_print_ts_ = time_now;
-        RCLCPP_WARN(
-                this->get_logger(),
-                "Ignoring velocities commanded while an autonomous behavior is running!");
+      auto_override_print_ts_ = time_now;
+      RCLCPP_WARN(
+        this->get_logger(),
+        "Ignoring velocities commanded while an autonomous behavior is running!");
     }
     return;
   }
@@ -256,10 +259,10 @@ void MotionControlNode::robot_pose_callback(nav_msgs::msg::Odometry::ConstShared
 
 void MotionControlNode::kidnap_callback(irobot_create_msgs::msg::KidnapStatus::ConstSharedPtr msg)
 {
-    if (!msg->is_kidnapped && last_kidnap_) {
-        backup_buffer_ = 0.0;
-    }
-    last_kidnap_ = msg->is_kidnapped;
+  if (!msg->is_kidnapped && last_kidnap_) {
+    backup_buffer_ = 0.0;
+  }
+  last_kidnap_ = msg->is_kidnapped;
 }
 
 void MotionControlNode::reset_last_teleop_cmd()
@@ -275,35 +278,36 @@ void MotionControlNode::reset_last_teleop_cmd()
   last_teleop_ts_ = this->now();
 }
 
-void MotionControlNode::bound_command_by_limits(geometry_msgs::msg::Twist& cmd)
+void MotionControlNode::bound_command_by_limits(geometry_msgs::msg::Twist & cmd)
 {
-    if (safety_override_mode_ == SafetyOverrideMode::NONE &&
-            backup_buffer_ <= 0.0 &&
-            cmd.linear.x < 0.0) {
-        // Robot has run out of room to backup
-        cmd.linear.x = 0.0;
-        auto time_now = this->now();
-        if (time_now - backup_print_ts_ > repeat_print_) {
-            backup_print_ts_ = time_now;
-            RCLCPP_WARN(this->get_logger(),
-                    "Reached backup limit! Stop Driving robot backward or disable from %s parameter!",
-                    safety_override_param_name_.c_str());
-        }
-    } else {
-        double left_vel = cmd.linear.x - cmd.angular.z * wheel_base_ / 2.0;
-        double right_vel = cmd.angular.z * wheel_base_ + left_vel;
-        double max_vel = std::max(std::abs(left_vel), std::abs(right_vel));
-        if (max_vel > 0 && max_vel > max_speed_)
-        {
-            double scale = max_speed_ / max_vel;
-            // Scale velocity to bring them in limits
-            left_vel *= scale;
-            right_vel *= scale;
-            // Convert back to cartesian
-            cmd.linear.x = (left_vel + right_vel) / 2.0;
-            cmd.angular.z = (right_vel - left_vel) / wheel_base_;
-        }
+  if (safety_override_mode_ == SafetyOverrideMode::NONE &&
+    backup_buffer_ <= 0.0 &&
+    cmd.linear.x < 0.0)
+  {
+    // Robot has run out of room to backup
+    cmd.linear.x = 0.0;
+    auto time_now = this->now();
+    if (time_now - backup_print_ts_ > repeat_print_) {
+      backup_print_ts_ = time_now;
+      RCLCPP_WARN(
+        this->get_logger(),
+        "Reached backup limit! Stop Driving robot backward or disable from %s parameter!",
+        safety_override_param_name_.c_str());
     }
+  } else {
+    double left_vel = cmd.linear.x - cmd.angular.z * wheel_base_ / 2.0;
+    double right_vel = cmd.angular.z * wheel_base_ + left_vel;
+    double max_vel = std::max(std::abs(left_vel), std::abs(right_vel));
+    if (max_vel > 0 && max_vel > max_speed_) {
+      double scale = max_speed_ / max_vel;
+      // Scale velocity to bring them in limits
+      left_vel *= scale;
+      right_vel *= scale;
+      // Convert back to cartesian
+      cmd.linear.x = (left_vel + right_vel) / 2.0;
+      cmd.angular.z = (right_vel - left_vel) / wheel_base_;
+    }
+  }
 }
 
 }  // namespace irobot_create_toolbox

@@ -59,10 +59,10 @@ HazardsVectorPublisher::HazardsVectorPublisher()
     RCLCPP_INFO_STREAM(get_logger(), "Subscription to topic: " << topic);
   }
   backup_limit_subscription_ = this->create_subscription<std_msgs::msg::Bool>(
-        "_internal/backup_buffer_low", rclcpp::SensorDataQoS(),
-        [this](std_msgs::msg::Bool::ConstSharedPtr msg) {
-            backup_limit_ = msg->data;
-        });
+    "_internal/backup_buffer_low", rclcpp::SensorDataQoS(),
+    [this](std_msgs::msg::Bool::ConstSharedPtr msg) {
+      backup_limit_ = msg->data;
+    });
 }
 
 }  // namespace irobot_create_toolbox
