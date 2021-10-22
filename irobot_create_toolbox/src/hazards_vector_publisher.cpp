@@ -25,8 +25,10 @@ HazardsVectorPublisher::HazardsVectorPublisher()
     publisher_topic_, rclcpp::SensorDataQoS());
   RCLCPP_INFO_STREAM(get_logger(), "Advertised topic: " << publisher_topic_);
 
-  timer_ = create_wall_timer(
-    std::chrono::duration<double>(1 / publish_rate), [this]() {
+  timer_ = rclcpp::create_timer(
+    this,
+    this->get_clock(),
+    rclcpp::Duration(std::chrono::duration<double>(1 / publish_rate)), [this]() {
       std::lock_guard<std::mutex> lock{this->mutex_};
 
       // Set header timestamp.

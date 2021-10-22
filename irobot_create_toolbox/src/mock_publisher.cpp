@@ -90,8 +90,10 @@ MockPublisher::MockPublisher()
     std::bind(&MockPublisher::lightring_callback, this, std::placeholders::_1));
   RCLCPP_INFO_STREAM(get_logger(), "Subscription to topic: " << lightring_subscription_topic_);
 
-  buttons_timer_ = create_wall_timer(
-    std::chrono::duration<double>(1 / buttons_publish_rate), [this]() {
+  buttons_timer_ = rclcpp::create_timer(
+    this,
+    this->get_clock(),
+    rclcpp::Duration(std::chrono::duration<double>(1 / buttons_publish_rate)), [this]() {
       // Set header timestamp.
       this->buttons_msg_.header.stamp = now();
 
@@ -109,8 +111,10 @@ MockPublisher::MockPublisher()
   buttons_msg_.button_power.header.frame_id = "button_power";
   buttons_msg_.button_2.header.frame_id = "button_2";
 
-  slip_status_timer_ = create_wall_timer(
-    std::chrono::duration<double>(1 / slip_status_publish_rate), [this]() {
+  slip_status_timer_ = rclcpp::create_timer(
+    this,
+    this->get_clock(),
+    rclcpp::Duration(std::chrono::duration<double>(1 / slip_status_publish_rate)), [this]() {
       // Set header timestamp.
       this->slip_status_msg_.header.stamp = now();
 
@@ -123,8 +127,10 @@ MockPublisher::MockPublisher()
   // Set slip status status
   slip_status_msg_.is_slipping = false;
 
-  battery_state_timer_ = create_wall_timer(
-    std::chrono::duration<double>(1 / battery_state_publish_rate), [this]() {
+  battery_state_timer_ = rclcpp::create_timer(
+    this,
+    this->get_clock(),
+    rclcpp::Duration(std::chrono::duration<double>(1 / battery_state_publish_rate)), [this]() {
       // Set header timestamp.
       this->battery_state_msg_.header.stamp = now();
 
