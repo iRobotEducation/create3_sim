@@ -153,6 +153,7 @@ void DockingBehavior::handle_dock_servo_accepted(
   BehaviorsScheduler::BehaviorsData data;
   data.run_func = std::bind(&DockingBehavior::execute_dock_servo, this, goal_handle);
   data.is_done_func = std::bind(&DockingBehavior::docking_behavior_is_done, this);
+  data.interruptable = true;
 
   const bool ret = behavior_scheduler_->set_behavior(data);
   if (!ret) {
@@ -287,6 +288,7 @@ void DockingBehavior::handle_undock_accepted(
   BehaviorsScheduler::BehaviorsData data;
   data.run_func = std::bind(&DockingBehavior::execute_undock, this, goal_handle);
   data.is_done_func = std::bind(&DockingBehavior::docking_behavior_is_done, this);
+  data.interruptable = true;
 
   const bool ret = behavior_scheduler_->set_behavior(data);
   if (!ret) {

@@ -15,12 +15,15 @@ using namespace std::chrono_literals;
 
 MotionControlNode::MotionControlNode()
 : rclcpp::Node("motion_control"),
-  wheels_stop_threshold_(1s)
+  wheels_stop_threshold_(0.5s),
+  repeat_print_(1s)
 {
-  // Declare ROS 2 parameters for controlling robot reflexes.
-  this->declare_reflex_parameters();
   // Declare ROS 2 parameters for robot safety.
   this->declare_safety_parameters();
+  // Setup transform tools for frames at time
+  tf_buffer_  = std::make_shared<tf2_ros::Buffer>(this->get_clock());
+  tf_buffer_->setUsingDedicatedThread(true);
+  tf_listener_ = std::make_shared<tf2_ros::TransformListener>(*tf_buffer_, this, false);
 
   // Create behaviors scheduler
   scheduler_ = std::make_shared<BehaviorsScheduler>();
@@ -32,18 +35,41 @@ MotionControlNode::MotionControlNode()
     this->get_node_topics_interface(),
     this->get_node_waitables_interface(),
     scheduler_);
+  // Create Reflex Behavior manager
+  reflex_behavior_ = std::make_shared<ReflexBehavior>(
+    this->get_node_clock_interface(),
+    this->get_node_logging_interface(),
+    this->get_node_topics_interface(),
+    this->get_node_parameters_interface(),
+    tf_buffer_,
+    scheduler_);
   // Create subscription to let other applications drive the robot
   teleop_subscription_ = this->create_subscription<geometry_msgs::msg::Twist>(
     "cmd_vel", rclcpp::SensorDataQoS(),
     std::bind(&MotionControlNode::commanded_velocity_callback, this, _1));
 
+  odom_pose_sub_ = this->create_subscription<nav_msgs::msg::Odometry>(
+    "odom", rclcpp::SensorDataQoS(),
+    std::bind(&MotionControlNode::robot_pose_callback, this, _1));
+
+  kidnap_sub_ = this->create_subscription<irobot_create_msgs::msg::KidnapStatus>(
+    "kidnap", rclcpp::SensorDataQoS(),
+    std::bind(&MotionControlNode::kidnap_callback, this, _1));
+
   cmd_vel_out_pub_ = this->create_publisher<geometry_msgs::msg::Twist>(
     "diffdrive_controller/cmd_vel_unstamped", rclcpp::SystemDefaultsQoS());
 
+  backup_buffer_low_pub_ = this->create_publisher<std_msgs::msg::Bool>(
+    "_internal/backup_buffer_low", rclcpp::SensorDataQoS());
   // Register a callback to handle parameter changes
   params_callback_handle_ = this->add_on_set_parameters_callback(
     std::bind(&MotionControlNode::set_parameters_callback, this, _1));
 
+  backup_print_ts_ = this->now();
+  auto_override_print_ts_ = this->now();
+
+  last_robot_pose_.setIdentity();
+  last_backup_pose_.setIdentity();
   last_teleop_ts_ = this->now();
   // Create timer to periodically execute behaviors and control the robot
   constexpr auto period = 25ms;
@@ -54,71 +80,16 @@ MotionControlNode::MotionControlNode()
     std::bind(&MotionControlNode::control_robot, this));
 }
 
-void MotionControlNode::declare_reflex_parameters()
-{
-  rcl_interfaces::msg::ParameterDescriptor descriptor;
-  descriptor.read_only = false;
-  rclcpp::ParameterValue ret;
-
-  // Declare individual reflexes parameters.
-  // Eventually reflexes will be enabled, but now this is just a stub implementation
-  // so we set them to false and we enforce that users do not change them.
-  for (const std::string & reflex_name : reflex_names_) {
-    const std::string param_name = std::string("reflexes.") + reflex_name;
-    ret = this->declare_parameter(param_name, rclcpp::ParameterValue(false), descriptor);
-
-    // Make sure user is not trying to enable reflexes at startup: this is not supported.
-    if (ret.get<bool>()) {
-      RCLCPP_ERROR(
-        this->get_logger(), "Trying to enable reflex: '%s'. This is not supported yet.",
-        param_name.c_str());
-      throw std::runtime_error("User tried to enable reflexes. This are not supported yet.");
-    }
-  }
-
-  // Declare parameter to control all reflexes.
-  ret =
-    this->declare_parameter(reflex_enabled_param_name_, rclcpp::ParameterValue(false), descriptor);
-  // Make sure user is not trying to enable reflexes at startup: this is not supported.
-  // See https://github.com/iRobotEducation/create3_sim/issues/65
-  if (ret.get<bool>()) {
-    RCLCPP_ERROR(
-      this->get_logger(), "Trying to enable: '%s'. This is not supported yet.",
-      reflex_enabled_param_name_.c_str());
-    throw std::runtime_error("User tried to enable reflexes. This are not supported yet.");
-  }
-}
-
 void MotionControlNode::declare_safety_parameters()
 {
   std::stringstream long_description_string;
   rcl_interfaces::msg::ParameterDescriptor descriptor;
   descriptor.read_only = false;
   long_description_string <<
-    "Mode to override safety options {\"none\"(default), " <<
-    "\"backup_only\"(disable backup limits, no cliff safety driving backwards), " <<
-    "\"full\"(disables cliffs completely and allows for higher max drive speed " <<
-    "(0.46m/s vs 0.306m/s in other modes))}";
-  descriptor.description = long_description_string.str();
-  auto val = this->declare_parameter<std::string>(
-    safety_override_param_name_, "backup_only",
-    descriptor);
-  if (val != "backup_only") {
-    RCLCPP_ERROR(
-      this->get_logger(), "Trying to set %s. This is not supported yet on sim.",
-      safety_override_param_name_.c_str());
-    throw std::runtime_error(
-            "User tried to set " + safety_override_param_name_ + ". This are not supported yet.");
-  }
-
-  descriptor.read_only = false;
-  long_description_string.str("");
-  long_description_string.clear();
-  long_description_string <<
     "Maximum speed of the system in m/s, updated by robot based on safety_override mode. " <<
     "Cannot be updated externally.";
   descriptor.description = long_description_string.str();
-  double default_speed = 0.306;
+  double default_speed = SAFETY_ON_MAX_SPEED;
   auto speed = this->declare_parameter<double>(max_speed_param_name_, default_speed, descriptor);
   if (speed != default_speed) {
     RCLCPP_WARN(
@@ -127,6 +98,23 @@ void MotionControlNode::declare_safety_parameters()
       "Max speed is only changed by updating the",
       safety_override_param_name_.c_str());
   }
+
+  long_description_string.str("");
+  long_description_string.clear();
+  descriptor.read_only = false;
+  long_description_string <<
+    "Mode to override safety options {\"none\"(default), " <<
+    "\"backup_only\"(disable backup limits, no cliff safety driving backwards), " <<
+    "\"full\"(disables cliffs completely and allows for higher max drive speed " <<
+    "(0.46m/s vs 0.306m/s in other modes))}";
+  descriptor.description = long_description_string.str();
+  auto val = this->declare_parameter<std::string>(
+    safety_override_param_name_, "none",
+    descriptor);
+  if (val != "none") {
+    set_safety_mode(val);
+  }
+
 }
 
 rcl_interfaces::msg::SetParametersResult MotionControlNode::set_parameters_callback(
@@ -140,20 +128,16 @@ rcl_interfaces::msg::SetParametersResult MotionControlNode::set_parameters_callb
 
   for (const rclcpp::Parameter & parameter : parameters) {
     if (parameter.get_name() == safety_override_param_name_) {
-      RCLCPP_WARN(
-        this->get_logger(), "Can't modify %s.  Not implemented in sim yet",
-        parameter.get_name().c_str());
-      result.reason = "Can't modify parameter \'" + parameter.get_name() +
-        "\' not implemented in sim yet.";
+        // Handle new value for parameters
+        result.successful = set_safety_mode(parameter.get_value<std::string>());
+        if (!result.successful) {
+            result.reason = "Failed to set safety mode, see rosout for more detail";
+        }
     } else if (parameter.get_name() == max_speed_param_name_) {
-      result.reason = "parameter \'" + parameter.get_name() +
-        "\' cannot be set externally. Only updated from change in \'" +
-        safety_override_param_name_ + "\' parameter";
-    } else {
-      RCLCPP_WARN(
-        this->get_logger(), "Can't modify reflex parameter %s.",
-        parameter.get_name().c_str());
-      result.reason = "reflexes can't be enabled yet.";
+        result.successful = allow_speed_param_change_;
+        if (!result.successful) {
+            result.reason = "parameter \'"+parameter.get_name()+"\' cannot be set externally. Only updated from change in \'"+safety_override_param_name_+"\' parameter";
+        }
     }
   }
 
@@ -162,6 +146,12 @@ rcl_interfaces::msg::SetParametersResult MotionControlNode::set_parameters_callb
 
 void MotionControlNode::control_robot()
 {
+  if (max_speed_ != this->get_parameter(max_speed_param_name_).get_value<double>()) {
+      allow_speed_param_change_ = true;
+      this->set_parameter(rclcpp::Parameter(max_speed_param_name_, max_speed_));
+      allow_speed_param_change_ = false;
+      RCLCPP_INFO(this->get_logger(), "Robot max speed is now %f m/s", max_speed_);
+  }
   // Handle behaviors
   BehaviorsScheduler::optional_output_t command;
   if (scheduler_->has_behavior()) {
@@ -182,27 +172,73 @@ void MotionControlNode::control_robot()
     } else {
       const std::lock_guard<std::mutex> lock(mutex_);
       command = last_teleop_cmd_;
+      bound_command_by_limits(*command);
     }
-  }
 
-  // Add reflex manager here
+  }
 
   // Create a null command if we don't have anything.
   // We also disable reflexes because the robot is in an idle state.
+  bool moving = false;
   if (!command) {
     command = geometry_msgs::msg::Twist();
+  } else {
+      // See if command is moving
+      moving = std::abs(command->linear.x) > 0.001
+              || std::abs(command->angular.z) > 0.001;
   }
+  {
+    const std::lock_guard<std::mutex> lock(robot_pose_mutex_);
+    reflex_behavior_->update_state(last_robot_pose_, moving);
+    // Update backup buffer
+    tf2::Transform diff_tf = last_backup_pose_.inverseTimes(last_robot_pose_);
+    backup_buffer_ += diff_tf.getOrigin().getX();
+    backup_buffer_ = std::min(backup_buffer_, 0.15);
+    last_backup_pose_ = last_robot_pose_;
+  }
+  auto backup_buffer_low_msg = std::make_unique<std_msgs::msg::Bool>();
+  backup_buffer_low_msg->data = (safety_override_mode_ == SafetyOverrideMode::NONE)
+      && (backup_buffer_ <= 0.05);
+  backup_buffer_low_pub_->publish(std::move(backup_buffer_low_msg));
   auto cmd_out_msg = std::make_unique<geometry_msgs::msg::Twist>();
   *cmd_out_msg = *command;
   cmd_vel_out_pub_->publish(std::move(cmd_out_msg));
 }
 
+bool MotionControlNode::set_safety_mode(const std::string& safety_mode)
+{
+  std::map<std::string, SafetyOverrideMode>::const_iterator safety_mode_it = safety_to_str_.find(safety_mode);
+  if (safety_mode_it != safety_to_str_.end()) {
+    safety_override_mode_ = safety_mode_it->second;
+    switch (safety_override_mode_) {
+        case SafetyOverrideMode::NONE:
+        case SafetyOverrideMode::BACKUP_ONLY:
+            max_speed_ = SAFETY_ON_MAX_SPEED;
+            break;
+        case SafetyOverrideMode::FULL:
+            max_speed_ = SAFETY_OFF_MAX_SPEED;
+            break;
+    }
+  } else {
+    RCLCPP_WARN(
+      this->get_logger(),
+      "Tried to set invalid safety mode %s, options are {\'none\',\'backup_only\',\'full\'",
+      safety_mode.c_str());
+    return false;
+  }
+  return true;
+}
+
 void MotionControlNode::commanded_velocity_callback(geometry_msgs::msg::Twist::ConstSharedPtr msg)
 {
   if (scheduler_->has_behavior()) {
-    RCLCPP_WARN(
-      this->get_logger(),
-      "Ignoring velocities commanded while an autonomous behavior is running!");
+    auto time_now = this->now();
+    if (time_now - auto_override_print_ts_ > repeat_print_) {
+        auto_override_print_ts_ = time_now;
+        RCLCPP_WARN(
+                this->get_logger(),
+                "Ignoring velocities commanded while an autonomous behavior is running!");
+    }
     return;
   }
 
@@ -210,6 +246,20 @@ void MotionControlNode::commanded_velocity_callback(geometry_msgs::msg::Twist::C
 
   last_teleop_cmd_ = *msg;
   last_teleop_ts_ = this->now();
+}
+
+void MotionControlNode::robot_pose_callback(nav_msgs::msg::Odometry::ConstSharedPtr msg)
+{
+  const std::lock_guard<std::mutex> lock(robot_pose_mutex_);
+  tf2::convert(msg->pose.pose, last_robot_pose_);
+}
+
+void MotionControlNode::kidnap_callback(irobot_create_msgs::msg::KidnapStatus::ConstSharedPtr msg)
+{
+    if (!msg->is_kidnapped && last_kidnap_) {
+        backup_buffer_ = 0.0;
+    }
+    last_kidnap_ = msg->is_kidnapped;
 }
 
 void MotionControlNode::reset_last_teleop_cmd()
@@ -223,6 +273,37 @@ void MotionControlNode::reset_last_teleop_cmd()
   last_teleop_cmd_.angular.y = 0;
   last_teleop_cmd_.angular.z = 0;
   last_teleop_ts_ = this->now();
+}
+
+void MotionControlNode::bound_command_by_limits(geometry_msgs::msg::Twist& cmd)
+{
+    if (safety_override_mode_ == SafetyOverrideMode::NONE &&
+            backup_buffer_ <= 0.0 &&
+            cmd.linear.x < 0.0) {
+        // Robot has run out of room to backup
+        cmd.linear.x = 0.0;
+        auto time_now = this->now();
+        if (time_now - backup_print_ts_ > repeat_print_) {
+            backup_print_ts_ = time_now;
+            RCLCPP_WARN(this->get_logger(),
+                    "Reached backup limit! Stop Driving robot backward or disable from %s parameter!",
+                    safety_override_param_name_.c_str());
+        }
+    } else {
+        double left_vel = cmd.linear.x - cmd.angular.z * wheel_base_ / 2.0;
+        double right_vel = cmd.angular.z * wheel_base_ + left_vel;
+        double max_vel = std::max(std::abs(left_vel), std::abs(right_vel));
+        if (max_vel > 0 && max_vel > max_speed_)
+        {
+            double scale = max_speed_ / max_vel;
+            // Scale velocity to bring them in limits
+            left_vel *= scale;
+            right_vel *= scale;
+            // Convert back to cartesian
+            cmd.linear.x = (left_vel + right_vel) / 2.0;
+            cmd.angular.z = (right_vel - left_vel) / wheel_base_;
+        }
+    }
 }
 
 }  // namespace irobot_create_toolbox

@@ -10,6 +10,7 @@ controller_manager:
 
 diffdrive_controller:
   ros__parameters:
+    use_sim_time: True
     left_wheel_names: ["left_wheel_joint"]
     right_wheel_names: ["right_wheel_joint"]
 
@@ -46,14 +47,18 @@ diffdrive_controller:
     # Publish wheel data
     publish_wheel_data: true
 
-    # Velocity and acceleration limits
+    # Velocity and acceleration limits in cartesian
+    # These limits do not factor in per wheel limits
+    # that might be exceeded when linear and angular are combined
     # Whenever a min_* is unspecified, default to -max_*
     linear.x.has_velocity_limits: true
     linear.x.has_acceleration_limits: true
     linear.x.has_jerk_limits: false
-    linear.x.max_velocity: 0.306
-    linear.x.min_velocity: -0.306
-    linear.x.max_acceleration: 0.6
+    # This is max if system is safety_override "full"
+    # motion_control_node will bound this to 0.306 if safety enabled (as is by default)
+    linear.x.max_velocity: 0.46
+    linear.x.min_velocity: -0.46
+    linear.x.max_acceleration: 0.9
     # Not using jerk limits yet
     # linear.x.max_jerk: 0.0
     # linear.x.min_jerk: 0.0
@@ -63,10 +68,10 @@ diffdrive_controller:
     angular.z.has_jerk_limits: false
     angular.z.max_velocity: 1.9
     angular.z.min_velocity: -1.9
-    # Using 0.6 linear for each wheel, assuming one wheel accel to 600 
-    # and other to -600 with wheelbase leads to 5.15 rad/s^2
-    angular.z.max_acceleration: 5.15
-    angular.z.min_acceleration: -5.15
+    # Using 0.9 linear for each wheel, assuming one wheel accel to .9 
+    # and other to -.9 with wheelbase leads to 7.725 rad/s^2
+    angular.z.max_acceleration: 7.725
+    angular.z.min_acceleration: -7.725
     # Not using jerk limits yet
     # angular.z.max_jerk: 0.0
     # angular.z.min_jerk: 0.0
