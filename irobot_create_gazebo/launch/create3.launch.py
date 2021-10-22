@@ -11,6 +11,7 @@ from launch.conditions import IfCondition
 from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch.substitutions import LaunchConfiguration, PathJoinSubstitution
 from launch_ros.actions import Node
+import os
 
 ARGUMENTS = [
     DeclareLaunchArgument('rviz', default_value='true',
@@ -53,6 +54,8 @@ def generate_launch_description():
     mock_params_yaml_file = PathJoinSubstitution(
         [pkg_create3_gazebo, 'config', 'mock_params.yaml'])
 
+    gazebo_params_yaml_file = os.path.join(pkg_create3_gazebo, 'config', 'gazebo_params.yaml')
+
     # Launch configurations
     x, y, z = LaunchConfiguration('x'), LaunchConfiguration('y'), LaunchConfiguration('z')
     yaw = LaunchConfiguration('yaw')
@@ -77,7 +80,8 @@ def generate_launch_description():
         cmd=['gzserver',
              '-s', 'libgazebo_ros_init.so',
              '-s', 'libgazebo_ros_factory.so',
-             world_path],
+             world_path,
+             'extra-gazebo-args', '--ros-args','--params-file', gazebo_params_yaml_file],
         output='screen',
     )
 
