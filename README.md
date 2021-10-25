@@ -4,14 +4,15 @@
 
 This is a ROS 2 simulation stack for the [iRobot® Create® 3](https://edu.irobot.com/create3) robot.
 
+Have a look at the [Create® 3 documentation](https://iroboteducation.github.io/create3_docs/) for more details on the ROS 2 interfaces exposed by the robot.
+
 ## Prerequisites
 
 Required dependencies:
 
-1. [ROS 2 galactic](https://docs.ros.org/en/galactic/Installation/Ubuntu-Install-Debians.html): it's recommended to install the desktop version of the distribution of your choosing, this will also install RViz 2. Bare in mind that if another version is installed, some dependencies may be missing.
+1. [ROS 2 galactic](https://docs.ros.org/en/galactic/Installation/Ubuntu-Install-Debians.html)
 2. [Gazebo](http://gazebosim.org/tutorials?tut=install_ubuntu)
-3. [RViz2](https://github.com/ros2/rviz): this is included as part of the rosdep dependecies.
-4. ROS 2 dev tools:
+3. ROS 2 dev tools:
     - [colcon-common-extensions](https://pypi.org/project/colcon-common-extensions/)
     - [rosdep](https://pypi.org/project/rosdep/): Used to install dependencies when building from sources
     - [vcs](https://pypi.org/project/vcstool/): Automates cloning of git repositories declared on a YAML file.
