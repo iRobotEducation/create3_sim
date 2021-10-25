@@ -4,6 +4,8 @@
 #
 # Launch Create(R) 3 in Gazebo and optionally also in RViz.
 
+import os
+
 from ament_index_python.packages import get_package_share_directory
 from launch import LaunchDescription
 from launch.actions import DeclareLaunchArgument, ExecuteProcess, IncludeLaunchDescription
@@ -11,7 +13,6 @@ from launch.conditions import IfCondition
 from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch.substitutions import LaunchConfiguration, PathJoinSubstitution
 from launch_ros.actions import Node
-import os
 
 ARGUMENTS = [
     DeclareLaunchArgument('rviz', default_value='true',
@@ -81,7 +82,7 @@ def generate_launch_description():
              '-s', 'libgazebo_ros_init.so',
              '-s', 'libgazebo_ros_factory.so',
              world_path,
-             'extra-gazebo-args', '--ros-args','--params-file', gazebo_params_yaml_file],
+             'extra-gazebo-args', '--ros-args', '--params-file', gazebo_params_yaml_file],
         output='screen',
     )
 
