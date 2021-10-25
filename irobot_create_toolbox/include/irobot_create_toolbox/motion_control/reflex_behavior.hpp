@@ -98,11 +98,16 @@ private:
   std::mutex robot_pose_mutex_;
   tf2::Transform last_robot_pose_;
   tf2::Transform reflex_start_pose_;
+  tf2::Transform continuous_reflex_start_pose_;
   std::mutex hazard_mutex_;
   std::vector<irobot_create_msgs::msg::HazardDetection> last_hazards_;
+  std::vector<irobot_create_msgs::msg::HazardDetection> last_trigger_hazards_;
   rclcpp::Time reflex_start_time_;
+  rclcpp::Time continuous_reflex_start_time_;
   const rclcpp::Duration max_reflex_runtime_;
+  const rclcpp::Duration max_continuous_reflex_runtime_;
   const double MAX_REFLEX_DISTANCE {0.15};
+  const double MAX_CONTINUOUS_REFLEX_DISTANCE {0.45};
   const double MIN_REFLEX_DISTANCE {0.05};
   const double BACKUP_X_VELOCITY {-0.14};
   const double ARC_X_VELOCITY {-0.1};

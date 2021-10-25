@@ -106,11 +106,13 @@ private:
   tf2::Transform last_robot_pose_;
   tf2::Transform last_backup_pose_;
   std::atomic<bool> last_kidnap_ {false};
-  rclcpp::Time backup_print_ts_;
   rclcpp::Time auto_override_print_ts_;
   const rclcpp::Duration repeat_print_;
+  std::atomic<bool> backup_printed_{false};
   const std::string backup_limit_frame_ {"base_link"};
   std::atomic<bool> backup_buffer_low_ {false};
+  const double BACKUP_BUFFER_WARN_THRESHOLD {0.05};
+  const double BACKUP_BUFFER_STOP_THRESHOLD {0.15};
 };
 
 }  // namespace irobot_create_toolbox

@@ -23,10 +23,11 @@ ReflexBehavior::ReflexBehavior(
   rclcpp::node_interfaces::NodeParametersInterface::SharedPtr node_parameters_interface,
   std::shared_ptr<tf2_ros::Buffer> tf_buffer,
   std::shared_ptr<BehaviorsScheduler> behavior_scheduler)
-: clock_(node_clock_interface->get_clock()),
-  tf_buffer_(tf_buffer),
-  logger_(node_logging_interface->get_logger()),
-  max_reflex_runtime_(rclcpp::Duration(std::chrono::seconds(10)))
+: clock_{node_clock_interface->get_clock()},
+  tf_buffer_{tf_buffer},
+  logger_{node_logging_interface->get_logger()},
+  max_reflex_runtime_{rclcpp::Duration(std::chrono::seconds(10))},
+  max_continuous_reflex_runtime_{rclcpp::Duration(std::chrono::seconds(30))}
 {
   behavior_scheduler_ = behavior_scheduler;
 
@@ -164,12 +165,12 @@ BehaviorsScheduler::optional_output_t ReflexBehavior::execute_reflex()
   BehaviorsScheduler::optional_output_t servo_cmd;
   enum class DriveAwayDirection
   {
-    NONE,
+    NO_HAZARD_TO_ESCAPE,
     PURE_BACKUP,
     ARC_CLOCKWISE,
     ARC_COUNTER_CLOCKWISE
   };
-  DriveAwayDirection drive_dir = DriveAwayDirection::NONE;
+  DriveAwayDirection drive_dir = DriveAwayDirection::NO_HAZARD_TO_ESCAPE;
   {
     // Check active reflexes
     const std::lock_guard<std::mutex> lock(hazard_mutex_);
@@ -182,22 +183,20 @@ BehaviorsScheduler::optional_output_t ReflexBehavior::execute_reflex()
           }
         case irobot_create_msgs::msg::HazardDetection::CLIFF:
           {
-            if (drive_dir != DriveAwayDirection::PURE_BACKUP) {
-              boost::optional<tf2::Vector3> hazard_offset =
-                get_pose_relative_to_odom(hazard);
-              if (hazard_offset) {
-                if (hazard_offset->getY() > 0) {
-                  if (drive_dir == DriveAwayDirection::ARC_COUNTER_CLOCKWISE) {
-                    drive_dir = DriveAwayDirection::PURE_BACKUP;
-                  } else {
-                    drive_dir = DriveAwayDirection::ARC_CLOCKWISE;
-                  }
+            boost::optional<tf2::Vector3> hazard_offset =
+              get_pose_relative_to_odom(hazard);
+            if (hazard_offset) {
+              if (hazard_offset->getY() > 0) {
+                if (drive_dir == DriveAwayDirection::ARC_COUNTER_CLOCKWISE) {
+                  drive_dir = DriveAwayDirection::PURE_BACKUP;
                 } else {
-                  if (drive_dir == DriveAwayDirection::ARC_CLOCKWISE) {
-                    drive_dir = DriveAwayDirection::PURE_BACKUP;
-                  } else {
-                    drive_dir = DriveAwayDirection::ARC_COUNTER_CLOCKWISE;
-                  }
+                  drive_dir = DriveAwayDirection::ARC_CLOCKWISE;
+                }
+              } else {
+                if (drive_dir == DriveAwayDirection::ARC_CLOCKWISE) {
+                  drive_dir = DriveAwayDirection::PURE_BACKUP;
+                } else {
+                  drive_dir = DriveAwayDirection::ARC_COUNTER_CLOCKWISE;
                 }
               }
             }
@@ -215,8 +214,14 @@ BehaviorsScheduler::optional_output_t ReflexBehavior::execute_reflex()
           }
         case irobot_create_msgs::msg::HazardDetection::BACKUP_LIMIT:
         case irobot_create_msgs::msg::HazardDetection::OBJECT_PROXIMITY:
-          // We do not trigger a reflex on these types of hazards
-          break;
+          {
+            // We do not trigger a reflex on these types of hazards
+            break;
+          }
+      }
+      if (drive_dir == DriveAwayDirection::PURE_BACKUP) {
+        // This is overriding escape, so won't be further modified
+        break;
       }
     }
   }
@@ -228,30 +233,38 @@ BehaviorsScheduler::optional_output_t ReflexBehavior::execute_reflex()
     robot_pose = last_robot_pose_;
   }
   // See if robot has done too much without clearing hazard
-  tf2::Vector3 delta_pose = robot_pose.getOrigin() - reflex_start_pose_.getOrigin();
   double distance_since_hazard = 0.0;
+  double distance_since_continuous_hazard = 0.0;
   if (driving_backwards_) {
+    tf2::Vector3 delta_pose = robot_pose.getOrigin() - reflex_start_pose_.getOrigin();
     distance_since_hazard = std::hypot(delta_pose.getX(), delta_pose.getY());
+    tf2::Vector3 delta_continuous_pose = robot_pose.getOrigin() -
+      continuous_reflex_start_pose_.getOrigin();
+    distance_since_continuous_hazard = std::hypot(
+      delta_continuous_pose.getX(), delta_continuous_pose.getY());
   } else {
     tf2::Transform relative_motion = reflex_start_pose_.inverseTimes(robot_pose);
     if (relative_motion.getOrigin().getX() < 0.0) {
       driving_backwards_ = true;
     }
   }
-  if (drive_dir == DriveAwayDirection::NONE && distance_since_hazard > MIN_REFLEX_DISTANCE) {
+  rclcpp::Time current_time = clock_->now();
+  if (drive_dir == DriveAwayDirection::NO_HAZARD_TO_ESCAPE &&
+    distance_since_hazard > MIN_REFLEX_DISTANCE) {
     finish_reflex = true;
-  } else if (distance_since_hazard > MAX_REFLEX_DISTANCE) {
+  } else if (distance_since_hazard > MAX_REFLEX_DISTANCE ||
+    distance_since_continuous_hazard > MAX_CONTINUOUS_REFLEX_DISTANCE) {
     RCLCPP_WARN(logger_, "Reflex Exceeded Max Travel Distance without clearing hazard");
     finish_reflex = true;
-  } else if (clock_->now() - reflex_start_time_ > max_reflex_runtime_) {
+  } else if ((current_time - reflex_start_time_ > max_reflex_runtime_) ||
+    (current_time - continuous_reflex_start_time_ > max_continuous_reflex_runtime_)) {
     RCLCPP_WARN(logger_, "Reflex Exceeded Runtime without clearing hazard");
     finish_reflex = true;
   }
 
-
   if (finish_reflex) {
     running_reflex_ = false;
-  } else if (drive_dir != DriveAwayDirection::NONE) {
+  } else if (drive_dir != DriveAwayDirection::NO_HAZARD_TO_ESCAPE) {
     // Pick velocity to escape hazards based on hazard types and locations
     servo_cmd = geometry_msgs::msg::Twist();
     switch (drive_dir) {
@@ -272,8 +285,10 @@ BehaviorsScheduler::optional_output_t ReflexBehavior::execute_reflex()
           servo_cmd->angular.z = ARC_ANGULAR_VELOCITY;
           break;
         }
-      case DriveAwayDirection::NONE:  // this code path is covered above
-        break;
+      case DriveAwayDirection::NO_HAZARD_TO_ESCAPE:  // this code path is covered above
+        {
+          break;
+        }
     }
   } else {
     // If here, we don't have a hazard, but haven't traveled the min distance
@@ -288,65 +303,76 @@ BehaviorsScheduler::optional_output_t ReflexBehavior::execute_reflex()
 void ReflexBehavior::hazard_vector_callback(
   irobot_create_msgs::msg::HazardDetectionVector::ConstSharedPtr msg)
 {
+  std::vector<irobot_create_msgs::msg::HazardDetection> active_hazards;
+  for (const auto & hazard : msg->detections) {
+    const std::lock_guard<std::mutex> lock(hazard_reflex_mutex_);
+    // See if reflex for this hazard is enabled
+    std::map<uint8_t, bool>::const_iterator hazard_reflex =
+      hazard_reflex_enabled_.find(hazard.type);
+    if (hazard_reflex == hazard_reflex_enabled_.end()) {
+      // hazard doesn't have corresponding reflex
+      continue;
+    }
+    if (hazard_reflex->second) {
+      // Reflex is active for this hazard
+      active_hazards.emplace_back(hazard);
+    }
+  }
   if (running_reflex_) {
     // Just cache the data for processing by execute_reflex
     const std::lock_guard<std::mutex> lock(hazard_mutex_);
-    last_hazards_ = msg->detections;
+    last_hazards_ = active_hazards;
   } else {
     // Don't trigger reflex is robot isn't driving
     if (!moving_ || !reflexes_enabled_) {return;}
-    // If hazard is triggered, start reflex
-    bool hazard_detected = false;
-    for (const auto & hazard : msg->detections) {
-      bool reflex_enabled_for_hazard = false;
-      {
-        const std::lock_guard<std::mutex> lock(hazard_reflex_mutex_);
-        // See if reflex for this hazard is enabled
-        std::map<uint8_t, bool>::const_iterator hazard_reflex =
-          hazard_reflex_enabled_.find(hazard.type);
-        if (hazard_reflex == hazard_reflex_enabled_.end()) {
-          // hazard doesn't have corresponding reflex
-          continue;
-        }
-        reflex_enabled_for_hazard = hazard_reflex->second;
-      }
-      if (reflex_enabled_for_hazard) {
-        switch (hazard.type) {
-          case irobot_create_msgs::msg::HazardDetection::BUMP:
-          case irobot_create_msgs::msg::HazardDetection::CLIFF:
-          case irobot_create_msgs::msg::HazardDetection::STALL:
-          case irobot_create_msgs::msg::HazardDetection::WHEEL_DROP:
-            hazard_detected = true;
+    // If hazard is triggered for active reflex, start reflex
+    if (active_hazards.size() > 0) {
+      // See if there is an overlap with last trigger hazards, in which case
+      // hazards failed to clear from last reflex behavior
+      bool matching_previous_hazard = false;
+      for (const auto & last_hazard : last_trigger_hazards_) {
+        for (const auto & hazard : active_hazards) {
+          if ((last_hazard.type == hazard.type) &&
+            (last_hazard.header.frame_id == hazard.header.frame_id))
+          {
+            matching_previous_hazard = true;
             break;
-
-          case irobot_create_msgs::msg::HazardDetection::BACKUP_LIMIT:
-          case irobot_create_msgs::msg::HazardDetection::OBJECT_PROXIMITY:
-            // We do not trigger a reflex on these types of hazards
-            break;
+          }
         }
-        if (hazard_detected) {
-          // Only need one hazard to trigger a reflex
+        if (matching_previous_hazard) {
           break;
         }
       }
-    }
-    // If reflex enabled for hazard, run reflex
-    if (hazard_detected) {
-      last_hazards_ = msg->detections;
-      BehaviorsScheduler::BehaviorsData data;
-      data.run_func = std::bind(&ReflexBehavior::execute_reflex, this);
-      data.is_done_func = std::bind(&ReflexBehavior::reflex_behavior_is_done, this);
-      data.interruptable = false;
+      if (!matching_previous_hazard) {
+        // new hazards compared to last run
+        bool continuous_reflex = last_trigger_hazards_.size() > 0;
+        last_hazards_ = active_hazards;
+        last_trigger_hazards_ = last_hazards_;
+        BehaviorsScheduler::BehaviorsData data;
+        data.run_func = std::bind(&ReflexBehavior::execute_reflex, this);
+        data.is_done_func = std::bind(&ReflexBehavior::reflex_behavior_is_done, this);
+        data.interruptable = false;
 
-      running_reflex_ = behavior_scheduler_->set_behavior(data);
-      if (running_reflex_) {
-        reflex_start_time_ = clock_->now();
-        {
-          const std::lock_guard<std::mutex> lock(robot_pose_mutex_);
-          reflex_start_pose_ = last_robot_pose_;
+        running_reflex_ = behavior_scheduler_->set_behavior(data);
+        if (running_reflex_) {
+          reflex_start_time_ = clock_->now();
+          {
+            const std::lock_guard<std::mutex> lock(robot_pose_mutex_);
+            reflex_start_pose_ = last_robot_pose_;
+          }
+          driving_backwards_ = false;
+          if (!continuous_reflex) {
+            // If starting fresh, reset continuous reflex starting points
+            // otherwise, will continue to check continous thresholds against
+            // previous start points
+            continuous_reflex_start_pose_ = reflex_start_pose_;
+            continuous_reflex_start_time_ = reflex_start_time_;
+          }
         }
-        driving_backwards_ = false;
       }
+    } else {
+      // If no hazards triggered, clear history to let any hazard trigger reflex
+      last_trigger_hazards_.clear();
     }
   }
 }

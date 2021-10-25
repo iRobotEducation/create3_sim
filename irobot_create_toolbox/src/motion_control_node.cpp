@@ -55,7 +55,7 @@ MotionControlNode::MotionControlNode()
     std::bind(&MotionControlNode::robot_pose_callback, this, _1));
 
   kidnap_sub_ = this->create_subscription<irobot_create_msgs::msg::KidnapStatus>(
-    "kidnap", rclcpp::SensorDataQoS(),
+    "kidnap_status", rclcpp::SensorDataQoS(),
     std::bind(&MotionControlNode::kidnap_callback, this, _1));
 
   cmd_vel_out_pub_ = this->create_publisher<geometry_msgs::msg::Twist>(
@@ -67,7 +67,6 @@ MotionControlNode::MotionControlNode()
   params_callback_handle_ = this->add_on_set_parameters_callback(
     std::bind(&MotionControlNode::set_parameters_callback, this, _1));
 
-  backup_print_ts_ = this->now();
   auto_override_print_ts_ = this->now();
 
   last_robot_pose_.setIdentity();
@@ -201,11 +200,14 @@ void MotionControlNode::control_robot()
     // Update backup buffer
     tf2::Transform diff_tf = last_backup_pose_.inverseTimes(last_robot_pose_);
     backup_buffer_ += diff_tf.getOrigin().getX();
-    backup_buffer_ = std::min(backup_buffer_, 0.15);
+    backup_buffer_ = std::min(backup_buffer_, BACKUP_BUFFER_STOP_THRESHOLD);
     last_backup_pose_ = last_robot_pose_;
   }
   backup_buffer_low_ = (safety_override_mode_ == SafetyOverrideMode::NONE) &&
-    (backup_buffer_ <= 0.05);
+    (backup_buffer_ <= BACKUP_BUFFER_WARN_THRESHOLD);
+  if (backup_printed_ && !backup_buffer_low_) {
+    backup_printed_ = false;
+  }
   auto cmd_out_msg = std::make_unique<geometry_msgs::msg::Twist>();
   *cmd_out_msg = *command;
   cmd_vel_out_pub_->publish(std::move(cmd_out_msg));
@@ -240,7 +242,7 @@ bool MotionControlNode::set_safety_mode(const std::string & safety_mode)
   } else {
     RCLCPP_WARN(
       this->get_logger(),
-      "Tried to set invalid safety mode %s, options are {\'none\',\'backup_only\',\'full\'",
+      "Tried to set invalid safety mode %s, options are {\'none\',\'backup_only\',\'full\'}",
       safety_mode.c_str());
     return false;
   }
@@ -302,8 +304,8 @@ void MotionControlNode::bound_command_by_limits(geometry_msgs::msg::Twist & cmd)
     // Robot has run out of room to backup
     cmd.linear.x = 0.0;
     const auto time_now = this->now();
-    if (time_now - backup_print_ts_ > repeat_print_) {
-      backup_print_ts_ = time_now;
+    if (!backup_printed_) {
+      backup_printed_ = true;
       RCLCPP_WARN(
         this->get_logger(),
         "Reached backup limit! Stop Driving robot backward or disable from %s parameter!",
