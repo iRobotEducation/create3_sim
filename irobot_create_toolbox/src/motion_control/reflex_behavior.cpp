@@ -248,16 +248,20 @@ BehaviorsScheduler::optional_output_t ReflexBehavior::execute_reflex()
       driving_backwards_ = true;
     }
   }
+  const bool exceeded_distance = distance_since_hazard > MAX_REFLEX_DISTANCE ||
+    distance_since_continuous_hazard > MAX_CONTINUOUS_REFLEX_DISTANCE;
   rclcpp::Time current_time = clock_->now();
-  if (drive_dir == DriveAwayDirection::NO_HAZARD_TO_ESCAPE &&
-    distance_since_hazard > MIN_REFLEX_DISTANCE) {
+  const bool exceeded_time = (current_time - reflex_start_time_ > max_reflex_runtime_) ||
+    (current_time - continuous_reflex_start_time_ > max_continuous_reflex_runtime_);
+  const bool cleared_hazed_with_min_travel_achieved =
+    drive_dir == DriveAwayDirection::NO_HAZARD_TO_ESCAPE &&
+    distance_since_hazard > MIN_REFLEX_DISTANCE;
+  if (cleared_hazed_with_min_travel_achieved) {
     finish_reflex = true;
-  } else if (distance_since_hazard > MAX_REFLEX_DISTANCE ||
-    distance_since_continuous_hazard > MAX_CONTINUOUS_REFLEX_DISTANCE) {
+  } else if (exceeded_distance) {
     RCLCPP_WARN(logger_, "Reflex Exceeded Max Travel Distance without clearing hazard");
     finish_reflex = true;
-  } else if ((current_time - reflex_start_time_ > max_reflex_runtime_) ||
-    (current_time - continuous_reflex_start_time_ > max_continuous_reflex_runtime_)) {
+  } else if (exceeded_time) {
     RCLCPP_WARN(logger_, "Reflex Exceeded Runtime without clearing hazard");
     finish_reflex = true;
   }
@@ -370,13 +374,13 @@ void ReflexBehavior::hazard_vector_callback(
           }
         }
       } else {
-          // If rejecting from previous match, then reset continuous start points
-          // as no longer running continuously, but keep triggered sensors
-          {
-            const std::lock_guard<std::mutex> lock(robot_pose_mutex_);
-            continuous_reflex_start_pose_ = last_robot_pose_;
-          }
-          continuous_reflex_start_time_ = clock_->now();
+        // If rejecting from previous match, then reset continuous start points
+        // as no longer running continuously, but keep triggered sensors
+        {
+          const std::lock_guard<std::mutex> lock(robot_pose_mutex_);
+          continuous_reflex_start_pose_ = last_robot_pose_;
+        }
+        continuous_reflex_start_time_ = clock_->now();
       }
     } else {
       // If no hazards triggered, clear history to let any hazard trigger reflex
