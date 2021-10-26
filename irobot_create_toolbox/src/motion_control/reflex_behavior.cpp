@@ -369,6 +369,14 @@ void ReflexBehavior::hazard_vector_callback(
             continuous_reflex_start_time_ = reflex_start_time_;
           }
         }
+      } else {
+          // If rejecting from previous match, then reset continuous start points
+          // as no longer running continuously, but keep triggered sensors
+          {
+            const std::lock_guard<std::mutex> lock(robot_pose_mutex_);
+            continuous_reflex_start_pose_ = last_robot_pose_;
+          }
+          continuous_reflex_start_time_ = clock_->now();
       }
     } else {
       // If no hazards triggered, clear history to let any hazard trigger reflex

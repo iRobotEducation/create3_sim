@@ -112,7 +112,7 @@ private:
   const double BACKUP_X_VELOCITY {-0.14};
   const double ARC_X_VELOCITY {-0.1};
   const double ARC_ANGULAR_VELOCITY {M_PI / 16.0};
-  std::atomic<bool> moving_;
+  std::atomic<bool> moving_{false};
   std::atomic<bool> driving_backwards_ {false};
   const std::string odom_frame_ {"odom"};
   const std::string base_frame_ {"base_link"};
