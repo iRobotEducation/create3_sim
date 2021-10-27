@@ -27,6 +27,18 @@ MotionControlNode::MotionControlNode()
   tf_buffer_->setUsingDedicatedThread(true);
   tf_listener_ = std::make_shared<tf2_ros::TransformListener>(*tf_buffer_, this, false);
 
+  // Services
+  power_server_ = this->create_service<irobot_create_msgs::srv::RobotPower>(
+    "robot_power",
+    std::bind(
+      &MotionControlNode::power_off_request, this, std::placeholders::_1,
+      std::placeholders::_2));
+  e_stop_server_ = this->create_service<irobot_create_msgs::srv::EStop>(
+    "e_stop",
+    std::bind(
+      &MotionControlNode::e_stop_request, this, std::placeholders::_1,
+      std::placeholders::_2));
+
   // Create behaviors scheduler
   scheduler_ = std::make_shared<BehaviorsScheduler>();
   // Create Docking Behavior manager
@@ -209,7 +221,9 @@ void MotionControlNode::control_robot()
     backup_printed_ = false;
   }
   auto cmd_out_msg = std::make_unique<geometry_msgs::msg::Twist>();
-  *cmd_out_msg = *command;
+  if (!e_stop_engaged_) {
+    *cmd_out_msg = *command;
+  }
   cmd_vel_out_pub_->publish(std::move(cmd_out_msg));
 }
 
@@ -325,6 +339,49 @@ void MotionControlNode::bound_command_by_limits(geometry_msgs::msg::Twist & cmd)
       cmd.angular.z = (right_vel - left_vel) / wheel_base_;
     }
   }
+}
+
+void MotionControlNode::e_stop_request(
+  const irobot_create_msgs::srv::EStop::Request::SharedPtr request,
+  irobot_create_msgs::srv::EStop::Response::SharedPtr response)
+{
+  auto set_response_w_msg = [this, response](const std::string msg, ResponseStatus result) {
+      response->message = msg;
+      response->success = static_cast<bool>(result);
+      const std::string log_prefix = "E-Stop request:";
+      if (response->success) {
+        RCLCPP_INFO(this->get_logger(), "%s %s", log_prefix.c_str(), response->message.c_str());
+      } else {
+        RCLCPP_ERROR(this->get_logger(), "%s %s", log_prefix.c_str(), response->message.c_str());
+      }
+    };
+
+  if (request->e_stop_on) {
+    e_stop_engaged_ = true;
+    set_response_w_msg("Set system E-Stop on, cutting motor power", SUCCESS);
+  } else {
+    e_stop_engaged_ = false;
+    set_response_w_msg("Set system E-Stop off, enabling motor power", SUCCESS);
+  }
+}
+
+void MotionControlNode::power_off_request(
+  const irobot_create_msgs::srv::RobotPower::Request::SharedPtr request,
+  irobot_create_msgs::srv::RobotPower::Response::SharedPtr response)
+{
+  auto set_response_w_msg = [this, response](const std::string msg, ResponseStatus result) {
+      response->message = msg;
+      response->success = static_cast<bool>(result);
+      const std::string log_prefix = "Power off request:";
+      if (response->success) {
+        RCLCPP_INFO(this->get_logger(), "%s %s", log_prefix.c_str(), response->message.c_str());
+      } else {
+        RCLCPP_ERROR(this->get_logger(), "%s %s", log_prefix.c_str(), response->message.c_str());
+      }
+    };
+
+  (void)request;
+  set_response_w_msg("Set system power off failed (not supported in sim)", FAILURE);
 }
 
 }  // namespace irobot_create_toolbox

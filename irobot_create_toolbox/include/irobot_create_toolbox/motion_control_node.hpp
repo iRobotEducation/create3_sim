@@ -7,6 +7,8 @@
 #include <geometry_msgs/msg/twist.hpp>
 #include <irobot_create_msgs/msg/kidnap_status.hpp>
 #include <irobot_create_msgs/msg/hazard_detection.hpp>
+#include <irobot_create_msgs/srv/e_stop.hpp>
+#include <irobot_create_msgs/srv/robot_power.hpp>
 #include <irobot_create_toolbox/parameter_helper.hpp>
 #include <irobot_create_toolbox/motion_control/docking_behavior.hpp>
 #include <irobot_create_toolbox/motion_control/reflex_behavior.hpp>
@@ -40,6 +42,14 @@ private:
   /// \brief Helper function to validate changes to parameters
   rcl_interfaces::msg::SetParametersResult set_parameters_callback(
     const std::vector<rclcpp::Parameter> & parameters);
+  /// \brief Callback for e_stop service
+  void e_stop_request(
+    const irobot_create_msgs::srv::EStop::Request::SharedPtr request,
+    irobot_create_msgs::srv::EStop::Response::SharedPtr response);
+  /// \brief Callback for power_off service
+  void power_off_request(
+    const irobot_create_msgs::srv::RobotPower::Request::SharedPtr request,
+    irobot_create_msgs::srv::RobotPower::Response::SharedPtr response);
 
   enum class SafetyOverrideMode
   {
@@ -75,6 +85,17 @@ private:
 
   /// \brief Given command, bound by max speed, checking each wheel
   void bound_command_by_limits(geometry_msgs::msg::Twist & cmd);
+
+  /// These robot services live in ui-mgr node on robot, but here for convenience
+  enum ResponseStatus : bool
+  {
+    SUCCESS = true,
+    FAILURE = false,
+  };
+  /// \brief Service to turn off robot power, this won't do anything in sim
+  rclcpp::Service<irobot_create_msgs::srv::RobotPower>::SharedPtr power_server_;
+  /// \brief Service to e_stop robot, this will prevent robot from commanding velocity
+  rclcpp::Service<irobot_create_msgs::srv::EStop>::SharedPtr e_stop_server_;
 
   rclcpp::Subscription<geometry_msgs::msg::Twist>::SharedPtr teleop_subscription_;
   rclcpp::Subscription<nav_msgs::msg::Odometry>::SharedPtr odom_pose_sub_;
@@ -113,6 +134,7 @@ private:
   std::atomic<bool> backup_buffer_low_ {false};
   const double BACKUP_BUFFER_WARN_THRESHOLD {0.05};
   const double BACKUP_BUFFER_STOP_THRESHOLD {0.15};
+  std::atomic<bool> e_stop_engaged_ {false};
 };
 
 }  // namespace irobot_create_toolbox
