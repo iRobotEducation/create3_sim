@@ -350,8 +350,11 @@ void ReflexBehavior::hazard_vector_callback(
       if (!matching_previous_hazard) {
         // new hazards compared to last run
         bool continuous_reflex = last_trigger_hazards_.size() > 0;
-        last_hazards_ = active_hazards;
-        last_trigger_hazards_ = last_hazards_;
+        {
+          const std::lock_guard<std::mutex> lock(hazard_mutex_);
+          last_hazards_ = active_hazards;
+          last_trigger_hazards_ = last_hazards_;
+        }
         BehaviorsScheduler::BehaviorsData data;
         data.run_func = std::bind(&ReflexBehavior::execute_reflex, this);
         data.is_done_func = std::bind(&ReflexBehavior::reflex_behavior_is_done, this);
