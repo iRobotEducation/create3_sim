@@ -24,6 +24,7 @@ find_package(rclcpp_action REQUIRED)
 find_package(rclpy REQUIRED)
 find_package(tf2 REQUIRED)
 find_package(tf2_geometry_msgs REQUIRED)
+find_package(tf2_ros REQUIRED)
 
 #### Libraries
 
@@ -39,6 +40,7 @@ set(dependencies
   rclcpp_action
   tf2
   tf2_geometry_msgs
+  tf2_ros
 )
 
 add_library(hazard_publisher_lib SHARED)
@@ -69,6 +71,7 @@ target_sources(
   PRIVATE
     src/motion_control_node.cpp
     src/motion_control/docking_behavior.cpp
+    src/motion_control/reflex_behavior.cpp
 )
 target_include_directories(motion_control_lib PUBLIC include)
 ament_target_dependencies(motion_control_lib

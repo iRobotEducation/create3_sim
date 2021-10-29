@@ -35,8 +35,10 @@ WheelsPublisher::WheelsPublisher()
     create_publisher<irobot_create_msgs::msg::WheelTicks>(ticks_topic, rclcpp::SystemDefaultsQoS());
   RCLCPP_INFO_STREAM(get_logger(), "Advertised topic: " << ticks_topic);
 
-  timer_ = create_wall_timer(
-    std::chrono::duration<double>(1 / publish_rate),
+  timer_ = rclcpp::create_timer(
+    this,
+    this->get_clock(),
+    rclcpp::Duration(std::chrono::duration<double>(1 / publish_rate)),
     std::bind(&WheelsPublisher::publisher_callback, this));
 
   subscription_ = create_subscription<control_msgs::msg::DynamicJointState>(

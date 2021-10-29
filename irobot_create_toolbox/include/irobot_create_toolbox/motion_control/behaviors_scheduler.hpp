@@ -7,6 +7,7 @@
 #include <boost/optional.hpp>
 #include <geometry_msgs/msg/twist.hpp>
 
+#include <atomic>
 #include <functional>
 #include <mutex>
 
@@ -30,6 +31,8 @@ public:
     run_behavior_func_t run_func;
     // This function is executed at the end of each iteration to know if we need to run again
     is_done_func_t is_done_func;
+    // Whether interruptable by other behaviors
+    bool interruptable;
   };
 
   BehaviorsScheduler()
@@ -40,7 +43,9 @@ public:
   {
     std::unique_lock<std::mutex> lock(mutex_);
 
-    if (has_behavior_) {
+    // If already has behavior, only take new behavior if old behavior is interruptable
+    // and new behavior is not
+    if (has_behavior_ && (!interruptable_behavior_ || data.interruptable)) {
       return false;
     }
 
@@ -50,23 +55,27 @@ public:
 
     has_behavior_ = true;
     current_behavior_ = data;
+    interruptable_behavior_ = data.interruptable;
     return true;
   }
 
   bool has_behavior()
   {
-    std::unique_lock<std::mutex> lock(mutex_);
     return has_behavior_;
+  }
+
+  bool interruptable_behavior()
+  {
+    return interruptable_behavior_;
   }
 
   optional_output_t run_behavior()
   {
-    std::unique_lock<std::mutex> lock(mutex_);
-
     if (!has_behavior_) {
       return optional_output_t();
     }
 
+    std::unique_lock<std::mutex> lock(mutex_);
     optional_output_t output = current_behavior_.run_func();
 
     if (current_behavior_.is_done_func()) {
@@ -78,7 +87,8 @@ public:
 
 private:
   std::mutex mutex_;
-  bool has_behavior_ {false};
+  std::atomic<bool> has_behavior_ {false};
+  std::atomic<bool> interruptable_behavior_ {false};
   BehaviorsData current_behavior_;
 };
 

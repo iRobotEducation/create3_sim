@@ -4,6 +4,8 @@
 #
 # Launch Create(R) 3 in Gazebo and optionally also in RViz.
 
+import os
+
 from ament_index_python.packages import get_package_share_directory
 from launch import LaunchDescription
 from launch.actions import DeclareLaunchArgument, ExecuteProcess, IncludeLaunchDescription
@@ -53,6 +55,8 @@ def generate_launch_description():
     mock_params_yaml_file = PathJoinSubstitution(
         [pkg_create3_gazebo, 'config', 'mock_params.yaml'])
 
+    gazebo_params_yaml_file = os.path.join(pkg_create3_gazebo, 'config', 'gazebo_params.yaml')
+
     # Launch configurations
     x, y, z = LaunchConfiguration('x'), LaunchConfiguration('y'), LaunchConfiguration('z')
     yaw = LaunchConfiguration('yaw')
@@ -77,7 +81,8 @@ def generate_launch_description():
         cmd=['gzserver',
              '-s', 'libgazebo_ros_init.so',
              '-s', 'libgazebo_ros_factory.so',
-             world_path],
+             world_path,
+             'extra-gazebo-args', '--ros-args', '--params-file', gazebo_params_yaml_file],
         output='screen',
     )
 

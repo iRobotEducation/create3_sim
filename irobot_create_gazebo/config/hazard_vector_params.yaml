@@ -15,3 +15,5 @@ hazards_vector_node:
       # Wheel drop topics
       - _internal/wheel_drop/left_wheel/event
       - _internal/wheel_drop/right_wheel/event
+      # Backup limit topic
+      - _internal/backup_limit
