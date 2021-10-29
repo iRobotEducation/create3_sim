@@ -32,7 +32,6 @@ public:
   ReflexBehavior(
     rclcpp::node_interfaces::NodeClockInterface::SharedPtr node_clock_interface,
     rclcpp::node_interfaces::NodeLoggingInterface::SharedPtr node_logging_interface,
-    rclcpp::node_interfaces::NodeTopicsInterface::SharedPtr node_topics_interface,
     rclcpp::node_interfaces::NodeParametersInterface::SharedPtr node_parameters_interface,
     std::shared_ptr<tf2_ros::Buffer> tf_buffer,
     std::shared_ptr<BehaviorsScheduler> behavior_scheduler);
@@ -41,6 +40,8 @@ public:
   /// \brief Update reflex manager information
   //  Reflexes only trigger if robot is moving
   void update_state(const tf2::Transform & last_robot_pose, bool moving);
+
+  void hazard_vector_callback(irobot_create_msgs::msg::HazardDetectionVector::ConstSharedPtr msg);
 
 private:
   /// \brief Name of parameter for enabling/disabling all reflexes
@@ -80,15 +81,10 @@ private:
 
   bool reflex_behavior_is_done();
 
-  void hazard_vector_callback(irobot_create_msgs::msg::HazardDetectionVector::ConstSharedPtr msg);
-
   boost::optional<tf2::Vector3> get_pose_relative_to_odom(
     const irobot_create_msgs::msg::HazardDetection & hazard);
 
   BehaviorsScheduler::optional_output_t execute_reflex();
-
-  rclcpp::Subscription<irobot_create_msgs::msg::HazardDetectionVector>::SharedPtr
-    hazard_detection_sub_;
 
   rclcpp::Clock::SharedPtr clock_;
   std::shared_ptr<tf2_ros::Buffer> tf_buffer_;

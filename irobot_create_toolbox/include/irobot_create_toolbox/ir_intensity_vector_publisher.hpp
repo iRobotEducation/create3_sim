@@ -4,6 +4,7 @@
 #ifndef IROBOT_CREATE_TOOLBOX__IR_INTENSITY_VECTOR_PUBLISHER_HPP_
 #define IROBOT_CREATE_TOOLBOX__IR_INTENSITY_VECTOR_PUBLISHER_HPP_
 
+#include <map>
 #include <memory>
 #include <string>
 #include <vector>
@@ -44,6 +45,9 @@ protected:
 
   // Message containing a vector to store IR intensity reasings
   irobot_create_msgs::msg::IrIntensityVector msg_;
+
+  // Cache of last message for each frame
+  std::map<std::string, irobot_create_msgs::msg::IrIntensity> ir_intensities_;
 };
 
 }  // namespace irobot_create_toolbox

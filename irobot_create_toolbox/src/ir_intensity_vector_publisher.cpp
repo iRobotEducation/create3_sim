@@ -33,10 +33,14 @@ IrIntensityVectorPublisher::IrIntensityVectorPublisher()
 
       // Set header timestamp.
       this->msg_.header.stamp = now();
+      this->msg_.readings.clear();
+      this->msg_.readings.reserve(this->ir_intensities_.size());
+      for (const auto & ir_msgs : this->ir_intensities_) {
+        this->msg_.readings.emplace_back(ir_msgs.second);
+      }
 
       // Publish detected vector.
       this->publisher_->publish(this->msg_);
-      this->msg_.readings.clear();
     });
 
   // Set header frame_id.
@@ -49,7 +53,7 @@ IrIntensityVectorPublisher::IrIntensityVectorPublisher()
         topic, rclcpp::SensorDataQoS(),
         [this](const irobot_create_msgs::msg::IrIntensity::SharedPtr msg) {
           std::lock_guard<std::mutex> lock{this->mutex_};
-          this->msg_.readings.push_back(*msg);
+          this->ir_intensities_[msg->header.frame_id] = *msg;
         })));
     RCLCPP_INFO_STREAM(get_logger(), "Subscription to topic: " << topic);
   }

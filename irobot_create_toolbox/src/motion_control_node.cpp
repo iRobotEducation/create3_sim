@@ -53,10 +53,24 @@ MotionControlNode::MotionControlNode()
   reflex_behavior_ = std::make_shared<ReflexBehavior>(
     this->get_node_clock_interface(),
     this->get_node_logging_interface(),
-    this->get_node_topics_interface(),
     this->get_node_parameters_interface(),
     tf_buffer_,
     scheduler_);
+  // Create Wall Follow Behavior manager
+  wall_follow_behavior_ = std::make_shared<WallFollowBehavior>(
+    this->get_node_base_interface(),
+    this->get_node_clock_interface(),
+    this->get_node_logging_interface(),
+    this->get_node_topics_interface(),
+    this->get_node_waitables_interface(),
+    scheduler_);
+
+  hazard_detection_sub_ =
+    this->create_subscription<irobot_create_msgs::msg::HazardDetectionVector>(
+    "hazard_detection",
+    rclcpp::SensorDataQoS(),
+    std::bind(&MotionControlNode::hazard_vector_callback, this, _1));
+
   // Create subscription to let other applications drive the robot
   teleop_subscription_ = this->create_subscription<geometry_msgs::msg::Twist>(
     "cmd_vel", rclcpp::SensorDataQoS(),
@@ -175,6 +189,7 @@ void MotionControlNode::control_robot()
   // Handle behaviors
   BehaviorsScheduler::optional_output_t command;
   if (scheduler_->has_behavior()) {
+    wall_follow_behavior_->update_state(last_robot_pose_);
     command = scheduler_->run_behavior();
     // Reset last teleoperation command if we are executing a behavior
     this->reset_last_teleop_cmd();
@@ -261,6 +276,13 @@ bool MotionControlNode::set_safety_mode(const std::string & safety_mode)
     return false;
   }
   return true;
+}
+
+void MotionControlNode::hazard_vector_callback(
+  irobot_create_msgs::msg::HazardDetectionVector::ConstSharedPtr msg)
+{
+  reflex_behavior_->hazard_vector_callback(msg);
+  wall_follow_behavior_->hazard_vector_callback(msg);
 }
 
 void MotionControlNode::commanded_velocity_callback(geometry_msgs::msg::Twist::ConstSharedPtr msg)

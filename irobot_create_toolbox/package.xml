@@ -23,7 +23,6 @@
   <depend>tf2_geometry_msgs</depend>
   <depend>tf2_ros</depend>
 
-
   <exec_depend>rcl_interfaces</exec_depend>
   <exec_depend>teleop_twist_keyboard</exec_depend>
   <exec_depend>teleop_twist_joy</exec_depend>
