@@ -162,8 +162,12 @@ MockPublisher::MockPublisher()
         }
       }
       // Approximate voltage from extrapolation of observed data
+      double voltage_scale_factor = battery_voltage_range_middle_;
+      if (this->battery_state_msg_.percentage > 0.9) {
+        voltage_scale_factor = battery_voltage_range_high_;
+      }
       this->battery_state_msg_.voltage = full_batter_state_voltage_ -
-      (battery_voltage_range_ * (1.0 - this->battery_state_msg_.percentage));
+      (voltage_scale_factor * (1.0 - this->battery_state_msg_.percentage));
       this->battery_state_msg_.charge = this->battery_state_msg_.capacity *
       this->battery_state_msg_.percentage;
 

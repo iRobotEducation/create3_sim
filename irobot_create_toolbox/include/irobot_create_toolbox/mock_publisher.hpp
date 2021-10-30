@@ -121,7 +121,8 @@ protected:
   const double charge_rate_percent_per_second_ {0.00012658291225191914};
   const double driving_drain_percentage_per_second {0.00008875};
   const double idle_drain_percentage_per_second {0.00005634};
-  const double battery_voltage_range_ {6};
+  const double battery_voltage_range_high_ {6};
+  const double battery_voltage_range_middle_ {3.27};
 };
 
 }  // namespace irobot_create_toolbox
