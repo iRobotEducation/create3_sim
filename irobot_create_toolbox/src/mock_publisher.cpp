@@ -3,6 +3,7 @@
 
 #include <irobot_create_toolbox/mock_publisher.hpp>
 
+#include <algorithm>
 #include <string>
 #include <vector>
 
@@ -84,7 +85,7 @@ MockPublisher::MockPublisher()
   RCLCPP_INFO_STREAM(get_logger(), "Subscription to topic: " << hazard_subscription_topic_);
 
   // Set kidnap status header
-  kidnap_status_msg_.header.frame_id = "base_link";
+  kidnap_status_msg_.header.frame_id = base_frame_;
 
   // Subscription to the stop status
   stop_status_subscription_ = create_subscription<nav_msgs::msg::Odometry>(
@@ -93,7 +94,7 @@ MockPublisher::MockPublisher()
   RCLCPP_INFO_STREAM(get_logger(), "Subscription to topic: " << wheel_vels_subscription_topic_);
 
   // Set stop status header
-  stop_status_msg_.header.frame_id = "base_link";
+  stop_status_msg_.header.frame_id = base_frame_;
 
   // Subscription to the lightring leds
   lightring_subscription_ = create_subscription<irobot_create_msgs::msg::LightringLeds>(
@@ -117,7 +118,7 @@ MockPublisher::MockPublisher()
     });
 
   // Set buttons header
-  buttons_msg_.header.frame_id = "base_link";
+  buttons_msg_.header.frame_id = base_frame_;
   buttons_msg_.button_1.header.frame_id = "button_1";
   buttons_msg_.button_power.header.frame_id = "button_power";
   buttons_msg_.button_2.header.frame_id = "button_2";
@@ -134,7 +135,7 @@ MockPublisher::MockPublisher()
     });
 
   // Set slip status header
-  slip_status_msg_.header.frame_id = "base_link";
+  slip_status_msg_.header.frame_id = base_frame_;
   // Set slip status status
   slip_status_msg_.is_slipping = false;
 
@@ -178,11 +179,11 @@ MockPublisher::MockPublisher()
   // The battery percentage goes from zero to one, one meaning that the battery is full.
   battery_state_msg_.percentage = 1;
   // Set battery state header
-  battery_state_msg_.header.frame_id = "base_link";
-  battery_state_msg_.capacity = 2.046;
-  battery_state_msg_.design_capacity = 2.046;
+  battery_state_msg_.header.frame_id = base_frame_;
+  battery_state_msg_.capacity = battery_capacity_;
+  battery_state_msg_.design_capacity = battery_capacity_;
   battery_state_msg_.present = true;
-  battery_state_msg_.temperature = 27.0;
+  battery_state_msg_.temperature = battery_default_temp_;
 }
 
 double MockPublisher::get_docked_charge_percentage(const rclcpp::Time & at_time)
@@ -192,9 +193,7 @@ double MockPublisher::get_docked_charge_percentage(const rclcpp::Time & at_time)
   // current charge is last charged + charging rate * time
   double docked_charge = last_docked_charge_percentage_ +
     (time_docked.seconds() * charge_rate_percent_per_second_);
-  if (docked_charge > 1.0) {
-    docked_charge = 1.0;
-  }
+  docked_charge = std::min(docked_charge, 1.0);
   return docked_charge;
 }
 

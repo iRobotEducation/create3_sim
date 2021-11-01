@@ -24,7 +24,7 @@ WallFollowBehavior::WallFollowBehavior(
   wf_running_ = false;
   behavior_scheduler_ = behavior_scheduler;
 
-  wf_state_mgr_ = std::make_shared<WallFollowStateManager>(node_logging_interface);
+  wf_state_mgr_ = std::make_shared<WallFollowStateManager>(logger_.get_child("state_manager"));
 
   wall_follow_action_server_ = rclcpp_action::create_server<irobot_create_msgs::action::WallFollow>(
     node_base_interface,
@@ -85,11 +85,18 @@ void WallFollowBehavior::handle_wall_follow_accepted(
       {
         wf_side = goal->follow_side;
       } else {
-        // Default to right side
-        wf_side = irobot_create_msgs::action::WallFollow::Goal::FOLLOW_RIGHT;
+        // Return error if not a valid side
+        RCLCPP_WARN(logger_, "Invalid follow_side value %d", goal->follow_side);
+        auto result = std::make_shared<irobot_create_msgs::action::WallFollow::Result>();
+        result->runtime = rclcpp::Duration::from_nanoseconds(0);
+        goal_handle->abort(result);
+        return;
       }
       wf_state_mgr_->initialize(wf_side);
-      RCLCPP_INFO(logger_, "Starting wall follow goal with side %d", static_cast<int>(wf_side));
+      RCLCPP_INFO(
+        logger_, "Starting wall follow goal with side %s",
+        wf_side == irobot_create_msgs::action::WallFollow::Goal::FOLLOW_RIGHT ?
+        "RIGHT" : "LEFT");
       wf_end_duration_ = rclcpp::Duration(goal->max_runtime);
       wf_start_time_ = clock_->now();
       wf_engaged_ = false;

@@ -153,9 +153,8 @@ private:
 class WallFollowStateManager : public WallFollowState
 {
 public:
-  WallFollowStateManager(
-    rclcpp::node_interfaces::NodeLoggingInterface::SharedPtr node_logging_interface)
-  : logger_{node_logging_interface->get_logger()}
+  explicit WallFollowStateManager(const rclcpp::Logger & logger)
+  : logger_{logger}
   {}
 
   void initialize(int8_t follow_side);

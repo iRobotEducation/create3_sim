@@ -123,6 +123,9 @@ protected:
   const double idle_drain_percentage_per_second {0.00005634};
   const double battery_voltage_range_high_ {6};
   const double battery_voltage_range_middle_ {3.27};
+  const double battery_capacity_ {2.046};
+  const double battery_default_temp_ {27.0};
+  const std::string base_frame_ {"base_link"};
 };
 
 }  // namespace irobot_create_toolbox
