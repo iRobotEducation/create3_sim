@@ -77,6 +77,7 @@ bool WallFollowStateManager::get_next_velocity(
       case WallFollowStateID::NONE:
         {
           // This behavior won't be instantiated by state machine
+          RCLCPP_ERROR(logger_, "Wall Follow State machine has NONE behavior");
           break;
         }
     }
