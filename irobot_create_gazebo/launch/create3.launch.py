@@ -187,5 +187,4 @@ def generate_launch_description():
     ld.add_action(mock_topics_node)
     ld.add_action(robot_status_node)
 
-
     return ld
