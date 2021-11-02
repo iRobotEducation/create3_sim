@@ -1,6 +1,6 @@
 controller_manager:
   ros__parameters:
-    update_rate: 100  # Hz
+    update_rate: 1000  # Hz
 
     joint_state_broadcaster:
       type: joint_state_broadcaster/JointStateBroadcaster
@@ -68,7 +68,7 @@ diffdrive_controller:
     angular.z.has_jerk_limits: false
     angular.z.max_velocity: 1.9
     angular.z.min_velocity: -1.9
-    # Using 0.9 linear for each wheel, assuming one wheel accel to .9 
+    # Using 0.9 linear for each wheel, assuming one wheel accel to .9
     # and other to -.9 with wheelbase leads to 7.725 rad/s^2
     angular.z.max_acceleration: 7.725
     angular.z.min_acceleration: -7.725
