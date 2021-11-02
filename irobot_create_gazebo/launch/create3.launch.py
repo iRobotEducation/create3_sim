@@ -54,6 +54,8 @@ def generate_launch_description():
         [pkg_create3_gazebo, 'config', 'wheel_status_params.yaml'])
     mock_params_yaml_file = PathJoinSubstitution(
         [pkg_create3_gazebo, 'config', 'mock_params.yaml'])
+    robot_status_yaml_file = PathJoinSubstitution(
+        [pkg_create3_gazebo, 'config', 'robot_status_params.yaml'])
 
     gazebo_params_yaml_file = os.path.join(pkg_create3_gazebo, 'config', 'gazebo_params.yaml')
 
@@ -149,6 +151,16 @@ def generate_launch_description():
     )
 
     # Publish wheel status
+    robot_status_node = Node(
+        package='irobot_create_toolbox',
+        name='robot_status_publisher_node',
+        executable='robot_status_publisher_node',
+        parameters=[robot_status_yaml_file,
+                    {'use_sim_time': True}],
+        output='screen',
+    )
+
+    # Publish wheel status
     mock_topics_node = Node(
         package='irobot_create_toolbox',
         name='mock_publisher_node',
@@ -173,5 +185,7 @@ def generate_launch_description():
     ld.add_action(motion_control_node)
     ld.add_action(wheel_status_node)
     ld.add_action(mock_topics_node)
+    ld.add_action(robot_status_node)
+
 
     return ld

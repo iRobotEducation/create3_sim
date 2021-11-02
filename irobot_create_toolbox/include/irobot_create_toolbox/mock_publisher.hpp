@@ -9,11 +9,9 @@
 #include <irobot_create_msgs/msg/hazard_detection.hpp>
 #include <irobot_create_msgs/msg/hazard_detection_vector.hpp>
 #include <irobot_create_msgs/msg/interface_buttons.hpp>
-#include <irobot_create_msgs/msg/kidnap_status.hpp>
 #include <irobot_create_msgs/msg/led_color.hpp>
 #include <irobot_create_msgs/msg/lightring_leds.hpp>
 #include <irobot_create_msgs/msg/slip_status.hpp>
-#include <irobot_create_msgs/msg/stop_status.hpp>
 #include <irobot_create_msgs/msg/wheel_vels.hpp>
 #include <irobot_create_toolbox/parameter_helper.hpp>
 
@@ -48,18 +46,13 @@ protected:
   // Publish aggregated detections on timer_'s frequency
   rclcpp::TimerBase::SharedPtr buttons_timer_;
   rclcpp::TimerBase::SharedPtr slip_status_timer_;
-  rclcpp::TimerBase::SharedPtr kidnap_status_timer_;
   rclcpp::TimerBase::SharedPtr battery_state_timer_;
-  rclcpp::TimerBase::SharedPtr stop_status_timer_;
 
   // Publishers
   std::shared_ptr<
     rclcpp::Publisher<irobot_create_msgs::msg::InterfaceButtons>> buttons_publisher_{nullptr};
   rclcpp::Publisher<irobot_create_msgs::msg::SlipStatus>::SharedPtr slip_status_publisher_{nullptr};
-  rclcpp::Publisher<irobot_create_msgs::msg::KidnapStatus>::SharedPtr
-    kidnap_status_publisher_{nullptr};
   rclcpp::Publisher<sensor_msgs::msg::BatteryState>::SharedPtr battery_state_publisher_{nullptr};
-  rclcpp::Publisher<irobot_create_msgs::msg::StopStatus>::SharedPtr stop_status_publisher_{nullptr};
 
   // Subscribers
   rclcpp::Subscription<irobot_create_msgs::msg::Dock>::SharedPtr dock_subscription_;
@@ -73,12 +66,8 @@ protected:
   std::string buttons_publisher_topic_;
   // Topic to publish slip status to
   std::string slip_status_publisher_topic_;
-  // Topic to publish kidnap status to
-  std::string kidnap_status_publisher_topic_;
   // Topic to publish battery state to
   std::string battery_state_publisher_topic_;
-  // Topic to publish stop status to
-  std::string stop_status_publisher_topic_;
 
   // Topic to subscribe to dock
   std::string dock_subscription_topic_;
@@ -93,12 +82,8 @@ protected:
   irobot_create_msgs::msg::InterfaceButtons buttons_msg_;
   // Message to store the slip status
   irobot_create_msgs::msg::SlipStatus slip_status_msg_;
-  // Message to store the kidnap status
-  irobot_create_msgs::msg::KidnapStatus kidnap_status_msg_;
   // Message to store the battery state
   sensor_msgs::msg::BatteryState battery_state_msg_;
-  // Message to store the stop status
-  irobot_create_msgs::msg::StopStatus stop_status_msg_;
 
   double linear_velocity_tolerance{std::numeric_limits<double>::max()};
   double angular_velocity_tolerance{std::numeric_limits<double>::max()};

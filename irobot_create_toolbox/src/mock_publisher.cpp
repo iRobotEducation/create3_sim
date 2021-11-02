@@ -20,14 +20,9 @@ MockPublisher::MockPublisher()
   buttons_publisher_topic_ = declare_and_get_parameter<std::string>("button_topic", this);
   // Topic parameter to publish slip status to
   slip_status_publisher_topic_ = declare_and_get_parameter<std::string>("slip_status_topic", this);
-  // Topic parameter to publish kidnap status to
-  kidnap_status_publisher_topic_ =
-    declare_and_get_parameter<std::string>("kidnap_status_topic", this);
-  // Topic parameter to publish battery state to
+
   battery_state_publisher_topic_ =
     declare_and_get_parameter<std::string>("battery_state_topic", this);
-  // Topic parameter to publish stop status to
-  stop_status_publisher_topic_ = declare_and_get_parameter<std::string>("stop_status_topic", this);
 
   // Subscriber topics
   dock_subscription_topic_ = declare_and_get_parameter<std::string>("dock_topic", this);
@@ -57,16 +52,12 @@ MockPublisher::MockPublisher()
     slip_status_publisher_topic_, rclcpp::SensorDataQoS());
   RCLCPP_INFO_STREAM(get_logger(), "Advertised mocked topic: " << slip_status_publisher_topic_);
 
-  // Define kidnap status publisher
-  kidnap_status_publisher_ = create_publisher<irobot_create_msgs::msg::KidnapStatus>(
-    kidnap_status_publisher_topic_, rclcpp::SensorDataQoS());
-  RCLCPP_INFO_STREAM(get_logger(), "Advertised mocked topic: " << kidnap_status_publisher_topic_);
-
   // Define battery state publisher
   battery_state_publisher_ = create_publisher<sensor_msgs::msg::BatteryState>(
     battery_state_publisher_topic_, rclcpp::SensorDataQoS());
   RCLCPP_INFO_STREAM(get_logger(), "Advertised mocked topic: " << battery_state_publisher_topic_);
 
+<<<<<<< HEAD
   // Define stop status publisher
   stop_status_publisher_ = create_publisher<irobot_create_msgs::msg::StopStatus>(
     stop_status_publisher_topic_, rclcpp::SensorDataQoS());
@@ -96,6 +87,8 @@ MockPublisher::MockPublisher()
   // Set stop status header
   stop_status_msg_.header.frame_id = base_frame_;
 
+=======
+>>>>>>> Adds cliffs to the kidnap logic. Creates a new node to publish the kidnap and the stop status.
   // Subscription to the lightring leds
   lightring_subscription_ = create_subscription<irobot_create_msgs::msg::LightringLeds>(
     lightring_subscription_topic_, rclcpp::SensorDataQoS(),
