@@ -28,7 +28,7 @@ RobotStatus::RobotStatus()
   // Define kidnap status publisher
   kidnap_status_publisher_ = create_publisher<irobot_create_msgs::msg::KidnapStatus>(
     kidnap_status_publisher_topic_, rclcpp::SensorDataQoS());
-  RCLCPP_INFO_STREAM(get_logger(), "Advertised mocked topic: " << kidnap_status_publisher_topic_);
+  RCLCPP_INFO_STREAM(get_logger(), "Advertised topic: " << kidnap_status_publisher_topic_);
 
   // Subscription to the hazard detection vector
   kidnap_status_subscription_ = create_subscription<irobot_create_msgs::msg::HazardDetectionVector>(
@@ -42,7 +42,7 @@ RobotStatus::RobotStatus()
   // Define stop status publisher
   stop_status_publisher_ = create_publisher<irobot_create_msgs::msg::StopStatus>(
     stop_status_publisher_topic_, rclcpp::SensorDataQoS());
-  RCLCPP_INFO_STREAM(get_logger(), "Advertised mocked topic: " << stop_status_publisher_topic_);
+  RCLCPP_INFO_STREAM(get_logger(), "Advertised topic: " << stop_status_publisher_topic_);
 
   // Subscription to the stop status
   stop_status_subscription_ = create_subscription<nav_msgs::msg::Odometry>(
