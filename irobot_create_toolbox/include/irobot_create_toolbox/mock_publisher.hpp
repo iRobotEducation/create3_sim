@@ -61,7 +61,6 @@ protected:
   rclcpp::Subscription<nav_msgs::msg::Odometry>::SharedPtr stop_status_subscription_;
   rclcpp::Subscription<irobot_create_msgs::msg::LightringLeds>::SharedPtr lightring_subscription_;
 
-
   // Topic to publish interface buttons to
   std::string buttons_publisher_topic_;
   // Topic to publish slip status to
@@ -69,12 +68,15 @@ protected:
   // Topic to publish battery state to
   std::string battery_state_publisher_topic_;
 
+<<<<<<< HEAD
   // Topic to subscribe to dock
   std::string dock_subscription_topic_;
   // Topic to subscribe to hazard detection vector
   std::string hazard_subscription_topic_;
   // Topic to subscribe to wheel vels vector
   std::string wheel_vels_subscription_topic_;
+=======
+>>>>>>> Deletes extra variables.
   // Topic to subscribe to light ring vector
   std::string lightring_subscription_topic_;
 
@@ -84,6 +86,7 @@ protected:
   irobot_create_msgs::msg::SlipStatus slip_status_msg_;
   // Message to store the battery state
   sensor_msgs::msg::BatteryState battery_state_msg_;
+<<<<<<< HEAD
 
   double linear_velocity_tolerance{std::numeric_limits<double>::max()};
   double angular_velocity_tolerance{std::numeric_limits<double>::max()};
@@ -111,6 +114,8 @@ protected:
   const double battery_capacity_ {2.046};
   const double battery_default_temp_ {27.0};
   const std::string base_frame_ {"base_link"};
+=======
+>>>>>>> Deletes extra variables.
 };
 
 }  // namespace irobot_create_toolbox
