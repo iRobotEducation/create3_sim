@@ -91,14 +91,14 @@ ament_target_dependencies(wheel_status_publisher_lib
   ${dependencies}
 )
 
-add_library(robot_status_publisher_lib SHARED)
+add_library(robot_state_publisher_lib SHARED)
 target_sources(
-  robot_status_publisher_lib
+  robot_state_publisher_lib
   PRIVATE
-    src/robot_status_publisher.cpp
+    src/robot_state_publisher.cpp
 )
-target_include_directories(robot_status_publisher_lib PUBLIC include)
-ament_target_dependencies(robot_status_publisher_lib
+target_include_directories(robot_state_publisher_lib PUBLIC include)
+ament_target_dependencies(robot_state_publisher_lib
   ${dependencies}
 )
 
@@ -118,7 +118,7 @@ set(libraries_names
   ir_intensity_publisher_lib
   motion_control_lib
   wheel_status_publisher_lib
-  robot_status_publisher_lib
+  robot_state_publisher_lib
   mock_publisher_lib
 )
 
@@ -161,13 +161,13 @@ target_sources(
 target_link_libraries(wheel_status_publisher_node wheel_status_publisher_lib)
 
 # Robot status publisher
-add_executable(robot_status_publisher_node)
+add_executable(robot_state_publisher_node)
 target_sources(
-  robot_status_publisher_node
+  robot_state_publisher_node
   PRIVATE
-    src/robot_status_publisher_node.cpp
+    src/robot_state_publisher_node.cpp
 )
-target_link_libraries(robot_status_publisher_node robot_status_publisher_lib)
+target_link_libraries(robot_state_publisher_node robot_state_publisher_lib)
 
 # Mock publisher
 add_executable(mock_publisher_node)
@@ -183,7 +183,7 @@ set(executables_names
   ir_intensity_vector_publisher_node
   motion_control
   wheel_status_publisher_node
-  robot_status_publisher_node
+  robot_state_publisher_node
   mock_publisher_node
 )
 

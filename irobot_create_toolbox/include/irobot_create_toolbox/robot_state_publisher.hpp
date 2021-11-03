@@ -1,8 +1,8 @@
 // Copyright 2021 iRobot Corporation. All Rights Reserved.
 // @author Lola Segura (lsegura@irobot.com)
 
-#ifndef IROBOT_CREATE_TOOLBOX__ROBOT_STATUS_PUBLISHER_HPP_
-#define IROBOT_CREATE_TOOLBOX__ROBOT_STATUS_PUBLISHER_HPP_
+#ifndef IROBOT_CREATE_TOOLBOX__ROBOT_STATE_PUBLISHER_HPP_
+#define IROBOT_CREATE_TOOLBOX__ROBOT_STATE_PUBLISHER_HPP_
 
 #include <irobot_create_msgs/msg/hazard_detection.hpp>
 #include <irobot_create_msgs/msg/hazard_detection_vector.hpp>
@@ -69,4 +69,4 @@ protected:
 
 }  // namespace irobot_create_toolbox
 
-#endif  // IROBOT_CREATE_TOOLBOX__ROBOT_STATUS_PUBLISHER_HPP_
+#endif  // IROBOT_CREATE_TOOLBOX__ROBOT_STATE_PUBLISHER_HPP_

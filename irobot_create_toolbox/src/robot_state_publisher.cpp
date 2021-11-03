@@ -1,7 +1,7 @@
 // Copyright 2021 iRobot Corporation. All Rights Reserved.
 // @author Lola Segura (lsegura@irobot.com)
 
-#include <irobot_create_toolbox/robot_status_publisher.hpp>
+#include <irobot_create_toolbox/robot_state_publisher.hpp>
 
 #include <string>
 #include <vector>
@@ -9,7 +9,7 @@
 namespace irobot_create_toolbox
 {
 RobotStatus::RobotStatus()
-: rclcpp::Node("robot_status_publisher_node")
+: rclcpp::Node("robot_state")
 {
   // Topic parameter to publish kidnap status to
   kidnap_status_publisher_topic_ =

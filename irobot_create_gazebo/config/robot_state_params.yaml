@@ -1,5 +1,5 @@
 ---
-robot_status_publisher_node:
+robot_state:
   ros__parameters:
     # Kidnap status publisher topic
     kidnap_status_topic: /kidnap_status
