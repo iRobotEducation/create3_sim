@@ -12,6 +12,7 @@
 #include <irobot_create_toolbox/parameter_helper.hpp>
 #include <irobot_create_toolbox/motion_control/docking_behavior.hpp>
 #include <irobot_create_toolbox/motion_control/reflex_behavior.hpp>
+#include <irobot_create_toolbox/motion_control/wall_follow_behavior.hpp>
 #include <rclcpp/rclcpp.hpp>
 #include <tf2_ros/buffer.h>
 #include <tf2_ros/transform_listener.h>
@@ -73,6 +74,8 @@ private:
   /// \brief Storage for custom parameter validation callbacks
   rclcpp::node_interfaces::OnSetParametersCallbackHandle::SharedPtr params_callback_handle_{
     nullptr};
+  /// \brief Callback for current hazards seen by robot
+  void hazard_vector_callback(irobot_create_msgs::msg::HazardDetectionVector::ConstSharedPtr msg);
 
   /// \brief Callback for new velocity commands
   void commanded_velocity_callback(geometry_msgs::msg::Twist::ConstSharedPtr msg);
@@ -97,20 +100,23 @@ private:
   /// \brief Service to e_stop robot, this will prevent robot from commanding velocity
   rclcpp::Service<irobot_create_msgs::srv::EStop>::SharedPtr e_stop_server_;
 
+  rclcpp::Subscription<irobot_create_msgs::msg::HazardDetectionVector>::SharedPtr
+    hazard_detection_sub_;
   rclcpp::Subscription<geometry_msgs::msg::Twist>::SharedPtr teleop_subscription_;
   rclcpp::Subscription<nav_msgs::msg::Odometry>::SharedPtr odom_pose_sub_;
   rclcpp::Subscription<irobot_create_msgs::msg::KidnapStatus>::SharedPtr kidnap_sub_;
   rclcpp::Publisher<geometry_msgs::msg::Twist>::SharedPtr cmd_vel_out_pub_;
   rclcpp::Publisher<irobot_create_msgs::msg::HazardDetection>::SharedPtr backup_limit_hazard_pub_;
-  rclcpp::TimerBase::SharedPtr control_timer_;
-  rclcpp::TimerBase::SharedPtr backup_limit_timer_;
+  rclcpp::TimerBase::SharedPtr control_timer_ {nullptr};
+  rclcpp::TimerBase::SharedPtr backup_limit_timer_ {nullptr};
 
-  std::shared_ptr<tf2_ros::Buffer> tf_buffer_;
-  std::shared_ptr<tf2_ros::TransformListener> tf_listener_;
+  std::shared_ptr<tf2_ros::Buffer> tf_buffer_ {nullptr};
+  std::shared_ptr<tf2_ros::TransformListener> tf_listener_ {nullptr};
 
-  std::shared_ptr<BehaviorsScheduler> scheduler_;
-  std::shared_ptr<DockingBehavior> docking_behavior_;
-  std::shared_ptr<ReflexBehavior> reflex_behavior_;
+  std::shared_ptr<BehaviorsScheduler> scheduler_ {nullptr};
+  std::shared_ptr<DockingBehavior> docking_behavior_ {nullptr};
+  std::shared_ptr<ReflexBehavior> reflex_behavior_ {nullptr};
+  std::shared_ptr<WallFollowBehavior> wall_follow_behavior_ {nullptr};
 
   std::mutex mutex_;
   geometry_msgs::msg::Twist last_teleop_cmd_;

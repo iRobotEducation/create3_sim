@@ -15,9 +15,10 @@ mock_publisher_node:
     buttons_publish_rate: 1.0
     slip_status_publish_rate: 62.0
     kidnap_status_publish_rate: 1.0
-    battery_state_publish_rate: 1.0
+    battery_state_publish_rate: 0.1
     stop_status_publish_rate: 62.0
     # Subscription topics
+    dock_topic: /dock
     hazard_topic: /hazard_detection
     wheel_vels_topic: /odom
     lightring_topic: /cmd_lightring

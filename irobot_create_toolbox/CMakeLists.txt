@@ -72,6 +72,8 @@ target_sources(
     src/motion_control_node.cpp
     src/motion_control/docking_behavior.cpp
     src/motion_control/reflex_behavior.cpp
+    src/motion_control/wall_follow_behavior.cpp
+    src/motion_control/wall_follow_states.cpp
 )
 target_include_directories(motion_control_lib PUBLIC include)
 ament_target_dependencies(motion_control_lib

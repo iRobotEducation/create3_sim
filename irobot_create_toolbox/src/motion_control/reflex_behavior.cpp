@@ -19,7 +19,6 @@ using namespace std::placeholders;
 ReflexBehavior::ReflexBehavior(
   rclcpp::node_interfaces::NodeClockInterface::SharedPtr node_clock_interface,
   rclcpp::node_interfaces::NodeLoggingInterface::SharedPtr node_logging_interface,
-  rclcpp::node_interfaces::NodeTopicsInterface::SharedPtr node_topics_interface,
   rclcpp::node_interfaces::NodeParametersInterface::SharedPtr node_parameters_interface,
   std::shared_ptr<tf2_ros::Buffer> tf_buffer,
   std::shared_ptr<BehaviorsScheduler> behavior_scheduler)
@@ -30,13 +29,6 @@ ReflexBehavior::ReflexBehavior(
   max_continuous_reflex_runtime_{rclcpp::Duration(std::chrono::seconds(30))}
 {
   behavior_scheduler_ = behavior_scheduler;
-
-  hazard_detection_sub_ =
-    rclcpp::create_subscription<irobot_create_msgs::msg::HazardDetectionVector>(
-    node_topics_interface,
-    "hazard_detection",
-    rclcpp::SensorDataQoS(),
-    std::bind(&ReflexBehavior::hazard_vector_callback, this, _1));
 
   // Declare ROS 2 parameters and setup the system according to default values
   this->declare_parameters(node_parameters_interface);
