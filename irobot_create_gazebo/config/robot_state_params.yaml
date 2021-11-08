@@ -5,10 +5,14 @@ robot_state:
     kidnap_status_topic: /kidnap_status
     # Stop status publisher topic
     stop_status_topic: /stop_status
+    # Mock battery state publisher topic
+    battery_state_topic: /battery_state
     # Publishers rate
     kidnap_status_publish_rate: 1.0
     stop_status_publish_rate: 62.0
+    battery_state_publish_rate: 0.1
     # Subscription topics
+    dock_topic: /dock
     hazard_topic: /hazard_detection
     wheel_vels_topic: /odom
     # Stop status position difference tolerance
