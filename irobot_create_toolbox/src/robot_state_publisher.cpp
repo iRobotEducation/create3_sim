@@ -33,7 +33,7 @@ RobotStatus::RobotStatus()
 
   // Publish rate parameters
   const double battery_state_publish_rate =
-    declare_and_get_parameter<double>("battery_state_publish_rate", this); // Hz
+    declare_and_get_parameter<double>("battery_state_publish_rate", this);  // Hz
 
   // Sets velocity tolerances
   linear_velocity_tolerance = declare_and_get_parameter<float>("linear_velocity_tolerance", this);
