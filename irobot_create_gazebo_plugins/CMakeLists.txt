@@ -11,12 +11,18 @@ if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
 endif()
 
 find_package(ament_cmake REQUIRED)
-find_package(gazebo_dev REQUIRED)
-find_package(gazebo_ros REQUIRED)
 find_package(geometry_msgs REQUIRED)
 find_package(irobot_create_msgs REQUIRED)
 find_package(rclcpp REQUIRED)
 find_package(sensor_msgs REQUIRED)
+
+find_package(gazebo_dev)
+find_package(gazebo_ros)
+if (NOT gazebo_dev_FOUND OR NOT gazebo_ros_FOUND)
+  message(WARNING "Gazebo not found. Skipping ${PROJECT_NAME}.")
+  ament_package()
+  return()
+endif
 
 link_directories(${gazebo_dev_LIBRARY_DIRS})
 
