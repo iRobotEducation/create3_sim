@@ -20,11 +20,11 @@ for pose_element, default_value in zip(['x', 'y', 'yaw'], ['9.0', '0.0', '0.0'])
 def generate_launch_description():
     # Directories
     aws_small_house_dir = get_package_share_directory('aws_robomaker_small_house_world')
-    irobot_create_gazebo_dir = get_package_share_directory('irobot_create_gazebo')
+    irobot_create_bringup_dir = get_package_share_directory('irobot_create_bringup')
 
     # Paths
     create3_launch_file = PathJoinSubstitution(
-        [irobot_create_gazebo_dir, 'launch', 'create3.launch.py'])
+        [irobot_create_bringup_dir, 'launch', 'create3.launch.py'])
     world_path = PathJoinSubstitution([aws_small_house_dir, 'worlds', 'small_house.world'])
     aws_model_path = PathJoinSubstitution([aws_small_house_dir, 'models'])
 

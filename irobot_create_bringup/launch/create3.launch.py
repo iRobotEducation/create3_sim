@@ -35,9 +35,9 @@ for pose_element in ['x', 'y', 'z', 'yaw']:
 
 def generate_launch_description():
     # Directories
+    pkg_create3_bringup = get_package_share_directory('irobot_create_bringup')
     pkg_create3_control = get_package_share_directory('irobot_create_control')
     pkg_create3_description = get_package_share_directory('irobot_create_description')
-    pkg_create3_gazebo = get_package_share_directory('irobot_create_gazebo')
 
     # Paths
     control_launch_file = PathJoinSubstitution(
@@ -47,15 +47,15 @@ def generate_launch_description():
     dock_launch_file = PathJoinSubstitution(
         [pkg_create3_description, 'launch', 'include', 'dock.py'])
     hazards_params_yaml_file = PathJoinSubstitution(
-        [pkg_create3_gazebo, 'config', 'hazard_vector_params.yaml'])
+        [pkg_create3_bringup, 'config', 'hazard_vector_params.yaml'])
     ir_intensity_params_yaml_file = PathJoinSubstitution(
-        [pkg_create3_gazebo, 'config', 'ir_intensity_vector_params.yaml'])
+        [pkg_create3_bringup, 'config', 'ir_intensity_vector_params.yaml'])
     wheel_status_params_yaml_file = PathJoinSubstitution(
-        [pkg_create3_gazebo, 'config', 'wheel_status_params.yaml'])
+        [pkg_create3_bringup, 'config', 'wheel_status_params.yaml'])
     mock_params_yaml_file = PathJoinSubstitution(
-        [pkg_create3_gazebo, 'config', 'mock_params.yaml'])
+        [pkg_create3_bringup, 'config', 'mock_params.yaml'])
 
-    gazebo_params_yaml_file = os.path.join(pkg_create3_gazebo, 'config', 'gazebo_params.yaml')
+    gazebo_params_yaml_file = os.path.join(pkg_create3_bringup, 'config', 'gazebo_params.yaml')
 
     # Launch configurations
     x, y, z = LaunchConfiguration('x'), LaunchConfiguration('y'), LaunchConfiguration('z')

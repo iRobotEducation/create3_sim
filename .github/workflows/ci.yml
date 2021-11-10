@@ -22,9 +22,9 @@ jobs:
           import-token: ${{ secrets.REPO_TOKEN }}
           vcs-repo-file-url: dependencies.repos
           package-name:
+            irobot_create_bringup
             irobot_create_control
             irobot_create_description
-            irobot_create_gazebo
             irobot_create_gazebo_plugins
             irobot_create_sim
             irobot_create_toolbox
