@@ -22,7 +22,7 @@ if (NOT gazebo_dev_FOUND OR NOT gazebo_ros_FOUND)
   message(WARNING "Gazebo not found. Skipping ${PROJECT_NAME}.")
   ament_package()
   return()
-endif
+endif()
 
 link_directories(${gazebo_dev_LIBRARY_DIRS})
 
