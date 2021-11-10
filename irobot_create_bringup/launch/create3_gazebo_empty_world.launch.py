@@ -36,7 +36,6 @@ for pose_element in ['x', 'y', 'z', 'yaw']:
 def generate_launch_description():
     # Directories
     pkg_create3_bringup = get_package_share_directory('irobot_create_bringup')
-    pkg_create3_control = get_package_share_directory('irobot_create_control')
     pkg_create3_description = get_package_share_directory('irobot_create_description')
 
     # Paths

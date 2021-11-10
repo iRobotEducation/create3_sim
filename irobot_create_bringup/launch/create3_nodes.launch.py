@@ -4,15 +4,13 @@
 #
 # Launch Create(R) 3 nodes
 
-import os
-
 from ament_index_python.packages import get_package_share_directory
 from launch import LaunchDescription
-from launch.actions import DeclareLaunchArgument, ExecuteProcess, IncludeLaunchDescription
-from launch.conditions import IfCondition
+from launch.actions import IncludeLaunchDescription
 from launch.launch_description_sources import PythonLaunchDescriptionSource
-from launch.substitutions import LaunchConfiguration, PathJoinSubstitution
+from launch.substitutions import PathJoinSubstitution
 from launch_ros.actions import Node
+
 
 def generate_launch_description():
     # Directories
@@ -23,8 +21,6 @@ def generate_launch_description():
     # Paths
     control_launch_file = PathJoinSubstitution(
         [pkg_create3_control, 'launch', 'include', 'control.py'])
-    dock_launch_file = PathJoinSubstitution(
-        [pkg_create3_description, 'launch', 'include', 'dock.py'])
     hazards_params_yaml_file = PathJoinSubstitution(
         [pkg_create3_bringup, 'config', 'hazard_vector_params.yaml'])
     ir_intensity_params_yaml_file = PathJoinSubstitution(
