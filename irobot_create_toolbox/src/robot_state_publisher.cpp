@@ -9,7 +9,7 @@
 
 namespace irobot_create_toolbox
 {
-RobotStatus::RobotStatus()
+RobotState::RobotState()
 : rclcpp::Node("robot_state")
 {
   transitioned_to_docked_ = this->now();
@@ -47,7 +47,7 @@ RobotStatus::RobotStatus()
   // Subscription to the hazard detection vector
   dock_subscription_ = create_subscription<irobot_create_msgs::msg::Dock>(
     dock_subscription_topic_, rclcpp::SensorDataQoS(),
-    std::bind(&RobotStatus::dock_callback, this, std::placeholders::_1));
+    std::bind(&RobotState::dock_callback, this, std::placeholders::_1));
   RCLCPP_INFO_STREAM(get_logger(), "Subscription to topic: " << dock_subscription_topic_);
 
   // Define kidnap status publisher
@@ -58,7 +58,7 @@ RobotStatus::RobotStatus()
   // Subscription to the hazard detection vector
   kidnap_status_subscription_ = create_subscription<irobot_create_msgs::msg::HazardDetectionVector>(
     hazard_subscription_topic_, rclcpp::SensorDataQoS(),
-    std::bind(&RobotStatus::kidnap_callback, this, std::placeholders::_1));
+    std::bind(&RobotState::kidnap_callback, this, std::placeholders::_1));
   RCLCPP_INFO_STREAM(get_logger(), "Subscription to topic: " << hazard_subscription_topic_);
 
   // Set kidnap status header
@@ -72,7 +72,7 @@ RobotStatus::RobotStatus()
   // Subscription to the stop status
   stop_status_subscription_ = create_subscription<nav_msgs::msg::Odometry>(
     wheel_vels_subscription_topic_, rclcpp::SensorDataQoS(),
-    std::bind(&RobotStatus::stop_callback, this, std::placeholders::_1));
+    std::bind(&RobotState::stop_callback, this, std::placeholders::_1));
   RCLCPP_INFO_STREAM(get_logger(), "Subscription to topic: " << wheel_vels_subscription_topic_);
 
   // Set stop status header
@@ -125,7 +125,7 @@ RobotStatus::RobotStatus()
   battery_state_msg_.temperature = battery_default_temp_;
 }
 
-double RobotStatus::get_docked_charge_percentage(const rclcpp::Time & at_time)
+double RobotState::get_docked_charge_percentage(const rclcpp::Time & at_time)
 {
   const std::lock_guard<std::mutex> lock(battery_charge_timings_mutex_);
   rclcpp::Duration time_docked = at_time - transitioned_to_docked_;
@@ -136,7 +136,7 @@ double RobotStatus::get_docked_charge_percentage(const rclcpp::Time & at_time)
   return docked_charge;
 }
 
-double RobotStatus::get_undocked_charge_percentage(const rclcpp::Time & at_time)
+double RobotState::get_undocked_charge_percentage(const rclcpp::Time & at_time)
 {
   const std::lock_guard<std::mutex> lock(battery_charge_timings_mutex_);
   double drain_percentage = 0.0;
@@ -157,7 +157,7 @@ double RobotStatus::get_undocked_charge_percentage(const rclcpp::Time & at_time)
   return undocked_charge;
 }
 
-void RobotStatus::dock_callback(irobot_create_msgs::msg::Dock::SharedPtr msg)
+void RobotState::dock_callback(irobot_create_msgs::msg::Dock::SharedPtr msg)
 {
   if (!is_docked_ && msg->is_docked) {
     rclcpp::Time current_time = this->now();
@@ -178,7 +178,7 @@ void RobotStatus::dock_callback(irobot_create_msgs::msg::Dock::SharedPtr msg)
   is_docked_ = msg->is_docked;
 }
 
-void RobotStatus::kidnap_callback(irobot_create_msgs::msg::HazardDetectionVector::SharedPtr msg)
+void RobotState::kidnap_callback(irobot_create_msgs::msg::HazardDetectionVector::SharedPtr msg)
 {
   auto hazard_vector = msg->detections;
 
@@ -219,7 +219,7 @@ void RobotStatus::kidnap_callback(irobot_create_msgs::msg::HazardDetectionVector
   kidnap_status_publisher_->publish(kidnap_status_msg_);
 }
 
-void RobotStatus::stop_callback(nav_msgs::msg::Odometry::SharedPtr msg)
+void RobotState::stop_callback(nav_msgs::msg::Odometry::SharedPtr msg)
 {
   const double linear_velocity = msg->twist.twist.linear.x;
   const double angular_velocity = msg->twist.twist.angular.z;
