@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.5)
 
-project(irobot_create_gazebo)
+project(irobot_create_bringup)
 
 # Default to C++14
 if(NOT CMAKE_CXX_STANDARD)

@@ -1,9 +1,9 @@
 <?xml version="1.0"?>
 <?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
 <package format="3">
-  <name>irobot_create_gazebo</name>
+  <name>irobot_create_bringup</name>
   <version>0.0.1</version>
-  <description>Provides the Gazebo simulation for the iRobot(R) Create(R) 3 Educational Robot.</description>
+  <description>Provides launch and configuration scripts for a simulated iRobot(R) Create(R) 3 Educational Robot.</description>
   <maintainer email="ekumen@irbt.onmicrosoft.com">Ekumen</maintainer>
   <license>BSD</license>
 

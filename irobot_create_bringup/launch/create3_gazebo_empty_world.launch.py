@@ -35,27 +35,18 @@ for pose_element in ['x', 'y', 'z', 'yaw']:
 
 def generate_launch_description():
     # Directories
-    pkg_create3_control = get_package_share_directory('irobot_create_control')
+    pkg_create3_bringup = get_package_share_directory('irobot_create_bringup')
     pkg_create3_description = get_package_share_directory('irobot_create_description')
-    pkg_create3_gazebo = get_package_share_directory('irobot_create_gazebo')
 
     # Paths
-    control_launch_file = PathJoinSubstitution(
-        [pkg_create3_control, 'launch', 'include', 'control.py'])
+    create3_nodes_launch_file = PathJoinSubstitution(
+        [pkg_create3_bringup, 'launch', 'create3_nodes.launch.py'])
     description_launch_file = PathJoinSubstitution(
         [pkg_create3_description, 'launch', 'include', 'rviz2.py'])
     dock_launch_file = PathJoinSubstitution(
         [pkg_create3_description, 'launch', 'include', 'dock.py'])
-    hazards_params_yaml_file = PathJoinSubstitution(
-        [pkg_create3_gazebo, 'config', 'hazard_vector_params.yaml'])
-    ir_intensity_params_yaml_file = PathJoinSubstitution(
-        [pkg_create3_gazebo, 'config', 'ir_intensity_vector_params.yaml'])
-    wheel_status_params_yaml_file = PathJoinSubstitution(
-        [pkg_create3_gazebo, 'config', 'wheel_status_params.yaml'])
-    mock_params_yaml_file = PathJoinSubstitution(
-        [pkg_create3_gazebo, 'config', 'mock_params.yaml'])
 
-    gazebo_params_yaml_file = os.path.join(pkg_create3_gazebo, 'config', 'gazebo_params.yaml')
+    gazebo_params_yaml_file = os.path.join(pkg_create3_bringup, 'config', 'gazebo_params.yaml')
 
     # Launch configurations
     x, y, z = LaunchConfiguration('x'), LaunchConfiguration('y'), LaunchConfiguration('z')
@@ -66,14 +57,15 @@ def generate_launch_description():
     robot_description = IncludeLaunchDescription(
         PythonLaunchDescriptionSource([description_launch_file])
     )
-    diffdrive_controller = IncludeLaunchDescription(
-        PythonLaunchDescriptionSource([control_launch_file])
-    )
     spawn_dock = IncludeLaunchDescription(
         PythonLaunchDescriptionSource([dock_launch_file]),
         condition=IfCondition(LaunchConfiguration('dock')),
         # The robot starts docked
         launch_arguments={'x': x, 'y': y, 'z': z, 'yaw': yaw}.items(),
+    )
+
+    create3_nodes = IncludeLaunchDescription(
+        PythonLaunchDescriptionSource([create3_nodes_launch_file])
     )
 
     # Gazebo server
@@ -109,69 +101,16 @@ def generate_launch_description():
         output='screen',
     )
 
-    # Publish hazards vector
-    hazards_vector_node = Node(
-        package='irobot_create_toolbox',
-        name='hazards_vector_node',
-        executable='hazards_vector_publisher_node',
-        parameters=[hazards_params_yaml_file,
-                    {'use_sim_time': True}],
-        output='screen',
-    )
-
-    # Publish IR intensity vector
-    ir_intensity_vector_node = Node(
-        package='irobot_create_toolbox',
-        name='ir_intensity_vector_node',
-        executable='ir_intensity_vector_publisher_node',
-        parameters=[ir_intensity_params_yaml_file,
-                    {'use_sim_time': True}],
-        output='screen',
-    )
-
-    # Motion Control
-    motion_control_node = Node(
-        package='irobot_create_toolbox',
-        name='motion_control',
-        executable='motion_control',
-        parameters=[{'use_sim_time': True}],
-        output='screen',
-    )
-
-    # Publish wheel status
-    wheel_status_node = Node(
-        package='irobot_create_toolbox',
-        name='wheel_status_publisher_node',
-        executable='wheel_status_publisher_node',
-        parameters=[wheel_status_params_yaml_file,
-                    {'use_sim_time': True}],
-        output='screen',
-    )
-
-    # Publish wheel status
-    mock_topics_node = Node(
-        package='irobot_create_toolbox',
-        name='mock_publisher_node',
-        executable='mock_publisher_node',
-        parameters=[mock_params_yaml_file,
-                    {'use_sim_time': True}],
-        output='screen',
-    )
-
     # Define LaunchDescription variable
     ld = LaunchDescription(ARGUMENTS)
+    # Include Create 3 nodes
+    ld.add_action(create3_nodes)
     # Include robot description
     ld.add_action(robot_description)
-    ld.add_action(diffdrive_controller)
     # Add nodes to LaunchDescription
     ld.add_action(gzserver)
     ld.add_action(gzclient)
     ld.add_action(spawn_robot)
     ld.add_action(spawn_dock)
-    ld.add_action(hazards_vector_node)
-    ld.add_action(ir_intensity_vector_node)
-    ld.add_action(motion_control_node)
-    ld.add_action(wheel_status_node)
-    ld.add_action(mock_topics_node)
 
     return ld
