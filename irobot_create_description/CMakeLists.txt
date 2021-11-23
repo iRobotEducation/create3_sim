@@ -8,7 +8,6 @@ find_package(xacro REQUIRED)
 
 install(
   DIRECTORY
-    launch
     meshes
     rviz
     urdf
