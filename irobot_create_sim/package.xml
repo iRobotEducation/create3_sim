@@ -13,11 +13,10 @@
 
   <buildtool_depend>ament_cmake</buildtool_depend>
 
+  <exec_depend>irobot_create_bringup</exec_depend>
   <exec_depend>irobot_create_control</exec_depend>
   <exec_depend>irobot_create_description</exec_depend>
-  <exec_depend>irobot_create_gazebo</exec_depend>
   <exec_depend>irobot_create_gazebo_plugins</exec_depend>
-  <exec_depend>irobot_create_msgs</exec_depend>
   <exec_depend>irobot_create_toolbox</exec_depend>
 
   <export>
