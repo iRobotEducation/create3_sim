@@ -89,7 +89,7 @@ def generate_launch_description():
     robot_state_node = Node(
         package='irobot_create_toolbox',
         name='robot_state',
-        executable='robot_state_publisher_node',
+        executable='robot_state_node',
         parameters=[robot_state_yaml_file,
                     {'use_sim_time': True}],
         output='screen',

@@ -1,7 +1,7 @@
 // Copyright 2021 iRobot Corporation. All Rights Reserved.
 // @author Lola Segura (lsegura@irobot.com)
 
-#include <irobot_create_toolbox/robot_state_publisher.hpp>
+#include <irobot_create_toolbox/robot_state.hpp>
 
 #include <algorithm>
 #include <string>
@@ -115,7 +115,7 @@ RobotState::RobotState()
         voltage_scale_factor = battery_voltage_range_high_;
       }
       this->battery_state_msg_.voltage = full_batter_state_voltage_ - (voltage_scale_factor *
-        (battery_full_charge_percentage - this->battery_state_msg_.percentage));
+      (battery_full_charge_percentage - this->battery_state_msg_.percentage));
       this->battery_state_msg_.charge = this->battery_state_msg_.capacity *
       this->battery_state_msg_.percentage;
 

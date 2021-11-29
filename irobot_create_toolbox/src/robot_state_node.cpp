@@ -1,7 +1,7 @@
 // Copyright 2021 iRobot Corporation. All Rights Reserved.
 // @author Lola Segura (lsegura@irobot.com)
 
-#include <irobot_create_toolbox/robot_state_publisher.hpp>
+#include <irobot_create_toolbox/robot_state.hpp>
 #include <memory>
 
 int main(int argc, char * argv[])
