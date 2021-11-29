@@ -10,11 +10,11 @@ from launch_ros.actions import Node
 
 
 def generate_launch_description():
-    pkg_create3_description = get_package_share_directory('irobot_create_description')
+    pkg_create3_bringup = get_package_share_directory('irobot_create_bringup')
 
     # Rviz
-    rviz_config_dir = PathJoinSubstitution([pkg_create3_description, 'rviz', 'model.rviz'])
-    rviz_logo_dir = PathJoinSubstitution([pkg_create3_description, 'rviz', 'irobot_logo.jpg'])
+    rviz_config_dir = PathJoinSubstitution([pkg_create3_bringup, 'rviz', 'irobot_create_view.rviz'])
+    rviz_logo_dir = PathJoinSubstitution([pkg_create3_bringup, 'rviz', 'irobot_logo.jpg'])
 
     rviz = Node(
         package='rviz2',
