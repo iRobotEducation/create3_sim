@@ -18,3 +18,8 @@ robot_state:
     # Stop status position difference tolerance
     linear_velocity_tolerance: 0.01
     angular_velocity_tolerance: 0.1
+    # Battery parameters
+    full_charge_percentage: 1.0
+    battery_high_percentage: 0.9
+    # Dock Parameters
+    undocked_charge_limit: 0.03

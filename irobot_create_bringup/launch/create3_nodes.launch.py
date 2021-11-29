@@ -28,6 +28,8 @@ def generate_launch_description():
         [pkg_create3_bringup, 'config', 'wheel_status_params.yaml'])
     mock_params_yaml_file = PathJoinSubstitution(
         [pkg_create3_bringup, 'config', 'mock_params.yaml'])
+    robot_state_yaml_file = PathJoinSubstitution(
+        [pkg_create3_bringup, 'config', 'robot_state_params.yaml'])
 
     # Includes
     diffdrive_controller = IncludeLaunchDescription(
@@ -73,12 +75,22 @@ def generate_launch_description():
         output='screen',
     )
 
-    # Publish wheel status
+    # Publish mock topics
     mock_topics_node = Node(
         package='irobot_create_toolbox',
         name='mock_publisher_node',
         executable='mock_publisher_node',
         parameters=[mock_params_yaml_file,
+                    {'use_sim_time': True}],
+        output='screen',
+    )
+
+    # Publish robot state
+    robot_state_node = Node(
+        package='irobot_create_toolbox',
+        name='robot_state',
+        executable='robot_state_publisher_node',
+        parameters=[robot_state_yaml_file,
                     {'use_sim_time': True}],
         output='screen',
     )
@@ -93,5 +105,6 @@ def generate_launch_description():
     ld.add_action(motion_control_node)
     ld.add_action(wheel_status_node)
     ld.add_action(mock_topics_node)
+    ld.add_action(robot_state_node)
 
     return ld

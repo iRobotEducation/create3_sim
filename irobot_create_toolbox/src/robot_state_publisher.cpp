@@ -44,6 +44,12 @@ RobotState::RobotState()
     battery_state_publisher_topic_, rclcpp::SensorDataQoS());
   RCLCPP_INFO_STREAM(get_logger(), "Advertised topic: " << battery_state_publisher_topic_);
 
+  // Define battery parameters
+  battery_full_charge_percentage =
+    declare_and_get_parameter<float>("full_charge_percentage", this);
+  battery_high_percentage_limit =
+    declare_and_get_parameter<float>("battery_high_percentage", this);
+
   // Subscription to the hazard detection vector
   dock_subscription_ = create_subscription<irobot_create_msgs::msg::Dock>(
     dock_subscription_topic_, rclcpp::SensorDataQoS(),
@@ -78,6 +84,8 @@ RobotState::RobotState()
   // Set stop status header
   stop_status_msg_.header.frame_id = base_frame_;
 
+  undocked_charge_limit =
+    declare_and_get_parameter<float>("undocked_charge_limit", this);
   battery_state_timer_ = rclcpp::create_timer(
     this,
     this->get_clock(),
@@ -88,7 +96,7 @@ RobotState::RobotState()
 
       if (is_docked_) {
         this->battery_state_msg_.percentage = get_docked_charge_percentage(current_time);
-        if (this->battery_state_msg_.percentage == 1.0f) {
+        if (this->battery_state_msg_.percentage == battery_full_charge_percentage) {
           this->battery_state_msg_.current = full_charge_current_;
         } else {
           this->battery_state_msg_.current = charge_current_;
@@ -103,11 +111,11 @@ RobotState::RobotState()
       }
       // Approximate voltage from extrapolation of observed data
       double voltage_scale_factor = battery_voltage_range_middle_;
-      if (this->battery_state_msg_.percentage > 0.9) {
+      if (this->battery_state_msg_.percentage > battery_high_percentage_limit) {
         voltage_scale_factor = battery_voltage_range_high_;
       }
-      this->battery_state_msg_.voltage = full_batter_state_voltage_ -
-      (voltage_scale_factor * (1.0 - this->battery_state_msg_.percentage));
+      this->battery_state_msg_.voltage = full_batter_state_voltage_ - (voltage_scale_factor *
+        (battery_full_charge_percentage - this->battery_state_msg_.percentage));
       this->battery_state_msg_.charge = this->battery_state_msg_.capacity *
       this->battery_state_msg_.percentage;
 
@@ -150,9 +158,9 @@ double RobotState::get_undocked_charge_percentage(const rclcpp::Time & at_time)
   drain_percentage += off_dock_drive_time_.seconds() * driving_drain_percentage_per_second;
   drain_percentage += off_dock_idle_time_.seconds() * idle_drain_percentage_per_second;
   double undocked_charge = last_docked_charge_percentage_ - drain_percentage;
-  if (undocked_charge < 0.03) {
+  if (undocked_charge < undocked_charge_limit) {
     // Battery will never let itself get to 0
-    undocked_charge = 0.03;
+    undocked_charge = undocked_charge_limit;
   }
   return undocked_charge;
 }

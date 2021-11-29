@@ -104,6 +104,10 @@ protected:
   const double battery_capacity_ {2.046};
   const double battery_default_temp_ {27.0};
 
+  double battery_full_charge_percentage;
+  double battery_high_percentage_limit;
+  double undocked_charge_limit;
+
   const std::string base_frame_ {"base_link"};
 };
 
