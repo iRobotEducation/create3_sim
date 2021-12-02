@@ -17,10 +17,6 @@ Required dependencies:
     - [rosdep](https://pypi.org/project/rosdep/): Used to install dependencies when building from sources
     - [vcs](https://pypi.org/project/vcstool/): Automates cloning of git repositories declared on a YAML file.
 
-Optional dependencies:
-
-1. [xterm](https://manpages.ubuntu.com/manpages/xenial/man1/xterm.1.html): Used to teleoperate the robot with the keyboard.
-
 ## Build
 
 - Create a workspace if you don't already have one:
