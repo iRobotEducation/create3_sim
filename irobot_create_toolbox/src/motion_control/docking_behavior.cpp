@@ -183,37 +183,32 @@ BehaviorsScheduler::optional_output_t DockingBehavior::execute_dock_servo(
     return servo_cmd;
   }
 
-  // Handle if reached dock
-  if (is_docked_) {
-    auto result = std::make_shared<irobot_create_msgs::action::DockServo::Result>();
-    result->is_docked = true;
-    RCLCPP_INFO(logger_, "Dock Servo Goal Succeeded");
-    goal_handle->succeed(result);
-    goal_controller_.reset();
-    running_dock_action_ = false;
-    return servo_cmd;
-  } else {
-    bool exceeded_runtime = false;
-    if (clock_->now() - action_start_time_ > max_action_runtime_) {
+  bool exceeded_runtime = false;
+  if (clock_->now() - action_start_time_ > max_action_runtime_) {
       RCLCPP_INFO(logger_, "Dock Servo Goal Exceeded Runtime");
       exceeded_runtime = true;
-    }
-    // Get next command
-    tf2::Transform robot_pose(tf2::Transform::getIdentity());
-    {
+  }
+  // Get next command
+  tf2::Transform robot_pose(tf2::Transform::getIdentity());
+  {
       const std::lock_guard<std::mutex> lock(robot_pose_mutex_);
       robot_pose = last_robot_pose_;
-    }
-    servo_cmd = goal_controller_.get_velocity_for_position(robot_pose);
-    if (!servo_cmd || exceeded_runtime) {
+  }
+  servo_cmd = goal_controller_.get_velocity_for_position(robot_pose);
+  if (!servo_cmd || exceeded_runtime) {
       auto result = std::make_shared<irobot_create_msgs::action::DockServo::Result>();
-      result->is_docked = false;
-      RCLCPP_INFO(logger_, "Dock Servo Goal Aborted");
-      goal_handle->abort(result);
+      if (is_docked_) {
+          result->is_docked = true;
+          RCLCPP_INFO(logger_, "Dock Servo Goal Succeeded");
+          goal_handle->succeed(result);
+      } else {
+          result->is_docked = false;
+          RCLCPP_INFO(logger_, "Dock Servo Goal Aborted");
+          goal_handle->abort(result);
+      }
       goal_controller_.reset();
       running_dock_action_ = false;
       return servo_cmd;
-    }
   }
 
   // Publish feedback
