@@ -4,6 +4,7 @@
 #ifndef IROBOT_CREATE_TOOLBOX__MOCK_PUBLISHER_HPP_
 #define IROBOT_CREATE_TOOLBOX__MOCK_PUBLISHER_HPP_
 
+#include <irobot_create_msgs/action/led_animation.hpp>
 #include <irobot_create_msgs/msg/button.hpp>
 #include <irobot_create_msgs/msg/dock.hpp>
 #include <irobot_create_msgs/msg/hazard_detection.hpp>
@@ -18,6 +19,7 @@
 #include <irobot_create_toolbox/parameter_helper.hpp>
 
 #include <rclcpp/rclcpp.hpp>
+#include <rclcpp_action/rclcpp_action.hpp>
 #include <sensor_msgs/msg/battery_state.hpp>
 #include <nav_msgs/msg/odometry.hpp>
 #include <geometry_msgs/msg/pose.hpp>
@@ -43,6 +45,18 @@ public:
   void lightring_callback(irobot_create_msgs::msg::LightringLeds::SharedPtr msg);
 
 protected:
+  rclcpp_action::GoalResponse handle_led_animation_goal(
+    const rclcpp_action::GoalUUID & uuid,
+    std::shared_ptr<const irobot_create_msgs::action::LedAnimation::Goal> goal);
+  rclcpp_action::CancelResponse handle_led_animation_cancel(
+    const std::shared_ptr<
+      rclcpp_action::ServerGoalHandle<irobot_create_msgs::action::LedAnimation>> goal_handle);
+  void handle_led_animation_accepted(
+    const std::shared_ptr<
+      rclcpp_action::ServerGoalHandle<irobot_create_msgs::action::LedAnimation>> goal_handle);
+  void execute_led_animation(
+    const std::shared_ptr<
+      rclcpp_action::ServerGoalHandle<irobot_create_msgs::action::LedAnimation>> goal_handle);
   double get_docked_charge_percentage(const rclcpp::Time & at_time);
   double get_undocked_charge_percentage(const rclcpp::Time & at_time);
   // Publish aggregated detections on timer_'s frequency
@@ -67,6 +81,10 @@ protected:
     irobot_create_msgs::msg::HazardDetectionVector>::SharedPtr kidnap_status_subscription_;
   rclcpp::Subscription<nav_msgs::msg::Odometry>::SharedPtr stop_status_subscription_;
   rclcpp::Subscription<irobot_create_msgs::msg::LightringLeds>::SharedPtr lightring_subscription_;
+
+  // Actions
+  rclcpp_action::Server<irobot_create_msgs::action::LedAnimation>::SharedPtr
+    led_animation_action_server_;
 
 
   // Topic to publish interface buttons to
@@ -126,6 +144,9 @@ protected:
   const double battery_capacity_ {2.046};
   const double battery_default_temp_ {27.0};
   const std::string base_frame_ {"base_link"};
+  std::mutex led_animation_params_mutex_;
+  rclcpp::Duration led_animation_end_duration_;
+  rclcpp::Time led_animation_start_time_;
 };
 
 }  // namespace irobot_create_toolbox

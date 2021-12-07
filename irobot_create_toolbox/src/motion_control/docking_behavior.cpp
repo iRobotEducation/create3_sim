@@ -151,9 +151,10 @@ void DockingBehavior::handle_dock_servo_accepted(
   goal_controller_.initialize_goal(dock_path, M_PI / 4.0, 0.15);
   // Setup behavior to override other commanded motion
   BehaviorsScheduler::BehaviorsData data;
-  data.run_func = std::bind(&DockingBehavior::execute_dock_servo, this, goal_handle);
+  data.run_func = std::bind(&DockingBehavior::execute_dock_servo, this, goal_handle, _1);
   data.is_done_func = std::bind(&DockingBehavior::docking_behavior_is_done, this);
-  data.interruptable = true;
+  data.stop_on_new_behavior = true;
+  data.apply_backup_limits = false;
 
   const bool ret = behavior_scheduler_->set_behavior(data);
   if (!ret) {
@@ -168,7 +169,8 @@ void DockingBehavior::handle_dock_servo_accepted(
 
 BehaviorsScheduler::optional_output_t DockingBehavior::execute_dock_servo(
   const std::shared_ptr<
-    rclcpp_action::ServerGoalHandle<irobot_create_msgs::action::DockServo>> goal_handle)
+    rclcpp_action::ServerGoalHandle<irobot_create_msgs::action::DockServo>> goal_handle,
+  const RobotState & /*current_state*/)
 {
   BehaviorsScheduler::optional_output_t servo_cmd;
   // Handle if goal is cancelling
@@ -286,9 +288,10 @@ void DockingBehavior::handle_undock_accepted(
   goal_controller_.initialize_goal(undock_path, M_PI / 4.0, 0.15);
 
   BehaviorsScheduler::BehaviorsData data;
-  data.run_func = std::bind(&DockingBehavior::execute_undock, this, goal_handle);
+  data.run_func = std::bind(&DockingBehavior::execute_undock, this, goal_handle, _1);
   data.is_done_func = std::bind(&DockingBehavior::docking_behavior_is_done, this);
-  data.interruptable = true;
+  data.stop_on_new_behavior = true;
+  data.apply_backup_limits = false;
 
   const bool ret = behavior_scheduler_->set_behavior(data);
   if (!ret) {
@@ -304,7 +307,8 @@ void DockingBehavior::handle_undock_accepted(
 
 BehaviorsScheduler::optional_output_t DockingBehavior::execute_undock(
   const std::shared_ptr<
-    rclcpp_action::ServerGoalHandle<irobot_create_msgs::action::Undock>> goal_handle)
+    rclcpp_action::ServerGoalHandle<irobot_create_msgs::action::Undock>> goal_handle,
+  const RobotState & /*current_state*/)
 {
   BehaviorsScheduler::optional_output_t servo_cmd;
   // Handle if goal is cancelling

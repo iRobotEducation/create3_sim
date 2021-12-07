@@ -1,8 +1,10 @@
 // Copyright 2021 iRobot Corporation. All Rights Reserved.
 // @author Justin Kearns (jkearns@irobot.com)
 
+#include <angles/angles.h>
 #include <geometry_msgs/msg/twist.hpp>
 #include <irobot_create_toolbox/motion_control/reflex_behavior.hpp>
+#include <tf2/utils.h>
 #include <tf2_geometry_msgs/tf2_geometry_msgs.h>
 
 #include <limits>
@@ -26,7 +28,8 @@ ReflexBehavior::ReflexBehavior(
   tf_buffer_{tf_buffer},
   logger_{node_logging_interface->get_logger()},
   max_reflex_runtime_{rclcpp::Duration(std::chrono::seconds(10))},
-  max_continuous_reflex_runtime_{rclcpp::Duration(std::chrono::seconds(30))}
+  max_continuous_reflex_runtime_{rclcpp::Duration(std::chrono::seconds(30))},
+  moving_check_duration_{rclcpp::Duration(std::chrono::seconds(1))}
 {
   behavior_scheduler_ = behavior_scheduler;
 
@@ -39,16 +42,9 @@ ReflexBehavior::ReflexBehavior(
 
   // Give poses default value, will be over-written by subscriptions
   reflex_start_pose_.setIdentity();
+  last_robot_pose_.setIdentity();
   reflex_start_time_ = clock_->now();
-}
-
-void ReflexBehavior::update_state(
-  const tf2::Transform & last_robot_pose,
-  bool moving)
-{
-  moving_ = moving;
-  const std::lock_guard<std::mutex> lock(robot_pose_mutex_);
-  last_robot_pose_ = last_robot_pose;
+  last_moving_check_time_ = clock_->now();
 }
 
 bool ReflexBehavior::reflex_behavior_is_done()
@@ -152,7 +148,8 @@ void ReflexBehavior::enable_reflex(uint8_t reflex, bool enable)
   }
 }
 
-BehaviorsScheduler::optional_output_t ReflexBehavior::execute_reflex()
+BehaviorsScheduler::optional_output_t ReflexBehavior::execute_reflex(
+  const RobotState & current_state)
 {
   BehaviorsScheduler::optional_output_t servo_cmd;
   enum class DriveAwayDirection
@@ -219,23 +216,18 @@ BehaviorsScheduler::optional_output_t ReflexBehavior::execute_reflex()
   }
   bool finish_reflex = false;
   // Get next command
-  tf2::Transform robot_pose(tf2::Transform::getIdentity());
-  {
-    const std::lock_guard<std::mutex> lock(robot_pose_mutex_);
-    robot_pose = last_robot_pose_;
-  }
   // See if robot has done too much without clearing hazard
   double distance_since_hazard = 0.0;
   double distance_since_continuous_hazard = 0.0;
   if (driving_backwards_) {
-    tf2::Vector3 delta_pose = robot_pose.getOrigin() - reflex_start_pose_.getOrigin();
+    tf2::Vector3 delta_pose = current_state.pose.getOrigin() - reflex_start_pose_.getOrigin();
     distance_since_hazard = std::hypot(delta_pose.getX(), delta_pose.getY());
-    tf2::Vector3 delta_continuous_pose = robot_pose.getOrigin() -
+    tf2::Vector3 delta_continuous_pose = current_state.pose.getOrigin() -
       continuous_reflex_start_pose_.getOrigin();
     distance_since_continuous_hazard = std::hypot(
       delta_continuous_pose.getX(), delta_continuous_pose.getY());
   } else {
-    tf2::Transform relative_motion = reflex_start_pose_.inverseTimes(robot_pose);
+    tf2::Transform relative_motion = reflex_start_pose_.inverseTimes(current_state.pose);
     if (relative_motion.getOrigin().getX() < 0.0) {
       driving_backwards_ = true;
     }
@@ -296,11 +288,31 @@ BehaviorsScheduler::optional_output_t ReflexBehavior::execute_reflex()
   return servo_cmd;
 }
 
-void ReflexBehavior::hazard_vector_callback(
-  irobot_create_msgs::msg::HazardDetectionVector::ConstSharedPtr msg)
+void ReflexBehavior::update_hazards(const RobotState & current_state)
 {
+  // Update if robot is moving
+  rclcpp::Time clock_now = clock_->now();
+  if (clock_now - last_moving_check_time_ > moving_check_duration_) {
+    last_moving_check_time_ = clock_now;
+    tf2::Vector3 last_position = last_robot_pose_.getOrigin();
+    tf2::Vector3 current_position = current_state.pose.getOrigin();
+    tf2::Vector3 pos_diff = current_position - last_position;
+    double pos_dist = std::hypot(pos_diff.getX(), pos_diff.getY());
+    double abs_ang_diff = std::abs(
+      angles::shortest_angular_distance(
+        tf2::getYaw(current_state.pose.getRotation()),
+        tf2::getYaw(last_robot_pose_.getRotation())));
+    if (pos_dist < NOT_MOVING_DISTANCE &&
+      abs_ang_diff < NOT_MOVING_ANGLE)
+    {
+      moving_ = false;
+    } else {
+      moving_ = true;
+    }
+    last_robot_pose_ = current_state.pose;
+  }
   std::vector<irobot_create_msgs::msg::HazardDetection> active_hazards;
-  for (const auto & hazard : msg->detections) {
+  for (const auto & hazard : current_state.hazards.detections) {
     const std::lock_guard<std::mutex> lock(hazard_reflex_mutex_);
     // See if reflex for this hazard is enabled
     std::map<uint8_t, bool>::const_iterator hazard_reflex =
@@ -348,16 +360,16 @@ void ReflexBehavior::hazard_vector_callback(
           last_trigger_hazards_ = last_hazards_;
         }
         BehaviorsScheduler::BehaviorsData data;
-        data.run_func = std::bind(&ReflexBehavior::execute_reflex, this);
+        data.run_func = std::bind(&ReflexBehavior::execute_reflex, this, _1);
         data.is_done_func = std::bind(&ReflexBehavior::reflex_behavior_is_done, this);
-        data.interruptable = false;
+        data.stop_on_new_behavior = false;
 
         running_reflex_ = behavior_scheduler_->set_behavior(data);
         if (running_reflex_) {
           reflex_start_time_ = clock_->now();
           {
             const std::lock_guard<std::mutex> lock(robot_pose_mutex_);
-            reflex_start_pose_ = last_robot_pose_;
+            reflex_start_pose_ = current_state.pose;
           }
           driving_backwards_ = false;
           if (!continuous_reflex) {
@@ -373,7 +385,7 @@ void ReflexBehavior::hazard_vector_callback(
         // as no longer running continuously, but keep triggered sensors
         {
           const std::lock_guard<std::mutex> lock(robot_pose_mutex_);
-          continuous_reflex_start_pose_ = last_robot_pose_;
+          continuous_reflex_start_pose_ = current_state.pose;
         }
         continuous_reflex_start_time_ = clock_->now();
       }

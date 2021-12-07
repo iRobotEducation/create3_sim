@@ -4,6 +4,8 @@
 #include <irobot_create_toolbox/motion_control/wall_follow_behavior.hpp>
 
 #include <memory>
+#include <string>
+#include <vector>
 
 namespace irobot_create_toolbox
 {
@@ -102,9 +104,10 @@ void WallFollowBehavior::handle_wall_follow_accepted(
       wf_engaged_ = false;
 
       BehaviorsScheduler::BehaviorsData data;
-      data.run_func = std::bind(&WallFollowBehavior::execute_wall_follow, this, goal_handle);
+      data.run_func = std::bind(&WallFollowBehavior::execute_wall_follow, this, goal_handle, _1);
       data.is_done_func = std::bind(&WallFollowBehavior::wall_follow_behavior_is_done, this);
-      data.interruptable = false;
+      data.stop_on_new_behavior = false;
+      data.apply_backup_limits = false;
 
       const bool ret = behavior_scheduler_->set_behavior(data);
       if (!ret) {
@@ -130,7 +133,8 @@ void WallFollowBehavior::handle_wall_follow_accepted(
 
 BehaviorsScheduler::optional_output_t WallFollowBehavior::execute_wall_follow(
   const std::shared_ptr<rclcpp_action::ServerGoalHandle<irobot_create_msgs::action::WallFollow>>
-  goal_handle)
+  goal_handle,
+  const RobotState & current_state)
 {
   // Handle if goal is cancelling
   rclcpp::Duration wf_runtime = clock_->now() - wf_start_time_;
@@ -152,7 +156,7 @@ BehaviorsScheduler::optional_output_t WallFollowBehavior::execute_wall_follow(
     return BehaviorsScheduler::optional_output_t();
   }
   // Get next servo command based on bump and IR sensors
-  BehaviorsScheduler::optional_output_t next_cmd = get_next_servo_cmd();
+  BehaviorsScheduler::optional_output_t next_cmd = get_next_servo_cmd(current_state);
   // Publish feedback
   auto feedback = std::make_shared<irobot_create_msgs::action::WallFollow::Feedback>();
   feedback->engaged = wf_state_mgr_->is_engaged();
@@ -161,20 +165,26 @@ BehaviorsScheduler::optional_output_t WallFollowBehavior::execute_wall_follow(
   return next_cmd;
 }
 
-void WallFollowBehavior::hazard_vector_callback(
-  irobot_create_msgs::msg::HazardDetectionVector::ConstSharedPtr msg)
+void WallFollowBehavior::ir_intensity_callback(
+  irobot_create_msgs::msg::IrIntensityVector::ConstSharedPtr msg)
 {
   const std::lock_guard<std::mutex> lock(sensor_mutex_);
-  hazard_time_ = msg->header.stamp;
-  active_hazard_frames_.clear();
-  for (const auto & hazard : msg->detections) {
+  last_ir_intensity_ = *msg;
+}
+
+BehaviorsScheduler::optional_output_t WallFollowBehavior::get_next_servo_cmd(
+  const RobotState & current_state)
+{
+  WFVelocityCommand wf_vel_cmd;
+  std::vector<std::string> active_hazard_frames;
+  for (const auto & hazard : current_state.hazards.detections) {
     switch (hazard.type) {
       case irobot_create_msgs::msg::HazardDetection::BUMP:
       case irobot_create_msgs::msg::HazardDetection::CLIFF:
       case irobot_create_msgs::msg::HazardDetection::STALL:
       case irobot_create_msgs::msg::HazardDetection::WHEEL_DROP:
         {
-          active_hazard_frames_.emplace_back(hazard.header.frame_id);
+          active_hazard_frames.emplace_back(hazard.header.frame_id);
           break;
         }
       case irobot_create_msgs::msg::HazardDetection::BACKUP_LIMIT:
@@ -185,34 +195,11 @@ void WallFollowBehavior::hazard_vector_callback(
         }
     }
   }
-}
-
-void WallFollowBehavior::ir_intensity_callback(
-  irobot_create_msgs::msg::IrIntensityVector::ConstSharedPtr msg)
-{
-  const std::lock_guard<std::mutex> lock(sensor_mutex_);
-  last_ir_intensity_ = *msg;
-}
-
-void WallFollowBehavior::update_state(const tf2::Transform & last_robot_pose)
-{
-  const std::lock_guard<std::mutex> lock(pose_mutex_);
-  last_robot_pose_ = last_robot_pose;
-}
-
-BehaviorsScheduler::optional_output_t WallFollowBehavior::get_next_servo_cmd()
-{
-  WFVelocityCommand wf_vel_cmd;
-  tf2::Transform last_pose;
-  {
-    const std::lock_guard<std::mutex> lock(pose_mutex_);
-    last_pose = last_robot_pose_;
-  }
   {
     const std::lock_guard<std::mutex> lock(sensor_mutex_);
     wf_state_mgr_->get_next_velocity(
-      last_pose, last_ir_intensity_,
-      active_hazard_frames_, wf_vel_cmd);
+      current_state.pose, last_ir_intensity_,
+      active_hazard_frames, wf_vel_cmd);
   }
   BehaviorsScheduler::optional_output_t servo_cmd = geometry_msgs::msg::Twist();
   servo_cmd->linear.x = wf_vel_cmd.translate;
