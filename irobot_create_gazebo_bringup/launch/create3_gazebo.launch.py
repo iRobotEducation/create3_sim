@@ -70,7 +70,8 @@ def generate_launch_description():
     rviz2_launch_file = PathJoinSubstitution(
         [pkg_create3_common_bringup, 'launch', 'rviz2.launch.py'])
 
-    gazebo_params_yaml_file = os.path.join(pkg_create3_gazebo_bringup, 'config', 'gazebo_params.yaml')
+    gazebo_params_yaml_file = os.path.join(
+        pkg_create3_gazebo_bringup, 'config', 'gazebo_params.yaml')
 
     # Launch configurations
     x, y, z = LaunchConfiguration('x'), LaunchConfiguration('y'), LaunchConfiguration('z')
