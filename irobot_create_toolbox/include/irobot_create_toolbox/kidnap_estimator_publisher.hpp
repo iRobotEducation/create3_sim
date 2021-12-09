@@ -53,4 +53,4 @@ protected:
 
 }  // namespace irobot_create_toolbox
 
-#endif  // IROBOT_CREATE_TOOLBOX__ROBOT_STATE_HPP_
+#endif  // IROBOT_CREATE_TOOLBOX__KIDNAP_ESTIMATOR_PUBLISHER_HPP_
