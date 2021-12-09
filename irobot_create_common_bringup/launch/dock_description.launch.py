@@ -1,30 +1,13 @@
 # Copyright 2021 iRobot Corporation. All Rights Reserved.
 # @author Emiliano Javier Borghi Orue (creativa_eborghi@irobot.com)
 #
-# Launch standard docking station in Gazebo.
+# Launch standard docking station state publishers.
 
 from ament_index_python.packages import get_package_share_directory
-from launch import LaunchContext, LaunchDescription, SomeSubstitutionsType, Substitution
+from launch import LaunchDescription
 from launch.actions import DeclareLaunchArgument
 from launch.substitutions import Command, LaunchConfiguration, PathJoinSubstitution
 from launch_ros.actions import Node
-
-
-class OffsetParser(Substitution):
-    def __init__(
-            self,
-            number: SomeSubstitutionsType,
-            offset: float,
-    ) -> None:
-        self.__number = number
-        self.__offset = offset
-
-    def perform(
-            self,
-            context: LaunchContext = None,
-    ) -> str:
-        number = float(self.__number.perform(context))
-        return f'{number + self.__offset}'
 
 
 ARGUMENTS = []
@@ -38,14 +21,11 @@ def generate_launch_description():
     pkg_create3_description = get_package_share_directory('irobot_create_description')
     # Path
     dock_xacro_file = PathJoinSubstitution(
-        [pkg_create3_description, 'urdf', 'dock', 'standard.urdf.xacro'])
+        [pkg_create3_description, 'urdf', 'dock', 'standard_dock.urdf.xacro'])
 
     # Launch Configurations
     x, y, z = LaunchConfiguration('x'), LaunchConfiguration('y'), LaunchConfiguration('z')
     yaw = LaunchConfiguration('yaw')
-    # Apply offsets
-    x_offset = OffsetParser(x, 0.157)
-    yaw_offset = OffsetParser(yaw, 3.1416)
 
     state_publisher = Node(
         package='robot_state_publisher',
@@ -61,29 +41,14 @@ def generate_launch_description():
         ],
     )
 
-    spawn_model = Node(
-        package='gazebo_ros',
-        executable='spawn_entity.py',
-        name='spawn_standard_dock',
-        arguments=['-entity',
-                   'standard_dock',
-                   '-topic',
-                   'standard_dock_description',
-                   '-x', x_offset,
-                   '-y', y,
-                   '-z', z,
-                   '-Y', yaw_offset],
-        output='screen',
-    )
-
     tf_odom_std_dock_link_publisher = Node(
         package='tf2_ros',
         executable='static_transform_publisher',
         name='tf_odom_std_dock_link_publisher',
-        arguments=[x_offset, y, z,
+        arguments=[x, y, z,
                    # According to documentation (http://wiki.ros.org/tf2_ros):
                    # the order is yaw, pitch, roll
-                   yaw_offset, '0', '0',
+                   yaw, '0', '0',
                    'odom', 'std_dock_link'],
         output='screen',
     )
@@ -92,7 +57,6 @@ def generate_launch_description():
     ld = LaunchDescription(ARGUMENTS)
     # Add nodes to LaunchDescription
     ld.add_action(state_publisher)
-    ld.add_action(spawn_model)
     ld.add_action(tf_odom_std_dock_link_publisher)
 
     return ld

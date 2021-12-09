@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.5)
 
-project(irobot_create_bringup)
+project(irobot_create_common_bringup)
 
 # Default to C++14
 if(NOT CMAKE_CXX_STANDARD)
@@ -11,18 +11,15 @@ if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
 endif()
 
 find_package(ament_cmake REQUIRED)
-find_package(urdf REQUIRED)
-find_package(xacro REQUIRED)
 
 install(
   DIRECTORY
     config
     launch
+    rviz
   DESTINATION
     share/${PROJECT_NAME}
 )
-
-ament_export_dependencies(irobot_create_gazebo_plugins)
 
 if(BUILD_TESTING)
   find_package(ament_lint_auto REQUIRED)
