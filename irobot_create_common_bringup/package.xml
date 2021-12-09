@@ -1,9 +1,9 @@
 <?xml version="1.0"?>
 <?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
 <package format="3">
-  <name>irobot_create_description</name>
+  <name>irobot_create_common_bringup</name>
   <version>0.0.1</version>
-  <description>Provides the model description for the iRobot(R) Create(R) 3 Educational Robot.</description>
+  <description>Provides common launch and configuration scripts for a simulated iRobot(R) Create(R) 3 Educational Robot.</description>
   <maintainer email="ekumen@irbt.onmicrosoft.com">Ekumen</maintainer>
   <license>BSD</license>
 
@@ -11,6 +11,12 @@
 
   <buildtool_depend>ament_cmake</buildtool_depend>
 
+  <exec_depend>irobot_create_control</exec_depend>
+  <exec_depend>irobot_create_description</exec_depend>
+  <exec_depend>joint_state_publisher</exec_depend>
+  <exec_depend>robot_state_publisher</exec_depend>
+  <exec_depend>ros2launch</exec_depend>
+  <exec_depend>rviz2</exec_depend>
   <exec_depend>urdf</exec_depend>
   <exec_depend>xacro</exec_depend>
 

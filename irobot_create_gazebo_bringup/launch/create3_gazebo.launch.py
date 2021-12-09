@@ -57,19 +57,20 @@ os.environ['LC_NUMERIC'] = 'en_US.UTF-8'
 
 def generate_launch_description():
     # Directories
-    pkg_create3_bringup = get_package_share_directory('irobot_create_bringup')
+    pkg_create3_common_bringup = get_package_share_directory('irobot_create_common_bringup')
+    pkg_create3_gazebo_bringup = get_package_share_directory('irobot_create_gazebo_bringup')
 
     # Paths
     create3_nodes_launch_file = PathJoinSubstitution(
-        [pkg_create3_bringup, 'launch', 'create3_nodes.launch.py'])
+        [pkg_create3_common_bringup, 'launch', 'create3_nodes.launch.py'])
     dock_description_launch_file = PathJoinSubstitution(
-        [pkg_create3_bringup, 'launch', 'dock_description.launch.py'])
+        [pkg_create3_common_bringup, 'launch', 'dock_description.launch.py'])
     robot_description_launch_file = PathJoinSubstitution(
-        [pkg_create3_bringup, 'launch', 'robot_description.launch.py'])
+        [pkg_create3_common_bringup, 'launch', 'robot_description.launch.py'])
     rviz2_launch_file = PathJoinSubstitution(
-        [pkg_create3_bringup, 'launch', 'rviz2.launch.py'])
+        [pkg_create3_common_bringup, 'launch', 'rviz2.launch.py'])
 
-    gazebo_params_yaml_file = os.path.join(pkg_create3_bringup, 'config', 'gazebo_params.yaml')
+    gazebo_params_yaml_file = os.path.join(pkg_create3_gazebo_bringup, 'config', 'gazebo_params.yaml')
 
     # Launch configurations
     x, y, z = LaunchConfiguration('x'), LaunchConfiguration('y'), LaunchConfiguration('z')

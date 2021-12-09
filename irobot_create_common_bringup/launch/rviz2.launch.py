@@ -10,7 +10,7 @@ from launch_ros.actions import Node
 
 
 def generate_launch_description():
-    create_bringup = get_package_share_directory('irobot_create_bringup')
+    create_bringup = get_package_share_directory('irobot_create_common_bringup')
 
     # Rviz
     rviz_config = PathJoinSubstitution([create_bringup, 'rviz', 'irobot_create_view.rviz'])

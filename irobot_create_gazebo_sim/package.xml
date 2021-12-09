@@ -1,19 +1,19 @@
 <?xml version="1.0"?>
 <?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
 <package format="3">
-  <name>irobot_create_sim</name>
+  <name>irobot_create_gazebo_sim</name>
   <version>0.0.1</version>
-  <description>Metapackage for the iRobot(R) Create(R) 3 robot simulator<a href="http://gazebosim.org/">Gazebo</a> simulation stack.</description>
+  <description>Metapackage for the iRobot(R) Create(R) 3 robot Gazebo simulator<a href="http://gazebosim.org/">Gazebo</a> simulation stack.</description>
 
   <maintainer email="ekumen@irbt.onmicrosoft.com">Ekumen</maintainer>
 
-  <license>Apache 2.0</license>
+  <license>BSD</license>
 
   <author>iRobot</author>
 
   <buildtool_depend>ament_cmake</buildtool_depend>
 
-  <exec_depend>irobot_create_bringup</exec_depend>
+  <exec_depend>irobot_create_gazebo_bringup</exec_depend>
   <exec_depend>irobot_create_control</exec_depend>
   <exec_depend>irobot_create_description</exec_depend>
   <exec_depend>irobot_create_gazebo_plugins</exec_depend>
