@@ -30,6 +30,8 @@ def generate_launch_description():
         [pkg_create3_bringup, 'config', 'mock_params.yaml'])
     robot_state_yaml_file = PathJoinSubstitution(
         [pkg_create3_bringup, 'config', 'robot_state_params.yaml'])
+    kidnap_estimator_yaml_file = PathJoinSubstitution(
+        [pkg_create3_bringup, 'config', 'kidnap_estimator_params.yaml'])
 
     # Includes
     diffdrive_controller = IncludeLaunchDescription(
@@ -95,6 +97,16 @@ def generate_launch_description():
         output='screen',
     )
 
+    # Publish kidnap estimator
+    kidnap_estimator_node = Node(
+        package='irobot_create_toolbox',
+        name='kidnap_estimator',
+        executable='kidnap_estimator_publisher_node',
+        parameters=[kidnap_estimator_yaml_file,
+                    {'use_sim_time': True}],
+        output='screen',
+    )
+
     # Define LaunchDescription variable
     ld = LaunchDescription()
     # Include robot description
@@ -106,5 +118,6 @@ def generate_launch_description():
     ld.add_action(wheel_status_node)
     ld.add_action(mock_topics_node)
     ld.add_action(robot_state_node)
+    ld.add_action(kidnap_estimator_node)
 
     return ld

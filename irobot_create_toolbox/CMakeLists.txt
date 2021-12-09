@@ -113,6 +113,17 @@ ament_target_dependencies(mock_publisher_lib
   ${dependencies}
 )
 
+add_library(kidnap_estimator_publisher_lib SHARED)
+target_sources(
+  kidnap_estimator_publisher_lib
+  PRIVATE
+    src/kidnap_estimator_publisher.cpp
+)
+target_include_directories(kidnap_estimator_publisher_lib PUBLIC include)
+ament_target_dependencies(kidnap_estimator_publisher_lib
+  ${dependencies}
+)
+
 set(libraries_names
   hazard_publisher_lib
   ir_intensity_publisher_lib
@@ -120,6 +131,7 @@ set(libraries_names
   wheel_status_publisher_lib
   robot_state_lib
   mock_publisher_lib
+  kidnap_estimator_publisher_lib
 )
 
 #### Executables
@@ -178,6 +190,15 @@ target_sources(
 )
 target_link_libraries(mock_publisher_node mock_publisher_lib)
 
+# Kidnap estimator publisher
+add_executable(kidnap_estimator_publisher_node)
+target_sources(
+  kidnap_estimator_publisher_node
+  PRIVATE
+    src/kidnap_estimator_publisher_node.cpp
+)
+target_link_libraries(kidnap_estimator_publisher_node kidnap_estimator_publisher_lib)
+
 set(executables_names
   hazards_vector_publisher_node
   ir_intensity_vector_publisher_node
@@ -185,6 +206,7 @@ set(executables_names
   wheel_status_publisher_node
   robot_state_node
   mock_publisher_node
+  kidnap_estimator_publisher_node
 )
 
 #### Install

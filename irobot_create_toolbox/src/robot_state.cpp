@@ -20,15 +20,11 @@ RobotState::RobotState()
   // Topic parameter to publish battery state to
   battery_state_publisher_topic_ =
     declare_and_get_parameter<std::string>("battery_state_topic", this);
-  // Topic parameter to publish kidnap status to
-  kidnap_status_publisher_topic_ =
-    declare_and_get_parameter<std::string>("kidnap_status_topic", this);
   // Topic parameter to publish stop status to
   stop_status_publisher_topic_ = declare_and_get_parameter<std::string>("stop_status_topic", this);
 
   // Subscriber topics
   dock_subscription_topic_ = declare_and_get_parameter<std::string>("dock_topic", this);
-  hazard_subscription_topic_ = declare_and_get_parameter<std::string>("hazard_topic", this);
   wheel_vels_subscription_topic_ = declare_and_get_parameter<std::string>("wheel_vels_topic", this);
 
   // Publish rate parameters
@@ -55,20 +51,6 @@ RobotState::RobotState()
     dock_subscription_topic_, rclcpp::SensorDataQoS(),
     std::bind(&RobotState::dock_callback, this, std::placeholders::_1));
   RCLCPP_INFO_STREAM(get_logger(), "Subscription to topic: " << dock_subscription_topic_);
-
-  // Define kidnap status publisher
-  kidnap_status_publisher_ = create_publisher<irobot_create_msgs::msg::KidnapStatus>(
-    kidnap_status_publisher_topic_, rclcpp::SensorDataQoS());
-  RCLCPP_INFO_STREAM(get_logger(), "Advertised topic: " << kidnap_status_publisher_topic_);
-
-  // Subscription to the hazard detection vector
-  kidnap_status_subscription_ = create_subscription<irobot_create_msgs::msg::HazardDetectionVector>(
-    hazard_subscription_topic_, rclcpp::SensorDataQoS(),
-    std::bind(&RobotState::kidnap_callback, this, std::placeholders::_1));
-  RCLCPP_INFO_STREAM(get_logger(), "Subscription to topic: " << hazard_subscription_topic_);
-
-  // Set kidnap status header
-  kidnap_status_msg_.header.frame_id = base_frame_;
 
   // Define stop status publisher
   stop_status_publisher_ = create_publisher<irobot_create_msgs::msg::StopStatus>(
@@ -184,47 +166,6 @@ void RobotState::dock_callback(irobot_create_msgs::msg::Dock::SharedPtr msg)
     off_dock_idle_time_ = rclcpp::Duration(std::chrono::seconds(0));
   }
   is_docked_ = msg->is_docked;
-}
-
-void RobotState::kidnap_callback(irobot_create_msgs::msg::HazardDetectionVector::SharedPtr msg)
-{
-  auto hazard_vector = msg->detections;
-
-  bool wheel_drop_left = false;
-  bool wheel_drop_right = false;
-
-  for (const auto & detection : hazard_vector) {
-    if (detection.header.frame_id == "wheel_drop_left") {
-      wheel_drop_left = true;
-    } else if (detection.header.frame_id == "wheel_drop_right") {
-      wheel_drop_right = true;
-    }
-  }
-
-  bool cliff_side_left = false;
-  bool cliff_side_right = false;
-  bool cliff_front_left = false;
-  bool cliff_front_right = false;
-  for (const auto & detection : hazard_vector) {
-    if (detection.header.frame_id == "cliff_side_left") {
-      cliff_side_left = true;
-    } else if (detection.header.frame_id == "cliff_side_right") {
-      cliff_side_right = true;
-    } else if (detection.header.frame_id == "cliff_front_left") {
-      cliff_front_left = true;
-    } else if (detection.header.frame_id == "cliff_front_right") {
-      cliff_front_right = true;
-    }
-  }
-
-  // Set header timestamp.
-  kidnap_status_msg_.header.stamp = now();
-  // Set kidnap status. The robot is kidnapped when both wheel drops are activated
-  kidnap_status_msg_.is_kidnapped = wheel_drop_left && wheel_drop_right &&
-    cliff_side_left && cliff_side_right &&
-    cliff_front_left && cliff_front_right;
-  // Publish topics
-  kidnap_status_publisher_->publish(kidnap_status_msg_);
 }
 
 void RobotState::stop_callback(nav_msgs::msg::Odometry::SharedPtr msg)

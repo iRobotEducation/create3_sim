@@ -7,7 +7,6 @@
 #include <irobot_create_msgs/msg/dock.hpp>
 #include <irobot_create_msgs/msg/hazard_detection.hpp>
 #include <irobot_create_msgs/msg/hazard_detection_vector.hpp>
-#include <irobot_create_msgs/msg/kidnap_status.hpp>
 #include <irobot_create_msgs/msg/stop_status.hpp>
 #include <irobot_create_msgs/msg/wheel_vels.hpp>
 #include <irobot_create_toolbox/parameter_helper.hpp>
@@ -27,52 +26,40 @@ namespace irobot_create_toolbox
 {
 class RobotState : public rclcpp::Node
 {
-public:
+ public:
   /// \brief Constructor
   RobotState();
 
   // Callback functions
   void dock_callback(irobot_create_msgs::msg::Dock::SharedPtr msg);
-  void kidnap_callback(irobot_create_msgs::msg::HazardDetectionVector::SharedPtr msg);
   void stop_callback(nav_msgs::msg::Odometry::SharedPtr msg);
 
-protected:
+ protected:
   double get_docked_charge_percentage(const rclcpp::Time & at_time);
   double get_undocked_charge_percentage(const rclcpp::Time & at_time);
 
   // Publish aggregated detections on timer_'s frequency
   rclcpp::TimerBase::SharedPtr battery_state_timer_;
-  rclcpp::TimerBase::SharedPtr kidnap_status_timer_;
   rclcpp::TimerBase::SharedPtr stop_status_timer_;
 
   // Publishers
   rclcpp::Publisher<sensor_msgs::msg::BatteryState>::SharedPtr battery_state_publisher_{nullptr};
-  rclcpp::Publisher<irobot_create_msgs::msg::KidnapStatus>::SharedPtr
-    kidnap_status_publisher_{nullptr};
   rclcpp::Publisher<irobot_create_msgs::msg::StopStatus>::SharedPtr stop_status_publisher_{nullptr};
 
   // Subscribers
   rclcpp::Subscription<irobot_create_msgs::msg::Dock>::SharedPtr dock_subscription_;
-  rclcpp::Subscription<
-    irobot_create_msgs::msg::HazardDetectionVector>::SharedPtr kidnap_status_subscription_;
   rclcpp::Subscription<nav_msgs::msg::Odometry>::SharedPtr stop_status_subscription_;
 
   // Topic to publish battery state to
   std::string battery_state_publisher_topic_;
-  // Topic to publish kidnap status to
-  std::string kidnap_status_publisher_topic_;
   // Topic to publish stop status to
   std::string stop_status_publisher_topic_;
 
   // Topic to subscribe to dock
   std::string dock_subscription_topic_;
-  // Topic to subscribe to hazard detection vector
-  std::string hazard_subscription_topic_;
   // Topic to subscribe to wheel vels vector
   std::string wheel_vels_subscription_topic_;
 
-  // Message to store the kidnap status
-  irobot_create_msgs::msg::KidnapStatus kidnap_status_msg_;
   // Message to store the stop status
   irobot_create_msgs::msg::StopStatus stop_status_msg_;
   // Message to store the battery state
