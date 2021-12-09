@@ -54,7 +54,7 @@ source install/local_setup.bash
 Create® 3 can be spawned in an empty world in Gazebo and monitored through RViz with
 
 ```bash
-ros2 launch irobot_create_bringup create3_gazebo_empty_world.launch.py
+ros2 launch irobot_create_gazebo_bringup create3_gazebo.launch.py
 ```
 
 #### AWS house
@@ -73,5 +73,5 @@ source install/local_setup.bash
 Then you can run:
 
 ```bash
-ros2 launch irobot_create_bringup create3_gazebo_aws_small.launch.py
+ros2 launch irobot_create_gazebo_bringup create3_gazebo_aws_small.launch.py
 ```
