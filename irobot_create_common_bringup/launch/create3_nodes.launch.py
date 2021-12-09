@@ -27,11 +27,11 @@ def generate_launch_description():
     wheel_status_params_yaml_file = PathJoinSubstitution(
         [pkg_create3_common_bringup, 'config', 'wheel_status_params.yaml'])
     mock_params_yaml_file = PathJoinSubstitution(
-        [pkg_create3_bringup, 'config', 'mock_params.yaml'])
+        [pkg_create3_common_bringup, 'config', 'mock_params.yaml'])
     robot_state_yaml_file = PathJoinSubstitution(
-        [pkg_create3_bringup, 'config', 'robot_state_params.yaml'])
+        [pkg_create3_common_bringup, 'config', 'robot_state_params.yaml'])
     kidnap_estimator_yaml_file = PathJoinSubstitution(
-        [pkg_create3_bringup, 'config', 'kidnap_estimator_params.yaml'])
+        [pkg_create3_common_bringup, 'config', 'kidnap_estimator_params.yaml'])
 
     # Includes
     diffdrive_controller = IncludeLaunchDescription(
