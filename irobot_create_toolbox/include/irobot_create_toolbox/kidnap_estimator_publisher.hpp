@@ -21,14 +21,13 @@ namespace irobot_create_toolbox
 {
 class KidnapEstimator : public rclcpp::Node
 {
- public:
+public:
   /// \brief Constructor
   KidnapEstimator();
   /// \brief Callback function
   void kidnap_callback(irobot_create_msgs::msg::HazardDetectionVector::SharedPtr msg);
 
- protected:
-
+protected:
   // Publish aggregated detections on timer_'s frequency
   rclcpp::TimerBase::SharedPtr kidnap_status_timer_;
 
