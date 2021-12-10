@@ -1,0 +1,35 @@
+<?xml version="1.0"?>
+<?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
+<package format="3">
+  <name>irobot_create_ignition_bringup</name>
+  <version>0.0.0</version>
+  <description>TODO: Package description</description>
+  <maintainer email="rkreinin@clearpathrobotics.com">rkreinin</maintainer>
+  <license>Apache 2.0</license>
+
+  <buildtool_depend>ament_cmake</buildtool_depend>
+
+  <!-- Create3 -->
+  <depend>irobot_create_description</depend>
+  <depend>irobot_create_common_bringup</depend>
+  <depend>irobot_create_toolbox</depend>
+  <depend>irobot_create_ignition_toolbox</depend>
+  <depend>irobot_create_ignition_plugins</depend>
+
+  <!-- ROS IGN -->
+  <depend>ros_ign_interfaces</depend>
+  <depend>ros_ign_gazebo</depend>
+  <depend>ros_ign_bridge</depend>
+
+  <!-- Messages -->
+  <depend>std_msgs</depend>
+  <depend>geometry_msgs</depend>
+  <depend>irobot_create_msgs</depend>
+
+  <test_depend>ament_lint_auto</test_depend>
+  <test_depend>ament_lint_common</test_depend>
+
+  <export>
+    <build_type>ament_cmake</build_type>
+  </export>
+</package>

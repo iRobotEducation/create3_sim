@@ -1,0 +1,37 @@
+---
+sensors_node:
+  ros__parameters:
+    cliff_subscription_topics:
+      - _internal/cliff_front_left/scan
+      - _internal/cliff_front_right/scan
+      - _internal/cliff_side_left/scan
+      - _internal/cliff_side_right/scan
+
+    cliff_publish_topics:
+      - _internal/cliff_front_left/event
+      - _internal/cliff_front_right/event
+      - _internal/cliff_side_left/event
+      - _internal/cliff_side_right/event
+
+    ir_scan_subscription_topics:
+      - _internal/ir_intensity_front_center_left/scan
+      - _internal/ir_intensity_front_center_right/scan
+      - _internal/ir_intensity_front_left/scan
+      - _internal/ir_intensity_front_right/scan
+      - _internal/ir_intensity_left/scan
+      - _internal/ir_intensity_right/scan
+      - _internal/ir_intensity_side_left/scan
+
+    ir_intensity_publish_topics:
+      - _internal/ir_intensity_front_center_left
+      - _internal/ir_intensity_front_center_right
+      - _internal/ir_intensity_front_left
+      - _internal/ir_intensity_front_right
+      - _internal/ir_intensity_left
+      - _internal/ir_intensity_right
+      - _internal/ir_intensity_side_left
+
+    ir_opcode_sensor_0_fov: 3.839724
+    ir_opcode_sensor_0_range: 0.1
+    ir_opcode_sensor_1_fov: 1.570796
+    ir_opcode_sensor_1_range: 0.5

@@ -1,0 +1,8 @@
+<!DOCTYPE RCC><RCC version="1.0">
+  <qresource prefix="Create3Hmi/">
+    <file>Create3Hmi.qml</file>
+    <file>images/One Dot.png</file>
+    <file>images/Power.png</file>
+    <file>images/Two Dots.png</file>
+  </qresource>
+</RCC>
