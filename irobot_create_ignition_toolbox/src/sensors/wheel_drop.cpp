@@ -42,7 +42,7 @@ WheelDrop::WheelDrop(std::shared_ptr<rclcpp::Node> &nh) : nh_(nh),
 void WheelDrop::joint_state_callback(const sensor_msgs::msg::JointState::SharedPtr joint_state_msg)
 {
     // Get position of each wheeldrop joint
-    for (int i = 0; i < joint_state_msg->name.size(); i++)
+    for (size_t i = 0; i < joint_state_msg->name.size(); i++)
     {
         for (auto joint : joints_)
         {

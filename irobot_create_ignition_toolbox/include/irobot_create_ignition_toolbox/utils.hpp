@@ -39,14 +39,14 @@ struct PolarCoordinate
   double azimuth;
 };
 
-static PolarCoordinate toPolar(tf2::Vector3 & cartesian)
+inline PolarCoordinate toPolar(tf2::Vector3 & cartesian)
 {
   // 2d vector
   cartesian.setZ(0.0);
   return PolarCoordinate{cartesian.length(), atan2(cartesian.getY(), cartesian.getX())};
 }
 
-static tf2::Vector3 fromPolar(const PolarCoordinate & polar)
+inline tf2::Vector3 fromPolar(const PolarCoordinate & polar)
 {
     return tf2::Vector3{
         polar.radius * cos(polar.azimuth), 
@@ -56,7 +56,7 @@ static tf2::Vector3 fromPolar(const PolarCoordinate & polar)
 }
 
 // Get yaw from tf2 Transform
-static double tf2_transform_to_yaw(const tf2::Transform tf)
+inline double tf2_transform_to_yaw(const tf2::Transform tf)
 {
   auto tf_m = tf2::Matrix3x3(tf.getRotation());
   double tf_r, tf_p, tf_y;
@@ -65,13 +65,13 @@ static double tf2_transform_to_yaw(const tf2::Transform tf)
 }
 
 // Get object position wrt frame
-static tf2::Vector3 object_wrt_frame(tf2::Transform object, tf2::Transform frame)
+inline tf2::Vector3 object_wrt_frame(tf2::Transform object, tf2::Transform frame)
 {
     return frame.inverseTimes(object).getOrigin();
 }
 
 // Get global transform of a static link connected to base frame
-static tf2::Transform static_link_wrt_global_frame(tf2::Transform static_link, tf2::Transform base_frame)
+inline tf2::Transform static_link_wrt_global_frame(tf2::Transform static_link, tf2::Transform base_frame)
 {
     tf2::Transform global_pose(tf2::Transform::getIdentity());
 
@@ -91,7 +91,7 @@ static tf2::Transform static_link_wrt_global_frame(tf2::Transform static_link, t
     return global_pose;
 }
 
-static nav_msgs::msg::Odometry::UniquePtr tf_message_to_odom(const tf2_msgs::msg::TFMessage::SharedPtr msg, uint16_t i)
+inline nav_msgs::msg::Odometry::UniquePtr tf_message_to_odom(const tf2_msgs::msg::TFMessage::SharedPtr msg, uint16_t i)
 {
   auto odom_msg = std::make_unique<nav_msgs::msg::Odometry>();
 
@@ -110,7 +110,7 @@ static nav_msgs::msg::Odometry::UniquePtr tf_message_to_odom(const tf2_msgs::msg
   return odom_msg;
 }
 
-static void tf2_transform_to_pose(const tf2::Transform tf, geometry_msgs::msg::Pose & pose)
+inline void tf2_transform_to_pose(const tf2::Transform tf, geometry_msgs::msg::Pose & pose)
 {
   pose.position.set__x(tf.getOrigin().getX());
   pose.position.set__y(tf.getOrigin().getY());
