@@ -14,20 +14,20 @@ from launch_ros.actions import Node
 
 def generate_launch_description():
     # Directories
-    pkg_create3_bringup = get_package_share_directory('irobot_create_bringup')
+    pkg_create3_common_bringup = get_package_share_directory('irobot_create_common_bringup')
     pkg_create3_control = get_package_share_directory('irobot_create_control')
 
     # Paths
     control_launch_file = PathJoinSubstitution(
         [pkg_create3_control, 'launch', 'include', 'control.py'])
     hazards_params_yaml_file = PathJoinSubstitution(
-        [pkg_create3_bringup, 'config', 'hazard_vector_params.yaml'])
+        [pkg_create3_common_bringup, 'config', 'hazard_vector_params.yaml'])
     ir_intensity_params_yaml_file = PathJoinSubstitution(
-        [pkg_create3_bringup, 'config', 'ir_intensity_vector_params.yaml'])
+        [pkg_create3_common_bringup, 'config', 'ir_intensity_vector_params.yaml'])
     wheel_status_params_yaml_file = PathJoinSubstitution(
-        [pkg_create3_bringup, 'config', 'wheel_status_params.yaml'])
+        [pkg_create3_common_bringup, 'config', 'wheel_status_params.yaml'])
     mock_params_yaml_file = PathJoinSubstitution(
-        [pkg_create3_bringup, 'config', 'mock_params.yaml'])
+        [pkg_create3_common_bringup, 'config', 'mock_params.yaml'])
 
     # Includes
     diffdrive_controller = IncludeLaunchDescription(
