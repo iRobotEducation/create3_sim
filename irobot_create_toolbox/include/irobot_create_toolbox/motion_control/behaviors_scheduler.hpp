@@ -71,7 +71,6 @@ public:
         // If behavior has to cleanup before moving onto another, run func
         current_behavior_.cleanup_func();
       }
-      return false;
     }
 
     has_behavior_ = true;
