@@ -46,6 +46,7 @@ public:
     server_name_(server_name)
   {
     behavior_scheduler_ = behavior_scheduler;
+    last_feedback_time_ = clock_->now();
 
     if (!server_name.empty()) {
       drive_goal_action_server_ = rclcpp_action::create_server<T>(
@@ -101,6 +102,26 @@ private:
     return rclcpp_action::CancelResponse::ACCEPT;
   }
 
+  void abort_drive_goal(
+    const std::shared_ptr<rclcpp_action::ServerGoalHandle<T>> goal_handle)
+  {
+    auto result = std::make_shared<typename T::Result>();
+    result->pose = current_pose_;
+    goal_handle->abort(result);
+  }
+
+  void cleanup_drive_goal(
+    const std::shared_ptr<rclcpp_action::ServerGoalHandle<T>> goal_handle)
+  {
+    if (goal_handle) {
+      RCLCPP_INFO(logger_, "Aborting %s goal: new drive goal received", server_name_.c_str());
+      drive_goal_running_ = false;
+      abort_drive_goal(goal_handle);
+    } else {
+      RCLCPP_WARN(logger_, "Failed to cleanup %s goal: goal_handle is null", server_name_.c_str());
+    }
+  }
+
   void handle_drive_goal_accepted(
     const std::shared_ptr<
       rclcpp_action::ServerGoalHandle<T>> goal_handle)
@@ -113,9 +134,7 @@ private:
       } else {
         drive_goal_running_ = false;
         RCLCPP_WARN(logger_, "Goal inside goal_handle is null");
-        auto result = std::make_shared<typename T::Result>();
-        result->pose = get_current_pose_stamped(clock_->now(), tf2::Transform::getIdentity());
-        goal_handle->abort(result);
+        abort_drive_goal(goal_handle);
       }
     } else {
       RCLCPP_WARN(logger_, "goal_handle is null, don't execute");
@@ -127,6 +146,7 @@ private:
       &DriveGoalBaseBehavior<T>::execute_drive_goal, this,
       goal_handle, std::placeholders::_1);
     data.is_done_func = std::bind(&DriveGoalBaseBehavior<T>::drive_goal_behavior_is_done, this);
+    data.cleanup_func = std::bind(&DriveGoalBaseBehavior<T>::cleanup_drive_goal, this, goal_handle);
     data.stop_on_new_behavior = true;
     data.apply_backup_limits = true;
 
@@ -135,9 +155,7 @@ private:
       // for some reason we couldn't set the new behavior, treat this as a goal being cancelled
       drive_goal_running_ = false;
       RCLCPP_WARN(logger_, "%s behavior failed to start", server_name_.c_str());
-      auto result = std::make_shared<typename T::Result>();
-      result->pose = get_current_pose_stamped(clock_->now(), tf2::Transform::getIdentity());
-      goal_handle->abort(result);
+      abort_drive_goal(goal_handle);
       return;
     }
     last_feedback_time_ = clock_->now();
@@ -149,12 +167,13 @@ private:
     const RobotState & current_state)
   {
     rclcpp::Time current_time = clock_->now();
+    current_pose_ = get_current_pose_stamped(current_time, current_state.pose);
     // Handle if goal is cancelling
     if (goal_handle->is_canceling()) {
       RCLCPP_INFO(logger_, "%s canceled", server_name_.c_str());
       drive_goal_running_ = false;
       auto result = std::make_shared<typename T::Result>();
-      result->pose = get_current_pose_stamped(current_time, current_state.pose);
+      result->pose = current_pose_;
       goal_handle->canceled(result);
       return BehaviorsScheduler::optional_output_t();
     }
@@ -173,9 +192,7 @@ private:
 
     if (fail_condition) {
       drive_goal_running_ = false;
-      auto result = std::make_shared<typename T::Result>();
-      result->pose = get_current_pose_stamped(current_time, current_state.pose);
-      goal_handle->abort(result);
+      abort_drive_goal(goal_handle);
       return BehaviorsScheduler::optional_output_t();
     }
 
@@ -185,7 +202,7 @@ private:
     if (succeeded) {
       drive_goal_running_ = false;
       auto result = std::make_shared<typename T::Result>();
-      result->pose = get_current_pose_stamped(current_time, current_state.pose);
+      result->pose = current_pose_;
       goal_handle->succeed(result);
       return output;
     }
@@ -204,6 +221,7 @@ private:
   const std::string server_name_;
   rclcpp::Time last_feedback_time_;
   std::shared_ptr<BehaviorsScheduler> behavior_scheduler_;
+  geometry_msgs::msg::PoseStamped current_pose_ {};
 };
 
 /**

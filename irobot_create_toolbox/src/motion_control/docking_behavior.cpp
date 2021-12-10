@@ -162,7 +162,7 @@ void DockingBehavior::handle_dock_servo_accepted(
     RCLCPP_WARN(logger_, "Dock Servo behavior failed to start");
     auto result = std::make_shared<irobot_create_msgs::action::DockServo::Result>();
     result->is_docked = is_docked_;
-    goal_handle->canceled(result);
+    goal_handle->abort(result);
     running_dock_action_ = false;
   }
 }
@@ -294,7 +294,7 @@ void DockingBehavior::handle_undock_accepted(
     RCLCPP_WARN(logger_, "Undock behavior failed to start");
     auto result = std::make_shared<irobot_create_msgs::action::Undock::Result>();
     result->is_docked = is_docked_;
-    goal_handle->canceled(result);
+    goal_handle->abort(result);
     goal_controller_.reset();
     running_dock_action_ = false;
   }
