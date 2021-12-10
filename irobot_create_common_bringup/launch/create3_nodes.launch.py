@@ -10,7 +10,8 @@ from launch.actions import IncludeLaunchDescription
 from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch.substitutions import PathJoinSubstitution
 from launch_ros.actions import Node
-
+from launch.actions import DeclareLaunchArgument
+from launch.conditions import LaunchConfigurationEquals
 
 def generate_launch_description():
     # Directories
@@ -31,7 +32,8 @@ def generate_launch_description():
 
     # Includes
     diffdrive_controller = IncludeLaunchDescription(
-        PythonLaunchDescriptionSource([control_launch_file])
+        PythonLaunchDescriptionSource([control_launch_file]),
+        condition=LaunchConfigurationEquals('gazebo', 'classic')
     )
 
     # Publish hazards vector
@@ -84,7 +86,11 @@ def generate_launch_description():
     )
 
     # Define LaunchDescription variable
-    ld = LaunchDescription()
+    ld = LaunchDescription(
+        [DeclareLaunchArgument('gazebo', default_value='classic',
+                          choices=['classic', 'ignition'],
+                          description='Which gazebo simulation to use')
+    ])
     # Include robot description
     ld.add_action(diffdrive_controller)
     # Add nodes to LaunchDescription

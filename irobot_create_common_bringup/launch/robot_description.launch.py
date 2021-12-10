@@ -5,6 +5,7 @@
 
 from ament_index_python.packages import get_package_share_directory
 from launch import LaunchDescription
+from launch.conditions import LaunchConfigurationEquals
 from launch.substitutions import Command, PathJoinSubstitution
 from launch.substitutions.launch_configuration import LaunchConfiguration
 from launch_ros.actions import Node
@@ -31,6 +32,7 @@ def generate_launch_description():
         executable='joint_state_publisher',
         name='joint_state_publisher',
         output='screen',
+        condition=LaunchConfigurationEquals('gazebo', 'classic')
     )
 
     # Define LaunchDescription variable
