@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <robot xmlns:xacro="http://ros.org/wiki/xacro">
 
-<xacro:macro name="cliff_sensor" params="name parent:=base_link
+<xacro:macro name="cliff_sensor" params="name gazebo parent:=base_link
                                          visualize:=false *origin">
   <!-- Sensor settings -->
   <xacro:property name="update_rate"         value="62"/>
@@ -25,31 +25,10 @@
   </link>
 
   <gazebo reference="${sensor_name}">
-    <sensor type="ray" name="${sensor_name}">
-      <update_rate>${update_rate}</update_rate>
-      <visualize>${visualize}</visualize>
-      <always_on>true</always_on>
-      <ray>
-        <scan>
-          <horizontal>
-            <samples>${samples}</samples>
-            <resolution>1.0</resolution>
-            <min_angle>-${fov_rad/2}</min_angle>
-            <max_angle>${fov_rad/2}</max_angle>
-          </horizontal>
-        </scan>
-        <range>
-          <min>${min_range}</min>
-          <max>${max_range}</max>
-          <resolution>1.0</resolution>
-        </range>
-      </ray>
-      <!-- Noise is currently disabled -->
-      <noise>
-        <type>gaussian</type>
-        <mean>0.0</mean>
-        <stddev>0.0</stddev>
-      </noise>
+    <xacro:ray_sensor sensor_name="${sensor_name}" gazebo="${gazebo}" 
+                      update_rate="${update_rate}" visualize="${visualize}" 
+                      h_samples="${samples}" h_res="1.0" h_min_angle="-${fov_rad/2}" h_max_angle="${fov_rad/2}" 
+                      r_min="${min_range}" r_max="${max_range}" r_res="1.0">
       <plugin name="${sensor_name}" filename="libgazebo_ros_create_cliff_sensor.so">
         <ros>
           <namespace>/</namespace>
@@ -58,7 +37,7 @@
         <detection_threshold>${detection_threshold}</detection_threshold>
         <frame_id>${sensor_name}</frame_id>
       </plugin>
-    </sensor>
+    </xacro:ray_sensor>
   </gazebo>
 </xacro:macro>
 

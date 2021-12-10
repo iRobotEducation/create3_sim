@@ -15,7 +15,7 @@ functional, while the 4 remaining ones are created as dummy links. -->
   <link name="${link_name}"/>
 </xacro:macro>
 
-<xacro:macro name="bumper" params="name:=bump_front_center parent_link:=base_link update_rate:=62.0 visual_mesh collision_mesh
+<xacro:macro name="bumper" params="name:=bump_front_center parent_link:=base_link update_rate:=62.0 gazebo visual_mesh collision_mesh
   *origin *inertial">
   <xacro:property name="link_name" value="${name}"/>
   <xacro:property name="joint_name" value="${name}_joint"/>
@@ -52,13 +52,14 @@ functional, while the 4 remaining ones are created as dummy links. -->
       <contact>
         <collision>${link_name}_collision</collision>
       </contact>
-      <plugin name="${name}_plugin" filename="libgazebo_ros_create_bumper.so">
-        <ros>
-          <namespace>/</namespace>
-          <remapping>~/out:=_internal/bumper/event</remapping>
-        </ros>
-      </plugin>
-
+      <xacro:if value="${gazebo == 'classic'}">
+        <plugin name="${name}_plugin" filename="libgazebo_ros_create_bumper.so">
+          <ros>
+            <namespace>/</namespace>
+            <remapping>~/out:=_internal/bumper/event</remapping>
+          </ros>
+        </plugin>
+      </xacro:if>
     </sensor>
   </gazebo>
 

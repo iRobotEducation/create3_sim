@@ -6,7 +6,9 @@
 from ament_index_python.packages import get_package_share_directory
 from launch import LaunchDescription
 from launch.substitutions import Command, PathJoinSubstitution
+from launch.substitutions.launch_configuration import LaunchConfiguration
 from launch_ros.actions import Node
+from launch.actions import DeclareLaunchArgument
 
 
 def generate_launch_description():
@@ -20,7 +22,7 @@ def generate_launch_description():
         output='screen',
         parameters=[
             {'use_sim_time': True},
-            {'robot_description': Command(['xacro', ' ', xacro_file])},
+            {'robot_description': Command(['xacro', ' ', xacro_file, ' ', 'gazebo:=', LaunchConfiguration('gazebo')])},
         ],
     )
 
@@ -32,7 +34,11 @@ def generate_launch_description():
     )
 
     # Define LaunchDescription variable
-    ld = LaunchDescription()
+    ld = LaunchDescription([
+        DeclareLaunchArgument('gazebo', default_value='classic',
+                          choices=['classic', 'ignition'],
+                          description='Which gazebo simulation to use')]
+    )
     # Add nodes to LaunchDescription
     ld.add_action(joint_state_publisher)
     ld.add_action(robot_state_publisher)
