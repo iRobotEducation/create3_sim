@@ -27,7 +27,7 @@ public:
   /// \brief Callback function
   void kidnap_callback(irobot_create_msgs::msg::HazardDetectionVector::SharedPtr msg);
 
-protected:
+private:
   // Publish aggregated detections on timer_'s frequency
   rclcpp::TimerBase::SharedPtr kidnap_status_timer_;
 
