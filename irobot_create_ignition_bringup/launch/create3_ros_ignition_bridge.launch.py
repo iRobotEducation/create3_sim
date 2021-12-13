@@ -199,24 +199,6 @@ def generate_launch_description():
                                   ('/model/dock/pose', '/_internal/sim_ground_truth_dock_pose')
                               ])
 
-    # Joint state bridge
-    joint_state_bridge = Node(package='ros_ign_bridge', executable='parameter_bridge',
-                              namespace=namespace,
-                              name='joint_state_bridge',
-                              output='screen',
-                              parameters=[{
-                                   'use_sim_time': use_sim_time
-                              }],
-                              arguments=[
-                                  ['/world/', LaunchConfiguration('world'), '/model/', LaunchConfiguration('robot_name'), '/joint_state' +
-                                  '@sensor_msgs/msg/JointState' +
-                                  '[ignition.msgs.Model']
-                              ],
-                              remappings=[
-                                  (['/world/', LaunchConfiguration('world'), '/model/', LaunchConfiguration('robot_name'), '/joint_state'], '/joint_states')
-                              ])
-
-
     # Create launch description and add actions
     ld = LaunchDescription(ARGUMENTS)
     ld.add_action(clock_bridge)
@@ -228,5 +210,4 @@ def generate_launch_description():
     ld.add_action(ir_intensity_bridge)
     ld.add_action(buttons_msg_bridge)
     ld.add_action(pose_bridge)
-    ld.add_action(joint_state_bridge)
     return ld
