@@ -9,9 +9,16 @@ from launch import LaunchDescription
 from launch.actions import IncludeLaunchDescription
 from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch.substitutions import PathJoinSubstitution
+from launch.substitutions.launch_configuration import LaunchConfiguration
 from launch_ros.actions import Node
 from launch.actions import DeclareLaunchArgument
 from launch.conditions import LaunchConfigurationEquals
+
+ARGUMENTS = [
+    DeclareLaunchArgument('gazebo', default_value='classic',
+                          choices=['classic', 'ignition'],
+                          description='Which gazebo simulator to use')
+]
 
 def generate_launch_description():
     # Directories
@@ -29,6 +36,8 @@ def generate_launch_description():
         [pkg_create3_common_bringup, 'config', 'wheel_status_params.yaml'])
     mock_params_yaml_file = PathJoinSubstitution(
         [pkg_create3_common_bringup, 'config', 'mock_params.yaml'])
+
+    
 
     # Includes
     diffdrive_controller = IncludeLaunchDescription(
@@ -86,11 +95,7 @@ def generate_launch_description():
     )
 
     # Define LaunchDescription variable
-    ld = LaunchDescription(
-        [DeclareLaunchArgument('gazebo', default_value='classic',
-                          choices=['classic', 'ignition'],
-                          description='Which gazebo simulation to use')
-    ])
+    ld = LaunchDescription(ARGUMENTS)
     # Include robot description
     ld.add_action(diffdrive_controller)
     # Add nodes to LaunchDescription

@@ -5,16 +5,21 @@
 
 from ament_index_python.packages import get_package_share_directory
 from launch import LaunchDescription
-from launch.conditions import LaunchConfigurationEquals
 from launch.substitutions import Command, PathJoinSubstitution
 from launch.substitutions.launch_configuration import LaunchConfiguration
 from launch_ros.actions import Node
 from launch.actions import DeclareLaunchArgument
 
+ARGUMENTS = [
+    DeclareLaunchArgument('gazebo', default_value='classic',
+                          choices=['classic', 'ignition'],
+                          description='Which gazebo simulation to use')
+]
 
 def generate_launch_description():
     pkg_create3_description = get_package_share_directory('irobot_create_description')
     xacro_file = PathJoinSubstitution([pkg_create3_description, 'urdf', 'create3.urdf.xacro'])
+    gazebo_simulator = LaunchConfiguration('gazebo')
 
     robot_state_publisher = Node(
         package='robot_state_publisher',
@@ -23,7 +28,7 @@ def generate_launch_description():
         output='screen',
         parameters=[
             {'use_sim_time': True},
-            {'robot_description': Command(['xacro', ' ', xacro_file, ' ', 'gazebo:=', LaunchConfiguration('gazebo')])},
+            {'robot_description': Command(['xacro', ' ', xacro_file, ' ', 'gazebo:=', gazebo_simulator])},
         ],
     )
 
@@ -32,15 +37,10 @@ def generate_launch_description():
         executable='joint_state_publisher',
         name='joint_state_publisher',
         output='screen',
-        condition=LaunchConfigurationEquals('gazebo', 'classic')
     )
 
     # Define LaunchDescription variable
-    ld = LaunchDescription([
-        DeclareLaunchArgument('gazebo', default_value='classic',
-                          choices=['classic', 'ignition'],
-                          description='Which gazebo simulation to use')]
-    )
+    ld = LaunchDescription(ARGUMENTS)
     # Add nodes to LaunchDescription
     ld.add_action(joint_state_publisher)
     ld.add_action(robot_state_publisher)

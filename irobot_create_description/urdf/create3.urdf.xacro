@@ -30,7 +30,7 @@
   <xacro:property name="distance_between_wheels" value="${23.3*cm2m}" />
 
   <xacro:property name="caster_position_x"       value="${12.5*cm2m}" />
-  <xacro:property name="caster_position_z"       value="${-5.25*cm2m}" />
+  <xacro:property name="caster_position_z"       value="${-5.2*cm2m}" />
 
   <xacro:property name="wheel_drop_offset_z"     value="${3.5*mm2m}"/>
   <xacro:property name="wheel_drop_z"            value="${wheel_height + wheel_drop_offset_z}"/>
@@ -250,15 +250,6 @@
         <publish_nested_model_pose>true</publish_nested_model_pose>
         <use_pose_vector_msg>true</use_pose_vector_msg>
         <update_frequency>62</update_frequency>
-      </plugin>
-    </gazebo>
-  
-    <gazebo>
-      <plugin filename="libignition-gazebo-joint-state-publisher-system.so" name="ignition::gazebo::systems::JointStatePublisher">
-        <joint_name>wheel_drop_left_joint</joint_name>
-        <joint_name>wheel_drop_right_joint</joint_name>
-        <joint_name>left_wheel_joint</joint_name>
-        <joint_name>right_wheel_joint</joint_name>
       </plugin>
     </gazebo>
   

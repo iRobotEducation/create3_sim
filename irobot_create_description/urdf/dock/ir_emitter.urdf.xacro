@@ -6,7 +6,7 @@
                                          aperture
                                          update_rate:=1.0
                                          min_range:=${7*cm2m}
-                                         visualize:=true" >
+                                         visualize:=false" >
 
     <!-- Physical link properties -->
     <xacro:property name="mass" value="0.15" />
