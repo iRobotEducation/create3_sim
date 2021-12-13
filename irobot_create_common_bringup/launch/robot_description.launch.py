@@ -13,7 +13,7 @@ from launch.actions import DeclareLaunchArgument
 ARGUMENTS = [
     DeclareLaunchArgument('gazebo', default_value='classic',
                           choices=['classic', 'ignition'],
-                          description='Which gazebo simulation to use')
+                          description='Which gazebo simulator to use')
 ]
 
 def generate_launch_description():
