@@ -40,7 +40,6 @@ public:
     std::shared_ptr<BehaviorsScheduler> behavior_scheduler);
   ~WallFollowBehavior() = default;
 
-  void update_state(const tf2::Transform & last_robot_pose);
   void hazard_vector_callback(irobot_create_msgs::msg::HazardDetectionVector::ConstSharedPtr msg);
 
 private:
@@ -49,7 +48,7 @@ private:
   void ir_intensity_callback(irobot_create_msgs::msg::IrIntensityVector::ConstSharedPtr msg);
 
   /// Get velocity command to follow wall given robot position and sensor readings
-  BehaviorsScheduler::optional_output_t get_next_servo_cmd();
+  BehaviorsScheduler::optional_output_t get_next_servo_cmd(const RobotState & current_state);
 
   rclcpp_action::GoalResponse handle_wall_follow_goal(
     const rclcpp_action::GoalUUID & uuid,
@@ -65,7 +64,8 @@ private:
 
   BehaviorsScheduler::optional_output_t execute_wall_follow(
     const std::shared_ptr<
-      rclcpp_action::ServerGoalHandle<irobot_create_msgs::action::WallFollow>> goal_handle);
+      rclcpp_action::ServerGoalHandle<irobot_create_msgs::action::WallFollow>> goal_handle,
+    const RobotState & current_state);
 
   rclcpp_action::Server<irobot_create_msgs::action::WallFollow>::SharedPtr
     wall_follow_action_server_;
@@ -81,11 +81,7 @@ private:
   rclcpp::Duration wf_end_duration_;
   rclcpp::Time wf_start_time_;
   std::mutex sensor_mutex_;
-  rclcpp::Time hazard_time_;
-  std::vector<std::string> active_hazard_frames_;
   irobot_create_msgs::msg::IrIntensityVector last_ir_intensity_;
-  std::mutex pose_mutex_;
-  tf2::Transform last_robot_pose_;
   std::shared_ptr<WallFollowStateManager> wf_state_mgr_ {nullptr};
 };
 

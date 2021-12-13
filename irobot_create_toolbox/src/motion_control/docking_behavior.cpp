@@ -151,9 +151,10 @@ void DockingBehavior::handle_dock_servo_accepted(
   goal_controller_.initialize_goal(dock_path, M_PI / 4.0, 0.15);
   // Setup behavior to override other commanded motion
   BehaviorsScheduler::BehaviorsData data;
-  data.run_func = std::bind(&DockingBehavior::execute_dock_servo, this, goal_handle);
+  data.run_func = std::bind(&DockingBehavior::execute_dock_servo, this, goal_handle, _1);
   data.is_done_func = std::bind(&DockingBehavior::docking_behavior_is_done, this);
-  data.interruptable = true;
+  data.stop_on_new_behavior = true;
+  data.apply_backup_limits = false;
 
   const bool ret = behavior_scheduler_->set_behavior(data);
   if (!ret) {
@@ -161,14 +162,15 @@ void DockingBehavior::handle_dock_servo_accepted(
     RCLCPP_WARN(logger_, "Dock Servo behavior failed to start");
     auto result = std::make_shared<irobot_create_msgs::action::DockServo::Result>();
     result->is_docked = is_docked_;
-    goal_handle->canceled(result);
+    goal_handle->abort(result);
     running_dock_action_ = false;
   }
 }
 
 BehaviorsScheduler::optional_output_t DockingBehavior::execute_dock_servo(
   const std::shared_ptr<
-    rclcpp_action::ServerGoalHandle<irobot_create_msgs::action::DockServo>> goal_handle)
+    rclcpp_action::ServerGoalHandle<irobot_create_msgs::action::DockServo>> goal_handle,
+  const RobotState & /*current_state*/)
 {
   BehaviorsScheduler::optional_output_t servo_cmd;
   // Handle if goal is cancelling
@@ -181,37 +183,32 @@ BehaviorsScheduler::optional_output_t DockingBehavior::execute_dock_servo(
     return servo_cmd;
   }
 
-  // Handle if reached dock
-  if (is_docked_) {
+  bool exceeded_runtime = false;
+  if (clock_->now() - action_start_time_ > max_action_runtime_) {
+    RCLCPP_INFO(logger_, "Dock Servo Goal Exceeded Runtime");
+    exceeded_runtime = true;
+  }
+  // Get next command
+  tf2::Transform robot_pose(tf2::Transform::getIdentity());
+  {
+    const std::lock_guard<std::mutex> lock(robot_pose_mutex_);
+    robot_pose = last_robot_pose_;
+  }
+  servo_cmd = goal_controller_.get_velocity_for_position(robot_pose);
+  if (!servo_cmd || exceeded_runtime) {
     auto result = std::make_shared<irobot_create_msgs::action::DockServo::Result>();
-    result->is_docked = true;
-    RCLCPP_INFO(logger_, "Dock Servo Goal Succeeded");
-    goal_handle->succeed(result);
-    goal_controller_.reset();
-    running_dock_action_ = false;
-    return servo_cmd;
-  } else {
-    bool exceeded_runtime = false;
-    if (clock_->now() - action_start_time_ > max_action_runtime_) {
-      RCLCPP_INFO(logger_, "Dock Servo Goal Exceeded Runtime");
-      exceeded_runtime = true;
-    }
-    // Get next command
-    tf2::Transform robot_pose(tf2::Transform::getIdentity());
-    {
-      const std::lock_guard<std::mutex> lock(robot_pose_mutex_);
-      robot_pose = last_robot_pose_;
-    }
-    servo_cmd = goal_controller_.get_velocity_for_position(robot_pose);
-    if (!servo_cmd || exceeded_runtime) {
-      auto result = std::make_shared<irobot_create_msgs::action::DockServo::Result>();
+    if (is_docked_) {
+      result->is_docked = true;
+      RCLCPP_INFO(logger_, "Dock Servo Goal Succeeded");
+      goal_handle->succeed(result);
+    } else {
       result->is_docked = false;
       RCLCPP_INFO(logger_, "Dock Servo Goal Aborted");
       goal_handle->abort(result);
-      goal_controller_.reset();
-      running_dock_action_ = false;
-      return servo_cmd;
     }
+    goal_controller_.reset();
+    running_dock_action_ = false;
+    return servo_cmd;
   }
 
   // Publish feedback
@@ -286,9 +283,10 @@ void DockingBehavior::handle_undock_accepted(
   goal_controller_.initialize_goal(undock_path, M_PI / 4.0, 0.15);
 
   BehaviorsScheduler::BehaviorsData data;
-  data.run_func = std::bind(&DockingBehavior::execute_undock, this, goal_handle);
+  data.run_func = std::bind(&DockingBehavior::execute_undock, this, goal_handle, _1);
   data.is_done_func = std::bind(&DockingBehavior::docking_behavior_is_done, this);
-  data.interruptable = true;
+  data.stop_on_new_behavior = true;
+  data.apply_backup_limits = false;
 
   const bool ret = behavior_scheduler_->set_behavior(data);
   if (!ret) {
@@ -296,7 +294,7 @@ void DockingBehavior::handle_undock_accepted(
     RCLCPP_WARN(logger_, "Undock behavior failed to start");
     auto result = std::make_shared<irobot_create_msgs::action::Undock::Result>();
     result->is_docked = is_docked_;
-    goal_handle->canceled(result);
+    goal_handle->abort(result);
     goal_controller_.reset();
     running_dock_action_ = false;
   }
@@ -304,7 +302,8 @@ void DockingBehavior::handle_undock_accepted(
 
 BehaviorsScheduler::optional_output_t DockingBehavior::execute_undock(
   const std::shared_ptr<
-    rclcpp_action::ServerGoalHandle<irobot_create_msgs::action::Undock>> goal_handle)
+    rclcpp_action::ServerGoalHandle<irobot_create_msgs::action::Undock>> goal_handle,
+  const RobotState & /*current_state*/)
 {
   BehaviorsScheduler::optional_output_t servo_cmd;
   // Handle if goal is cancelling

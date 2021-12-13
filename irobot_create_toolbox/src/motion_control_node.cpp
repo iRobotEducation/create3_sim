@@ -64,6 +64,43 @@ MotionControlNode::MotionControlNode()
     this->get_node_topics_interface(),
     this->get_node_waitables_interface(),
     scheduler_);
+  // Create Drive Goals behaviors
+  drive_arc_behavior_ = std::make_shared<DriveArcBehavior>(
+    this->get_node_base_interface(),
+    this->get_node_clock_interface(),
+    this->get_node_logging_interface(),
+    this->get_node_waitables_interface(),
+    scheduler_,
+    SAFETY_ON_MAX_SPEED,
+    "drive_arc");
+
+  drive_distance_behavior_ = std::make_shared<DriveDistanceBehavior>(
+    this->get_node_base_interface(),
+    this->get_node_clock_interface(),
+    this->get_node_logging_interface(),
+    this->get_node_waitables_interface(),
+    scheduler_,
+    SAFETY_ON_MAX_SPEED,
+    "drive_distance");
+
+  navigate_to_position_behavior_ = std::make_shared<NavigateToPositionBehavior>(
+    this->get_node_base_interface(),
+    this->get_node_clock_interface(),
+    this->get_node_logging_interface(),
+    this->get_node_waitables_interface(),
+    scheduler_,
+    SAFETY_ON_MAX_SPEED,
+    GYRO_MAX_ROTATE_SPEED_RAD_S,
+    "navigate_to_position");
+
+  rotate_angle_behavior_ = std::make_shared<RotateAngleBehavior>(
+    this->get_node_base_interface(),
+    this->get_node_clock_interface(),
+    this->get_node_logging_interface(),
+    this->get_node_waitables_interface(),
+    scheduler_,
+    GYRO_MAX_ROTATE_SPEED_RAD_S,
+    "rotate_angle");
 
   hazard_detection_sub_ =
     this->create_subscription<irobot_create_msgs::msg::HazardDetectionVector>(
@@ -89,13 +126,16 @@ MotionControlNode::MotionControlNode()
 
   backup_limit_hazard_pub_ = this->create_publisher<irobot_create_msgs::msg::HazardDetection>(
     "_internal/backup_limit", rclcpp::SensorDataQoS());
+
+  wheel_status_pub_ = this->create_publisher<irobot_create_msgs::msg::WheelStatus>(
+    "wheel_status", rclcpp::SensorDataQoS());
   // Register a callback to handle parameter changes
   params_callback_handle_ = this->add_on_set_parameters_callback(
     std::bind(&MotionControlNode::set_parameters_callback, this, _1));
 
   auto_override_print_ts_ = this->now();
 
-  last_robot_pose_.setIdentity();
+  current_state_.pose.setIdentity();
   last_backup_pose_.setIdentity();
   last_teleop_ts_ = this->now();
   // Create timer to periodically execute behaviors and control the robot
@@ -188,9 +228,11 @@ void MotionControlNode::control_robot()
   }
   // Handle behaviors
   BehaviorsScheduler::optional_output_t command;
+  bool apply_backup_limits = true;
   if (scheduler_->has_behavior()) {
-    wall_follow_behavior_->update_state(last_robot_pose_);
-    command = scheduler_->run_behavior();
+    apply_backup_limits = scheduler_->apply_backup_limits();
+    const std::lock_guard<std::mutex> lock(current_state_mutex_);
+    command = scheduler_->run_behavior(current_state_);
     // Reset last teleoperation command if we are executing a behavior
     this->reset_last_teleop_cmd();
   } else {
@@ -207,28 +249,23 @@ void MotionControlNode::control_robot()
     } else {
       const std::lock_guard<std::mutex> lock(mutex_);
       command = last_teleop_cmd_;
-      bound_command_by_limits(*command);
     }
   }
 
   // Create a null command if we don't have anything.
   // We also disable reflexes because the robot is in an idle state.
-  bool moving = false;
   if (!command) {
     command = geometry_msgs::msg::Twist();
-  } else {
-    // See if command is moving
-    moving = std::abs(command->linear.x) > 0.001 ||
-      std::abs(command->angular.z) > 0.001;
+  } else if (apply_backup_limits) {
+    bound_command_by_limits(*command);
   }
   {
-    const std::lock_guard<std::mutex> lock(robot_pose_mutex_);
-    reflex_behavior_->update_state(last_robot_pose_, moving);
+    const std::lock_guard<std::mutex> lock(current_state_mutex_);
     // Update backup buffer
-    tf2::Transform diff_tf = last_backup_pose_.inverseTimes(last_robot_pose_);
+    tf2::Transform diff_tf = last_backup_pose_.inverseTimes(current_state_.pose);
     backup_buffer_ += diff_tf.getOrigin().getX();
     backup_buffer_ = std::min(backup_buffer_, BACKUP_BUFFER_STOP_THRESHOLD);
-    last_backup_pose_ = last_robot_pose_;
+    last_backup_pose_ = current_state_.pose;
   }
   backup_buffer_low_ = (safety_override_mode_ == SafetyOverrideMode::NONE) &&
     (backup_buffer_ <= BACKUP_BUFFER_WARN_THRESHOLD);
@@ -240,13 +277,18 @@ void MotionControlNode::control_robot()
     *cmd_out_msg = *command;
   }
   cmd_vel_out_pub_->publish(std::move(cmd_out_msg));
+  auto wheel_status_msg = std::make_unique<irobot_create_msgs::msg::WheelStatus>();
+  wheel_status_msg->header.stamp = this->now();
+  wheel_status_msg->header.frame_id = base_frame_;
+  wheel_status_msg->wheels_enabled = !e_stop_engaged_;
+  wheel_status_pub_->publish(std::move(wheel_status_msg));
 }
 
 void MotionControlNode::check_backup_buffer()
 {
   if (backup_buffer_low_) {
     auto backup_limit_msg = std::make_unique<irobot_create_msgs::msg::HazardDetection>();
-    backup_limit_msg->header.frame_id = backup_limit_frame_;
+    backup_limit_msg->header.frame_id = base_frame_;
     backup_limit_msg->header.stamp = this->now();
     backup_limit_msg->type = irobot_create_msgs::msg::HazardDetection::BACKUP_LIMIT;
     backup_limit_hazard_pub_->publish(std::move(backup_limit_msg));
@@ -281,8 +323,9 @@ bool MotionControlNode::set_safety_mode(const std::string & safety_mode)
 void MotionControlNode::hazard_vector_callback(
   irobot_create_msgs::msg::HazardDetectionVector::ConstSharedPtr msg)
 {
-  reflex_behavior_->hazard_vector_callback(msg);
-  wall_follow_behavior_->hazard_vector_callback(msg);
+  const std::lock_guard<std::mutex> lock(current_state_mutex_);
+  current_state_.hazards = *msg;
+  reflex_behavior_->update_hazards(current_state_);
 }
 
 void MotionControlNode::commanded_velocity_callback(geometry_msgs::msg::Twist::ConstSharedPtr msg)
@@ -306,8 +349,8 @@ void MotionControlNode::commanded_velocity_callback(geometry_msgs::msg::Twist::C
 
 void MotionControlNode::robot_pose_callback(nav_msgs::msg::Odometry::ConstSharedPtr msg)
 {
-  const std::lock_guard<std::mutex> lock(robot_pose_mutex_);
-  tf2::convert(msg->pose.pose, last_robot_pose_);
+  const std::lock_guard<std::mutex> lock(current_state_mutex_);
+  tf2::convert(msg->pose.pose, current_state_.pose);
 }
 
 void MotionControlNode::kidnap_callback(irobot_create_msgs::msg::KidnapStatus::ConstSharedPtr msg)
@@ -322,23 +365,22 @@ void MotionControlNode::reset_last_teleop_cmd()
 {
   const std::lock_guard<std::mutex> lock(mutex_);
 
-  last_teleop_cmd_.linear.x = 0;
-  last_teleop_cmd_.linear.y = 0;
-  last_teleop_cmd_.linear.z = 0;
-  last_teleop_cmd_.angular.x = 0;
-  last_teleop_cmd_.angular.y = 0;
-  last_teleop_cmd_.angular.z = 0;
+  last_teleop_cmd_ = get_default_velocity_cmd();
   last_teleop_ts_ = this->now();
 }
 
 void MotionControlNode::bound_command_by_limits(geometry_msgs::msg::Twist & cmd)
 {
+  if (std::abs(cmd.angular.z) > GYRO_MAX_ROTATE_SPEED_RAD_S) {
+    cmd.angular.z = std::copysign(GYRO_MAX_ROTATE_SPEED_RAD_S, cmd.angular.z);
+  }
   if (safety_override_mode_ == SafetyOverrideMode::NONE &&
     backup_buffer_ <= 0.0 &&
     cmd.linear.x < 0.0)
   {
     // Robot has run out of room to backup
     cmd.linear.x = 0.0;
+    cmd.angular.z = 0.0;
     const auto time_now = this->now();
     if (!backup_printed_) {
       backup_printed_ = true;

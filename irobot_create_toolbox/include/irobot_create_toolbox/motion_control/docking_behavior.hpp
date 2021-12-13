@@ -65,7 +65,8 @@ private:
 
   BehaviorsScheduler::optional_output_t execute_dock_servo(
     const std::shared_ptr<
-      rclcpp_action::ServerGoalHandle<irobot_create_msgs::action::DockServo>> goal_handle);
+      rclcpp_action::ServerGoalHandle<irobot_create_msgs::action::DockServo>> goal_handle,
+    const RobotState & current_state);
 
   rclcpp_action::GoalResponse handle_undock_goal(
     const rclcpp_action::GoalUUID & uuid,
@@ -81,7 +82,8 @@ private:
 
   BehaviorsScheduler::optional_output_t execute_undock(
     const std::shared_ptr<
-      rclcpp_action::ServerGoalHandle<irobot_create_msgs::action::Undock>> goal_handle);
+      rclcpp_action::ServerGoalHandle<irobot_create_msgs::action::Undock>> goal_handle,
+    const RobotState & current_state);
 
   rclcpp_action::Server<irobot_create_msgs::action::DockServo>::SharedPtr docking_action_server_;
   rclcpp_action::Server<irobot_create_msgs::action::Undock>::SharedPtr undocking_action_server_;
