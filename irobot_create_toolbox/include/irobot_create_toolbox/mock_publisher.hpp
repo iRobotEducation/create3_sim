@@ -45,8 +45,7 @@ protected:
   void execute_led_animation(
     const std::shared_ptr<
       rclcpp_action::ServerGoalHandle<irobot_create_msgs::action::LedAnimation>> goal_handle);
-  double get_docked_charge_percentage(const rclcpp::Time & at_time);
-  double get_undocked_charge_percentage(const rclcpp::Time & at_time);
+
   // Publish aggregated detections on timer_'s frequency
   rclcpp::TimerBase::SharedPtr buttons_timer_;
   rclcpp::TimerBase::SharedPtr slip_status_timer_;
