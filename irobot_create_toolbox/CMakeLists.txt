@@ -69,6 +69,7 @@ target_sources(
   PRIVATE
     src/motion_control_node.cpp
     src/motion_control/docking_behavior.cpp
+    src/motion_control/drive_goal_behaviors.cpp
     src/motion_control/reflex_behavior.cpp
     src/motion_control/wall_follow_behavior.cpp
     src/motion_control/wall_follow_states.cpp

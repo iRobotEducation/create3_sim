@@ -4,13 +4,17 @@
 #include <irobot_create_toolbox/mock_publisher.hpp>
 
 #include <algorithm>
+#include <memory>
 #include <string>
 #include <vector>
 
 namespace irobot_create_toolbox
 {
+using namespace std::placeholders;
+
 MockPublisher::MockPublisher()
-: rclcpp::Node("mock_publisher_node")
+: rclcpp::Node("mock_publisher_node"),
+  led_animation_end_duration_(rclcpp::Duration::from_nanoseconds(0))
 {
   // Topic parameter to publish buttons to
   buttons_publisher_topic_ = declare_and_get_parameter<std::string>("button_topic", this);
@@ -41,6 +45,14 @@ MockPublisher::MockPublisher()
     lightring_subscription_topic_, rclcpp::SensorDataQoS(),
     std::bind(&MockPublisher::lightring_callback, this, std::placeholders::_1));
   RCLCPP_INFO_STREAM(get_logger(), "Subscription to topic: " << lightring_subscription_topic_);
+
+  led_animation_action_server_ =
+    rclcpp_action::create_server<irobot_create_msgs::action::LedAnimation>(
+    this,
+    "led_animation",
+    std::bind(&MockPublisher::handle_led_animation_goal, this, _1, _2),
+    std::bind(&MockPublisher::handle_led_animation_cancel, this, _1),
+    std::bind(&MockPublisher::handle_led_animation_accepted, this, _1));
 
   buttons_timer_ = rclcpp::create_timer(
     this,
@@ -78,6 +90,72 @@ MockPublisher::MockPublisher()
   slip_status_msg_.header.frame_id = base_frame_;
   // Set slip status status
   slip_status_msg_.is_slipping = false;
+}
+rclcpp_action::GoalResponse MockPublisher::handle_led_animation_goal(
+  const rclcpp_action::GoalUUID & /* uuid*/,
+  std::shared_ptr<const irobot_create_msgs::action::LedAnimation::Goal>/*goal*/)
+{
+  RCLCPP_INFO(get_logger(), "Received new Led Animation goal");
+  return rclcpp_action::GoalResponse::ACCEPT_AND_EXECUTE;
+}
+
+rclcpp_action::CancelResponse MockPublisher::handle_led_animation_cancel(
+  const std::shared_ptr<
+    rclcpp_action::ServerGoalHandle<irobot_create_msgs::action::LedAnimation>>/*goal_handle*/)
+{
+  RCLCPP_INFO(get_logger(), "Received request to cancel Led Animation goal");
+  return rclcpp_action::CancelResponse::ACCEPT;
+}
+
+void MockPublisher::handle_led_animation_accepted(
+  const std::shared_ptr<
+    rclcpp_action::ServerGoalHandle<irobot_create_msgs::action::LedAnimation>> goal_handle)
+{
+  if (goal_handle) {
+    auto goal = goal_handle->get_goal();
+    if (goal) {
+      {
+        RCLCPP_INFO(
+          get_logger(), "Starting Led Animation goal with animation_type %s",
+          (goal->animation_type ==
+          irobot_create_msgs::action::LedAnimation::Goal::BLINK_LIGHTS) ?
+          "BLINK_LIGHTS" : "SPIN_LIGHTS");
+        const std::lock_guard<std::mutex> lock(led_animation_params_mutex_);
+        led_animation_end_duration_ = rclcpp::Duration(goal->max_runtime);
+        led_animation_start_time_ = this->now();
+      }
+      std::thread{std::bind(&MockPublisher::execute_led_animation, this, _1), goal_handle}.detach();
+    }
+  }
+}
+
+void MockPublisher::execute_led_animation(
+  const std::shared_ptr<
+    rclcpp_action::ServerGoalHandle<irobot_create_msgs::action::LedAnimation>> goal_handle)
+{
+  bool working_on_goal = true;
+  rclcpp::Rate loop_rate(10.0f);
+  while (working_on_goal) {
+    loop_rate.sleep();
+    rclcpp::Duration led_animation_runtime(rclcpp::Duration::from_nanoseconds(0));
+    {
+      const std::lock_guard<std::mutex> lock(led_animation_params_mutex_);
+      led_animation_runtime = this->now() - led_animation_start_time_;
+    }
+    if (led_animation_runtime >= led_animation_end_duration_) {
+      RCLCPP_INFO(get_logger(), "Led Animation hit max_runtime, succeeded");
+      auto result = std::make_shared<irobot_create_msgs::action::LedAnimation::Result>();
+      result->runtime = led_animation_runtime;
+      goal_handle->succeed(result);
+      working_on_goal = false;
+    } else if (goal_handle->is_canceling()) {
+      RCLCPP_INFO(get_logger(), "Led Animation canceled");
+      auto result = std::make_shared<irobot_create_msgs::action::LedAnimation::Result>();
+      result->runtime = led_animation_runtime;
+      goal_handle->canceled(result);
+      working_on_goal = false;
+    }
+  }
 }
 
 void MockPublisher::lightring_callback(irobot_create_msgs::msg::LightringLeds::SharedPtr /*msg*/)
