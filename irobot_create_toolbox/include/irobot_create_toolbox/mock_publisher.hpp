@@ -13,13 +13,7 @@
 #include <irobot_create_toolbox/parameter_helper.hpp>
 
 #include <rclcpp/rclcpp.hpp>
-<<<<<<< HEAD
-=======
 #include <rclcpp_action/rclcpp_action.hpp>
-#include <sensor_msgs/msg/battery_state.hpp>
-#include <nav_msgs/msg/odometry.hpp>
-#include <geometry_msgs/msg/pose.hpp>
->>>>>>> 0109e866f9982f9ce944a08df4b21aa3d908cf42
 
 #include <limits>
 #include <memory>
