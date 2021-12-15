@@ -1,0 +1,22 @@
+---
+robot_state:
+  ros__parameters:
+    # Stop status publisher topic
+    stop_status_topic: /stop_status
+    # Mock battery state publisher topic
+    battery_state_topic: /battery_state
+    # Publishers rate
+    kidnap_status_publish_rate: 1.0
+    stop_status_publish_rate: 62.0
+    battery_state_publish_rate: 0.1
+    # Subscription topics
+    dock_topic: /dock
+    wheel_vels_topic: /odom
+    # Stop status position difference tolerance
+    linear_velocity_tolerance: 0.01
+    angular_velocity_tolerance: 0.1
+    # Battery parameters
+    full_charge_percentage: 1.0
+    battery_high_percentage: 0.9
+    # Dock Parameters
+    undocked_charge_limit: 0.03
