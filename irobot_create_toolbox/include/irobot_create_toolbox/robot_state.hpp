@@ -26,15 +26,16 @@ namespace irobot_create_toolbox
 {
 class RobotState : public rclcpp::Node
 {
-public:
+ public:
   /// \brief Constructor
   RobotState();
 
+
+ protected:
   // Callback functions
   void dock_callback(irobot_create_msgs::msg::Dock::SharedPtr msg);
   void stop_callback(nav_msgs::msg::Odometry::SharedPtr msg);
 
-protected:
   double get_docked_charge_percentage(const rclcpp::Time & at_time);
   double get_undocked_charge_percentage(const rclcpp::Time & at_time);
 
