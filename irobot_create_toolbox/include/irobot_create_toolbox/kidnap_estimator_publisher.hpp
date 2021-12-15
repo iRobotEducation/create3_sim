@@ -21,11 +21,11 @@ namespace irobot_create_toolbox
 {
 class KidnapEstimator : public rclcpp::Node
 {
- public:
+public:
   /// \brief Constructor
   KidnapEstimator();
 
- private:
+private:
   /// \brief Callback function
   void kidnap_callback(irobot_create_msgs::msg::HazardDetectionVector::SharedPtr msg);
 
