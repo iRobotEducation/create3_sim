@@ -44,6 +44,9 @@ ARGUMENTS = [
                           description='Spawn the standard dock model.'),
     DeclareLaunchArgument('world_path', default_value='',
                           description='Set world path, by default is empty.world'),
+    DeclareLaunchArgument('visualize_rays', default_value='false',
+                          choices=['true', 'false'],
+                          description='Enable/disable ray visualization'),
 ]
 
 for pose_element in ['x', 'y', 'z', 'yaw']:
