@@ -49,6 +49,9 @@ private:
   // Message to store the kidnap status
   irobot_create_msgs::msg::KidnapStatus kidnap_status_msg_;
 
+  const int min_wheel_drop_count_{2};
+  const int min_cliff_sensor_count_{4};
+
   const std::string base_frame_ {"base_link"};
 };
 
