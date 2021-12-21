@@ -37,40 +37,27 @@ KidnapEstimator::KidnapEstimator()
 void KidnapEstimator::kidnap_callback(irobot_create_msgs::msg::HazardDetectionVector::SharedPtr msg)
 {
   auto hazard_vector = msg->detections;
+  auto wheel_drop_count = std::count_if(
+    hazard_vector.begin(), hazard_vector.end(), [](auto hazard_vector) {
+      return hazard_vector.header.frame_id == "wheel_drop_left" ||
+      hazard_vector.header.frame_id == "wheel_drop_right";
+    });
 
-  bool wheel_drop_left = false;
-  bool wheel_drop_right = false;
-
-  for (const auto & detection : hazard_vector) {
-    if (detection.header.frame_id == "wheel_drop_left") {
-      wheel_drop_left = true;
-    } else if (detection.header.frame_id == "wheel_drop_right") {
-      wheel_drop_right = true;
-    }
-  }
-
-  bool cliff_side_left = false;
-  bool cliff_side_right = false;
-  bool cliff_front_left = false;
-  bool cliff_front_right = false;
-  for (const auto & detection : hazard_vector) {
-    if (detection.header.frame_id == "cliff_side_left") {
-      cliff_side_left = true;
-    } else if (detection.header.frame_id == "cliff_side_right") {
-      cliff_side_right = true;
-    } else if (detection.header.frame_id == "cliff_front_left") {
-      cliff_front_left = true;
-    } else if (detection.header.frame_id == "cliff_front_right") {
-      cliff_front_right = true;
-    }
-  }
+  auto cliff_sensor_count = std::count_if(
+    hazard_vector.begin(), hazard_vector.end(), [](auto hazard_vector) {
+      return hazard_vector.header.frame_id == "cliff_side_left" ||
+      hazard_vector.header.frame_id == "cliff_side_right" ||
+      hazard_vector.header.frame_id == "cliff_front_left" ||
+      hazard_vector.header.frame_id == "cliff_front_right";
+    });
 
   // Set header timestamp.
   kidnap_status_msg_.header.stamp = now();
-  // Set kidnap status. The robot is kidnapped when both wheel drops are activated
-  kidnap_status_msg_.is_kidnapped = wheel_drop_left && wheel_drop_right &&
-    cliff_side_left && cliff_side_right &&
-    cliff_front_left && cliff_front_right;
+  // Set kidnap status. The robot is kidnapped when both wheel drops
+  // and four cliff sensors are triggered.
+  kidnap_status_msg_.is_kidnapped = wheel_drop_count >= min_wheel_drop_count_ &&
+    cliff_sensor_count >= min_cliff_sensor_count_;
+
   // Publish topics
   kidnap_status_publisher_->publish(kidnap_status_msg_);
 }
