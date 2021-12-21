@@ -94,8 +94,6 @@ protected:
   double battery_full_charge_percentage;
   double battery_high_percentage_limit;
   double undocked_charge_limit;
-  const double min_wheel_drop_count_ {2};
-  const double min_cliff_sensor_count_ {4};
 
   const std::string base_frame_ {"base_link"};
 };
