@@ -19,17 +19,24 @@ for pose_element in ['x', 'y', 'z', 'yaw']:
     ARGUMENTS.append(DeclareLaunchArgument(f'{pose_element}', default_value='0.0',
                      description=f'{pose_element} component of the dock pose.'))
 
+ARGUMENTS.append(DeclareLaunchArgument('visualize_rays', default_value='true',
+                                       choices=['true', 'false'],
+                                       description='Enable/disable ray visualization'))
+
 
 def generate_launch_description():
     # Directory
-    pkg_create3_description = get_package_share_directory('irobot_create_description')
+    pkg_create3_description = get_package_share_directory(
+        'irobot_create_description')
     # Path
     dock_xacro_file = PathJoinSubstitution(
         [pkg_create3_description, 'urdf', 'dock', 'standard_dock.urdf.xacro'])
 
     # Launch Configurations
-    x, y, z = LaunchConfiguration('x'), LaunchConfiguration('y'), LaunchConfiguration('z')
+    x, y, z = LaunchConfiguration('x'), LaunchConfiguration(
+        'y'), LaunchConfiguration('z')
     yaw = LaunchConfiguration('yaw')
+    visualize_rays = LaunchConfiguration('visualize_rays')
 
     gazebo_simulator = LaunchConfiguration('gazebo')
 
@@ -41,7 +48,7 @@ def generate_launch_description():
         parameters=[
             {'use_sim_time': True},
             {'robot_description':
-             Command(['xacro', ' ', dock_xacro_file, ' ', 'gazebo:=', gazebo_simulator])},
+             Command(['xacro', ' ', dock_xacro_file, ' ', 'gazebo:=', gazebo_simulator, ' ', 'visualize_rays:=', visualize_rays])},
         ],
         remappings=[
             ('robot_description', 'standard_dock_description'),
