@@ -7,14 +7,15 @@ from ament_index_python.packages import get_package_share_directory
 from launch import LaunchDescription
 from launch.substitutions import Command, PathJoinSubstitution
 from launch.substitutions.launch_configuration import LaunchConfiguration
-from launch_ros.actions import Node
 from launch.actions import DeclareLaunchArgument
+from launch_ros.actions import Node
 
 ARGUMENTS = [
     DeclareLaunchArgument('gazebo', default_value='classic',
                           choices=['classic', 'ignition'],
                           description='Which gazebo simulator to use')
 ]
+
 
 def generate_launch_description():
     pkg_create3_description = get_package_share_directory('irobot_create_description')
@@ -28,7 +29,7 @@ def generate_launch_description():
         output='screen',
         parameters=[
             {'use_sim_time': True},
-            {'robot_description': 
+            {'robot_description':
              Command(['xacro', ' ', xacro_file, ' ', 'gazebo:=', gazebo_simulator])},
         ],
     )
