@@ -28,7 +28,8 @@ def generate_launch_description():
         output='screen',
         parameters=[
             {'use_sim_time': True},
-            {'robot_description': Command(['xacro', ' ', xacro_file, ' ', 'gazebo:=', gazebo_simulator])},
+            {'robot_description': 
+             Command(['xacro', ' ', xacro_file, ' ', 'gazebo:=', gazebo_simulator])},
         ],
     )
 
