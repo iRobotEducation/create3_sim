@@ -37,11 +37,7 @@ public:
     std::shared_ptr<BehaviorsScheduler> behavior_scheduler);
   ~ReflexBehavior() = default;
 
-  /// \brief Update reflex manager information
-  //  Reflexes only trigger if robot is moving
-  void update_state(const tf2::Transform & last_robot_pose, bool moving);
-
-  void hazard_vector_callback(irobot_create_msgs::msg::HazardDetectionVector::ConstSharedPtr msg);
+  void update_hazards(const RobotState & current_state);
 
 private:
   /// \brief Name of parameter for enabling/disabling all reflexes
@@ -84,7 +80,7 @@ private:
   boost::optional<tf2::Vector3> get_pose_relative_to_odom(
     const irobot_create_msgs::msg::HazardDetection & hazard);
 
-  BehaviorsScheduler::optional_output_t execute_reflex();
+  BehaviorsScheduler::optional_output_t execute_reflex(const RobotState & current_state);
 
   rclcpp::Clock::SharedPtr clock_;
   std::shared_ptr<tf2_ros::Buffer> tf_buffer_;
@@ -113,6 +109,10 @@ private:
   const std::string odom_frame_ {"odom"};
   const std::string base_frame_ {"base_link"};
   BehaviorsScheduler::optional_output_t last_reflex_cmd_;
+  rclcpp::Time last_moving_check_time_;
+  const double NOT_MOVING_DISTANCE {0.001};
+  const double NOT_MOVING_ANGLE {0.001};
+  const rclcpp::Duration moving_check_duration_;
 };
 
 }  // namespace irobot_create_toolbox

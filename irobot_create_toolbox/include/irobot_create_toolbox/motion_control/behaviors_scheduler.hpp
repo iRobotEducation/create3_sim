@@ -6,6 +6,8 @@
 
 #include <boost/optional.hpp>
 #include <geometry_msgs/msg/twist.hpp>
+#include <irobot_create_msgs/msg/hazard_detection_vector.hpp>
+#include <tf2/LinearMath/Transform.h>
 
 #include <atomic>
 #include <functional>
@@ -14,6 +16,12 @@
 namespace irobot_create_toolbox
 {
 
+struct RobotState
+{
+  tf2::Transform pose;
+  irobot_create_msgs::msg::HazardDetectionVector hazards;
+};
+
 /**
  * @brief This class manages the execution of a single behavior at the time.
  */
@@ -21,8 +29,9 @@ class BehaviorsScheduler
 {
 public:
   using optional_output_t = boost::optional<geometry_msgs::msg::Twist>;
-  using run_behavior_func_t = std::function<optional_output_t()>;
+  using run_behavior_func_t = std::function<optional_output_t(const RobotState &)>;
   using is_done_func_t = std::function<bool ()>;
+  using cleanup_func_t = std::function<void ()>;
 
   // A behavior implementation needs to provide the following data in order to be used
   struct BehaviorsData
@@ -31,8 +40,13 @@ public:
     run_behavior_func_t run_func;
     // This function is executed at the end of each iteration to know if we need to run again
     is_done_func_t is_done_func;
-    // Whether interruptable by other behaviors
-    bool interruptable;
+    // This function is executed when a behavior is stopped externally
+    cleanup_func_t cleanup_func;
+    // Whether a new behavior should stop this behavior (true) or if behavior should prevent
+    // new ones from running till finished (false)
+    bool stop_on_new_behavior;
+    // Whether backup limits should be applied to behavior
+    bool apply_backup_limits;
   };
 
   BehaviorsScheduler()
@@ -43,19 +57,24 @@ public:
   {
     std::unique_lock<std::mutex> lock(mutex_);
 
-    // If already has behavior, only take new behavior if old behavior is interruptable
-    // and new behavior is not
-    if (has_behavior_ && (!interruptable_behavior_ || data.interruptable)) {
-      return false;
-    }
-
     if (!data.run_func || !data.is_done_func) {
       return false;
     }
 
+    // If already has behavior, only take new behavior if old behavior is stop_on_new_behavior
+    // and new behavior is not
+    if (has_behavior_) {
+      if (!current_behavior_.stop_on_new_behavior) {
+        // Reject new behavior to keep running current
+        return false;
+      } else if (current_behavior_.cleanup_func) {
+        // If behavior has to cleanup before moving onto another, run func
+        current_behavior_.cleanup_func();
+      }
+    }
+
     has_behavior_ = true;
     current_behavior_ = data;
-    interruptable_behavior_ = data.interruptable;
     return true;
   }
 
@@ -64,19 +83,26 @@ public:
     return has_behavior_;
   }
 
-  bool interruptable_behavior()
+  bool apply_backup_limits()
   {
-    return interruptable_behavior_;
+    std::unique_lock<std::mutex> lock(mutex_);
+    return current_behavior_.apply_backup_limits;
   }
 
-  optional_output_t run_behavior()
+  bool stop_on_new_behavior()
+  {
+    std::unique_lock<std::mutex> lock(mutex_);
+    return current_behavior_.stop_on_new_behavior;
+  }
+
+  optional_output_t run_behavior(const RobotState & current_state)
   {
     if (!has_behavior_) {
       return optional_output_t();
     }
 
     std::unique_lock<std::mutex> lock(mutex_);
-    optional_output_t output = current_behavior_.run_func();
+    optional_output_t output = current_behavior_.run_func(current_state);
 
     if (current_behavior_.is_done_func()) {
       has_behavior_ = false;
@@ -88,7 +114,6 @@ public:
 private:
   std::mutex mutex_;
   std::atomic<bool> has_behavior_ {false};
-  std::atomic<bool> interruptable_behavior_ {false};
   BehaviorsData current_behavior_;
 };
 
