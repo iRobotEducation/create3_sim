@@ -1,11 +1,22 @@
 <?xml version="1.0"?>
 <robot xmlns:xacro="http://ros.org/wiki/xacro">
-<xacro:macro name="wheel_drop" params="name parent_link *origin" >
+<xacro:macro name="wheel_drop" params="name gazebo parent_link *origin" >
   <xacro:include filename="$(find irobot_create_description)/urdf/common_properties.urdf.xacro"/>
 
   <xacro:property name="detection_threshold" value="${3*cm2m}"/>
-  <xacro:property name="spring_stiffness_nm" value="450"/>
 
+  <xacro:if value="${gazebo == 'classic'}">
+    <xacro:property name="spring_stiffness_nm"  value="400"/>
+    <xacro:property name="spring_damping"       value="50"/>
+    <xacro:property name="spring_friction"      value="0.1"/>
+  </xacro:if>
+
+  <xacro:if value="${gazebo == 'ignition'}">
+    <xacro:property name="spring_stiffness_nm"  value="450"/>
+    <xacro:property name="spring_damping"       value="50"/>
+    <xacro:property name="spring_friction"      value="0.1"/>
+  </xacro:if>
+  
   <xacro:property name="wd_size" value="${5*cm2m}"/>
   <xacro:property name="wd_mass" value="0.05"/>
 
@@ -19,8 +30,8 @@
     <xacro:insert_block name="origin"/>
     <axis xyz="0 1 0"/>
     <limit lower="0" upper="${detection_threshold}" effort="0" velocity="0"/>
-    <!-- Damping is big enough to don't make the body oscillate too much when it's lifted up -->
-    <dynamics damping="50" friction="0.1"/>
+    <!-- Damping is big enough to not make the body oscillate too much when it's lifted up -->
+    <dynamics damping="${spring_damping}" friction="${spring_friction}"/>
   </joint>
 
   <!-- Gazebo parameters to simulate a spring -->
@@ -37,18 +48,20 @@
     <xacro:inertial_cuboid mass="${wd_mass}" x="${wd_size}" y="${wd_size}" z="${wd_size}"/>
   </link>
 
-  <gazebo>
-    <plugin name="${wd_link_name}_plugin" filename="libgazebo_ros_create_wheel_drop.so">
-      <ros>
-        <namespace>/</namespace>
-        <remapping>~/out:=_internal/wheel_drop/${name}_wheel/event</remapping>
-      </ros>
-      <update_rate>${update_rate}</update_rate>
-      <detection_threshold>${detection_threshold}</detection_threshold>
-      <joint_name>${wd_joint_name}</joint_name>
-      <frame_id>${wd_link_name}</frame_id>
-    </plugin>
-  </gazebo>
+  <xacro:if value="${gazebo == 'classic'}">
+    <gazebo>
+      <plugin name="${wd_link_name}_plugin" filename="libgazebo_ros_create_wheel_drop.so">
+        <ros>
+          <namespace>/</namespace>
+          <remapping>~/out:=_internal/wheel_drop/${name}_wheel/event</remapping>
+        </ros>
+        <update_rate>${update_rate}</update_rate>
+        <detection_threshold>${detection_threshold}</detection_threshold>
+        <joint_name>${wd_joint_name}</joint_name>
+        <frame_id>${wd_link_name}</frame_id>
+      </plugin>
+    </gazebo>
+  </xacro:if>
 
 </xacro:macro>
 </robot>

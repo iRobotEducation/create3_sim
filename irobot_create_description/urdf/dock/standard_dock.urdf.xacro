@@ -3,6 +3,9 @@
   <xacro:include filename="$(find irobot_create_description)/urdf/common_properties.urdf.xacro"/>
   <xacro:include filename="$(find irobot_create_description)/urdf/dock/ir_emitter.urdf.xacro"/>
 
+  <!-- Gazebo version -->
+  <xacro:arg name="gazebo"         default="classic" />
+
   <xacro:property name="z_offset"  value="${4.6*mm2m}"/>
   <xacro:property name="link_name" value="std_dock_link"/>
 
@@ -38,6 +41,7 @@
   <!-- Green IR emitter -->
   <xacro:ir_emitter name="${green_buoy_name}"
                     parent="${link_name}"
+                    gazebo="$(arg gazebo)"
                     aperture="${buoy_lateral_aperture}"
                     range="1.0">
     <origin xyz="${buoy_x} 0 ${buoy_z}"
@@ -47,6 +51,7 @@
   <!-- Red IR emitter -->
   <xacro:ir_emitter name="${red_buoy_name}"
                     parent="${link_name}"
+                    gazebo="$(arg gazebo)"
                     aperture="${buoy_lateral_aperture}"
                     range="1.0">
     <origin xyz="${buoy_x} 0 ${buoy_z}"
@@ -56,6 +61,7 @@
   <!-- Yellow IR emitter -->
   <xacro:ir_emitter name="${yellow_buoy_name}"
                     parent="${link_name}"
+                    gazebo="$(arg gazebo)"
                     aperture="${10*deg2rad}"
                     range="1.0">
     <origin xyz="${buoy_x} 0 ${buoy_z}"/>
@@ -64,26 +70,42 @@
   <!-- Halo IR emitter -->
   <xacro:ir_emitter name="${halo_name}"
                     parent="${link_name}"
+                    gazebo="$(arg gazebo)"
                     aperture="360"
                     range="0.6096">
     <origin xyz="${buoy_x} 0 ${0.095 - z_offset}"/>
   </xacro:ir_emitter>
 
-  <gazebo>
-    <static>true</static>
-    <!-- Ground truth pose-->
-    <plugin name="gazebo_ros_p3d_dock" filename="libgazebo_ros_p3d.so">
-      <ros>
-        <namespace>/</namespace>
-        <remapping>odom:=sim_ground_truth_dock_pose</remapping>
-      </ros>
-      <body_name>${link_name}</body_name>
-      <frame_name>world</frame_name>
-      <update_rate>1</update_rate>
-      <xyz_offset>0 0 0</xyz_offset>
-      <rpy_offset>0.0 0.0 0.0</rpy_offset>
-      <gaussian_noise>0.0</gaussian_noise>
-    </plugin>
-  </gazebo>
+  <xacro:if value="${'$(arg gazebo)' == 'classic'}">
+    <gazebo>
+      <static>true</static>
+      <!-- Ground truth pose-->
+      <plugin name="gazebo_ros_p3d_dock" filename="libgazebo_ros_p3d.so">
+        <ros>
+          <namespace>/</namespace>
+          <remapping>odom:=sim_ground_truth_dock_pose</remapping>
+        </ros>
+        <body_name>${link_name}</body_name>
+        <frame_name>world</frame_name>
+        <update_rate>1</update_rate>
+        <xyz_offset>0 0 0</xyz_offset>
+        <rpy_offset>0.0 0.0 0.0</rpy_offset>
+        <gaussian_noise>0.0</gaussian_noise>
+      </plugin>
+    </gazebo>
+  </xacro:if>
+
+  <xacro:if value="${'$(arg gazebo)' == 'ignition'}">
+    <gazebo>
+      <static>true</static>
+      <!-- Ground truth pose-->
+      <plugin filename="libignition-gazebo-pose-publisher-system.so" name="ignition::gazebo::systems::PosePublisher">
+        <publish_link_pose>true</publish_link_pose>
+        <publish_nested_model_pose>true</publish_nested_model_pose>   
+        <use_pose_vector_msg>true</use_pose_vector_msg>   
+        <update_frequency>62</update_frequency>
+      </plugin>
+    </gazebo>
+  </xacro:if>
 
 </robot>

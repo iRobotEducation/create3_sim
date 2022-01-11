@@ -6,10 +6,17 @@
 
 from ament_index_python.packages import get_package_share_directory
 from launch import LaunchDescription
-from launch.actions import IncludeLaunchDescription
+from launch.actions import DeclareLaunchArgument, IncludeLaunchDescription
+from launch.conditions import LaunchConfigurationEquals
 from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch.substitutions import PathJoinSubstitution
 from launch_ros.actions import Node
+
+ARGUMENTS = [
+    DeclareLaunchArgument('gazebo', default_value='classic',
+                          choices=['classic', 'ignition'],
+                          description='Which gazebo simulator to use')
+]
 
 
 def generate_launch_description():
@@ -35,7 +42,8 @@ def generate_launch_description():
 
     # Includes
     diffdrive_controller = IncludeLaunchDescription(
-        PythonLaunchDescriptionSource([control_launch_file])
+        PythonLaunchDescriptionSource([control_launch_file]),
+        condition=LaunchConfigurationEquals('gazebo', 'classic')
     )
 
     # Publish hazards vector
@@ -108,7 +116,7 @@ def generate_launch_description():
     )
 
     # Define LaunchDescription variable
-    ld = LaunchDescription()
+    ld = LaunchDescription(ARGUMENTS)
     # Include robot description
     ld.add_action(diffdrive_controller)
     # Add nodes to LaunchDescription

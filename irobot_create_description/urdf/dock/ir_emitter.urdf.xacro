@@ -1,6 +1,7 @@
 <?xml version="1.0"?>
 <robot xmlns:xacro="http://ros.org/wiki/xacro">
   <xacro:macro name="ir_emitter" params="name parent:=base_link *origin
+                                         gazebo
                                          range
                                          aperture
                                          update_rate:=1.0
@@ -27,26 +28,12 @@
     only when the visualize flag is set. No need for high update rates. -->
     <xacro:if value="${visualize}">
       <gazebo reference="${name}_link">
-        <sensor type="ray" name="${name}">
-          <always_on>true</always_on>
-          <update_rate>${update_rate}</update_rate>
-          <visualize>${visualize}</visualize>
-          <ray>
-            <scan>
-              <horizontal>
-                <samples>50</samples>
-                <resolution>1</resolution>
-                <min_angle>-${aperture/2}</min_angle>
-                <max_angle>${aperture/2}</max_angle>
-                </horizontal>
-            </scan>
-              <range>
-              <min>${min_range}</min>
-              <max>${range}</max>
-              <resolution>0.01</resolution>
-            </range>
-          </ray>
-        </sensor>
+        <xacro:ray_sensor sensor_name="${name}" gazebo="${gazebo}" 
+                      update_rate="${update_rate}" visualize="${visualize}" 
+                      h_samples="50" h_res="1.0" h_min_angle="-${aperture/2}" h_max_angle="${aperture/2}" 
+                      r_min="${min_range}" r_max="${range}" r_res="0.01">
+                      <plugin name="dummy" filename="dummyfile"></plugin>
+        </xacro:ray_sensor>
       </gazebo>
     </xacro:if>
 
