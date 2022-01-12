@@ -268,6 +268,7 @@
         <frame_id>odom</frame_id>
         <child_frame_id>base_link</child_frame_id>
         <odom_publish_frequency>50</odom_publish_frequency>
+        <!-- Requires ignition gazebo to be installed from source -->
         <min_linear_velocity>-0.46</min_linear_velocity>
         <max_linear_velocity>0.46</max_linear_velocity>
         <min_linear_acceleration>-0.9</min_linear_acceleration>
@@ -276,6 +277,11 @@
         <max_angular_velocity>1.9</max_angular_velocity>
         <min_angular_acceleration>-7.725</min_angular_acceleration>
         <max_angular_acceleration>7.725</max_angular_acceleration>
+        <!-- Maintain compatibility with debian installation -->
+        <min_velocity>-1.9</min_velocity>
+        <max_velocity>1.9</max_velocity>
+        <min_acceleration>-0.9</min_acceleration>
+        <max_acceleration>0.9</max_acceleration>
       </plugin>
     </gazebo>
   

@@ -1,8 +1,8 @@
-# iRobot® Create® 3 Simulator
+# iRobot® Create® 3 Gazebo Simulator
 
 [![Testing](https://github.com/iRobotSTEM/create3_sim/actions/workflows/ci.yml/badge.svg)](https://github.com/iRobotSTEM/create3_sim/actions/workflows/ci.yml) [![License](https://img.shields.io/github/license/iRobotEducation/create3_sim)](https://github.com/iRobotEducation/create3_sim/blob/main/LICENSE)
 
-This is a ROS 2 simulation stack for the [iRobot® Create® 3](https://edu.irobot.com/create3) robot.
+This is a ROS 2 Classic Gazebo simulation stack for the [iRobot® Create® 3](https://edu.irobot.com/create3) robot.
 
 Have a look at the [Create® 3 documentation](https://iroboteducation.github.io/create3_docs/) for more details on the ROS 2 interfaces exposed by the robot.
 
@@ -30,7 +30,7 @@ mkdir -p ~/create3_ws/src
 - Use `vcs` to clone additional dependencies into the workspace:
 
 ```bash
-vcs import ~/create3_ws/src/ < ~/create3_ws/src/create3_sim/dependencies.repos
+vcs import ~/create3_ws/src/ < ~/create3_ws/src/create3_sim/irobot_create_gazebo/dependencies.repos
 ```
 
 - Navigate to the workspace and install ROS 2 dependencies with:
@@ -64,7 +64,7 @@ This requires that the package `aws_robomaker_small_house_world` is available.
 
 If you need it, you can build `aws_robomaker_small_house_world` in your ROS 2 workspace by doing:
 ```bash
-vcs import ~/create3_ws/src/ < ~/create3_ws/src/create3_sim/demo.repos
+vcs import ~/create3_ws/src/ < ~/create3_ws/src/create3_sim/irobot_create_gazebo/demo.repos
 cd ~/create3_ws
 colcon build --symlink-install
 source install/local_setup.bash
