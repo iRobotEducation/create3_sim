@@ -16,8 +16,8 @@
  * @author Roni Kreinin (rkreinin@clearpathrobotics.com)
  */
 
-#ifndef IGNITION_GUI_CREATE3_HMI_HH_
-#define IGNITION_GUI_CREATE3_HMI_HH_
+#ifndef IROBOT_CREATE_IGNITION__IROBOT_CREATE_IGNITION_PLUGINS__CREATE3HMI__CREATE3HMI_HH_
+#define IROBOT_CREATE_IGNITION__IROBOT_CREATE_IGNITION_PLUGINS__CREATE3HMI__CREATE3HMI_HH_
 
 #include <string>
 
@@ -28,33 +28,31 @@
 
 namespace ignition
 {
-  namespace gui
-  {
-    class Create3Hmi : public Plugin
-    {
-      Q_OBJECT
 
-      /// \brief Constructor
-      public: Create3Hmi();
+namespace gui
+{
 
-      /// \brief Destructor
-      public: virtual ~Create3Hmi();
+class Create3Hmi : public Plugin
+{
+  Q_OBJECT
 
-      /// \brief Called by Ignition GUI when plugin is instantiated.
-      /// \param[in] _pluginElem XML configuration for this plugin.
-      public: virtual void LoadConfig(const tinyxml2::XMLElement *_pluginElem)
-          override;
+  /// \brief Constructor
+  public: Create3Hmi();
+  /// \brief Destructor
+  public: virtual ~Create3Hmi();
+  /// \brief Called by Ignition GUI when plugin is instantiated.
+  /// \param[in] _pluginElem XML configuration for this plugin.
+  public: virtual void LoadConfig(const tinyxml2::XMLElement *_pluginElem)
+      override;
+  /// \brief Callback trigged when the button is pressed.
+  protected slots: void OnCreate3Button(const int button);
+  private: ignition::transport::Node node_;
+  private: ignition::transport::Node::Publisher create3_button_pub_;
+  private: std::string create3_button_topic_ = "/create3/buttons";
+};
 
-      /// \brief Callback trigged when the button is pressed.
-      protected slots: void OnCreate3Button(const int button);
+}  // namespace gui
 
-      private: ignition::transport::Node node_;
+}  // namespace ignition
 
-      private: ignition::transport::Node::Publisher create3_button_pub_;
-
-      private: std::string create3_button_topic_ = "/create3/buttons";
-    };
-  }
-}
-
-#endif // IGNITION_GUI_CREATE3_HMI_HH_
+#endif  // IROBOT_CREATE_IGNITION__IROBOT_CREATE_IGNITION_PLUGINS__CREATE3HMI__CREATE3HMI_HH_

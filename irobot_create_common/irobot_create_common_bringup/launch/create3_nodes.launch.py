@@ -10,10 +10,7 @@ from launch.actions import DeclareLaunchArgument, IncludeLaunchDescription
 from launch.conditions import LaunchConfigurationEquals
 from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch.substitutions import PathJoinSubstitution
-from launch.substitutions.launch_configuration import LaunchConfiguration
 from launch_ros.actions import Node
-from launch.actions import DeclareLaunchArgument
-from launch.conditions import LaunchConfigurationEquals
 
 ARGUMENTS = [
     DeclareLaunchArgument('gazebo', default_value='classic',
@@ -21,7 +18,9 @@ ARGUMENTS = [
                           description='Which gazebo simulator to use')
 ]
 
+
 def generate_launch_description():
+
     # Directories
     pkg_create3_common_bringup = get_package_share_directory('irobot_create_common_bringup')
     pkg_create3_control = get_package_share_directory('irobot_create_control')
@@ -41,8 +40,6 @@ def generate_launch_description():
         [pkg_create3_common_bringup, 'config', 'robot_state_params.yaml'])
     kidnap_estimator_yaml_file = PathJoinSubstitution(
         [pkg_create3_common_bringup, 'config', 'kidnap_estimator_params.yaml'])
-
-    
 
     # Includes
     diffdrive_controller = IncludeLaunchDescription(

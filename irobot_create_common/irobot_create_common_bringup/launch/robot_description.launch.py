@@ -9,13 +9,13 @@ from launch.actions import DeclareLaunchArgument
 from launch.substitutions import Command, PathJoinSubstitution
 from launch.substitutions.launch_configuration import LaunchConfiguration
 from launch_ros.actions import Node
-from launch.actions import DeclareLaunchArgument
 
 ARGUMENTS = [
     DeclareLaunchArgument('gazebo', default_value='classic',
                           choices=['classic', 'ignition'],
                           description='Which gazebo simulator to use')
 ]
+
 
 def generate_launch_description():
     pkg_create3_description = get_package_share_directory('irobot_create_description')

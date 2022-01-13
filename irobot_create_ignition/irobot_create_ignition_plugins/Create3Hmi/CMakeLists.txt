@@ -4,10 +4,10 @@ if(POLICY CMP0100)
   cmake_policy(SET CMP0100 NEW)
 endif()
 
-set (CMAKE_AUTOMOC ON)
+set(CMAKE_AUTOMOC ON)
 
 # Find Qt5
-find_package (Qt5
+find_package(Qt5
   COMPONENTS
     Core
     Quick
@@ -19,9 +19,9 @@ find_package (Qt5
 find_package(ignition-gui5 REQUIRED)
 find_package(ignition-common4 REQUIRED)
 
-set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${IGNITION-GUI_CXX_FLAGS}")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${IGNITION-GUI_CXX_FLAGS}")
 
-QT5_ADD_RESOURCES(resources_RCC Create3Hmi.qrc)
+QT5_ADD_RESOURCES(resources_rcc Create3Hmi.qrc)
 
 include_directories(SYSTEM
   ${IGNITION-COMMON_INCLUDE_DIRS}
@@ -40,7 +40,7 @@ link_directories(
 # Generate examples
 add_library(Create3Hmi SHARED ${headers_MOC}
 Create3Hmi.cc
-  ${resources_RCC}
+  ${resources_rcc}
 )
 target_link_libraries(Create3Hmi
   ${IGNITION-GUI_LIBRARIES}

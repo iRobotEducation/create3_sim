@@ -16,16 +16,13 @@
  * @author Roni Kreinin (rkreinin@clearpathrobotics.com)
  */
 
-#include <iostream>
-#include <ignition/plugin/Register.hh>
-
 #include "Create3Hmi.hh"
 
-#include <ignition/plugin/Register.hh>
+#include <iostream>
 
+#include <ignition/plugin/Register.hh>
 #include <ignition/gui/Application.hh>
 #include <ignition/gui/MainWindow.hh>
-
 #include <ignition/msgs/int32.pb.h>
 
 using namespace ignition;
@@ -33,10 +30,11 @@ using namespace gui;
 
 
 Create3Hmi::Create3Hmi()
-    : Plugin()
+  : Plugin()
 {
   this->create3_button_pub_ = ignition::transport::Node::Publisher();
-  this->create3_button_pub_ = this->node_.Advertise<ignition::msgs::Int32>(this->create3_button_topic_);
+  this->create3_button_pub_ = 
+    this->node_.Advertise<ignition::msgs::Int32>(this->create3_button_topic_);
 }
 
 Create3Hmi::~Create3Hmi()
