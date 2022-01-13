@@ -17,10 +17,16 @@
   <!-- Mechanical properties -->
   <xacro:property name="body_z_offset"           value="${-2.5*cm2m}" />
   <xacro:property name="body_collision_z_offset" value="${1*cm2m}" />
-  <xacro:property name="body_cog_x_offset"       value="${2.28*cm2m}" />
   <xacro:property name="body_mass"               value="2.300" />
   <xacro:property name="body_radius"             value="${16.4*cm2m}" />
   <xacro:property name="body_length"             value="${6*cm2m}" />
+
+  <xacro:if value="${'$(arg gazebo)' == 'ignition'}">
+    <xacro:property name="body_cog_x_offset"       value="${2.28*cm2m}" />
+  </xacro:if>
+  <xacro:if value="${'$(arg gazebo)' == 'classic'}">
+    <xacro:property name="body_cog_x_offset"       value="${0*cm2m}" />
+  </xacro:if>
 
   <xacro:property name="bumper_mass"             value="0.1" />
   <xacro:property name="bumper_offset_z"         value="${-2.5*cm2m}" />

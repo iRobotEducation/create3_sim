@@ -190,13 +190,13 @@ def generate_launch_description():
                                   ['/model/', LaunchConfiguration('robot_name'), '/pose' +
                                   '@tf2_msgs/msg/TFMessage' +
                                   '[ignition.msgs.Pose_V'],
-                                  '/model/dock/pose' +
+                                  '/model/standard_dock/pose' +
                                   '@tf2_msgs/msg/TFMessage' +
                                   '[ignition.msgs.Pose_V'
                               ],
                               remappings=[
                                   (['/model/', LaunchConfiguration('robot_name'), '/pose'], '/_internal/sim_ground_truth_pose'),
-                                  ('/model/dock/pose', '/_internal/sim_ground_truth_dock_pose')
+                                  ('/model/standard_dock/pose', '/_internal/sim_ground_truth_dock_pose')
                               ])
 
     # Create launch description and add actions
