@@ -1,0 +1,5 @@
+repositories:
+  gazebo-ros2-control:
+    type: git
+    url: https://github.com/iRobotEducation/gazebo_ros2_control.git
+    version: create3_galactic
