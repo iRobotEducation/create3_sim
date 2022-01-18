@@ -36,14 +36,14 @@ KidnapEstimator::KidnapEstimator()
 
 void KidnapEstimator::kidnap_callback(irobot_create_msgs::msg::HazardDetectionVector::SharedPtr msg)
 {
-  auto hazard_vector = msg->detections;
-  auto wheel_drop_count = std::count_if(
+  const auto hazard_vector = msg->detections;
+  const std::size_t wheel_drop_count = std::count_if(
     hazard_vector.begin(), hazard_vector.end(), [](auto hazard_vector) {
       return hazard_vector.header.frame_id == "wheel_drop_left" ||
       hazard_vector.header.frame_id == "wheel_drop_right";
     });
 
-  auto cliff_sensor_count = std::count_if(
+  const std::size_t cliff_sensor_count = std::count_if(
     hazard_vector.begin(), hazard_vector.end(), [](auto hazard_vector) {
       return hazard_vector.header.frame_id == "cliff_side_left" ||
       hazard_vector.header.frame_id == "cliff_side_right" ||
