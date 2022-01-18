@@ -28,8 +28,14 @@ find_package(rclpy REQUIRED)
 find_package(tf2 REQUIRED)
 find_package(tf2_geometry_msgs REQUIRED)
 find_package(tf2_ros REQUIRED)
-find_package(ros_ign_interfaces REQUIRED)
 find_package(irobot_create_toolbox REQUIRED)
+find_package(ros_ign_interfaces)
+
+if(NOT ros_ign_interfaces_FOUND)
+  message(WARNING "ros_ign_interfaces not found. Skipping ${PROJECT_NAME}.")
+  ament_package()
+  return()
+endif()
 
 # Libraries
 
