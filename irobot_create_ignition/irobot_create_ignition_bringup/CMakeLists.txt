@@ -7,7 +7,13 @@ endif()
 
 # find dependencies
 find_package(ament_cmake REQUIRED)
-find_package(ros_ign_interfaces REQUIRED)
+find_package(ros_ign_interfaces)
+
+if(NOT ros_ign_interfaces_FOUND)
+  message(WARNING "ros_ign_interfaces not found. Skipping ${PROJECT_NAME}.")
+  ament_package()
+  return()
+endif()
 
 install(
   DIRECTORY gui launch worlds config
