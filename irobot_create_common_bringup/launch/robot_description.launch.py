@@ -14,10 +14,11 @@ ARGUMENTS = [
     DeclareLaunchArgument('gazebo', default_value='classic',
                           choices=['classic', 'ignition'],
                           description='Which gazebo simulator to use'),
-	DeclareLaunchArgument('visualize_rays', default_value='false',
+    DeclareLaunchArgument('visualize_rays', default_value='false',
                           choices=['true', 'false'],
                           description='Enable/disable ray visualization')
 ]
+
 
 def generate_launch_description():
     pkg_create3_description = get_package_share_directory('irobot_create_description')
@@ -33,7 +34,10 @@ def generate_launch_description():
         parameters=[
             {'use_sim_time': True},
             {'robot_description':
-             Command(['xacro', ' ', xacro_file, ' ', 'gazebo:=', gazebo_simulator, ' ', 'visualize_rays:=', visualize_rays])},
+             Command(
+                  ['xacro', ' ', xacro_file, ' ',
+                   'gazebo:=', gazebo_simulator, ' ',
+                   'visualize_rays:=', visualize_rays])},
         ],
     )
 
