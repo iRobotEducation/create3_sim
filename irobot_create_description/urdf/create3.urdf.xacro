@@ -42,7 +42,7 @@
   <xacro:property name="receiver_link_name" value="ir_omni"/>
   <xacro:property name="dock_model_name" value="standard_dock"/>
   <xacro:property name="emitter_link_name" value="halo_link"/>
-
+  <xacro:arg name="visualize_rays" default="false"/>
   <!-- Create 3 base definition-->
   <link name="base_link">
     <visual>
@@ -127,22 +127,22 @@
   <xacro:property name="cliff_back_pitch" value="${80*deg2rad}"/>
   <xacro:property name="cliff_back_yaw" value="${167.4*deg2rad}"/>
 
-  <xacro:cliff_sensor name="side_left" gazebo="$(arg gazebo)">
+  <xacro:cliff_sensor name="side_left" gazebo="$(arg gazebo)" visualize="$(arg visualize_rays)">
     <origin xyz="${cliff_back_x} ${cliff_back_y} ${cliff_z + base_link_z_offset}"
             rpy="0 ${cliff_back_pitch} ${cliff_back_yaw}"/>
   </xacro:cliff_sensor>
 
-  <xacro:cliff_sensor name="side_right" gazebo="$(arg gazebo)">
+  <xacro:cliff_sensor name="side_right" gazebo="$(arg gazebo)" visualize="$(arg visualize_rays)">
     <origin xyz="${cliff_back_x} ${- cliff_back_y} ${cliff_z + base_link_z_offset}"
             rpy="0 ${cliff_back_pitch} ${- cliff_back_yaw}"/>
   </xacro:cliff_sensor>
 
-  <xacro:cliff_sensor name="front_left" gazebo="$(arg gazebo)">
+  <xacro:cliff_sensor name="front_left" gazebo="$(arg gazebo)" visualize="$(arg visualize_rays)">
     <origin xyz="${cliff_center_x} ${cliff_center_y} ${cliff_z + base_link_z_offset}"
             rpy="0 ${cliff_center_pitch} ${cliff_center_yaw}"/>
   </xacro:cliff_sensor>
 
-  <xacro:cliff_sensor name="front_right" gazebo="$(arg gazebo)">
+  <xacro:cliff_sensor name="front_right" gazebo="$(arg gazebo)" visualize="$(arg visualize_rays)">
     <origin xyz="${cliff_center_x} ${- cliff_center_y} ${cliff_z + base_link_z_offset}"
             rpy="0 ${cliff_center_pitch} ${- cliff_center_yaw}"/>
   </xacro:cliff_sensor>
