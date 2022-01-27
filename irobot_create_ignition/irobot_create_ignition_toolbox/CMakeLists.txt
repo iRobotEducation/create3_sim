@@ -29,10 +29,10 @@ find_package(tf2 REQUIRED)
 find_package(tf2_geometry_msgs REQUIRED)
 find_package(tf2_ros REQUIRED)
 find_package(irobot_create_toolbox REQUIRED)
-find_package(ros_ign_interfaces)
+find_package(ros_ign_interfaces QUIET)
 
 if(NOT ros_ign_interfaces_FOUND)
-  message(WARNING "ros_ign_interfaces not found. Skipping ${PROJECT_NAME}.")
+  message(WARNING "ros_ign_interfaces not found. Skipping ${PROJECT_NAME} package.")
   ament_package()
   return()
 endif()
@@ -152,6 +152,11 @@ install(TARGETS ${executables_names}
 install(DIRECTORY include/
   DESTINATION include
 )
+
+if(BUILD_TESTING)
+  find_package(ament_lint_auto REQUIRED)
+  ament_lint_auto_find_test_dependencies()
+endif()
 
 ament_export_include_directories(include)
 ament_export_libraries(${libraries_names})
