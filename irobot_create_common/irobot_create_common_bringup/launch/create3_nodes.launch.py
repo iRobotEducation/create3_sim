@@ -9,7 +9,7 @@ from launch import LaunchDescription
 from launch.actions import DeclareLaunchArgument, IncludeLaunchDescription
 from launch.conditions import LaunchConfigurationEquals
 from launch.launch_description_sources import PythonLaunchDescriptionSource
-from launch.substitutions import PathJoinSubstitution
+from launch.substitutions import PathJoinSubstitution, LaunchConfiguration
 from launch_ros.actions import Node
 
 ARGUMENTS = [
@@ -92,7 +92,8 @@ def generate_launch_description():
         name='mock_publisher_node',
         executable='mock_publisher_node',
         parameters=[mock_params_yaml_file,
-                    {'use_sim_time': True}],
+                    {'use_sim_time': True},
+                    {'gazebo': LaunchConfiguration('gazebo')}],
         output='screen',
     )
 

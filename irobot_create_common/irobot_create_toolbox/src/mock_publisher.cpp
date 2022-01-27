@@ -16,8 +16,12 @@ MockPublisher::MockPublisher()
 : rclcpp::Node("mock_publisher_node"),
   led_animation_end_duration_(rclcpp::Duration::from_nanoseconds(0))
 {
+  // Gazebo simulator being used
+  gazebo_ = declare_and_get_parameter<std::string>("gazebo", this);
+
   // Topic parameter to publish buttons to
   buttons_publisher_topic_ = declare_and_get_parameter<std::string>("button_topic", this);
+
   // Topic parameter to publish slip status to
   slip_status_publisher_topic_ = declare_and_get_parameter<std::string>("slip_status_topic", this);
 
@@ -31,9 +35,12 @@ MockPublisher::MockPublisher()
     declare_and_get_parameter<double>("slip_status_publish_rate", this);  // Hz
 
   // Define buttons publisher
-  buttons_publisher_ = create_publisher<irobot_create_msgs::msg::InterfaceButtons>(
-    buttons_publisher_topic_, rclcpp::QoS(10).reliable());
-  RCLCPP_INFO_STREAM(get_logger(), "Advertised mocked topic: " << buttons_publisher_topic_);
+  if (gazebo_ != "ignition")
+  {
+    buttons_publisher_ = create_publisher<irobot_create_msgs::msg::InterfaceButtons>(
+      buttons_publisher_topic_, rclcpp::QoS(10).reliable());
+    RCLCPP_INFO_STREAM(get_logger(), "Advertised mocked topic: " << buttons_publisher_topic_);
+  }
 
   // Define slip status publisher
   slip_status_publisher_ = create_publisher<irobot_create_msgs::msg::SlipStatus>(
@@ -54,26 +61,29 @@ MockPublisher::MockPublisher()
     std::bind(&MockPublisher::handle_led_animation_cancel, this, _1),
     std::bind(&MockPublisher::handle_led_animation_accepted, this, _1));
 
-  buttons_timer_ = rclcpp::create_timer(
-    this,
-    this->get_clock(),
-    rclcpp::Duration(std::chrono::duration<double>(1 / buttons_publish_rate)), [this]() {
-      // Set header timestamp.
-      this->buttons_msg_.header.stamp = now();
+  if (gazebo_ != "ignition")
+  {
+    buttons_timer_ = rclcpp::create_timer(
+      this,
+      this->get_clock(),
+      rclcpp::Duration(std::chrono::duration<double>(1 / buttons_publish_rate)), [this]() {
+        // Set header timestamp.
+        this->buttons_msg_.header.stamp = now();
 
-      this->buttons_msg_.button_1.header.stamp = now();
-      this->buttons_msg_.button_power.header.stamp = now();
-      this->buttons_msg_.button_2.header.stamp = now();
+        this->buttons_msg_.button_1.header.stamp = now();
+        this->buttons_msg_.button_power.header.stamp = now();
+        this->buttons_msg_.button_2.header.stamp = now();
 
-      // Publish topics
-      this->buttons_publisher_->publish(this->buttons_msg_);
-    });
-
-  // Set buttons header
-  buttons_msg_.header.frame_id = base_frame_;
-  buttons_msg_.button_1.header.frame_id = "button_1";
-  buttons_msg_.button_power.header.frame_id = "button_power";
-  buttons_msg_.button_2.header.frame_id = "button_2";
+        // Publish topics
+        this->buttons_publisher_->publish(this->buttons_msg_);
+      });
+  
+    // Set buttons header
+    buttons_msg_.header.frame_id = base_frame_;
+    buttons_msg_.button_1.header.frame_id = "button_1";
+    buttons_msg_.button_power.header.frame_id = "button_power";
+    buttons_msg_.button_2.header.frame_id = "button_2";
+  }
 
   slip_status_timer_ = rclcpp::create_timer(
     this,

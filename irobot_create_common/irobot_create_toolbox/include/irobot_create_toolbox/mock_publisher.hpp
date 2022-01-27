@@ -62,7 +62,9 @@ protected:
   rclcpp_action::Server<irobot_create_msgs::action::LedAnimation>::SharedPtr
     led_animation_action_server_;
 
-
+  // Gazebo simulator being used
+  std::string gazebo_;
+  
   // Topic to publish interface buttons to
   std::string buttons_publisher_topic_;
   // Topic to publish slip status to
