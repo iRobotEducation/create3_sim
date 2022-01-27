@@ -1,8 +1,9 @@
-# iRobot® Create® 3 Gazebo Simulator
+# iRobot® Create® 3 Simulator
 
 [![Testing](https://github.com/iRobotSTEM/create3_sim/actions/workflows/ci.yml/badge.svg)](https://github.com/iRobotSTEM/create3_sim/actions/workflows/ci.yml) [![License](https://img.shields.io/github/license/iRobotEducation/create3_sim)](https://github.com/iRobotEducation/create3_sim/blob/main/LICENSE)
 
-This is a ROS 2 simulation stack for the [iRobot® Create® 3](https://edu.irobot.com/create3) robot. Both Ignition Gazebo and Classic Gazebo are supported.
+This is a ROS 2 simulation stack for the [iRobot® Create® 3](https://edu.irobot.com/create3) robot.
+Both Ignition Gazebo and Classic Gazebo are supported.
 
 Have a look at the [Create® 3 documentation](https://iroboteducation.github.io/create3_docs/) for more details on the ROS 2 interfaces exposed by the robot.
 
@@ -16,11 +17,18 @@ Required dependencies:
     - [rosdep](https://pypi.org/project/rosdep/): Used to install dependencies when building from sources
     - [vcs](https://pypi.org/project/vcstool/): Automates cloning of git repositories declared on a YAML file.
 
-### Classic Gazebo
+Besides the aforementioned dependencies you will also need at least one among Ignition Gazebo and Classic Gazebo
+
+#### Classic Gazebo
+
 Install [Gazebo 11](http://gazebosim.org/tutorials?tut=install_ubuntu)
 
-### Ignition Edifice
-#### From Source (Recommended)
+#### Ignition Edifice
+
+It is currently recommended to build Ignition Gazebo from sources because this will include the latest, unreleased, bug fixes.
+
+##### From Source (Recommended)
+
 - Create a workspace
 ```bash
 mkdir -p ~/ignition_ws/src
@@ -29,7 +37,8 @@ mkdir -p ~/ignition_ws/src
 - Use `vcs` to clone Ignition Edifice dependencies into the workspace:
 ```bash
 cd ~/ignition_ws
-wget https://raw.githubusercontent.com/iRobotEducation/create3_sim/ignition_edifice.repos
+sudo apt-get update && sudo apt-get install wget
+wget https://raw.githubusercontent.com/iRobotEducation/create3_sim/irobot_create_ignition/ignition_edifice.repos
 vcs import ~/ignition_ws/src < ~/ignition_ws/ignition_edifice.repos
 ```
 
@@ -45,16 +54,16 @@ sudo apt -y install \
 - Build the Ignition libraries:
 ```bash
 cd ~/ignition_ws
-source /opt/ros/galactic/setup.bash
 colcon build --merge-install
 ```
 
- #### Binary
+##### Binary
+
 ```bash
+sudo apt-get update && sudo apt-get install wget
 sudo sh -c 'echo "deb http://packages.osrfoundation.org/gazebo/ubuntu-stable `lsb_release -cs` main" > /etc/apt/sources.list.d/gazebo-stable.list'
 wget http://packages.osrfoundation.org/gazebo.key -O - | sudo apt-key add -
-sudo apt-get update
-sudo apt-get install ignition-edifice
+sudo apt-get update && sudo apt-get install ignition-edifice
 ```
 
 ## Build
@@ -70,11 +79,7 @@ mkdir -p ~/create3_ws/src
 - Use `vcs` to clone additional dependencies into the workspace:
 
 ```bash
-vcs import ~/create3_ws/src/ < ~/create3_ws/src/create3_sim/common_dependencies.repos
-```
-- Classic Gazebo only:
-```bash
-vcs import ~/create3_ws/src/ < ~/create3_ws/src/create3_sim/classic_dependencies.repos
+vcs import ~/create3_ws/src/ < ~/create3_ws/src/create3_sim/dependencies.repos
 ```
 
 - Navigate to the workspace and install ROS 2 dependencies with:
@@ -91,11 +96,11 @@ colcon build --symlink-install
 source install/local_setup.bash
 ```
 
-## Examples
+## Run
 
-### Classic Gazebo
+#### Classic Gazebo
 
-#### Empty world
+##### Empty world
 
 Create® 3 can be spawned in an empty world in Gazebo and monitored through RViz with
 
@@ -103,7 +108,7 @@ Create® 3 can be spawned in an empty world in Gazebo and monitored through RViz
 ros2 launch irobot_create_gazebo_bringup create3_gazebo.launch.py
 ```
 
-#### AWS house
+##### AWS house
 
 Create® 3 can be spawned in the AWS small house in Gazebo and monitored through RViz.
 This requires that the package `aws_robomaker_small_house_world` is available.
@@ -122,7 +127,7 @@ Then you can run:
 ros2 launch irobot_create_gazebo_bringup create3_gazebo_aws_small.launch.py
 ```
 
-### Ignition Gazebo
+#### Ignition Gazebo
 
 Create® 3 can be spawned in a demo world in Ignition and monitored through RViz with
 
@@ -133,18 +138,17 @@ ros2 launch irobot_create_ignition_bringup create3_ignition.launch.py
 ## Package layout
 
 This repository contains packages for both the Classic and Ignition Gazebo simulators:
+
 - `irobot_create_common` Packages common to both Classic and Ignition
     - `irobot_create_common_bringup` Launch files and configurations
     - `irobot_create_control` Launch control nodes
     - `irobot_create_description`  URDF and mesh files describing the robot
     - `irobot_create_toolbox` Nodes for simulating robot topics and motion control
 
-
 - `irobot_create_gazebo` Packages used for the Classic Gazebo Simulator
     - `irobot_create_gazebo_bringup` Launch files and configurations
     - `irobot_create_gazebo_plugins` Sensor plugins
     - `irobot_create_gazebo_sim`  Metapackage
-
 
 - `irobot_create_ignition` Packages used for the Ignition Gazebo Simulator
     - `irobot_create_ignition_bringup` Launch files and configurations

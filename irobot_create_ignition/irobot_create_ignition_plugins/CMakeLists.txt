@@ -8,11 +8,23 @@ endif()
 # find dependencies
 find_package(ament_cmake REQUIRED)
 
+set(OpenGL_GL_PREFERENCE LEGACY)
+
+# Find the Ignition gui library
+find_package(ignition-gui5 QUIET)
+find_package(ignition-common4 QUIET)
+
+if(NOT ignition-gui5_FOUND OR NOT ignition-common4_FOUND)
+  message(WARNING "Ignition GUI not found. Skipping ${PROJECT_NAME} package.")
+  ament_package()
+  return()
+endif()
+
+add_subdirectory(Create3Hmi)
+
 if(BUILD_TESTING)
   find_package(ament_lint_auto REQUIRED)
   ament_lint_auto_find_test_dependencies()
 endif()
-
-add_subdirectory(Create3Hmi)
 
 ament_package()

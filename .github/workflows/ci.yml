@@ -25,7 +25,11 @@ jobs:
             irobot_create_common_bringup
             irobot_create_control
             irobot_create_description
+            irobot_create_toolbox
             irobot_create_gazebo_bringup
             irobot_create_gazebo_plugins
             irobot_create_gazebo_sim
-            irobot_create_toolbox
+            irobot_create_ignition_bringup
+            irobot_create_ignition_plugins
+            irobot_create_ignition_sim
+            irobot_create_ignition_toolbox

@@ -7,10 +7,10 @@ endif()
 
 # find dependencies
 find_package(ament_cmake REQUIRED)
-find_package(ros_ign_interfaces)
+find_package(ros_ign_interfaces QUIET)
 
 if(NOT ros_ign_interfaces_FOUND)
-  message(WARNING "ros_ign_interfaces not found. Skipping ${PROJECT_NAME}.")
+  message(WARNING "ros_ign_interfaces not found. Skipping ${PROJECT_NAME} package.")
   ament_package()
   return()
 endif()
