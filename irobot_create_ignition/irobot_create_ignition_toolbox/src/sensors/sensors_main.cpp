@@ -3,6 +3,8 @@
  * @author Roni Kreinin (rkreinin@clearpathrobotics.com)
  */
 
+#include <memory>
+
 #include "irobot_create_ignition_toolbox/sensors/sensors_node.hpp"
 
 int main(int argc, char * argv[])

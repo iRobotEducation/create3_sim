@@ -3,143 +3,159 @@
  * @author Roni Kreinin (rkreinin@clearpathrobotics.com)
  */
 
+#include <memory>
+#include <utility>
+
 #include "irobot_create_ignition_toolbox/sensors/ir_opcode.hpp"
 #include "irobot_create_toolbox/parameter_helper.hpp"
 
-using namespace irobot_create_ignition_toolbox;
+using irobot_create_ignition_toolbox::IrOpcode;
 
-IrOpcode::IrOpcode(std::shared_ptr<rclcpp::Node> &nh) : nh_(nh)
+IrOpcode::IrOpcode(std::shared_ptr<rclcpp::Node> & nh)
+: nh_(nh)
 {
-    emitter_pose_sub_ = nh_->create_subscription<nav_msgs::msg::Odometry>(
-        "/_internal/sim_ground_truth_ir_emitter_pose",
-        rclcpp::SensorDataQoS(),
-        std::bind(&IrOpcode::emitter_pose_callback, this, std::placeholders::_1));
+  emitter_pose_sub_ = nh_->create_subscription<nav_msgs::msg::Odometry>(
+    "/_internal/sim_ground_truth_ir_emitter_pose",
+    rclcpp::SensorDataQoS(),
+    std::bind(&IrOpcode::emitter_pose_callback, this, std::placeholders::_1));
 
-    receiver_pose_sub_ = nh_->create_subscription<nav_msgs::msg::Odometry>(
-        "/_internal/sim_ground_truth_ir_receiver_pose",
-        rclcpp::SensorDataQoS(),
-        std::bind(&IrOpcode::receiver_pose_callback, this, std::placeholders::_1));
+  receiver_pose_sub_ = nh_->create_subscription<nav_msgs::msg::Odometry>(
+    "/_internal/sim_ground_truth_ir_receiver_pose",
+    rclcpp::SensorDataQoS(),
+    std::bind(&IrOpcode::receiver_pose_callback, this, std::placeholders::_1));
 
-    ir_opcode_pub_ = nh_->create_publisher<irobot_create_msgs::msg::IrOpcode>(
-        "ir_opcode",
-        rclcpp::SensorDataQoS());
+  ir_opcode_pub_ = nh_->create_publisher<irobot_create_msgs::msg::IrOpcode>(
+    "ir_opcode",
+    rclcpp::SensorDataQoS());
 
-    dock_pub_ = nh_->create_publisher<irobot_create_msgs::msg::Dock>(
-        "dock", 
-        rclcpp::SensorDataQoS());
+  dock_pub_ = nh_->create_publisher<irobot_create_msgs::msg::Dock>(
+    "dock",
+    rclcpp::SensorDataQoS());
 
-    auto sensor_0_fov = irobot_create_toolbox::declare_and_get_parameter<double>("ir_opcode_sensor_0_fov", nh_.get());
-    auto sensor_0_range = irobot_create_toolbox::declare_and_get_parameter<double>("ir_opcode_sensor_0_range", nh_.get());
-    auto sensor_1_fov = irobot_create_toolbox::declare_and_get_parameter<double>("ir_opcode_sensor_1_fov", nh_.get());
-    auto sensor_1_range = irobot_create_toolbox::declare_and_get_parameter<double>("ir_opcode_sensor_1_range", nh_.get());
+  auto sensor_0_fov = irobot_create_toolbox::declare_and_get_parameter<double>(
+    "ir_opcode_sensor_0_fov", nh_.get());
+  auto sensor_0_range = irobot_create_toolbox::declare_and_get_parameter<double>(
+    "ir_opcode_sensor_0_range", nh_.get());
+  auto sensor_1_fov = irobot_create_toolbox::declare_and_get_parameter<double>(
+    "ir_opcode_sensor_1_fov", nh_.get());
+  auto sensor_1_range = irobot_create_toolbox::declare_and_get_parameter<double>(
+    "ir_opcode_sensor_1_range", nh_.get());
 
-    sensors_[irobot_create_msgs::msg::IrOpcode::SENSOR_OMNI] = {sensor_0_fov, sensor_0_range};
-    sensors_[irobot_create_msgs::msg::IrOpcode::SENSOR_DIRECTIONAL_FRONT] = {sensor_1_fov, sensor_1_range};
+  sensors_[irobot_create_msgs::msg::IrOpcode::SENSOR_OMNI] = {
+    sensor_0_fov, sensor_0_range};
+  sensors_[irobot_create_msgs::msg::IrOpcode::SENSOR_DIRECTIONAL_FRONT] = {
+    sensor_1_fov, sensor_1_range};
 
-    ir_opcode_timer_ = rclcpp::create_timer(
-        nh_,
-        nh_->get_clock(),
-        rclcpp::Duration(std::chrono::duration<double>(1 / 62.0)),
-        [this]() -> void
-        {
-            // Get detected opcodes from force field
-            detected_forcefield_opcodes_ = {
-                CheckForceFieldDetection(
-                    sensors_[irobot_create_msgs::msg::IrOpcode::SENSOR_OMNI].fov,
-                    sensors_[irobot_create_msgs::msg::IrOpcode::SENSOR_OMNI].range),
-                CheckForceFieldDetection(
-                    sensors_[irobot_create_msgs::msg::IrOpcode::SENSOR_DIRECTIONAL_FRONT].fov,
-                    sensors_[irobot_create_msgs::msg::IrOpcode::SENSOR_DIRECTIONAL_FRONT].range)
-            };
+  ir_opcode_timer_ = rclcpp::create_timer(
+    nh_,
+    nh_->get_clock(),
+    rclcpp::Duration(std::chrono::duration<double>(1 / 62.0)),
+    [this]() -> void
+    {
+      // Get detected opcodes from force field
+      detected_forcefield_opcodes_ = {
+        CheckForceFieldDetection(
+          sensors_[irobot_create_msgs::msg::IrOpcode::SENSOR_OMNI].fov,
+          sensors_[irobot_create_msgs::msg::IrOpcode::SENSOR_OMNI].range),
+        CheckForceFieldDetection(
+          sensors_[irobot_create_msgs::msg::IrOpcode::SENSOR_DIRECTIONAL_FRONT].fov,
+          sensors_[irobot_create_msgs::msg::IrOpcode::SENSOR_DIRECTIONAL_FRONT].range)
+      };
 
-            // Get detected opcodes from buoys
-            detected_buoys_opcodes_ = {
-                CheckBuoysDetection(
-                    sensors_[irobot_create_msgs::msg::IrOpcode::SENSOR_OMNI].fov,
-                    sensors_[irobot_create_msgs::msg::IrOpcode::SENSOR_OMNI].range),
-                CheckBuoysDetection(
-                    sensors_[irobot_create_msgs::msg::IrOpcode::SENSOR_DIRECTIONAL_FRONT].fov,
-                    sensors_[irobot_create_msgs::msg::IrOpcode::SENSOR_DIRECTIONAL_FRONT].range)
-            };
+      // Get detected opcodes from buoys
+      detected_buoys_opcodes_ = {
+        CheckBuoysDetection(
+          sensors_[irobot_create_msgs::msg::IrOpcode::SENSOR_OMNI].fov,
+          sensors_[irobot_create_msgs::msg::IrOpcode::SENSOR_OMNI].range),
+        CheckBuoysDetection(
+          sensors_[irobot_create_msgs::msg::IrOpcode::SENSOR_DIRECTIONAL_FRONT].fov,
+          sensors_[irobot_create_msgs::msg::IrOpcode::SENSOR_DIRECTIONAL_FRONT].range)
+      };
 
-            PublishSensors(detected_forcefield_opcodes_);
-            PublishSensors(detected_buoys_opcodes_);
-        });
+      PublishSensors(detected_forcefield_opcodes_);
+      PublishSensors(detected_buoys_opcodes_);
+    });
 
-    dock_status_timer_ = rclcpp::create_timer(
-        nh_,
-        nh_->get_clock(),
-        rclcpp::Duration(std::chrono::duration<double>(1 / 20.0)),
-        [this]() -> void
-        {
-            utils::PolarCoordinate receiver_wrt_emitter_polar =
-                ReceiverCartesianPointToEmitterPolarPoint(tf2::Vector3(0.0, 0.0, 0.0));
+  dock_status_timer_ = rclcpp::create_timer(
+    nh_,
+    nh_->get_clock(),
+    rclcpp::Duration(std::chrono::duration<double>(1 / 20.0)),
+    [this]() -> void
+    {
+      irobot_create_ignition_toolbox::utils::PolarCoordinate receiver_wrt_emitter_polar =
+      ReceiverCartesianPointToEmitterPolarPoint(tf2::Vector3(0.0, 0.0, 0.0));
 
-            utils::PolarCoordinate emitter_wrt_receiver_polar =
-                EmitterCartesianPointToReceiverPolarPoint(tf2::Vector3(0.0, 0.0, 0.0));
+      irobot_create_ignition_toolbox::utils::PolarCoordinate emitter_wrt_receiver_polar =
+      EmitterCartesianPointToReceiverPolarPoint(tf2::Vector3(0.0, 0.0, 0.0));
 
-            is_docked_ = receiver_wrt_emitter_polar.radius < DOCKED_DISTANCE &&
-                            std::abs(emitter_wrt_receiver_polar.azimuth) < DOCKED_YAW &&
-                            std::abs(receiver_wrt_emitter_polar.azimuth) < DOCKED_YAW;
+      is_docked_ = receiver_wrt_emitter_polar.radius < DOCKED_DISTANCE &&
+      std::abs(emitter_wrt_receiver_polar.azimuth) < DOCKED_YAW &&
+      std::abs(receiver_wrt_emitter_polar.azimuth) < DOCKED_YAW;
 
-            is_dock_visible_ = detected_buoys_opcodes_[irobot_create_msgs::msg::IrOpcode::SENSOR_OMNI] != 
-                                    irobot_create_msgs::msg::IrOpcode::CODE_IR_VIRTUAL_WALL &&
-                               detected_buoys_opcodes_[irobot_create_msgs::msg::IrOpcode::SENSOR_DIRECTIONAL_FRONT] != 
-                                    irobot_create_msgs::msg::IrOpcode::CODE_IR_VIRTUAL_WALL;
+      is_dock_visible_ = detected_buoys_opcodes_[
+        irobot_create_msgs::msg::IrOpcode::SENSOR_OMNI] !=
+      irobot_create_msgs::msg::IrOpcode::CODE_IR_VIRTUAL_WALL &&
+      detected_buoys_opcodes_[
+        irobot_create_msgs::msg::IrOpcode::SENSOR_DIRECTIONAL_FRONT] !=
+      irobot_create_msgs::msg::IrOpcode::CODE_IR_VIRTUAL_WALL;
 
-            auto dock_msg = irobot_create_msgs::msg::Dock();
-            dock_msg.header.stamp = nh_->now();
-            dock_msg.is_docked = is_docked_;
-            dock_msg.dock_visible = is_dock_visible_;
-            dock_pub_->publish(std::move(dock_msg));
-        });
+      auto dock_msg = irobot_create_msgs::msg::Dock();
+      dock_msg.header.stamp = nh_->now();
+      dock_msg.is_docked = is_docked_;
+      dock_msg.dock_visible = is_dock_visible_;
+      dock_pub_->publish(std::move(dock_msg));
+    });
 }
 
-utils::PolarCoordinate IrOpcode::EmitterCartesianPointToReceiverPolarPoint(const tf2::Vector3 & emitter_point)
+irobot_create_ignition_toolbox::utils::PolarCoordinate
+IrOpcode::EmitterCartesianPointToReceiverPolarPoint(const tf2::Vector3 & emitter_point)
 {
-    tf2::Transform emitter_pose;
-    {
-        const std::lock_guard<std::mutex> lock(emitter_pose_mutex_);
-        emitter_pose = last_emitter_pose_;
-    }
-    tf2::Transform receiver_pose;
-    {
-        const std::lock_guard<std::mutex> lock(receiver_pose_mutex_);
-        receiver_pose = last_receiver_pose_;
-    }
+  tf2::Transform emitter_pose;
+  {
+    const std::lock_guard<std::mutex> lock(emitter_pose_mutex_);
+    emitter_pose = last_emitter_pose_;
+  }
+  tf2::Transform receiver_pose;
+  {
+    const std::lock_guard<std::mutex> lock(receiver_pose_mutex_);
+    receiver_pose = last_receiver_pose_;
+  }
 
-    tf2::Vector3 emitter_wrt_receiver_pose = utils::object_wrt_frame(emitter_pose, receiver_pose);
-    tf2::Vector3 emitter_wrt_receiver_point = emitter_wrt_receiver_pose + emitter_point;
-    return utils::toPolar(emitter_wrt_receiver_point);
+  tf2::Vector3 emitter_wrt_receiver_pose = irobot_create_ignition_toolbox::utils::object_wrt_frame(
+    emitter_pose, receiver_pose);
+  tf2::Vector3 emitter_wrt_receiver_point = emitter_wrt_receiver_pose + emitter_point;
+  return irobot_create_ignition_toolbox::utils::toPolar(emitter_wrt_receiver_point);
 }
 
-utils::PolarCoordinate IrOpcode::ReceiverCartesianPointToEmitterPolarPoint(const tf2::Vector3 & receiver_point)
+irobot_create_ignition_toolbox::utils::PolarCoordinate
+IrOpcode::ReceiverCartesianPointToEmitterPolarPoint(const tf2::Vector3 & receiver_point)
 {
-    tf2::Transform emitter_pose;
-    {
-        const std::lock_guard<std::mutex> lock(emitter_pose_mutex_);
-        emitter_pose = last_emitter_pose_;
-    }
-    tf2::Transform receiver_pose;
-    {
-        const std::lock_guard<std::mutex> lock(receiver_pose_mutex_);
-        receiver_pose = last_receiver_pose_;
-    }
+  tf2::Transform emitter_pose;
+  {
+    const std::lock_guard<std::mutex> lock(emitter_pose_mutex_);
+    emitter_pose = last_emitter_pose_;
+  }
+  tf2::Transform receiver_pose;
+  {
+    const std::lock_guard<std::mutex> lock(receiver_pose_mutex_);
+    receiver_pose = last_receiver_pose_;
+  }
 
-    // Pose of receiver relative to the emitter
-    tf2::Vector3 receiver_wrt_emitter_pose = utils::object_wrt_frame(receiver_pose, emitter_pose);
-    tf2::Vector3 receiver_wrt_emitter_point = receiver_wrt_emitter_pose + receiver_point;
-    return utils::toPolar(receiver_wrt_emitter_point);
+  // Pose of receiver relative to the emitter
+  tf2::Vector3 receiver_wrt_emitter_pose = irobot_create_ignition_toolbox::utils::object_wrt_frame(
+    receiver_pose, emitter_pose);
+  tf2::Vector3 receiver_wrt_emitter_point = receiver_wrt_emitter_pose + receiver_point;
+  return irobot_create_ignition_toolbox::utils::toPolar(receiver_wrt_emitter_point);
 }
 
 int IrOpcode::CheckBuoysDetection(const double fov, const double range)
 {
   // Get the origin of the receiver as a polar point WRT the emitter
-  const utils::PolarCoordinate receiver_wrt_emitter_polar =
+  const irobot_create_ignition_toolbox::utils::PolarCoordinate receiver_wrt_emitter_polar =
     ReceiverCartesianPointToEmitterPolarPoint(tf2::Vector3(0.0, 0.0, 0.0));
 
   // Get the origin of the emitter as a polar point WRT the receiver
-  const utils::PolarCoordinate emitter_wrt_receiver_polar =
+  const irobot_create_ignition_toolbox::utils::PolarCoordinate emitter_wrt_receiver_polar =
     EmitterCartesianPointToReceiverPolarPoint(tf2::Vector3(0.0, 0.0, 0.0));
 
   bool receiver_sees_emitter = false;
@@ -206,7 +222,7 @@ int IrOpcode::CheckBuoysDetection(const double fov, const double range)
 int IrOpcode::CheckForceFieldDetection(const double fov, const double range)
 {
   // Get the origin of the emitter as a polar point WRT the receiver
-  const utils::PolarCoordinate emitter_wrt_receiver_polar =
+  const irobot_create_ignition_toolbox::utils::PolarCoordinate emitter_wrt_receiver_polar =
     EmitterCartesianPointToReceiverPolarPoint(tf2::Vector3{0.0, 0.0, 0.0});
 
   bool force_field_in_range = false;
@@ -219,7 +235,8 @@ int IrOpcode::CheckForceFieldDetection(const double fov, const double range)
   }
 
   // Check emitter fov
-  if (emitter_wrt_receiver_polar.azimuth > -fov / 2 && emitter_wrt_receiver_polar.azimuth < fov / 2)
+  if (emitter_wrt_receiver_polar.azimuth > -fov / 2 &&
+    emitter_wrt_receiver_polar.azimuth < fov / 2)
   {
     receiver_sees_emitter = true;
   }

@@ -3,7 +3,8 @@
  * @author Roni Kreinin (rkreinin@clearpathrobotics.com)
  */
 
-#pragma once
+#ifndef IROBOT_CREATE_IGNITION_TOOLBOX__POSE_REPUBLISHER__POSE_REPUBLISHER_HPP_
+#define IROBOT_CREATE_IGNITION_TOOLBOX__POSE_REPUBLISHER__POSE_REPUBLISHER_HPP_
 
 #include <tf2_msgs/msg/tf_message.hpp>
 #include <nav_msgs/msg/odometry.hpp>
@@ -17,7 +18,7 @@
 
 namespace irobot_create_ignition_toolbox
 {
-  
+
 class PoseRepublisher : public rclcpp::Node
 {
 public:
@@ -48,4 +49,6 @@ private:
   std::string wheel_joints_[2];
 };
 
-}  // namespace irobot_create_toolbox
+}  // namespace irobot_create_ignition_toolbox
+
+#endif  // IROBOT_CREATE_IGNITION_TOOLBOX__POSE_REPUBLISHER__POSE_REPUBLISHER_HPP_

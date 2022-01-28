@@ -64,7 +64,7 @@ protected:
 
   // Gazebo simulator being used
   std::string gazebo_;
-  
+
   // Topic to publish interface buttons to
   std::string buttons_publisher_topic_;
   // Topic to publish slip status to

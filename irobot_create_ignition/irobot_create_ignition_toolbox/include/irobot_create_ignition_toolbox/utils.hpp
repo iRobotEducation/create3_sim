@@ -3,15 +3,18 @@
  * @author Roni Kreinin (rkreinin@clearpathrobotics.com)
  */
 
-#pragma once
+#ifndef IROBOT_CREATE_IGNITION_TOOLBOX__UTILS_HPP_
+#define IROBOT_CREATE_IGNITION_TOOLBOX__UTILS_HPP_
+
+#include <tf2_geometry_msgs/tf2_geometry_msgs.h>
+#include <tf2_msgs/msg/tf_message.hpp>
+#include <nav_msgs/msg/odometry.hpp>
 
 #include <rclcpp/rclcpp.hpp>
 
 #include <atomic>
+#include <memory>
 
-#include <tf2_msgs/msg/tf_message.hpp>
-#include <tf2_geometry_msgs/tf2_geometry_msgs.h>
-#include <nav_msgs/msg/odometry.hpp>
 
 namespace irobot_create_ignition_toolbox
 {
@@ -35,11 +38,11 @@ inline PolarCoordinate toPolar(tf2::Vector3 & cartesian)
 
 inline tf2::Vector3 fromPolar(const PolarCoordinate & polar)
 {
-    return tf2::Vector3{
-        polar.radius * cos(polar.azimuth), 
-        polar.radius * sin(polar.azimuth), 
-        0.0
-    };
+  return tf2::Vector3{
+    polar.radius * cos(polar.azimuth),
+    polar.radius * sin(polar.azimuth),
+    0.0
+  };
 }
 
 // Get yaw from tf2 Transform
@@ -54,31 +57,38 @@ inline double tf2_transform_to_yaw(const tf2::Transform tf)
 // Get object position wrt frame
 inline tf2::Vector3 object_wrt_frame(tf2::Transform object, tf2::Transform frame)
 {
-    return frame.inverseTimes(object).getOrigin();
+  return frame.inverseTimes(object).getOrigin();
 }
 
 // Get global transform of a static link connected to base frame
-inline tf2::Transform static_link_wrt_global_frame(tf2::Transform static_link, tf2::Transform base_frame)
+inline tf2::Transform static_link_wrt_global_frame(
+  tf2::Transform static_link,
+  tf2::Transform base_frame)
 {
-    tf2::Transform global_pose(tf2::Transform::getIdentity());
+  tf2::Transform global_pose(tf2::Transform::getIdentity());
 
-    double base_y = tf2_transform_to_yaw(base_frame);
+  double base_y = tf2_transform_to_yaw(base_frame);
 
-    // Rotate static link frame by the base yaw
-    global_pose.getOrigin().setX(cos(base_y) * static_link.getOrigin().getX() - sin(base_y) * static_link.getOrigin().getY());
-    global_pose.getOrigin().setY(sin(base_y) * static_link.getOrigin().getX() + cos(base_y) * static_link.getOrigin().getY());
+  // Rotate static link frame by the base yaw
+  global_pose.getOrigin().setX(
+    cos(base_y) * static_link.getOrigin().getX() -
+    sin(base_y) * static_link.getOrigin().getY());
+  global_pose.getOrigin().setY(
+    sin(base_y) * static_link.getOrigin().getX() +
+    cos(base_y) * static_link.getOrigin().getY());
 
-    // Static link pose is relative to base pose, so add the base pose to get global pose
-    global_pose.setOrigin(global_pose.getOrigin() + base_frame.getOrigin());
-    // Get global rotation
-    tf2::Quaternion rotation;
-    rotation.setRPY(0.0, 0.0, tf2_transform_to_yaw(global_pose) + tf2_transform_to_yaw(base_frame));
-    global_pose.setRotation(rotation);
+  // Static link pose is relative to base pose, so add the base pose to get global pose
+  global_pose.setOrigin(global_pose.getOrigin() + base_frame.getOrigin());
+  // Get global rotation
+  tf2::Quaternion rotation;
+  rotation.setRPY(0.0, 0.0, tf2_transform_to_yaw(global_pose) + tf2_transform_to_yaw(base_frame));
+  global_pose.setRotation(rotation);
 
-    return global_pose;
+  return global_pose;
 }
 
-inline nav_msgs::msg::Odometry::UniquePtr tf_message_to_odom(const tf2_msgs::msg::TFMessage::SharedPtr msg, uint16_t i)
+inline nav_msgs::msg::Odometry::UniquePtr tf_message_to_odom(
+  const tf2_msgs::msg::TFMessage::SharedPtr msg, uint16_t i)
 {
   auto odom_msg = std::make_unique<nav_msgs::msg::Odometry>();
 
@@ -110,6 +120,8 @@ inline void tf2_transform_to_pose(const tf2::Transform tf, geometry_msgs::msg::P
 }
 
 
-} // namespace utils
+}  // namespace utils
 
-} // namespace irobot_create_ignition_toolbox
+}  // namespace irobot_create_ignition_toolbox
+
+#endif  // IROBOT_CREATE_IGNITION_TOOLBOX__UTILS_HPP_

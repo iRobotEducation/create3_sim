@@ -35,8 +35,7 @@ MockPublisher::MockPublisher()
     declare_and_get_parameter<double>("slip_status_publish_rate", this);  // Hz
 
   // Define buttons publisher
-  if (gazebo_ != "ignition")
-  {
+  if (gazebo_ != "ignition") {
     buttons_publisher_ = create_publisher<irobot_create_msgs::msg::InterfaceButtons>(
       buttons_publisher_topic_, rclcpp::QoS(10).reliable());
     RCLCPP_INFO_STREAM(get_logger(), "Advertised mocked topic: " << buttons_publisher_topic_);
@@ -61,8 +60,7 @@ MockPublisher::MockPublisher()
     std::bind(&MockPublisher::handle_led_animation_cancel, this, _1),
     std::bind(&MockPublisher::handle_led_animation_accepted, this, _1));
 
-  if (gazebo_ != "ignition")
-  {
+  if (gazebo_ != "ignition") {
     buttons_timer_ = rclcpp::create_timer(
       this,
       this->get_clock(),
@@ -77,7 +75,7 @@ MockPublisher::MockPublisher()
         // Publish topics
         this->buttons_publisher_->publish(this->buttons_msg_);
       });
-  
+
     // Set buttons header
     buttons_msg_.header.frame_id = base_frame_;
     buttons_msg_.button_1.header.frame_id = "button_1";

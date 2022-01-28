@@ -3,7 +3,8 @@
  * @author Roni Kreinin (rkreinin@clearpathrobotics.com)
  */
 
-#pragma once
+#ifndef IROBOT_CREATE_IGNITION_TOOLBOX__SENSORS__SENSORS_NODE_HPP_
+#define IROBOT_CREATE_IGNITION_TOOLBOX__SENSORS__SENSORS_NODE_HPP_
 
 #include <rclcpp/rclcpp.hpp>
 
@@ -42,3 +43,5 @@ private:
 };
 
 }  // namespace irobot_create_ignition_toolbox
+
+#endif  // IROBOT_CREATE_IGNITION_TOOLBOX__SENSORS__SENSORS_NODE_HPP_

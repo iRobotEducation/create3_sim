@@ -4,6 +4,7 @@
  */
 
 #include "irobot_create_ignition_toolbox/interface_buttons/interface_buttons_node.hpp"
+#include <memory>
 
 int main(int argc, char * argv[])
 {

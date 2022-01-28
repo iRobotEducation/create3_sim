@@ -3,7 +3,8 @@
  * @author Roni Kreinin (rkreinin@clearpathrobotics.com)
  */
 
-#pragma once
+#ifndef IROBOT_CREATE_IGNITION_TOOLBOX__INTERFACE_BUTTONS__INTERFACE_BUTTONS_NODE_HPP_
+#define IROBOT_CREATE_IGNITION_TOOLBOX__INTERFACE_BUTTONS__INTERFACE_BUTTONS_NODE_HPP_
 
 #include <rclcpp/rclcpp.hpp>
 
@@ -19,7 +20,8 @@
 namespace irobot_create_ignition_toolbox
 {
 
-enum Create3Buttons {
+enum Create3Buttons
+{
   NONE,
   BUTTON_1,
   BUTTON_POWER,
@@ -42,3 +44,5 @@ private:
 };
 
 }  // namespace irobot_create_ignition_toolbox
+
+#endif  // IROBOT_CREATE_IGNITION_TOOLBOX__INTERFACE_BUTTONS__INTERFACE_BUTTONS_NODE_HPP_

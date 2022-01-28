@@ -4,6 +4,7 @@
  */
 
 #include "irobot_create_ignition_toolbox/pose_republisher/pose_republisher.hpp"
+#include <memory>
 
 int main(int argc, char * argv[])
 {

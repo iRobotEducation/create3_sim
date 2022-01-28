@@ -24,14 +24,13 @@ class Create3Hmi : public Plugin
   Q_OBJECT
 
 public:
-
   /// \brief Constructor
   Create3Hmi();
   /// \brief Destructor
   virtual ~Create3Hmi();
   /// \brief Called by Ignition GUI when plugin is instantiated.
   /// \param[in] _pluginElem XML configuration for this plugin.
-  virtual void LoadConfig(const tinyxml2::XMLElement *_pluginElem) override;
+  void LoadConfig(const tinyxml2::XMLElement *_pluginElem) override;
 
 protected slots:
   /// \brief Callback trigged when the button is pressed.
