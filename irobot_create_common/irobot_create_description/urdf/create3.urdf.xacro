@@ -1,0 +1,305 @@
+<?xml version="1.0" ?>
+<robot name="create3" xmlns:xacro="http://ros.org/wiki/xacro">
+  <xacro:include filename="$(find irobot_create_description)/urdf/bumper.urdf.xacro" />
+  <xacro:include filename="$(find irobot_create_description)/urdf/button.urdf.xacro" />
+  <xacro:include filename="$(find irobot_create_description)/urdf/caster.urdf.xacro" />
+  <xacro:include filename="$(find irobot_create_description)/urdf/common_properties.urdf.xacro"/>
+  <xacro:include filename="$(find irobot_create_description)/urdf/sensors/cliff_sensor.urdf.xacro"/>
+  <xacro:include filename="$(find irobot_create_description)/urdf/sensors/imu.urdf.xacro" />
+  <xacro:include filename="$(find irobot_create_description)/urdf/sensors/ir_intensity.urdf.xacro" />
+  <xacro:include filename="$(find irobot_create_description)/urdf/sensors/ir_opcode_receivers.urdf.xacro" />
+  <xacro:include filename="$(find irobot_create_description)/urdf/sensors/optical_mouse.urdf.xacro"/>
+  <xacro:include filename="$(find irobot_create_description)/urdf/wheel_with_wheeldrop.urdf.xacro" />
+
+  <!-- Gazebo version -->
+  <xacro:arg name="gazebo"                       default="classic" />
+
+  <!-- Mechanical properties -->
+  <xacro:property name="body_z_offset"           value="${-2.5*cm2m}" />
+  <xacro:property name="body_collision_z_offset" value="${1*cm2m}" />
+  <xacro:property name="body_mass"               value="2.300" />
+  <xacro:property name="body_radius"             value="${16.4*cm2m}" />
+  <xacro:property name="body_length"             value="${6*cm2m}" />
+
+  <xacro:if value="${'$(arg gazebo)' == 'ignition'}">
+    <xacro:property name="body_cog_x_offset"       value="${2.28*cm2m}" />
+  </xacro:if>
+  <xacro:if value="${'$(arg gazebo)' == 'classic'}">
+    <xacro:property name="body_cog_x_offset"       value="${0*cm2m}" />
+  </xacro:if>
+
+  <xacro:property name="bumper_mass"             value="0.1" />
+  <xacro:property name="bumper_offset_z"         value="${-2.5*cm2m}" />
+  <xacro:property name="bumper_inertial_x"       value="${8*cm2m}" />
+  <xacro:property name="bumper_inertial_z"       value="${2*cm2m}"/>
+
+  <xacro:property name="wheel_height"            value="${-2.75*cm2m}" />
+  <xacro:property name="distance_between_wheels" value="${23.3*cm2m}" />
+
+  <xacro:property name="caster_position_x"       value="${12.5*cm2m}" />
+  <xacro:if value="${'$(arg gazebo)' == 'ignition'}">
+    <xacro:property name="caster_position_z"       value="${-5.03*cm2m}" />
+  </xacro:if>
+  <xacro:if value="${'$(arg gazebo)' == 'classic'}">
+    <xacro:property name="caster_position_z"       value="${-5.2*cm2m}" />
+  </xacro:if>
+  
+  <xacro:property name="wheel_drop_offset_z"     value="${3.5*mm2m}"/>
+  <xacro:property name="wheel_drop_z"            value="${wheel_height + wheel_drop_offset_z}"/>
+
+  <xacro:property name="base_link_z_offset"     value="${6.42*cm2m}"/>
+
+  <!-- Docking properties -->
+  <xacro:property name="robot_model_name" value="create3"/>
+  <xacro:property name="receiver_link_name" value="ir_omni"/>
+  <xacro:property name="dock_model_name" value="standard_dock"/>
+  <xacro:property name="emitter_link_name" value="halo_link"/>
+  <xacro:arg name="visualize_rays" default="false"/>
+  <!-- Create 3 base definition-->
+  <link name="base_link">
+    <visual>
+      <origin xyz="0 0 ${body_z_offset + base_link_z_offset}" rpy="0 0 ${pi/2}"/>
+      <geometry>
+        <mesh filename="file://$(find irobot_create_description)/meshes/body_visual.dae" />
+      </geometry>
+    </visual>
+    <collision name="create3_base_collision">
+      <origin xyz="0 0 ${body_z_offset + body_collision_z_offset  + base_link_z_offset}" rpy="0 0 ${pi/2}"/>
+      <geometry>
+        <cylinder length="${body_length}" radius="${body_radius}"/>
+      </geometry>
+    </collision>
+    <xacro:inertial_cylinder_with_pose mass="${body_mass}" radius="${body_radius}" length="${body_length}">
+      <origin xyz="${body_cog_x_offset} 0 ${body_collision_z_offset + base_link_z_offset}"/>
+    </xacro:inertial_cylinder_with_pose>
+  </link>
+
+  <xacro:if value="${'$(arg gazebo)' == 'ignition'}">
+    <gazebo reference="base_link">
+      <xacro:material_darkgray/>
+    </gazebo>
+  </xacro:if>
+
+  <!-- Bumper -->
+  <xacro:bumper
+      gazebo="$(arg gazebo)"
+      visual_mesh="file://$(find irobot_create_description)/meshes/bumper_visual.dae"
+      collision_mesh="file://$(find irobot_create_description)/meshes/bumper_collision.dae">
+    <origin xyz="0 0 ${bumper_offset_z  + base_link_z_offset}"/>
+    <inertial>
+      <origin xyz="${bumper_inertial_x} 0 ${bumper_inertial_z}"/>
+      <mass value="${bumper_mass}"/>
+      <inertia ixx="0.0013483753405" ixy="0.0000000454352" ixz="0.0000014434849"
+               iyy="0.0002521736852" iyz="-0.0000000006721" izz="0.0015442525386"/>
+    </inertial>
+  </xacro:bumper>
+
+  <!-- Wheels with mechanical wheel drop -->
+  <xacro:wheel_with_wheeldrop name="left" gazebo="$(arg gazebo)">
+    <origin xyz="0 ${distance_between_wheels/2} ${wheel_drop_z  + base_link_z_offset}" rpy="${-pi/2} 0 0"/>
+  </xacro:wheel_with_wheeldrop>
+
+  <xacro:wheel_with_wheeldrop name="right" gazebo="$(arg gazebo)">
+    <origin xyz="0 ${-distance_between_wheels/2} ${wheel_drop_z  + base_link_z_offset}" rpy="${-pi/2} 0 0"/>
+  </xacro:wheel_with_wheeldrop>
+
+  <!-- Caster wheel -->
+  <xacro:caster name="front_caster" parent_link="base_link">
+    <origin xyz="${caster_position_x} 0 ${caster_position_z  + base_link_z_offset}" rpy="${-pi/2} 0 0"/>
+  </xacro:caster>
+
+  <!-- IMU -->
+  <xacro:imu_sensor gazebo="$(arg gazebo)">
+    <origin xyz="0.050613 0.043673 ${0.0202 + base_link_z_offset}"/>
+  </xacro:imu_sensor>
+
+  <xacro:if value="${'$(arg gazebo)' == 'classic'}">
+    <gazebo>
+      <plugin name="gazebo_ros2_control" filename="libgazebo_ros2_control.so">
+        <parameters> $(find irobot_create_control)/config/control.yaml </parameters>
+      </plugin>
+    </gazebo>
+  </xacro:if>
+
+  <!-- Mouse -->
+  <xacro:optical_mouse gazebo="$(arg gazebo)">
+    <origin xyz="0.1015 0.087 ${-0.055 + base_link_z_offset}" rpy="0 0 ${-pi/4}"/>
+  </xacro:optical_mouse>
+
+  <!-- Cliffs sensors -->
+  <xacro:property name="cliff_z"  value="${-4.5*cm2m}" />
+
+  <xacro:property name="cliff_center_x" value="${16*cm2m}"/>
+  <xacro:property name="cliff_center_y" value="${4.5*cm2m}"/>
+  <xacro:property name="cliff_center_pitch" value="${80*deg2rad}"/>
+  <xacro:property name="cliff_center_yaw" value="${65.3*deg2rad}"/>
+
+  <xacro:property name="cliff_back_x" value="${6*cm2m}"/>
+  <xacro:property name="cliff_back_y" value="${14.5*cm2m}"/>
+  <xacro:property name="cliff_back_pitch" value="${80*deg2rad}"/>
+  <xacro:property name="cliff_back_yaw" value="${167.4*deg2rad}"/>
+
+  <xacro:cliff_sensor name="side_left" gazebo="$(arg gazebo)" visualize="$(arg visualize_rays)">
+    <origin xyz="${cliff_back_x} ${cliff_back_y} ${cliff_z + base_link_z_offset}"
+            rpy="0 ${cliff_back_pitch} ${cliff_back_yaw}"/>
+  </xacro:cliff_sensor>
+
+  <xacro:cliff_sensor name="side_right" gazebo="$(arg gazebo)" visualize="$(arg visualize_rays)">
+    <origin xyz="${cliff_back_x} ${- cliff_back_y} ${cliff_z + base_link_z_offset}"
+            rpy="0 ${cliff_back_pitch} ${- cliff_back_yaw}"/>
+  </xacro:cliff_sensor>
+
+  <xacro:cliff_sensor name="front_left" gazebo="$(arg gazebo)" visualize="$(arg visualize_rays)">
+    <origin xyz="${cliff_center_x} ${cliff_center_y} ${cliff_z + base_link_z_offset}"
+            rpy="0 ${cliff_center_pitch} ${cliff_center_yaw}"/>
+  </xacro:cliff_sensor>
+
+  <xacro:cliff_sensor name="front_right" gazebo="$(arg gazebo)" visualize="$(arg visualize_rays)">
+    <origin xyz="${cliff_center_x} ${- cliff_center_y} ${cliff_z + base_link_z_offset}"
+            rpy="0 ${cliff_center_pitch} ${- cliff_center_yaw}"/>
+  </xacro:cliff_sensor>
+
+  <!-- IR intensity sensors -->
+  <xacro:property name="ir_intensity_z_pos" value="${-0.7*cm2m}"/>
+  <!--
+  The robot uses 7 IR sensors in the front to execute a wall-following action
+  or reduce the speed when it detects something in front for safety reasons.
+
+  The arrangement of the sensors is defined in the following schema of the top
+  view of the robot:
+                          Front view
+                              |
+                              V
+
+                        front_center_left
+                front_left            front_center_right
+            left                                    front_right
+  side_left                                                   right
+  -->
+  <xacro:ir_intensity name="front_center_left" gazebo="$(arg gazebo)">
+    <origin xyz="0.1540 0 ${ir_intensity_z_pos + base_link_z_offset}"/>
+  </xacro:ir_intensity>
+  <xacro:ir_intensity name="front_center_right" gazebo="$(arg gazebo)">
+    <origin xyz="0.1396 -0.0651 ${ir_intensity_z_pos + base_link_z_offset}" rpy="0 0 -0.436"/>
+  </xacro:ir_intensity>
+  <xacro:ir_intensity name="front_left" gazebo="$(arg gazebo)">
+    <origin xyz="0.1396 0.0651 ${ir_intensity_z_pos + base_link_z_offset}" rpy="0 0 0.436"/>
+  </xacro:ir_intensity>
+  <xacro:ir_intensity name="front_right" gazebo="$(arg gazebo)">
+    <origin xyz="0.0990 -0.1180 ${ir_intensity_z_pos + base_link_z_offset}" rpy="0 0 -0.873"/>
+  </xacro:ir_intensity>
+  <xacro:ir_intensity name="left" gazebo="$(arg gazebo)">
+    <origin xyz="0.0990 0.1180 ${ir_intensity_z_pos + base_link_z_offset}" rpy="0 0 0.873"/>
+  </xacro:ir_intensity>
+  <xacro:ir_intensity name="right" gazebo="$(arg gazebo)">
+    <origin xyz="0.0399 -0.1488 ${ir_intensity_z_pos + base_link_z_offset}" rpy="0 0 -1.309"/>
+  </xacro:ir_intensity>
+  <xacro:ir_intensity name="side_left" gazebo="$(arg gazebo)">
+    <origin xyz="0.0399 0.1488 ${ir_intensity_z_pos + base_link_z_offset}" rpy="0 0 1.309"/>
+  </xacro:ir_intensity>
+
+  <!-- Buttons -->
+  <xacro:button
+      name="button_1">
+      <origin xyz="0.06 0.37 ${0.08 + base_link_z_offset}" rpy="0 ${-pi/2} 0"/>
+  </xacro:button>
+  <xacro:button
+      name="button_2">
+      <origin xyz="0.06 -0.37 ${0.08 + base_link_z_offset}" rpy="0 ${-pi/2} 0"/>
+  </xacro:button>
+  <xacro:button
+      name="button_power">
+      <origin xyz="0.06 0 ${0.08 + base_link_z_offset}" rpy="0 ${-pi/2} 0"/>
+  </xacro:button>
+
+  <!-- Omni IR receiver (sensor 0) parameters and Front-facing IR receiver (sensor 1) parameters -->
+  <xacro:property name="ir_omni_fov_rad" value="${220.0*deg2rad}"/>
+  <xacro:property name="ir_front_facing_fov_rad" value="${pi/2}"/>
+  <xacro:ir_opcode_receivers gazebo="$(arg gazebo)" robot_model_name="${robot_model_name}" dock_model_name="${dock_model_name}"
+    emitter_link_name="${emitter_link_name}" sensor_0_range="0.01" sensor_0_fov="${ir_omni_fov_rad}"
+    sensor_1_range="0.5" sensor_1_fov="${ir_front_facing_fov_rad}" >
+    <origin xyz="0.153 0 ${0.035 + base_link_z_offset}"/>
+  </xacro:ir_opcode_receivers>
+
+  <!-- Plugins -->
+  <xacro:if value="${'$(arg gazebo)' == 'classic'}">
+    <!-- Ground truth pose -->
+    <gazebo>
+      <plugin name="gazebo_ros_p3d_robot" filename="libgazebo_ros_p3d.so">
+        <ros>
+          <namespace>/</namespace>
+          <remapping>odom:=sim_ground_truth_pose</remapping>
+        </ros>
+        <body_name>base_link</body_name>
+        <frame_name>world</frame_name>
+        <update_rate>62</update_rate>
+        <xyz_offset>0 0 0</xyz_offset>
+        <rpy_offset>0.0 0.0 0.0</rpy_offset>
+        <gaussian_noise>0.0</gaussian_noise>
+      </plugin>
+    </gazebo>
+
+    <!-- Dock status -->
+    <gazebo>
+      <plugin name="dock_status_publisher" filename="libgazebo_ros_create_docking_status.so">
+        <ros>
+          <namespace>/</namespace>
+          <remapping>~/out:=dock</remapping>
+        </ros>
+        <update_rate>1.0</update_rate>
+        <robot_model_name>${robot_model_name}</robot_model_name>
+        <receiver_link_name>${receiver_link_name}</receiver_link_name>
+        <dock_model_name>${dock_model_name}</dock_model_name>
+        <emitter_link_name>${emitter_link_name}</emitter_link_name>
+      </plugin>
+    </gazebo>
+  </xacro:if>
+
+  <xacro:if value="${'$(arg gazebo)' == 'ignition'}">
+    <gazebo>
+      <plugin filename="libignition-gazebo-pose-publisher-system.so" name="ignition::gazebo::systems::PosePublisher">
+        <publish_link_pose>true</publish_link_pose>
+        <publish_nested_model_pose>true</publish_nested_model_pose>
+        <use_pose_vector_msg>true</use_pose_vector_msg>
+        <update_frequency>62</update_frequency>
+      </plugin>
+    </gazebo>
+  
+    <gazebo>
+      <plugin filename="ignition-gazebo-diff-drive-system" name="ignition::gazebo::systems::DiffDrive">
+        <left_joint>left_wheel_joint</left_joint>
+        <right_joint>right_wheel_joint</right_joint>
+        <wheel_separation>0.233</wheel_separation>
+        <wheel_radius>0.03575</wheel_radius>
+        <frame_id>odom</frame_id>
+        <child_frame_id>base_link</child_frame_id>
+        <odom_publish_frequency>50</odom_publish_frequency>
+        <!-- Requires ignition gazebo to be installed from source -->
+        <min_linear_velocity>-0.46</min_linear_velocity>
+        <max_linear_velocity>0.46</max_linear_velocity>
+        <min_linear_acceleration>-0.9</min_linear_acceleration>
+        <max_linear_acceleration>0.9</max_linear_acceleration>
+        <min_angular_velocity>-1.9</min_angular_velocity>
+        <max_angular_velocity>1.9</max_angular_velocity>
+        <min_angular_acceleration>-7.725</min_angular_acceleration>
+        <max_angular_acceleration>7.725</max_angular_acceleration>
+        <!-- Maintain compatibility with debian installation -->
+        <min_velocity>-1.9</min_velocity>
+        <max_velocity>1.9</max_velocity>
+        <min_acceleration>-0.9</min_acceleration>
+        <max_acceleration>0.9</max_acceleration>
+      </plugin>
+    </gazebo>
+  
+    <gazebo>
+      <plugin filename="libignition-gazebo-contact-system.so" name="ignition::gazebo::systems::Contact"></plugin>
+    </gazebo>
+      
+    <gazebo>
+      <plugin filename="libignition-gazebo-sensors-system.so" name="ignition::gazebo::systems::Sensors">
+        <render_engine>ogre</render_engine>
+      </plugin>
+    </gazebo>
+  </xacro:if>
+
+</robot>

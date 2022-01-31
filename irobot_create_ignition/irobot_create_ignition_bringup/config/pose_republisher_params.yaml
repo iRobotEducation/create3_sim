@@ -1,0 +1,10 @@
+---
+pose_republisher_node:
+  ros__parameters:
+    robot_publisher_topic: /sim_ground_truth_pose
+    robot_subscriber_topic: /_internal/sim_ground_truth_pose
+    mouse_publisher_topic: /_internal/sim_ground_truth_mouse_pose
+    dock_subscriber_topic: /_internal/sim_ground_truth_dock_pose
+    dock_publisher_topic: /sim_ground_truth_dock_pose
+    ir_emitter_publisher_topic: /_internal/sim_ground_truth_ir_emitter_pose
+    ir_receiver_publisher_topic: /_internal/sim_ground_truth_ir_receiver_pose
