@@ -38,7 +38,7 @@ mkdir -p ~/ignition_ws/src
 ```bash
 cd ~/ignition_ws
 sudo apt-get update && sudo apt-get install wget
-wget https://raw.githubusercontent.com/iRobotEducation/create3_sim/irobot_create_ignition/ignition_edifice.repos
+wget https://raw.githubusercontent.com/iRobotEducation/create3_sim/main/irobot_create_ignition/ignition_edifice.repos
 vcs import ~/ignition_ws/src < ~/ignition_ws/ignition_edifice.repos
 ```
 
