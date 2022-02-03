@@ -68,24 +68,6 @@ def generate_launch_description():
                                'diffdrive_controller/cmd_vel_unstamped')
                           ])
 
-    # odometry bridge
-    odometry_bridge = Node(package='ros_ign_bridge', executable='parameter_bridge',
-                           namespace=namespace,
-                           name='odometry_bridge',
-                           output='screen',
-                           parameters=[{
-                               'use_sim_time': use_sim_time
-                           }],
-                           arguments=[
-                               ['/model/', LaunchConfiguration('robot_name'), '/odometry' +
-                                '@nav_msgs/msg/Odometry' +
-                                '[ignition.msgs.Odometry']
-                           ],
-                           remappings=[
-                               (['/model/', LaunchConfiguration('robot_name'), '/odometry'],
-                                '/odom')
-                           ])
-
     # odom to base_link transform bridge
     odom_base_tf_bridge = Node(package='ros_ign_bridge', executable='parameter_bridge',
                                namespace=namespace,
@@ -181,38 +163,13 @@ def generate_launch_description():
                                    '[ignition.msgs.Int32']
                               ])
 
-    # Pose bridge
-    pose_bridge = Node(package='ros_ign_bridge', executable='parameter_bridge',
-                       namespace=namespace,
-                       name='pose_bridge',
-                       output='screen',
-                       parameters=[{
-                            'use_sim_time': use_sim_time
-                       }],
-                       arguments=[
-                           ['/model/', LaunchConfiguration('robot_name'), '/pose' +
-                            '@tf2_msgs/msg/TFMessage' +
-                            '[ignition.msgs.Pose_V'],
-                           '/model/standard_dock/pose' +
-                           '@tf2_msgs/msg/TFMessage' +
-                           '[ignition.msgs.Pose_V'
-                       ],
-                       remappings=[
-                           (['/model/', LaunchConfiguration('robot_name'), '/pose'],
-                            '/_internal/sim_ground_truth_pose'),
-                           ('/model/standard_dock/pose',
-                            '/_internal/sim_ground_truth_dock_pose')
-                       ])
-
     # Create launch description and add actions
     ld = LaunchDescription(ARGUMENTS)
     ld.add_action(clock_bridge)
-    ld.add_action(odometry_bridge)
     ld.add_action(cmd_vel_bridge)
     ld.add_action(odom_base_tf_bridge)
     ld.add_action(bumper_contact_bridge)
     ld.add_action(cliff_bridge)
     ld.add_action(ir_intensity_bridge)
     ld.add_action(buttons_msg_bridge)
-    ld.add_action(pose_bridge)
     return ld
