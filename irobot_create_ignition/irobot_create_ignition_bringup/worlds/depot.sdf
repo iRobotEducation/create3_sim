@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <sdf version="1.6">
-  <world name="edifice">
+  <world name="depot">
     <scene>
       <grid>false</grid>
     </scene>
