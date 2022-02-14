@@ -14,7 +14,7 @@ ARGUMENTS = [
                           description='Use sim time'),
     DeclareLaunchArgument('robot_name', default_value='create3',
                           description='Ignition model name'),
-    DeclareLaunchArgument('world', default_value='edifice',
+    DeclareLaunchArgument('world', default_value='depot',
                           description='World name')
 ]
 
