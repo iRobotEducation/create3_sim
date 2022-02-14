@@ -92,6 +92,7 @@ rosdep install --from-path src -yi
 - Build the workspace with:
 
 ```bash
+export IGNITION_VERSION=edifice
 colcon build --symlink-install
 source install/local_setup.bash
 ```
