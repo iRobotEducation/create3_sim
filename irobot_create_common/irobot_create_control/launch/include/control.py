@@ -21,7 +21,6 @@ def generate_launch_description():
         package='controller_manager',
         executable='spawner',
         parameters=[control_params_file],
-        remappings=[('/diffdrive_controller/cmd_vel_unstamped', '/cmd_vel')],
         arguments=['diffdrive_controller', '-c', '/controller_manager'],
         output='screen',
     )
