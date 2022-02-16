@@ -25,40 +25,6 @@ Install [Gazebo 11](http://gazebosim.org/tutorials?tut=install_ubuntu)
 
 #### Ignition Edifice
 
-It is currently recommended to build Ignition Gazebo from sources because this will include the latest, unreleased, bug fixes.
-
-##### From Source (Recommended)
-
-- Create a workspace
-```bash
-mkdir -p ~/ignition_ws/src
-```
-
-- Use `vcs` to clone Ignition Edifice dependencies into the workspace:
-```bash
-cd ~/ignition_ws
-sudo apt-get update && sudo apt-get install wget
-wget https://raw.githubusercontent.com/iRobotEducation/create3_sim/main/irobot_create_ignition/ignition_edifice.repos
-vcs import ~/ignition_ws/src < ~/ignition_ws/ignition_edifice.repos
-```
-
-- Install additional dependencies:
-```bash
-sudo sh -c 'echo "deb http://packages.osrfoundation.org/gazebo/ubuntu-stable `lsb_release -cs` main" > /etc/apt/sources.list.d/gazebo-stable.list'
-wget http://packages.osrfoundation.org/gazebo.key -O - | sudo apt-key add -
-sudo apt-get update
-sudo apt -y install \
-  $(sort -u $(find . -iname 'packages-'`lsb_release -cs`'.apt' -o -iname 'packages.apt' | grep -v '/\.git/') | sed '/ignition\|sdf/d' | tr '\n' ' ')
-```
-
-- Build the Ignition libraries:
-```bash
-cd ~/ignition_ws
-colcon build --merge-install
-```
-
-##### Binary
-
 ```bash
 sudo apt-get update && sudo apt-get install wget
 sudo sh -c 'echo "deb http://packages.osrfoundation.org/gazebo/ubuntu-stable `lsb_release -cs` main" > /etc/apt/sources.list.d/gazebo-stable.list'
