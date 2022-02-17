@@ -10,13 +10,15 @@
 #include <utility>
 #include <vector>
 
+#include "rclcpp_components/register_node_macro.hpp"
+
 namespace irobot_create_nodes
 {
 using namespace std::placeholders;
 using namespace std::chrono_literals;
 
-MotionControlNode::MotionControlNode()
-: rclcpp::Node("motion_control"),
+MotionControlNode::MotionControlNode(const rclcpp::NodeOptions & options)
+: rclcpp::Node("motion_control", options),
   wheels_stop_threshold_(0.5s),
   repeat_print_(1s)
 {
@@ -449,3 +451,5 @@ void MotionControlNode::power_off_request(
 }
 
 }  // namespace irobot_create_nodes
+
+RCLCPP_COMPONENTS_REGISTER_NODE(irobot_create_nodes::MotionControlNode)

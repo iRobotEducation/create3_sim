@@ -27,12 +27,12 @@ class MockPublisher : public rclcpp::Node
 {
 public:
   /// \brief Constructor
-  MockPublisher();
+  MockPublisher(const rclcpp::NodeOptions & options = rclcpp::NodeOptions());
 
   // Callback functions
   void lightring_callback(irobot_create_msgs::msg::LightringLeds::SharedPtr msg);
 
-protected:
+private:
   rclcpp_action::GoalResponse handle_led_animation_goal(
     const rclcpp_action::GoalUUID & uuid,
     std::shared_ptr<const irobot_create_msgs::action::LedAnimation::Goal> goal);

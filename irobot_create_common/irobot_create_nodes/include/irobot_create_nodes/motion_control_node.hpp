@@ -29,7 +29,7 @@ class MotionControlNode : public rclcpp::Node
 {
 public:
   /// \brief Constructor
-  MotionControlNode();
+  MotionControlNode(const rclcpp::NodeOptions & options = rclcpp::NodeOptions());
 
 private:
   /// \brief Function to centralize velocity command for system

@@ -9,13 +9,14 @@
 #include <vector>
 
 #include "irobot_create_toolbox/parameter_helper.hpp"
+#include "rclcpp_components/register_node_macro.hpp"
 
 namespace irobot_create_nodes
 {
 using namespace std::placeholders;
 
-MockPublisher::MockPublisher()
-: rclcpp::Node("mock_publisher_node"),
+MockPublisher::MockPublisher(const rclcpp::NodeOptions & options)
+: rclcpp::Node("mock_publisher_node", options),
   led_animation_end_duration_(rclcpp::Duration::from_nanoseconds(0))
 {
   // Gazebo simulator being used
@@ -178,4 +179,7 @@ void MockPublisher::lightring_callback(irobot_create_msgs::msg::LightringLeds::S
     get_logger(),
     "Lightring message received but it is not yet implemented in simulation");
 }
+
 }  // namespace irobot_create_nodes
+
+RCLCPP_COMPONENTS_REGISTER_NODE(irobot_create_nodes::MockPublisher)

@@ -17,7 +17,7 @@ class HazardsVectorPublisher : public rclcpp::Node
 {
 public:
   /// \brief Constructor
-  HazardsVectorPublisher();
+  HazardsVectorPublisher(const rclcpp::NodeOptions & options = rclcpp::NodeOptions());
 
 private:
   // Publish aggregated detections on timer_'s frequency

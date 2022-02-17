@@ -7,12 +7,13 @@
 #include <vector>
 
 #include "irobot_create_toolbox/parameter_helper.hpp"
+#include "rclcpp_components/register_node_macro.hpp"
 
 namespace irobot_create_nodes
 {
 
-HazardsVectorPublisher::HazardsVectorPublisher()
-: rclcpp::Node("hazard_detection_vector_node")
+HazardsVectorPublisher::HazardsVectorPublisher(const rclcpp::NodeOptions & options)
+: rclcpp::Node("hazard_detection_vector_node", options)
 {
   // Topic parameter to publish hazards vector to
   publisher_topic_ =
@@ -61,3 +62,5 @@ HazardsVectorPublisher::HazardsVectorPublisher()
 }
 
 }  // namespace irobot_create_nodes
+
+RCLCPP_COMPONENTS_REGISTER_NODE(irobot_create_nodes::HazardsVectorPublisher)

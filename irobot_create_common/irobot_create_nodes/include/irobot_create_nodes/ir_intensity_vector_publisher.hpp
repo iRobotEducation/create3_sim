@@ -20,9 +20,9 @@ class IrIntensityVectorPublisher : public rclcpp::Node
 {
 public:
   /// \brief Constructor
-  IrIntensityVectorPublisher();
+  IrIntensityVectorPublisher(const rclcpp::NodeOptions & options = rclcpp::NodeOptions());
 
-protected:
+private:
   // Publish aggregated detections on timer_'s frequency
   rclcpp::TimerBase::SharedPtr timer_;
 

@@ -28,9 +28,9 @@ class RobotState : public rclcpp::Node
 {
 public:
   /// \brief Constructor
-  RobotState();
+  RobotState(const rclcpp::NodeOptions & options = rclcpp::NodeOptions());
 
-protected:
+private:
   // Callback functions
   void dock_callback(irobot_create_msgs::msg::Dock::SharedPtr msg);
   void stop_callback(nav_msgs::msg::Odometry::SharedPtr msg);

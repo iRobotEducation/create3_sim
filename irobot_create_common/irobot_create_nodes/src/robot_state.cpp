@@ -8,12 +8,13 @@
 #include <vector>
 
 #include "irobot_create_toolbox/parameter_helper.hpp"
+#include "rclcpp_components/register_node_macro.hpp"
 
 namespace irobot_create_nodes
 {
 
-RobotState::RobotState()
-: rclcpp::Node("robot_state")
+RobotState::RobotState(const rclcpp::NodeOptions & options)
+: rclcpp::Node("robot_state", options)
 {
   transitioned_to_docked_ = this->now();
   transitioned_to_undocked_ = transitioned_to_docked_;
@@ -207,4 +208,7 @@ void RobotState::stop_callback(nav_msgs::msg::Odometry::SharedPtr msg)
   // Publish topics
   stop_status_publisher_->publish(stop_status_msg_);
 }
+
 }  // namespace irobot_create_nodes
+
+RCLCPP_COMPONENTS_REGISTER_NODE(irobot_create_nodes::RobotState)

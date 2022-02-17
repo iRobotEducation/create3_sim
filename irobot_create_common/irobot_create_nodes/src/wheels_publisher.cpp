@@ -7,12 +7,13 @@
 #include <vector>
 
 #include "irobot_create_toolbox/parameter_helper.hpp"
+#include "rclcpp_components/register_node_macro.hpp"
 
 namespace irobot_create_nodes
 {
 
-WheelsPublisher::WheelsPublisher()
-: rclcpp::Node("wheels_publisher_node")
+WheelsPublisher::WheelsPublisher(const rclcpp::NodeOptions & options)
+: rclcpp::Node("wheels_publisher_node", options)
 {
   // Topic parameter to publish angular velocity to
   const std::string velocity_topic =
@@ -128,3 +129,5 @@ double WheelsPublisher::get_dynamic_state_value(std::string joint_name, std::str
 }
 
 }  // namespace irobot_create_nodes
+
+RCLCPP_COMPONENTS_REGISTER_NODE(irobot_create_nodes::WheelsPublisher)

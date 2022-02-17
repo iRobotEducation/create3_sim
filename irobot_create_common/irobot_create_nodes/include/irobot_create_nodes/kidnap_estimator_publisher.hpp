@@ -23,7 +23,7 @@ class KidnapEstimator : public rclcpp::Node
 {
 public:
   /// \brief Constructor
-  KidnapEstimator();
+  KidnapEstimator(const rclcpp::NodeOptions & options = rclcpp::NodeOptions());
 
 private:
   /// \brief Callback function

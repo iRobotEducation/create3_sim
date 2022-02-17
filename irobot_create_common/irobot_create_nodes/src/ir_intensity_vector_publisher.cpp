@@ -6,11 +6,13 @@
 #include <string>
 #include <vector>
 
+#include "rclcpp_components/register_node_macro.hpp"
+
 namespace irobot_create_nodes
 {
 
-IrIntensityVectorPublisher::IrIntensityVectorPublisher()
-: rclcpp::Node("ir_intensity_readings_vector_node")
+IrIntensityVectorPublisher::IrIntensityVectorPublisher(const rclcpp::NodeOptions & options)
+: rclcpp::Node("ir_intensity_readings_vector_node", options)
 {
   // Topic parameter to publish IR intensity vector to
   publisher_topic_ =
@@ -62,3 +64,5 @@ IrIntensityVectorPublisher::IrIntensityVectorPublisher()
 }
 
 }  // namespace irobot_create_nodes
+
+RCLCPP_COMPONENTS_REGISTER_NODE(irobot_create_nodes::IrIntensityVectorPublisher)

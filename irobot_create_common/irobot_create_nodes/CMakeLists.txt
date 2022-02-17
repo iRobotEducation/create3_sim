@@ -21,6 +21,7 @@ find_package(irobot_create_toolbox REQUIRED)
 find_package(nav_msgs REQUIRED)
 find_package(rclcpp REQUIRED)
 find_package(rclcpp_action REQUIRED)
+find_package(rclcpp_components REQUIRED)
 find_package(tf2 REQUIRED)
 find_package(tf2_geometry_msgs REQUIRED)
 find_package(tf2_ros REQUIRED)
@@ -43,6 +44,7 @@ set(dependencies
   tf2_ros
 )
 
+# Hazards vector publisher
 add_library(hazard_publisher_lib SHARED)
 target_sources(
   hazard_publisher_lib
@@ -54,6 +56,11 @@ ament_target_dependencies(hazard_publisher_lib
   ${dependencies}
 )
 
+rclcpp_components_register_node(hazard_publisher_lib
+  PLUGIN "irobot_create_nodes::HazardsVectorPublisher"
+  EXECUTABLE hazards_vector_publisher)
+
+# IR intensity vector publisher
 add_library(ir_intensity_publisher_lib SHARED)
 target_sources(
   ir_intensity_publisher_lib
@@ -65,6 +72,11 @@ ament_target_dependencies(ir_intensity_publisher_lib
   ${dependencies}
 )
 
+rclcpp_components_register_node(ir_intensity_publisher_lib
+  PLUGIN "irobot_create_nodes::IrIntensityVectorPublisher"
+  EXECUTABLE ir_intensity_vector_publisher)
+
+# Motion control node
 add_library(motion_control_lib SHARED)
 target_sources(
   motion_control_lib
@@ -81,6 +93,11 @@ ament_target_dependencies(motion_control_lib
   ${dependencies}
 )
 
+rclcpp_components_register_node(motion_control_lib
+  PLUGIN "irobot_create_nodes::MotionControlNode"
+  EXECUTABLE motion_control)
+
+# Wheel status publisher
 add_library(wheel_status_publisher_lib SHARED)
 target_sources(
   wheel_status_publisher_lib
@@ -92,6 +109,11 @@ ament_target_dependencies(wheel_status_publisher_lib
   ${dependencies}
 )
 
+rclcpp_components_register_node(wheel_status_publisher_lib
+  PLUGIN "irobot_create_nodes::WheelsPublisher"
+  EXECUTABLE wheel_status_publisher)
+
+# Robot status publisher
 add_library(robot_state_lib SHARED)
 target_sources(
   robot_state_lib
@@ -103,6 +125,11 @@ ament_target_dependencies(robot_state_lib
   ${dependencies}
 )
 
+rclcpp_components_register_node(robot_state_lib
+  PLUGIN "irobot_create_nodes::RobotState"
+  EXECUTABLE robot_state)
+
+# Mock publisher
 add_library(mock_publisher_lib SHARED)
 target_sources(
   mock_publisher_lib
@@ -114,6 +141,11 @@ ament_target_dependencies(mock_publisher_lib
   ${dependencies}
 )
 
+rclcpp_components_register_node(mock_publisher_lib
+  PLUGIN "irobot_create_nodes::MockPublisher"
+  EXECUTABLE mock_publisher)
+
+# Kidnap estimator publisher
 add_library(kidnap_estimator_publisher_lib SHARED)
 target_sources(
   kidnap_estimator_publisher_lib
@@ -125,6 +157,10 @@ ament_target_dependencies(kidnap_estimator_publisher_lib
   ${dependencies}
 )
 
+rclcpp_components_register_node(kidnap_estimator_publisher_lib
+  PLUGIN "irobot_create_nodes::KidnapEstimator"
+  EXECUTABLE kidnap_estimator_publisher)
+
 set(libraries_names
   hazard_publisher_lib
   ir_intensity_publisher_lib
@@ -135,91 +171,12 @@ set(libraries_names
   kidnap_estimator_publisher_lib
 )
 
-#### Executables
-
-# Hazards vector publisher
-add_executable(hazards_vector_publisher_node)
-target_sources(
-  hazards_vector_publisher_node
-  PRIVATE
-    src/hazards_vector_publisher_node.cpp
-)
-target_link_libraries(hazards_vector_publisher_node hazard_publisher_lib)
-
-# IR intensity vector publisher
-add_executable(ir_intensity_vector_publisher_node)
-target_sources(
-  ir_intensity_vector_publisher_node
-  PRIVATE
-    src/ir_intensity_vector_publisher_node.cpp
-)
-target_link_libraries(ir_intensity_vector_publisher_node ir_intensity_publisher_lib)
-
-# Motion control node
-add_executable(motion_control)
-target_sources(
-  motion_control
-  PRIVATE
-    src/motion_control_main.cpp
-)
-target_link_libraries(motion_control motion_control_lib)
-
-# Wheel status publisher
-add_executable(wheel_status_publisher_node)
-target_sources(
-  wheel_status_publisher_node
-  PRIVATE
-    src/wheels_publisher_node.cpp
-)
-target_link_libraries(wheel_status_publisher_node wheel_status_publisher_lib)
-
-# Robot status publisher
-add_executable(robot_state_node)
-target_sources(
-  robot_state_node
-  PRIVATE
-    src/robot_state_node.cpp
-)
-target_link_libraries(robot_state_node robot_state_lib)
-
-# Mock publisher
-add_executable(mock_publisher_node)
-target_sources(
-  mock_publisher_node
-  PRIVATE
-    src/mock_publisher_node.cpp
-)
-target_link_libraries(mock_publisher_node mock_publisher_lib)
-
-# Kidnap estimator publisher
-add_executable(kidnap_estimator_publisher_node)
-target_sources(
-  kidnap_estimator_publisher_node
-  PRIVATE
-    src/kidnap_estimator_publisher_node.cpp
-)
-target_link_libraries(kidnap_estimator_publisher_node kidnap_estimator_publisher_lib)
-
-set(executables_names
-  hazards_vector_publisher_node
-  ir_intensity_vector_publisher_node
-  motion_control
-  wheel_status_publisher_node
-  robot_state_node
-  mock_publisher_node
-  kidnap_estimator_publisher_node
-)
-
 #### Install
 
 install(TARGETS ${libraries_names}
   ARCHIVE DESTINATION lib
   LIBRARY DESTINATION lib
   RUNTIME DESTINATION bin
-)
-
-install(TARGETS ${executables_names}
-  DESTINATION lib/${PROJECT_NAME}
 )
 
 install(DIRECTORY include/

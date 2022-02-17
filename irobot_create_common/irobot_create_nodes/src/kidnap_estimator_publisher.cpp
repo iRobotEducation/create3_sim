@@ -8,11 +8,12 @@
 #include <vector>
 
 #include "irobot_create_toolbox/parameter_helper.hpp"
+#include "rclcpp_components/register_node_macro.hpp"
 
 namespace irobot_create_nodes
 {
-KidnapEstimator::KidnapEstimator()
-: rclcpp::Node("kidnap_estimator")
+KidnapEstimator::KidnapEstimator(const rclcpp::NodeOptions & options)
+: rclcpp::Node("kidnap_estimator", options)
 {
   // Topic parameter to publish kidnap status to
   kidnap_status_publisher_topic_ =
@@ -64,4 +65,7 @@ void KidnapEstimator::kidnap_callback(irobot_create_msgs::msg::HazardDetectionVe
   // Publish topics
   kidnap_status_publisher_->publish(kidnap_status_msg_);
 }
+
 }  // namespace irobot_create_nodes
+
+RCLCPP_COMPONENTS_REGISTER_NODE(irobot_create_nodes::KidnapEstimator)

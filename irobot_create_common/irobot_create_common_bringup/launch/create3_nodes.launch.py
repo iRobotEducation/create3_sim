@@ -48,8 +48,8 @@ def generate_launch_description():
     # Publish hazards vector
     hazards_vector_node = Node(
         package='irobot_create_nodes',
-        name='hazards_vector_node',
-        executable='hazards_vector_publisher_node',
+        name='hazards_vector_publisher',
+        executable='hazards_vector_publisher',
         parameters=[hazards_params_yaml_file,
                     {'use_sim_time': True}],
         output='screen',
@@ -58,8 +58,8 @@ def generate_launch_description():
     # Publish IR intensity vector
     ir_intensity_vector_node = Node(
         package='irobot_create_nodes',
-        name='ir_intensity_vector_node',
-        executable='ir_intensity_vector_publisher_node',
+        name='ir_intensity_vector_publisher',
+        executable='ir_intensity_vector_publisher',
         parameters=[ir_intensity_params_yaml_file,
                     {'use_sim_time': True}],
         output='screen',
@@ -77,8 +77,8 @@ def generate_launch_description():
     # Publish wheel status
     wheel_status_node = Node(
         package='irobot_create_nodes',
-        name='wheel_status_publisher_node',
-        executable='wheel_status_publisher_node',
+        name='wheel_status_publisher',
+        executable='wheel_status_publisher',
         parameters=[wheel_status_params_yaml_file,
                     {'use_sim_time': True}],
         output='screen',
@@ -87,8 +87,8 @@ def generate_launch_description():
     # Publish mock topics
     mock_topics_node = Node(
         package='irobot_create_nodes',
-        name='mock_publisher_node',
-        executable='mock_publisher_node',
+        name='mock_publisher',
+        executable='mock_publisher',
         parameters=[mock_params_yaml_file,
                     {'use_sim_time': True},
                     {'gazebo': LaunchConfiguration('gazebo')}],
@@ -99,7 +99,7 @@ def generate_launch_description():
     robot_state_node = Node(
         package='irobot_create_nodes',
         name='robot_state',
-        executable='robot_state_node',
+        executable='robot_state',
         parameters=[robot_state_yaml_file,
                     {'use_sim_time': True}],
         output='screen',
@@ -108,8 +108,8 @@ def generate_launch_description():
     # Publish kidnap estimator
     kidnap_estimator_node = Node(
         package='irobot_create_nodes',
-        name='kidnap_estimator',
-        executable='kidnap_estimator_publisher_node',
+        name='kidnap_estimator_publisher',
+        executable='kidnap_estimator_publisher',
         parameters=[kidnap_estimator_yaml_file,
                     {'use_sim_time': True}],
         output='screen',
