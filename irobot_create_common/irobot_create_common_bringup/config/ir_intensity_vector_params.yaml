@@ -1,5 +1,5 @@
 ---
-ir_intensity_vector_node:
+ir_intensity_vector_publisher:
   ros__parameters:
     # IR intensity publisher topic
     publisher_topic: /ir_intensity

@@ -1,5 +1,5 @@
 ---
-mock_publisher_node:
+mock_publisher:
   ros__parameters:
     # Mock buttons publisher topic
     button_topic: /interface_buttons
