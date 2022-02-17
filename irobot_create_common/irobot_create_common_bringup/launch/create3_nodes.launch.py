@@ -47,7 +47,7 @@ def generate_launch_description():
 
     # Publish hazards vector
     hazards_vector_node = Node(
-        package='irobot_create_toolbox',
+        package='irobot_create_nodes',
         name='hazards_vector_node',
         executable='hazards_vector_publisher_node',
         parameters=[hazards_params_yaml_file,
@@ -57,7 +57,7 @@ def generate_launch_description():
 
     # Publish IR intensity vector
     ir_intensity_vector_node = Node(
-        package='irobot_create_toolbox',
+        package='irobot_create_nodes',
         name='ir_intensity_vector_node',
         executable='ir_intensity_vector_publisher_node',
         parameters=[ir_intensity_params_yaml_file,
@@ -67,7 +67,7 @@ def generate_launch_description():
 
     # Motion Control
     motion_control_node = Node(
-        package='irobot_create_toolbox',
+        package='irobot_create_nodes',
         name='motion_control',
         executable='motion_control',
         parameters=[{'use_sim_time': True}],
@@ -76,7 +76,7 @@ def generate_launch_description():
 
     # Publish wheel status
     wheel_status_node = Node(
-        package='irobot_create_toolbox',
+        package='irobot_create_nodes',
         name='wheel_status_publisher_node',
         executable='wheel_status_publisher_node',
         parameters=[wheel_status_params_yaml_file,
@@ -86,7 +86,7 @@ def generate_launch_description():
 
     # Publish mock topics
     mock_topics_node = Node(
-        package='irobot_create_toolbox',
+        package='irobot_create_nodes',
         name='mock_publisher_node',
         executable='mock_publisher_node',
         parameters=[mock_params_yaml_file,
@@ -97,7 +97,7 @@ def generate_launch_description():
 
     # Publish robot state
     robot_state_node = Node(
-        package='irobot_create_toolbox',
+        package='irobot_create_nodes',
         name='robot_state',
         executable='robot_state_node',
         parameters=[robot_state_yaml_file,
@@ -107,7 +107,7 @@ def generate_launch_description():
 
     # Publish kidnap estimator
     kidnap_estimator_node = Node(
-        package='irobot_create_toolbox',
+        package='irobot_create_nodes',
         name='kidnap_estimator',
         executable='kidnap_estimator_publisher_node',
         parameters=[kidnap_estimator_yaml_file,

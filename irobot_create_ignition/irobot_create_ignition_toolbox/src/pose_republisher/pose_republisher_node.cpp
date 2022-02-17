@@ -7,7 +7,7 @@
 #include <utility>
 
 #include "irobot_create_ignition_toolbox/pose_republisher/pose_republisher.hpp"
-#include "irobot_create_toolbox/parameter_helper.hpp"
+#include "irobot_create_nodes/parameter_helper.hpp"
 
 using irobot_create_ignition_toolbox::PoseRepublisher;
 
@@ -16,21 +16,21 @@ PoseRepublisher::PoseRepublisher()
   wheel_joints_{"left_wheel_joint",
     "right_wheel_joint"}
 {
-  robot_name_ = irobot_create_toolbox::declare_and_get_parameter<std::string>("robot_name", this);
-  std::string robot_pub_topic = irobot_create_toolbox::declare_and_get_parameter<std::string>(
+  robot_name_ = irobot_create_nodes::declare_and_get_parameter<std::string>("robot_name", this);
+  std::string robot_pub_topic = irobot_create_nodes::declare_and_get_parameter<std::string>(
     "robot_publisher_topic", this);
-  std::string robot_sub_topic = irobot_create_toolbox::declare_and_get_parameter<std::string>(
+  std::string robot_sub_topic = irobot_create_nodes::declare_and_get_parameter<std::string>(
     "robot_subscriber_topic", this);
-  std::string mouse_pub_topic = irobot_create_toolbox::declare_and_get_parameter<std::string>(
+  std::string mouse_pub_topic = irobot_create_nodes::declare_and_get_parameter<std::string>(
     "mouse_publisher_topic", this);
 
-  std::string dock_pub_topic = irobot_create_toolbox::declare_and_get_parameter<std::string>(
+  std::string dock_pub_topic = irobot_create_nodes::declare_and_get_parameter<std::string>(
     "dock_publisher_topic", this);
-  std::string dock_sub_topic = irobot_create_toolbox::declare_and_get_parameter<std::string>(
+  std::string dock_sub_topic = irobot_create_nodes::declare_and_get_parameter<std::string>(
     "dock_subscriber_topic", this);
-  std::string ir_emitter_pub_topic = irobot_create_toolbox::declare_and_get_parameter<std::string>(
+  std::string ir_emitter_pub_topic = irobot_create_nodes::declare_and_get_parameter<std::string>(
     "ir_emitter_publisher_topic", this);
-  std::string ir_receiver_pub_topic = irobot_create_toolbox::declare_and_get_parameter<std::string>(
+  std::string ir_receiver_pub_topic = irobot_create_nodes::declare_and_get_parameter<std::string>(
     "ir_receiver_publisher_topic", this);
 
 

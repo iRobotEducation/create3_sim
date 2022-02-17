@@ -8,7 +8,7 @@
 #include <vector>
 
 #include "irobot_create_ignition_toolbox/sensors/cliff.hpp"
-#include "irobot_create_toolbox/parameter_helper.hpp"
+#include "irobot_create_nodes/parameter_helper.hpp"
 
 using irobot_create_ignition_toolbox::Cliff;
 
@@ -21,11 +21,11 @@ Cliff::Cliff(std::shared_ptr<rclcpp::Node> & nh)
     "side_right"
   }
 {
-  auto cliff_sub_topics = irobot_create_toolbox::declare_and_get_parameter<
+  auto cliff_sub_topics = irobot_create_nodes::declare_and_get_parameter<
     std::vector<std::string>>(
     "cliff_subscription_topics", nh_.get());
 
-  auto cliff_pub_topics = irobot_create_toolbox::declare_and_get_parameter<
+  auto cliff_pub_topics = irobot_create_nodes::declare_and_get_parameter<
     std::vector<std::string>>(
     "cliff_publish_topics", nh_.get());
 

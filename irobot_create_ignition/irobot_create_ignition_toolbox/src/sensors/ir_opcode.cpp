@@ -7,7 +7,7 @@
 #include <utility>
 
 #include "irobot_create_ignition_toolbox/sensors/ir_opcode.hpp"
-#include "irobot_create_toolbox/parameter_helper.hpp"
+#include "irobot_create_nodes/parameter_helper.hpp"
 
 using irobot_create_ignition_toolbox::IrOpcode;
 
@@ -32,13 +32,13 @@ IrOpcode::IrOpcode(std::shared_ptr<rclcpp::Node> & nh)
     "dock",
     rclcpp::SensorDataQoS());
 
-  auto sensor_0_fov = irobot_create_toolbox::declare_and_get_parameter<double>(
+  auto sensor_0_fov = irobot_create_nodes::declare_and_get_parameter<double>(
     "ir_opcode_sensor_0_fov", nh_.get());
-  auto sensor_0_range = irobot_create_toolbox::declare_and_get_parameter<double>(
+  auto sensor_0_range = irobot_create_nodes::declare_and_get_parameter<double>(
     "ir_opcode_sensor_0_range", nh_.get());
-  auto sensor_1_fov = irobot_create_toolbox::declare_and_get_parameter<double>(
+  auto sensor_1_fov = irobot_create_nodes::declare_and_get_parameter<double>(
     "ir_opcode_sensor_1_fov", nh_.get());
-  auto sensor_1_range = irobot_create_toolbox::declare_and_get_parameter<double>(
+  auto sensor_1_range = irobot_create_nodes::declare_and_get_parameter<double>(
     "ir_opcode_sensor_1_range", nh_.get());
 
   sensors_[irobot_create_msgs::msg::IrOpcode::SENSOR_OMNI] = {

@@ -28,7 +28,7 @@ find_package(rclpy REQUIRED)
 find_package(tf2 REQUIRED)
 find_package(tf2_geometry_msgs REQUIRED)
 find_package(tf2_ros REQUIRED)
-find_package(irobot_create_toolbox REQUIRED)
+find_package(irobot_create_nodes REQUIRED)
 find_package(ros_ign_interfaces QUIET)
 
 if(NOT ros_ign_interfaces_FOUND)
@@ -51,7 +51,7 @@ set(dependencies
   tf2_geometry_msgs
   tf2_ros
   ros_ign_interfaces
-  irobot_create_toolbox
+  irobot_create_nodes
 )
 
 # Pose republisher

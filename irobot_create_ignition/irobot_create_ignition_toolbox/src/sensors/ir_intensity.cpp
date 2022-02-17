@@ -9,7 +9,7 @@
 #include <vector>
 
 #include "irobot_create_ignition_toolbox/sensors/ir_intensity.hpp"
-#include "irobot_create_toolbox/parameter_helper.hpp"
+#include "irobot_create_nodes/parameter_helper.hpp"
 
 using irobot_create_ignition_toolbox::IrIntensity;
 
@@ -25,11 +25,11 @@ IrIntensity::IrIntensity(std::shared_ptr<rclcpp::Node> & nh)
     "side_left"
   }
 {
-  auto ir_scan_sub_topics = irobot_create_toolbox::declare_and_get_parameter<
+  auto ir_scan_sub_topics = irobot_create_nodes::declare_and_get_parameter<
     std::vector<std::string>>(
     "ir_scan_subscription_topics", nh_.get());
 
-  auto ir_intensity_pub_topics = irobot_create_toolbox::declare_and_get_parameter<
+  auto ir_intensity_pub_topics = irobot_create_nodes::declare_and_get_parameter<
     std::vector<std::string>>(
     "ir_intensity_publish_topics", nh_.get());
 

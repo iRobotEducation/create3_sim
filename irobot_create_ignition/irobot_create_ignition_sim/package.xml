@@ -15,7 +15,7 @@
 
   <exec_depend>irobot_create_common_bringup</exec_depend>
   <exec_depend>irobot_create_description</exec_depend>
-  <exec_depend>irobot_create_toolbox</exec_depend>
+  <exec_depend>irobot_create_nodes</exec_depend>
   <exec_depend>irobot_create_ignition_bringup</exec_depend>
   <exec_depend>irobot_create_ignition_plugins</exec_depend>
   <exec_depend>irobot_create_ignition_toolbox</exec_depend>
