@@ -4,30 +4,28 @@
 #ifndef IROBOT_CREATE_NODES__MOCK_PUBLISHER_HPP_
 #define IROBOT_CREATE_NODES__MOCK_PUBLISHER_HPP_
 
-#include <irobot_create_msgs/action/led_animation.hpp>
-#include <irobot_create_msgs/msg/button.hpp>
-#include <irobot_create_msgs/msg/interface_buttons.hpp>
-#include <irobot_create_msgs/msg/led_color.hpp>
-#include <irobot_create_msgs/msg/lightring_leds.hpp>
-#include <irobot_create_msgs/msg/slip_status.hpp>
-#include <irobot_create_toolbox/parameter_helper.hpp>
-
-#include <rclcpp/rclcpp.hpp>
-#include <rclcpp_action/rclcpp_action.hpp>
-
 #include <limits>
 #include <memory>
 #include <string>
 #include <vector>
 
+#include "irobot_create_msgs/action/led_animation.hpp"
+#include "irobot_create_msgs/msg/button.hpp"
+#include "irobot_create_msgs/msg/interface_buttons.hpp"
+#include "irobot_create_msgs/msg/led_color.hpp"
+#include "irobot_create_msgs/msg/lightring_leds.hpp"
+#include "irobot_create_msgs/msg/slip_status.hpp"
+#include "rclcpp/rclcpp.hpp"
+#include "rclcpp_action/rclcpp_action.hpp"
 
 namespace irobot_create_nodes
 {
+
 class MockPublisher : public rclcpp::Node
 {
 public:
   /// \brief Constructor
-  MockPublisher(const rclcpp::NodeOptions & options = rclcpp::NodeOptions());
+  explicit MockPublisher(const rclcpp::NodeOptions & options = rclcpp::NodeOptions());
 
   // Callback functions
   void lightring_callback(irobot_create_msgs::msg::LightringLeds::SharedPtr msg);

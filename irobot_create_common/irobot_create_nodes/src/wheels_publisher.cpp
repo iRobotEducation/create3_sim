@@ -6,7 +6,6 @@
 #include <string>
 #include <vector>
 
-#include "irobot_create_toolbox/parameter_helper.hpp"
 #include "rclcpp_components/register_node_macro.hpp"
 
 namespace irobot_create_nodes
@@ -17,23 +16,23 @@ WheelsPublisher::WheelsPublisher(const rclcpp::NodeOptions & options)
 {
   // Topic parameter to publish angular velocity to
   const std::string velocity_topic =
-    irobot_create_toolbox::declare_and_get_parameter<std::string>("velocity_topic", this);
+    this->declare_parameter("velocity_topic", "/wheel_vels");
 
   // Topic parameter to publish wheel ticks to
   const std::string ticks_topic =
-    irobot_create_toolbox::declare_and_get_parameter<std::string>("ticks_topic", this);
+    this->declare_parameter("ticks_topic", "/wheel_ticks");
 
   // Publish rate parameter in Hz
   const double publish_rate =
-    irobot_create_toolbox::declare_and_get_parameter<double>("publish_rate", this);
+    this->declare_parameter("publish_rate", 62.0);
 
   // Encoder resolution in ticks per revolution
   encoder_resolution_ =
-    irobot_create_toolbox::declare_and_get_parameter<double>("encoder_resolution", this);
+    this->declare_parameter("encoder_resolution", 508.8);
 
   // wheel radius in meters
   const double wheel_radius =
-    irobot_create_toolbox::declare_and_get_parameter<double>("wheel_radius", this);
+    this->declare_parameter("wheel_radius", 0.03575);
   // Set wheel circumference from wheel radius parameter
   wheel_circumference_ = 2 * M_PI * wheel_radius;
 

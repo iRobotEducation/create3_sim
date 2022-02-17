@@ -10,17 +10,17 @@
 #include "control_msgs/msg/dynamic_joint_state.hpp"
 #include "irobot_create_msgs/msg/wheel_ticks.hpp"
 #include "irobot_create_msgs/msg/wheel_vels.hpp"
-#include "irobot_create_toolbox/parameter_helper.hpp"
 #include "rclcpp/rclcpp.hpp"
 #include "std_msgs/msg/string.hpp"
 
 namespace irobot_create_nodes
 {
+
 class WheelsPublisher : public rclcpp::Node
 {
 public:
   /// \brief Constructor
-  WheelsPublisher(const rclcpp::NodeOptions & options = rclcpp::NodeOptions());
+  explicit WheelsPublisher(const rclcpp::NodeOptions & options = rclcpp::NodeOptions());
 
 private:
   /// \brief Callback to be called periodically to publish the vector message

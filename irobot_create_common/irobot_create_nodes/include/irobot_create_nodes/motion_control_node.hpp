@@ -4,32 +4,34 @@
 #ifndef IROBOT_CREATE_NODES__MOTION_CONTROL_NODE_HPP_
 #define IROBOT_CREATE_NODES__MOTION_CONTROL_NODE_HPP_
 
-#include <geometry_msgs/msg/twist.hpp>
-#include <irobot_create_msgs/msg/kidnap_status.hpp>
-#include <irobot_create_msgs/msg/hazard_detection.hpp>
-#include <irobot_create_msgs/msg/wheel_status.hpp>
-#include <irobot_create_msgs/srv/e_stop.hpp>
-#include <irobot_create_msgs/srv/robot_power.hpp>
-#include <irobot_create_toolbox/parameter_helper.hpp>
-#include <irobot_create_nodes/motion_control/docking_behavior.hpp>
-#include <irobot_create_nodes/motion_control/drive_goal_behaviors.hpp>
-#include <irobot_create_nodes/motion_control/reflex_behavior.hpp>
-#include <irobot_create_nodes/motion_control/wall_follow_behavior.hpp>
-#include <rclcpp/rclcpp.hpp>
-#include <tf2_ros/buffer.h>
-#include <tf2_ros/transform_listener.h>
 #include <map>
 #include <memory>
 #include <string>
 #include <vector>
 
+#include "tf2_ros/buffer.h"
+#include "tf2_ros/transform_listener.h"
+
+#include "geometry_msgs/msg/twist.hpp"
+#include "irobot_create_msgs/msg/kidnap_status.hpp"
+#include "irobot_create_msgs/msg/hazard_detection.hpp"
+#include "irobot_create_msgs/msg/wheel_status.hpp"
+#include "irobot_create_msgs/srv/e_stop.hpp"
+#include "irobot_create_msgs/srv/robot_power.hpp"
+#include "irobot_create_nodes/motion_control/docking_behavior.hpp"
+#include "irobot_create_nodes/motion_control/drive_goal_behaviors.hpp"
+#include "irobot_create_nodes/motion_control/reflex_behavior.hpp"
+#include "irobot_create_nodes/motion_control/wall_follow_behavior.hpp"
+#include "rclcpp/rclcpp.hpp"
+
 namespace irobot_create_nodes
 {
+
 class MotionControlNode : public rclcpp::Node
 {
 public:
   /// \brief Constructor
-  MotionControlNode(const rclcpp::NodeOptions & options = rclcpp::NodeOptions());
+  explicit MotionControlNode(const rclcpp::NodeOptions & options = rclcpp::NodeOptions());
 
 private:
   /// \brief Function to centralize velocity command for system

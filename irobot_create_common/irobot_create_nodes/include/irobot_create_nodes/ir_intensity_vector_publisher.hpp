@@ -11,16 +11,16 @@
 
 #include "irobot_create_msgs/msg/ir_intensity.hpp"
 #include "irobot_create_msgs/msg/ir_intensity_vector.hpp"
-#include "irobot_create_toolbox/parameter_helper.hpp"
 #include "rclcpp/rclcpp.hpp"
 
 namespace irobot_create_nodes
 {
+
 class IrIntensityVectorPublisher : public rclcpp::Node
 {
 public:
   /// \brief Constructor
-  IrIntensityVectorPublisher(const rclcpp::NodeOptions & options = rclcpp::NodeOptions());
+  explicit IrIntensityVectorPublisher(const rclcpp::NodeOptions & options = rclcpp::NodeOptions());
 
 private:
   // Publish aggregated detections on timer_'s frequency

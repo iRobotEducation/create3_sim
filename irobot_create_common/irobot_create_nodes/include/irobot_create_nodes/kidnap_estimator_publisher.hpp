@@ -4,26 +4,24 @@
 #ifndef IROBOT_CREATE_NODES__KIDNAP_ESTIMATOR_PUBLISHER_HPP_
 #define IROBOT_CREATE_NODES__KIDNAP_ESTIMATOR_PUBLISHER_HPP_
 
-#include <irobot_create_msgs/msg/hazard_detection.hpp>
-#include <irobot_create_msgs/msg/hazard_detection_vector.hpp>
-#include <irobot_create_msgs/msg/kidnap_status.hpp>
-#include <irobot_create_toolbox/parameter_helper.hpp>
-
-#include <rclcpp/rclcpp.hpp>
-
 #include <limits>
 #include <memory>
 #include <string>
 #include <vector>
 
+#include "irobot_create_msgs/msg/hazard_detection.hpp"
+#include "irobot_create_msgs/msg/hazard_detection_vector.hpp"
+#include "irobot_create_msgs/msg/kidnap_status.hpp"
+#include "rclcpp/rclcpp.hpp"
 
 namespace irobot_create_nodes
 {
+
 class KidnapEstimator : public rclcpp::Node
 {
 public:
   /// \brief Constructor
-  KidnapEstimator(const rclcpp::NodeOptions & options = rclcpp::NodeOptions());
+  explicit KidnapEstimator(const rclcpp::NodeOptions & options = rclcpp::NodeOptions());
 
 private:
   /// \brief Callback function

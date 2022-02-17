@@ -1,8 +1,8 @@
 // Copyright 2022 iRobot Corporation. All Rights Reserved.
 // @author Alberto Soragna (asoragna@irobot.com)
 
-#ifndef IROBOT_CREATE_TOOLBOX_SENSORS__BUMPERS_HPP_
-#define IROBOT_CREATE_TOOLBOX_SENSORS__BUMPERS_HPP_
+#ifndef IROBOT_CREATE_TOOLBOX__SENSORS__BUMPERS_HPP_
+#define IROBOT_CREATE_TOOLBOX__SENSORS__BUMPERS_HPP_
 
 #include <cmath>
 #include <map>
@@ -42,4 +42,4 @@ const std::map<BumperZoneType, BumperZone> BUMPER_ZONES_MAP = {
 }  // namespace sensors
 }  // namespace irobot_create_toolbox
 
-#endif  // IROBOT_CREATE_TOOLBOX_SENSORS__BUMPERS_HPP_
+#endif  // IROBOT_CREATE_TOOLBOX__SENSORS__BUMPERS_HPP_

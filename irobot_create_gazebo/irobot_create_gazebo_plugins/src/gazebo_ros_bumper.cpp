@@ -56,7 +56,8 @@ void GazeboRosBumper::OnUpdate()
     // Only publish if the bump event corresponds to one of the zones
     // "released" events are not published.
     const auto iter = std::find_if(
-      irobot_create_toolbox::sensors::BUMPER_ZONES_MAP.begin(), irobot_create_toolbox::sensors::BUMPER_ZONES_MAP.end(),
+      irobot_create_toolbox::sensors::BUMPER_ZONES_MAP.begin(),
+      irobot_create_toolbox::sensors::BUMPER_ZONES_MAP.end(),
       [relative_contact_angle_xy](const auto & zone) -> bool {
         return irobot_create_toolbox::IsAngleBetween(
           zone.second.left_limit, zone.second.right_limit, relative_contact_angle_xy);
@@ -64,7 +65,6 @@ void GazeboRosBumper::OnUpdate()
     if (iter == irobot_create_toolbox::sensors::BUMPER_ZONES_MAP.end()) {
       return;
     } else {
-      std::cout<<"BUMPED:::::::::: "<< iter->second.name<<std::endl;
       msg_.header.frame_id = iter->second.name;
       bumper_pub_->publish(msg_);
       return;

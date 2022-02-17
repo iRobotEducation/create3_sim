@@ -77,7 +77,8 @@ void Bumper::bumper_callback(const ros_ign_interfaces::msg::Contacts::SharedPtr 
 
     // Find contact zone
     const auto iter = std::find_if(
-      irobot_create_toolbox::sensors::BUMPER_ZONES_MAP.begin(), irobot_create_toolbox::sensors::BUMPER_ZONES_MAP.end(),
+      irobot_create_toolbox::sensors::BUMPER_ZONES_MAP.begin(),
+      irobot_create_toolbox::sensors::BUMPER_ZONES_MAP.end(),
       [this, azimuth](const auto & zone) -> bool {
         return irobot_create_toolbox::IsAngleBetween(
           zone.second.left_limit, zone.second.right_limit, azimuth);

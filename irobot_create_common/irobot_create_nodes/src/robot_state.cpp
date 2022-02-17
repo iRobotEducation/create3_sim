@@ -1,13 +1,12 @@
 // Copyright 2021 iRobot Corporation. All Rights Reserved.
 // @author Lola Segura (lsegura@irobot.com)
 
-#include <irobot_create_nodes/robot_state.hpp>
+#include "irobot_create_nodes/robot_state.hpp"
 
 #include <algorithm>
 #include <string>
 #include <vector>
 
-#include "irobot_create_toolbox/parameter_helper.hpp"
 #include "rclcpp_components/register_node_macro.hpp"
 
 namespace irobot_create_nodes
@@ -23,26 +22,26 @@ RobotState::RobotState(const rclcpp::NodeOptions & options)
 
   // Topic parameter to publish battery state to
   battery_state_publisher_topic_ =
-    irobot_create_toolbox::declare_and_get_parameter<std::string>("battery_state_topic", this);
+    this->declare_parameter("battery_state_topic", "/battery_state");
   // Topic parameter to publish stop status to
   stop_status_publisher_topic_ =
-    irobot_create_toolbox::declare_and_get_parameter<std::string>("stop_status_topic", this);
+    this->declare_parameter("stop_status_topic", "/stop_status");
 
   // Subscriber topics
   dock_subscription_topic_ =
-    irobot_create_toolbox::declare_and_get_parameter<std::string>("dock_topic", this);
+    this->declare_parameter("dock_topic", "/dock");
   wheel_vels_subscription_topic_ =
-    irobot_create_toolbox::declare_and_get_parameter<std::string>("wheel_vels_topic", this);
+    this->declare_parameter("wheel_vels_topic", "/odom");
 
-  // Publish rate parameters
+  // Publish rate parameters in Hz
   const double battery_state_publish_rate =
-    irobot_create_toolbox::declare_and_get_parameter<double>("battery_state_publish_rate", this);  // Hz
+    this->declare_parameter("battery_state_publish_rate", 1.0);
 
   // Sets velocity tolerances
   linear_velocity_tolerance =
-    irobot_create_toolbox::declare_and_get_parameter<float>("linear_velocity_tolerance", this);
+    this->declare_parameter("linear_velocity_tolerance", 0.01f);
   angular_velocity_tolerance =
-    irobot_create_toolbox::declare_and_get_parameter<float>("angular_velocity_tolerance", this);
+    this->declare_parameter("angular_velocity_tolerance", 0.1f);
 
   // Define battery state publisher
   battery_state_publisher_ = create_publisher<sensor_msgs::msg::BatteryState>(
@@ -51,9 +50,9 @@ RobotState::RobotState(const rclcpp::NodeOptions & options)
 
   // Define battery parameters
   battery_full_charge_percentage =
-    irobot_create_toolbox::declare_and_get_parameter<float>("full_charge_percentage", this);
+    this->declare_parameter("full_charge_percentage", 1.0);
   battery_high_percentage_limit =
-    irobot_create_toolbox::declare_and_get_parameter<float>("battery_high_percentage", this);
+    this->declare_parameter("battery_high_percentage", 0.9);
 
   // Subscription to the hazard detection vector
   dock_subscription_ = create_subscription<irobot_create_msgs::msg::Dock>(
@@ -76,7 +75,7 @@ RobotState::RobotState(const rclcpp::NodeOptions & options)
   stop_status_msg_.header.frame_id = base_frame_;
 
   undocked_charge_limit =
-    irobot_create_toolbox::declare_and_get_parameter<float>("undocked_charge_limit", this);
+    this->declare_parameter("undocked_charge_limit", 0.03);
   battery_state_timer_ = rclcpp::create_timer(
     this,
     this->get_clock(),

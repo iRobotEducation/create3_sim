@@ -4,31 +4,29 @@
 #ifndef IROBOT_CREATE_NODES__ROBOT_STATE_HPP_
 #define IROBOT_CREATE_NODES__ROBOT_STATE_HPP_
 
-#include <irobot_create_msgs/msg/dock.hpp>
-#include <irobot_create_msgs/msg/hazard_detection.hpp>
-#include <irobot_create_msgs/msg/hazard_detection_vector.hpp>
-#include <irobot_create_msgs/msg/stop_status.hpp>
-#include <irobot_create_msgs/msg/wheel_vels.hpp>
-#include <irobot_create_toolbox/parameter_helper.hpp>
-
-#include <rclcpp/rclcpp.hpp>
-#include <sensor_msgs/msg/battery_state.hpp>
-#include <nav_msgs/msg/odometry.hpp>
-#include <geometry_msgs/msg/pose.hpp>
-
 #include <limits>
 #include <memory>
 #include <string>
 #include <vector>
 
+#include "geometry_msgs/msg/pose.hpp"
+#include "irobot_create_msgs/msg/dock.hpp"
+#include "irobot_create_msgs/msg/hazard_detection.hpp"
+#include "irobot_create_msgs/msg/hazard_detection_vector.hpp"
+#include "irobot_create_msgs/msg/stop_status.hpp"
+#include "irobot_create_msgs/msg/wheel_vels.hpp"
+#include "nav_msgs/msg/odometry.hpp"
+#include "rclcpp/rclcpp.hpp"
+#include "sensor_msgs/msg/battery_state.hpp"
 
 namespace irobot_create_nodes
 {
+
 class RobotState : public rclcpp::Node
 {
 public:
   /// \brief Constructor
-  RobotState(const rclcpp::NodeOptions & options = rclcpp::NodeOptions());
+  explicit RobotState(const rclcpp::NodeOptions & options = rclcpp::NodeOptions());
 
 private:
   // Callback functions

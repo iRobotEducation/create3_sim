@@ -1,14 +1,13 @@
 // Copyright 2021 iRobot Corporation. All Rights Reserved.
 // @author Lola Segura (lsegura@irobot.com)
 
-#include <irobot_create_nodes/mock_publisher.hpp>
+#include "irobot_create_nodes/mock_publisher.hpp"
 
 #include <algorithm>
 #include <memory>
 #include <string>
 #include <vector>
 
-#include "irobot_create_toolbox/parameter_helper.hpp"
 #include "rclcpp_components/register_node_macro.hpp"
 
 namespace irobot_create_nodes
@@ -21,25 +20,25 @@ MockPublisher::MockPublisher(const rclcpp::NodeOptions & options)
 {
   // Gazebo simulator being used
   gazebo_ =
-    irobot_create_toolbox::declare_and_get_parameter<std::string>("gazebo", this);
+    this->declare_parameter("gazebo", "classic");
 
   // Topic parameter to publish buttons to
   buttons_publisher_topic_ =
-    irobot_create_toolbox::declare_and_get_parameter<std::string>("button_topic", this);
+    this->declare_parameter("button_topic", "/interface_buttons");
 
   // Topic parameter to publish slip status to
   slip_status_publisher_topic_ =
-    irobot_create_toolbox::declare_and_get_parameter<std::string>("slip_status_topic", this);
+    this->declare_parameter("slip_status_topic", "/slip_status");
 
   // Subscriber topics
   lightring_subscription_topic_ =
-    irobot_create_toolbox::declare_and_get_parameter<std::string>("lightring_topic", this);
+    this->declare_parameter("lightring_topic", "/cmd_lightring");
 
-  // Publish rate parameters
+  // Publish rate parameters in Hz
   const double buttons_publish_rate =
-    irobot_create_toolbox::declare_and_get_parameter<double>("buttons_publish_rate", this);  // Hz
+    this->declare_parameter("buttons_publish_rate", 1.0);
   const double slip_status_publish_rate =
-    irobot_create_toolbox::declare_and_get_parameter<double>("slip_status_publish_rate", this);  // Hz
+    this->declare_parameter("slip_status_publish_rate", 62.0);
 
   // Define buttons publisher
   if (gazebo_ != "ignition") {

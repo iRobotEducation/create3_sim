@@ -6,7 +6,6 @@
 #include <string>
 #include <vector>
 
-#include "irobot_create_toolbox/parameter_helper.hpp"
 #include "rclcpp_components/register_node_macro.hpp"
 
 namespace irobot_create_nodes
@@ -17,15 +16,15 @@ HazardsVectorPublisher::HazardsVectorPublisher(const rclcpp::NodeOptions & optio
 {
   // Topic parameter to publish hazards vector to
   publisher_topic_ =
-    irobot_create_toolbox::declare_and_get_parameter<std::string>("publisher_topic", this);
+    this->declare_parameter("publisher_topic", "/hazard_detection");
 
   // Subscription topics parameter
   subscription_topics_ =
-    irobot_create_toolbox::declare_and_get_parameter<std::vector<std::string>>("subscription_topics", this);
+    this->declare_parameter("subscription_topics", std::vector<std::string>());
 
-  // Publish rate parameter
+  // Publish rate parameter in Hz
   const double publish_rate =
-    irobot_create_toolbox::declare_and_get_parameter<double>("publish_rate", this);  // Hz
+    this->declare_parameter("publish_rate", 62.0);
 
   publisher_ = create_publisher<irobot_create_msgs::msg::HazardDetectionVector>(
     publisher_topic_, rclcpp::SensorDataQoS());

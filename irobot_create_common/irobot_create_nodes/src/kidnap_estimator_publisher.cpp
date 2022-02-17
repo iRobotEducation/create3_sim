@@ -1,13 +1,12 @@
 // Copyright 2021 iRobot Corporation. All Rights Reserved.
 // @author Lola Segura (lsegura@irobot.com)
 
-#include <irobot_create_nodes/kidnap_estimator_publisher.hpp>
+#include "irobot_create_nodes/kidnap_estimator_publisher.hpp"
 
 #include <algorithm>
 #include <string>
 #include <vector>
 
-#include "irobot_create_toolbox/parameter_helper.hpp"
 #include "rclcpp_components/register_node_macro.hpp"
 
 namespace irobot_create_nodes
@@ -17,11 +16,11 @@ KidnapEstimator::KidnapEstimator(const rclcpp::NodeOptions & options)
 {
   // Topic parameter to publish kidnap status to
   kidnap_status_publisher_topic_ =
-    irobot_create_toolbox::declare_and_get_parameter<std::string>("kidnap_status_topic", this);
+    this->declare_parameter("kidnap_status_topic", "/kidnap_status");
 
   // Subscriber topics
   hazard_subscription_topic_ =
-    irobot_create_toolbox::declare_and_get_parameter<std::string>("hazard_topic", this);
+    this->declare_parameter("hazard_topic", "/hazard_detection");
 
   // Define kidnap status publisher
   kidnap_status_publisher_ = create_publisher<irobot_create_msgs::msg::KidnapStatus>(
