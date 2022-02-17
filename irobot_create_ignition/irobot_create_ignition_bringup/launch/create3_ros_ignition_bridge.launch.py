@@ -68,6 +68,29 @@ def generate_launch_description():
                                'diffdrive_controller/cmd_vel_unstamped')
                           ])
 
+    # Pose bridge
+    pose_bridge = Node(package='ros_ign_bridge', executable='parameter_bridge',
+                       namespace=namespace,
+                       name='pose_bridge',
+                       output='screen',
+                       parameters=[{
+                            'use_sim_time': use_sim_time
+                       }],
+                       arguments=[
+                           ['/model/', LaunchConfiguration('robot_name'), '/pose' +
+                            '@tf2_msgs/msg/TFMessage' +
+                            '[ignition.msgs.Pose_V'],
+                           '/model/standard_dock/pose' +
+                           '@tf2_msgs/msg/TFMessage' +
+                           '[ignition.msgs.Pose_V'
+                       ],
+                       remappings=[
+                           (['/model/', LaunchConfiguration('robot_name'), '/pose'],
+                            '/_internal/sim_ground_truth_pose'),
+                           ('/model/standard_dock/pose',
+                            '/_internal/sim_ground_truth_dock_pose')
+                       ])
+
     # odom to base_link transform bridge
     odom_base_tf_bridge = Node(package='ros_ign_bridge', executable='parameter_bridge',
                                namespace=namespace,
@@ -167,6 +190,7 @@ def generate_launch_description():
     ld = LaunchDescription(ARGUMENTS)
     ld.add_action(clock_bridge)
     ld.add_action(cmd_vel_bridge)
+    ld.add_action(pose_bridge)
     ld.add_action(odom_base_tf_bridge)
     ld.add_action(bumper_contact_bridge)
     ld.add_action(cliff_bridge)
