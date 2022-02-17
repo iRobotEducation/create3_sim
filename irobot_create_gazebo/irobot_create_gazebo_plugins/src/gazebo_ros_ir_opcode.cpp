@@ -6,6 +6,8 @@
 #include <memory>
 #include <string>
 
+#include "irobot_create_toolbox/polar_coordinates.hpp"
+
 namespace irobot_create_gazebo_plugins
 {
 GazeboRosIrOpcode::GazeboRosIrOpcode()
@@ -120,11 +122,11 @@ void GazeboRosIrOpcode::OnUpdate(const gazebo::common::UpdateInfo & info)
 int GazeboRosIrOpcode::CheckBuoysDetection(const double fov, const double range)
 {
   // Get the origin of the receiver as a polar point WRT the emitter
-  const utils::PolarCoordinate receiver_wrt_emitter_polar =
+  const irobot_create_toolbox::PolarCoordinate receiver_wrt_emitter_polar =
     dock_manager_->ReceiverCartesianPointToEmitterPolarPoint({0.0, 0.0});
 
   // Get the origin of the emitter as a polar point WRT the receiver
-  const utils::PolarCoordinate emitter_wrt_receiver_polar =
+  const irobot_create_toolbox::PolarCoordinate emitter_wrt_receiver_polar =
     dock_manager_->EmitterCartesianPointToReceiverPolarPoint({0.0, 0.0});
 
   bool receiver_sees_emitter = false;
@@ -191,7 +193,7 @@ int GazeboRosIrOpcode::CheckBuoysDetection(const double fov, const double range)
 int GazeboRosIrOpcode::CheckForceFieldDetection(const double fov, const double range)
 {
   // Get the origin of the emitter as a polar point WRT the receiver
-  const utils::PolarCoordinate emitter_wrt_receiver_polar =
+  const irobot_create_toolbox::PolarCoordinate emitter_wrt_receiver_polar =
     dock_manager_->EmitterCartesianPointToReceiverPolarPoint({0.0, 0.0});
 
   bool force_field_in_range = false;

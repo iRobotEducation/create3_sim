@@ -8,6 +8,8 @@
 #include <string>
 #include <vector>
 
+#include "irobot_create_toolbox/parameter_helper.hpp"
+
 namespace irobot_create_nodes
 {
 using namespace std::placeholders;
@@ -17,22 +19,26 @@ MockPublisher::MockPublisher()
   led_animation_end_duration_(rclcpp::Duration::from_nanoseconds(0))
 {
   // Gazebo simulator being used
-  gazebo_ = declare_and_get_parameter<std::string>("gazebo", this);
+  gazebo_ =
+    irobot_create_toolbox::declare_and_get_parameter<std::string>("gazebo", this);
 
   // Topic parameter to publish buttons to
-  buttons_publisher_topic_ = declare_and_get_parameter<std::string>("button_topic", this);
+  buttons_publisher_topic_ =
+    irobot_create_toolbox::declare_and_get_parameter<std::string>("button_topic", this);
 
   // Topic parameter to publish slip status to
-  slip_status_publisher_topic_ = declare_and_get_parameter<std::string>("slip_status_topic", this);
+  slip_status_publisher_topic_ =
+    irobot_create_toolbox::declare_and_get_parameter<std::string>("slip_status_topic", this);
 
   // Subscriber topics
-  lightring_subscription_topic_ = declare_and_get_parameter<std::string>("lightring_topic", this);
+  lightring_subscription_topic_ =
+    irobot_create_toolbox::declare_and_get_parameter<std::string>("lightring_topic", this);
 
   // Publish rate parameters
   const double buttons_publish_rate =
-    declare_and_get_parameter<double>("buttons_publish_rate", this);  // Hz
+    irobot_create_toolbox::declare_and_get_parameter<double>("buttons_publish_rate", this);  // Hz
   const double slip_status_publish_rate =
-    declare_and_get_parameter<double>("slip_status_publish_rate", this);  // Hz
+    irobot_create_toolbox::declare_and_get_parameter<double>("slip_status_publish_rate", this);  // Hz
 
   // Define buttons publisher
   if (gazebo_ != "ignition") {

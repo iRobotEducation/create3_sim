@@ -17,6 +17,7 @@ find_package(geometry_msgs REQUIRED)
 find_package(sensor_msgs REQUIRED)
 find_package(nav_msgs REQUIRED)
 find_package(irobot_create_msgs REQUIRED)
+find_package(irobot_create_toolbox REQUIRED)
 find_package(nav_msgs REQUIRED)
 find_package(rclcpp REQUIRED)
 find_package(rclcpp_action REQUIRED)
@@ -33,6 +34,7 @@ set(dependencies
   sensor_msgs
   nav_msgs
   irobot_create_msgs
+  irobot_create_toolbox
   nav_msgs
   rclcpp
   rclcpp_action

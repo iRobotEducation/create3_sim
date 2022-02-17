@@ -19,7 +19,6 @@
 #include "ros_ign_interfaces/msg/contacts.hpp"
 #include "irobot_create_msgs/msg/hazard_detection.hpp"
 
-
 namespace irobot_create_ignition_toolbox
 {
 
@@ -30,26 +29,6 @@ public:
   virtual ~Bumper() {}
 
 private:
-// Bumper zones
-  enum class ZoneType { RIGHT, CENTER_RIGHT, CENTER, CENTER_LEFT, LEFT };
-
-// Auxiliary data structure to hold bumper zone details
-  struct Zone
-  {
-    double left_limit;
-    double right_limit;
-    std::string name;
-  };
-
-// Data structure to hold the definitions related to bumper zones
-  const std::map<ZoneType, Zone> angles_map_ = {
-    {ZoneType::RIGHT, {-M_PI / 2, -3 * M_PI / 10, "bump_right"}},
-    {ZoneType::CENTER_RIGHT, {-3 * M_PI / 10, -M_PI / 10, "bump_front_right"}},
-    {ZoneType::CENTER, {-M_PI / 10, M_PI / 10, "bump_front_center"}},
-    {ZoneType::CENTER_LEFT, {M_PI / 10, 3 * M_PI / 10, "bump_front_left"}},
-    {ZoneType::LEFT, {3 * M_PI / 10, M_PI / 2, "bump_left"}}
-  };
-
   void bumper_callback(const ros_ign_interfaces::msg::Contacts::SharedPtr bumper_contact_msg);
   void robot_pose_callback(nav_msgs::msg::Odometry::ConstSharedPtr msg);
 

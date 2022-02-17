@@ -6,27 +6,35 @@
 #include <string>
 #include <vector>
 
+#include "irobot_create_toolbox/parameter_helper.hpp"
+
 namespace irobot_create_nodes
 {
+
 WheelsPublisher::WheelsPublisher()
 : rclcpp::Node("wheels_publisher_node")
 {
   // Topic parameter to publish angular velocity to
-  const std::string velocity_topic = declare_and_get_parameter<std::string>("velocity_topic", this);
+  const std::string velocity_topic =
+    irobot_create_toolbox::declare_and_get_parameter<std::string>("velocity_topic", this);
 
   // Topic parameter to publish wheel ticks to
-  const std::string ticks_topic = declare_and_get_parameter<std::string>("ticks_topic", this);
+  const std::string ticks_topic =
+    irobot_create_toolbox::declare_and_get_parameter<std::string>("ticks_topic", this);
 
-  // Publish rate parameter
-  const double publish_rate = declare_and_get_parameter<double>("publish_rate", this);  // Hz
+  // Publish rate parameter in Hz
+  const double publish_rate =
+    irobot_create_toolbox::declare_and_get_parameter<double>("publish_rate", this);
 
-  // Encoder resolution
+  // Encoder resolution in ticks per revolution
   encoder_resolution_ =
-    declare_and_get_parameter<double>("encoder_resolution", this);  // Ticks per revolution
+    irobot_create_toolbox::declare_and_get_parameter<double>("encoder_resolution", this);
 
+  // wheel radius in meters
+  const double wheel_radius =
+    irobot_create_toolbox::declare_and_get_parameter<double>("wheel_radius", this);
   // Set wheel circumference from wheel radius parameter
-  wheel_circumference_ =
-    2 * M_PI * declare_and_get_parameter<double>("wheel_radius", this);  // wheel radius in meters
+  wheel_circumference_ = 2 * M_PI * wheel_radius;
 
   angular_vels_publisher_ = create_publisher<irobot_create_msgs::msg::WheelVels>(
     velocity_topic, rclcpp::SystemDefaultsQoS());

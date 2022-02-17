@@ -6,6 +6,8 @@
 #include <algorithm>
 #include <vector>
 
+#include "irobot_create_toolbox/math.hpp"
+
 namespace irobot_create_gazebo_plugins
 {
 // Constructor
@@ -46,7 +48,8 @@ void GazeboRosIrIntensitySensor::OnNewLaserScans()
   // Find the minimum detected distance
   std::vector<double> ranges;
   parent_sensor_->Ranges(ranges);
-  const double detection = std::min(utils::FindMinimumRange(ranges), max_range_);
+  const double detection =
+    std::min(irobot_create_toolbox::FindMinimumRange(ranges), max_range_);
   RCLCPP_DEBUG_STREAM(ros_node_->get_logger(), "IR reporting " << detection << " m");
 
   // IR sensor produces an exponential signal that is correlated to the distance,

@@ -10,7 +10,7 @@
 #include <irobot_create_msgs/msg/wheel_status.hpp>
 #include <irobot_create_msgs/srv/e_stop.hpp>
 #include <irobot_create_msgs/srv/robot_power.hpp>
-#include <irobot_create_nodes/parameter_helper.hpp>
+#include <irobot_create_toolbox/parameter_helper.hpp>
 #include <irobot_create_nodes/motion_control/docking_behavior.hpp>
 #include <irobot_create_nodes/motion_control/drive_goal_behaviors.hpp>
 #include <irobot_create_nodes/motion_control/reflex_behavior.hpp>

@@ -11,7 +11,7 @@
 
 #include "irobot_create_msgs/msg/ir_intensity.hpp"
 #include "irobot_create_msgs/msg/ir_intensity_vector.hpp"
-#include "irobot_create_nodes/parameter_helper.hpp"
+#include "irobot_create_toolbox/parameter_helper.hpp"
 #include "rclcpp/rclcpp.hpp"
 
 namespace irobot_create_nodes

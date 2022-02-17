@@ -22,29 +22,6 @@ namespace irobot_create_ignition_toolbox
 namespace utils
 {
 
-// Very useful Polar Coordinates tools when working with Fields of views and distances.
-struct PolarCoordinate
-{
-  double radius;
-  double azimuth;
-};
-
-inline PolarCoordinate toPolar(tf2::Vector3 & cartesian)
-{
-  // 2d vector
-  cartesian.setZ(0.0);
-  return PolarCoordinate{cartesian.length(), atan2(cartesian.getY(), cartesian.getX())};
-}
-
-inline tf2::Vector3 fromPolar(const PolarCoordinate & polar)
-{
-  return tf2::Vector3{
-    polar.radius * cos(polar.azimuth),
-    polar.radius * sin(polar.azimuth),
-    0.0
-  };
-}
-
 // Get yaw from tf2 Transform
 inline double tf2_transform_to_yaw(const tf2::Transform tf)
 {

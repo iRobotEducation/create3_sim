@@ -55,63 +55,6 @@ inline bool initialize(T & var, sdf::ElementPtr sdf, const char * str, V default
   }
 }
 
-/// \brief Convert radians to degrees
-inline int Rad2Deg(double radians) {return radians / M_PI * 180;}
-
-/// \brief Wrap angle between (-pi, pi]
-inline double WrapAngle(double angle) {return atan2(sin(angle), cos(angle));}
-
-/// \brief Calculate if a provided angle in radians is within the arc formed by two other angles.
-/// \param target angle to test
-/// \param angle1 first leg of the arc
-/// \param target second leg of the arc
-bool IsAngleBetween(double target, double angle1, double angle2)
-{
-  double t = WrapAngle(target);
-  double a1 = WrapAngle(angle1);
-  double a2 = WrapAngle(angle2);
-  // check if it passes through zero
-  if (a1 <= a2) {
-    return (t >= a1) && (t <= a2);
-  } else {
-    return (t >= a1) || (t <= a2);
-  }
-  return false;
-}
-
-// Find the minimum range given a vector of 'ranges'.
-// If none was found, returns a maximum double.
-double FindMinimumRange(std::vector<double> & ranges)
-{
-  std::vector<double>::iterator detection_ptr =
-    std::min_element(std::begin(ranges), std::end(ranges));
-  // If a minimum range was found, return it
-  if (detection_ptr != std::end(ranges)) {
-    return *detection_ptr;
-  }
-  // Otherwise, return a maximum range
-  return std::numeric_limits<double>::max();
-}
-
-// Very useful Polar Coordinates tools when working with Fields of views and distances.
-struct PolarCoordinate
-{
-  double radius;
-  double azimuth;
-};
-
-PolarCoordinate toPolar(const ignition::math::Vector2d & cartesian)
-{
-  return PolarCoordinate{cartesian.Length(), atan2(cartesian.Y(), cartesian.X())};
-}
-
-ignition::math::Vector2d fromPolar(const PolarCoordinate & polar)
-{
-  ignition::math::Vector2d cartesian{
-    polar.radius * cos(polar.azimuth), polar.radius * sin(polar.azimuth)};
-  return cartesian;
-}
-
 }  // namespace utils
 }  // namespace irobot_create_gazebo_plugins
 

@@ -13,6 +13,7 @@ endif()
 find_package(ament_cmake REQUIRED)
 find_package(geometry_msgs REQUIRED)
 find_package(irobot_create_msgs REQUIRED)
+find_package(irobot_create_toolbox REQUIRED)
 find_package(rclcpp REQUIRED)
 find_package(sensor_msgs REQUIRED)
 
@@ -74,6 +75,7 @@ ament_target_dependencies(gazebo_ros_create_bumper
   "gazebo_dev"
   "gazebo_ros"
   "irobot_create_msgs"
+  "irobot_create_toolbox"
   "rclcpp"
 )
 ament_export_libraries(gazebo_ros_create_bumper)
@@ -85,6 +87,7 @@ ament_target_dependencies(gazebo_ros_create_cliff_sensor
   "gazebo_dev"
   "gazebo_ros"
   "irobot_create_msgs"
+  "irobot_create_toolbox"
   "rclcpp"
 )
 ament_export_libraries(gazebo_ros_create_cliff_sensor)
@@ -96,6 +99,7 @@ ament_target_dependencies(gazebo_ros_create_docking_status
   "gazebo_dev"
   "gazebo_ros"
   "irobot_create_msgs"
+  "irobot_create_toolbox"
   "rclcpp"
 )
 ament_export_libraries(gazebo_ros_create_docking_status)
@@ -127,6 +131,7 @@ ament_target_dependencies(gazebo_ros_create_ir_intensity_sensor
   "gazebo_dev"
   "gazebo_ros"
   "irobot_create_msgs"
+  "irobot_create_toolbox"
   "rclcpp"
 )
 ament_export_libraries(gazebo_ros_create_ir_intensity_sensor)
@@ -149,6 +154,7 @@ ament_target_dependencies(gazebo_ros_create_ir_opcode
   "gazebo_dev"
   "gazebo_ros"
   "irobot_create_msgs"
+  "irobot_create_toolbox"
   "rclcpp"
 )
 ament_export_libraries(gazebo_ros_create_ir_opcode)
@@ -159,6 +165,7 @@ target_include_directories(docking_manager PUBLIC include)
 ament_target_dependencies(docking_manager
   "gazebo_dev"
   "gazebo_ros"
+  "irobot_create_toolbox"
   "rclcpp"
 )
 ament_export_libraries(docking_manager)

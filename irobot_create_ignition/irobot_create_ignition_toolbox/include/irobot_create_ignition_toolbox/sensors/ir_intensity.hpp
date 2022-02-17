@@ -28,7 +28,6 @@ public:
 
 private:
   void ir_scan_callback(const sensor_msgs::msg::LaserScan::SharedPtr ir_msg);
-  float find_minimum_range(std::vector<float> ranges);
 
   std::shared_ptr<rclcpp::Node> nh_;
 

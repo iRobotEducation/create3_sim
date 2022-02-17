@@ -10,7 +10,7 @@
 #include <irobot_create_msgs/msg/led_color.hpp>
 #include <irobot_create_msgs/msg/lightring_leds.hpp>
 #include <irobot_create_msgs/msg/slip_status.hpp>
-#include <irobot_create_nodes/parameter_helper.hpp>
+#include <irobot_create_toolbox/parameter_helper.hpp>
 
 #include <rclcpp/rclcpp.hpp>
 #include <rclcpp_action/rclcpp_action.hpp>

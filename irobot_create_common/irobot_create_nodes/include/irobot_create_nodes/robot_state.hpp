@@ -9,7 +9,7 @@
 #include <irobot_create_msgs/msg/hazard_detection_vector.hpp>
 #include <irobot_create_msgs/msg/stop_status.hpp>
 #include <irobot_create_msgs/msg/wheel_vels.hpp>
-#include <irobot_create_nodes/parameter_helper.hpp>
+#include <irobot_create_toolbox/parameter_helper.hpp>
 
 #include <rclcpp/rclcpp.hpp>
 #include <sensor_msgs/msg/battery_state.hpp>

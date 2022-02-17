@@ -7,6 +7,8 @@
 #include <string>
 #include <vector>
 
+#include "irobot_create_toolbox/parameter_helper.hpp"
+
 namespace irobot_create_nodes
 {
 KidnapEstimator::KidnapEstimator()
@@ -14,10 +16,11 @@ KidnapEstimator::KidnapEstimator()
 {
   // Topic parameter to publish kidnap status to
   kidnap_status_publisher_topic_ =
-    declare_and_get_parameter<std::string>("kidnap_status_topic", this);
+    irobot_create_toolbox::declare_and_get_parameter<std::string>("kidnap_status_topic", this);
 
   // Subscriber topics
-  hazard_subscription_topic_ = declare_and_get_parameter<std::string>("hazard_topic", this);
+  hazard_subscription_topic_ =
+    irobot_create_toolbox::declare_and_get_parameter<std::string>("hazard_topic", this);
 
   // Define kidnap status publisher
   kidnap_status_publisher_ = create_publisher<irobot_create_msgs::msg::KidnapStatus>(

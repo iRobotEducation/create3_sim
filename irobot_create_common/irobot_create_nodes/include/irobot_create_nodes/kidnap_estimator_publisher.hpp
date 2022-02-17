@@ -7,7 +7,7 @@
 #include <irobot_create_msgs/msg/hazard_detection.hpp>
 #include <irobot_create_msgs/msg/hazard_detection_vector.hpp>
 #include <irobot_create_msgs/msg/kidnap_status.hpp>
-#include <irobot_create_nodes/parameter_helper.hpp>
+#include <irobot_create_toolbox/parameter_helper.hpp>
 
 #include <rclcpp/rclcpp.hpp>
 
