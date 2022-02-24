@@ -7,7 +7,7 @@
 #include <utility>
 
 #include "irobot_create_ignition_toolbox/sensors/ir_opcode.hpp"
-#include "irobot_create_toolbox/parameter_helper.hpp"
+#include "irobot_create_toolbox/polar_coordinates.hpp"
 
 using irobot_create_ignition_toolbox::IrOpcode;
 
@@ -32,14 +32,14 @@ IrOpcode::IrOpcode(std::shared_ptr<rclcpp::Node> & nh)
     "dock",
     rclcpp::SensorDataQoS());
 
-  auto sensor_0_fov = irobot_create_toolbox::declare_and_get_parameter<double>(
-    "ir_opcode_sensor_0_fov", nh_.get());
-  auto sensor_0_range = irobot_create_toolbox::declare_and_get_parameter<double>(
-    "ir_opcode_sensor_0_range", nh_.get());
-  auto sensor_1_fov = irobot_create_toolbox::declare_and_get_parameter<double>(
-    "ir_opcode_sensor_1_fov", nh_.get());
-  auto sensor_1_range = irobot_create_toolbox::declare_and_get_parameter<double>(
-    "ir_opcode_sensor_1_range", nh_.get());
+  auto sensor_0_fov =
+    nh_->declare_parameter("ir_opcode_sensor_0_fov", 3.839724);
+  auto sensor_0_range =
+    nh_->declare_parameter("ir_opcode_sensor_0_range", 0.1);
+  auto sensor_1_fov =
+    nh_->declare_parameter("ir_opcode_sensor_1_fov", 1.570796);
+  auto sensor_1_range =
+    nh_->declare_parameter("ir_opcode_sensor_1_range", 0.5);
 
   sensors_[irobot_create_msgs::msg::IrOpcode::SENSOR_OMNI] = {
     sensor_0_fov, sensor_0_range};
@@ -82,10 +82,10 @@ IrOpcode::IrOpcode(std::shared_ptr<rclcpp::Node> & nh)
     rclcpp::Duration(std::chrono::duration<double>(1 / 20.0)),
     [this]() -> void
     {
-      irobot_create_ignition_toolbox::utils::PolarCoordinate receiver_wrt_emitter_polar =
+      irobot_create_toolbox::PolarCoordinate receiver_wrt_emitter_polar =
       ReceiverCartesianPointToEmitterPolarPoint(tf2::Vector3(0.0, 0.0, 0.0));
 
-      irobot_create_ignition_toolbox::utils::PolarCoordinate emitter_wrt_receiver_polar =
+      irobot_create_toolbox::PolarCoordinate emitter_wrt_receiver_polar =
       EmitterCartesianPointToReceiverPolarPoint(tf2::Vector3(0.0, 0.0, 0.0));
 
       is_docked_ = receiver_wrt_emitter_polar.radius < DOCKED_DISTANCE &&
@@ -107,7 +107,7 @@ IrOpcode::IrOpcode(std::shared_ptr<rclcpp::Node> & nh)
     });
 }
 
-irobot_create_ignition_toolbox::utils::PolarCoordinate
+irobot_create_toolbox::PolarCoordinate
 IrOpcode::EmitterCartesianPointToReceiverPolarPoint(const tf2::Vector3 & emitter_point)
 {
   tf2::Transform emitter_pose;
@@ -124,10 +124,12 @@ IrOpcode::EmitterCartesianPointToReceiverPolarPoint(const tf2::Vector3 & emitter
   tf2::Vector3 emitter_wrt_receiver_pose = irobot_create_ignition_toolbox::utils::object_wrt_frame(
     emitter_pose, receiver_pose);
   tf2::Vector3 emitter_wrt_receiver_point = emitter_wrt_receiver_pose + emitter_point;
-  return irobot_create_ignition_toolbox::utils::toPolar(emitter_wrt_receiver_point);
+  ignition::math::Vector2d cartesian_coord =
+  {emitter_wrt_receiver_point[0], emitter_wrt_receiver_point[1]};
+  return irobot_create_toolbox::toPolar(cartesian_coord);
 }
 
-irobot_create_ignition_toolbox::utils::PolarCoordinate
+irobot_create_toolbox::PolarCoordinate
 IrOpcode::ReceiverCartesianPointToEmitterPolarPoint(const tf2::Vector3 & receiver_point)
 {
   tf2::Transform emitter_pose;
@@ -145,17 +147,19 @@ IrOpcode::ReceiverCartesianPointToEmitterPolarPoint(const tf2::Vector3 & receive
   tf2::Vector3 receiver_wrt_emitter_pose = irobot_create_ignition_toolbox::utils::object_wrt_frame(
     receiver_pose, emitter_pose);
   tf2::Vector3 receiver_wrt_emitter_point = receiver_wrt_emitter_pose + receiver_point;
-  return irobot_create_ignition_toolbox::utils::toPolar(receiver_wrt_emitter_point);
+  ignition::math::Vector2d cartesian_coord =
+  {receiver_wrt_emitter_point[0], receiver_wrt_emitter_point[1]};
+  return irobot_create_toolbox::toPolar(cartesian_coord);
 }
 
 int IrOpcode::CheckBuoysDetection(const double fov, const double range)
 {
   // Get the origin of the receiver as a polar point WRT the emitter
-  const irobot_create_ignition_toolbox::utils::PolarCoordinate receiver_wrt_emitter_polar =
+  const irobot_create_toolbox::PolarCoordinate receiver_wrt_emitter_polar =
     ReceiverCartesianPointToEmitterPolarPoint(tf2::Vector3(0.0, 0.0, 0.0));
 
   // Get the origin of the emitter as a polar point WRT the receiver
-  const irobot_create_ignition_toolbox::utils::PolarCoordinate emitter_wrt_receiver_polar =
+  const irobot_create_toolbox::PolarCoordinate emitter_wrt_receiver_polar =
     EmitterCartesianPointToReceiverPolarPoint(tf2::Vector3(0.0, 0.0, 0.0));
 
   bool receiver_sees_emitter = false;
@@ -222,7 +226,7 @@ int IrOpcode::CheckBuoysDetection(const double fov, const double range)
 int IrOpcode::CheckForceFieldDetection(const double fov, const double range)
 {
   // Get the origin of the emitter as a polar point WRT the receiver
-  const irobot_create_ignition_toolbox::utils::PolarCoordinate emitter_wrt_receiver_polar =
+  const irobot_create_toolbox::PolarCoordinate emitter_wrt_receiver_polar =
     EmitterCartesianPointToReceiverPolarPoint(tf2::Vector3{0.0, 0.0, 0.0});
 
   bool force_field_in_range = false;

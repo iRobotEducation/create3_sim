@@ -14,6 +14,7 @@
 #include <string>
 
 #include "irobot_create_gazebo_plugins/gazebo_ros_helpers.hpp"
+#include "irobot_create_toolbox/polar_coordinates.hpp"
 
 namespace irobot_create_gazebo_plugins
 {
@@ -49,12 +50,12 @@ public:
 
   /// Change reference frame of a cartesian point WRT emitter and return in the new frame as
   /// polar point
-  utils::PolarCoordinate EmitterCartesianPointToReceiverPolarPoint(
+  irobot_create_toolbox::PolarCoordinate EmitterCartesianPointToReceiverPolarPoint(
     const ignition::math::Vector2d & emitter_point);
 
   /// Change reference frame of a cartesian point WRT receiver and return in the new frame as
   /// polar point
-  utils::PolarCoordinate ReceiverCartesianPointToEmitterPolarPoint(
+  irobot_create_toolbox::PolarCoordinate ReceiverCartesianPointToEmitterPolarPoint(
     const ignition::math::Vector2d & receiver_point);
 };
 }  // namespace irobot_create_gazebo_plugins

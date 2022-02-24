@@ -7,7 +7,6 @@
 #include <utility>
 
 #include "irobot_create_ignition_toolbox/pose_republisher/pose_republisher.hpp"
-#include "irobot_create_toolbox/parameter_helper.hpp"
 
 using irobot_create_ignition_toolbox::PoseRepublisher;
 
@@ -16,23 +15,23 @@ PoseRepublisher::PoseRepublisher()
   wheel_joints_{"left_wheel_joint",
     "right_wheel_joint"}
 {
-  robot_name_ = irobot_create_toolbox::declare_and_get_parameter<std::string>("robot_name", this);
-  std::string robot_pub_topic = irobot_create_toolbox::declare_and_get_parameter<std::string>(
-    "robot_publisher_topic", this);
-  std::string robot_sub_topic = irobot_create_toolbox::declare_and_get_parameter<std::string>(
-    "robot_subscriber_topic", this);
-  std::string mouse_pub_topic = irobot_create_toolbox::declare_and_get_parameter<std::string>(
-    "mouse_publisher_topic", this);
+  robot_name_ =
+    this->declare_parameter("robot_name", "create3");
+  std::string robot_pub_topic =
+    this->declare_parameter("robot_publisher_topic", "/sim_ground_truth_pose");
+  std::string robot_sub_topic =
+    this->declare_parameter("robot_subscriber_topic", "/sim_ground_truth_pose");
+  std::string mouse_pub_topic =
+    this->declare_parameter("mouse_publisher_topic", "/sim_ground_truth_mouse_pose");
 
-  std::string dock_pub_topic = irobot_create_toolbox::declare_and_get_parameter<std::string>(
-    "dock_publisher_topic", this);
-  std::string dock_sub_topic = irobot_create_toolbox::declare_and_get_parameter<std::string>(
-    "dock_subscriber_topic", this);
-  std::string ir_emitter_pub_topic = irobot_create_toolbox::declare_and_get_parameter<std::string>(
-    "ir_emitter_publisher_topic", this);
-  std::string ir_receiver_pub_topic = irobot_create_toolbox::declare_and_get_parameter<std::string>(
-    "ir_receiver_publisher_topic", this);
-
+  std::string dock_pub_topic =
+    this->declare_parameter("dock_publisher_topic", "/sim_ground_truth_dock_pose");
+  std::string dock_sub_topic =
+    this->declare_parameter("dock_subscriber_topic", "/sim_ground_truth_dock_pose");
+  std::string ir_emitter_pub_topic =
+    this->declare_parameter("ir_emitter_publisher_topic", "/sim_ground_truth_ir_emitter_pose");
+  std::string ir_receiver_pub_topic =
+    this->declare_parameter("ir_receiver_publisher_topic", "/sim_ground_truth_ir_receiver_pose");
 
   robot_subscriber_ = create_subscription<tf2_msgs::msg::TFMessage>(
     robot_sub_topic,

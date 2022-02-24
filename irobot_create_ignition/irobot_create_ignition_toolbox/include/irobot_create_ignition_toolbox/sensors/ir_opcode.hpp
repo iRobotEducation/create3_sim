@@ -17,7 +17,7 @@
 #include "irobot_create_msgs/msg/dock.hpp"
 #include "nav_msgs/msg/odometry.hpp"
 #include "irobot_create_ignition_toolbox/utils.hpp"
-
+#include "irobot_create_toolbox/polar_coordinates.hpp"
 
 namespace irobot_create_ignition_toolbox
 {
@@ -49,10 +49,10 @@ private:
   const double DOCKED_YAW = M_PI / 30.0;         // Max Yaw between dock and robot in radians.
 
   // Convert cartesian point to polar point
-  utils::PolarCoordinate EmitterCartesianPointToReceiverPolarPoint(
+  irobot_create_toolbox::PolarCoordinate EmitterCartesianPointToReceiverPolarPoint(
     const tf2::Vector3 &
     emitter_point);
-  utils::PolarCoordinate ReceiverCartesianPointToEmitterPolarPoint(
+  irobot_create_toolbox::PolarCoordinate ReceiverCartesianPointToEmitterPolarPoint(
     const tf2::Vector3 &
     receiver_point);
 

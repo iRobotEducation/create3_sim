@@ -52,6 +52,7 @@ vcs import ~/create3_ws/src/ < ~/create3_ws/src/create3_sim/dependencies.repos
 
 ```bash
 cd ~/create3_ws
+sudo apt-get update
 rosdep install --from-path src -yi
 ```
 
@@ -110,7 +111,8 @@ This repository contains packages for both the Classic and Ignition Gazebo simul
     - `irobot_create_common_bringup` Launch files and configurations
     - `irobot_create_control` Launch control nodes
     - `irobot_create_description`  URDF and mesh files describing the robot
-    - `irobot_create_toolbox` Nodes for simulating robot topics and motion control
+    - `irobot_create_nodes` Nodes for simulating robot topics and motion control
+    - `irobot_create_toolbox` Tools and helpers for creating nodes and plugins
 
 - `irobot_create_gazebo` Packages used for the Classic Gazebo Simulator
     - `irobot_create_gazebo_bringup` Launch files and configurations

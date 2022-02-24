@@ -9,7 +9,7 @@
 #include <vector>
 
 #include "irobot_create_ignition_toolbox/sensors/ir_intensity.hpp"
-#include "irobot_create_toolbox/parameter_helper.hpp"
+#include "irobot_create_toolbox/math.hpp"
 
 using irobot_create_ignition_toolbox::IrIntensity;
 
@@ -25,13 +25,11 @@ IrIntensity::IrIntensity(std::shared_ptr<rclcpp::Node> & nh)
     "side_left"
   }
 {
-  auto ir_scan_sub_topics = irobot_create_toolbox::declare_and_get_parameter<
-    std::vector<std::string>>(
-    "ir_scan_subscription_topics", nh_.get());
+  auto ir_scan_sub_topics =
+    nh_->declare_parameter("ir_scan_subscription_topics", std::vector<std::string>());
 
-  auto ir_intensity_pub_topics = irobot_create_toolbox::declare_and_get_parameter<
-    std::vector<std::string>>(
-    "ir_intensity_publish_topics", nh_.get());
+  auto ir_intensity_pub_topics =
+    nh_->declare_parameter("ir_intensity_publish_topics", std::vector<std::string>());
 
   for (std::string topic : ir_scan_sub_topics) {
     ir_scan_sub_.push_back(
@@ -53,16 +51,12 @@ IrIntensity::IrIntensity(std::shared_ptr<rclcpp::Node> & nh)
   }
 }
 
-float IrIntensity::find_minimum_range(std::vector<float> ranges)
-{
-  return *std::min_element(ranges.begin(), ranges.end());
-}
-
 void IrIntensity::ir_scan_callback(const sensor_msgs::msg::LaserScan::SharedPtr ir_msg)
 {
   auto ir_intensity_msg = irobot_create_msgs::msg::IrIntensity();
 
-  const double detection = std::min(find_minimum_range(ir_msg->ranges), ir_msg->range_max);
+  const double detection =
+    std::min(irobot_create_toolbox::FindMinimumRange(ir_msg->ranges), ir_msg->range_max);
 
   // IR sensor produces an exponential signal that is correlated to the distance,
   // that follows this formula: ir_reading = A exp(-x*B)

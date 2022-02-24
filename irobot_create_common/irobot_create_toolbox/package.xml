@@ -3,23 +3,14 @@
 <package format="3">
   <name>irobot_create_toolbox</name>
   <version>0.0.1</version>
-  <description>Helper tools for the iRobot(R) Create(R) 3 Educational Robot.</description>
+  <description>Components and helpers for the iRobot(R) Create(R) 3 Educational Robot.</description>
   <maintainer email="ekumen@irbt.onmicrosoft.com">Ekumen</maintainer>
   <license>BSD</license>
 
   <buildtool_depend>ament_cmake</buildtool_depend>
 
-  <depend>angles</depend>
   <depend>rclcpp</depend>
-  <depend>rclcpp_action</depend>
-  <depend>control_msgs</depend>
-  <depend>sensor_msgs</depend>
-  <depend>nav_msgs</depend>
-  <depend>geometry_msgs</depend>
-  <depend>irobot_create_msgs</depend>
-  <depend>tf2</depend>
-  <depend>tf2_geometry_msgs</depend>
-  <depend>tf2_ros</depend>
+  <depend>ignition-math6</depend>
 
   <test_depend>ament_lint_auto</test_depend>
   <test_depend>ament_cmake_cppcheck</test_depend>

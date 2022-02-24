@@ -1,5 +1,5 @@
 ---
-hazards_vector_node:
+hazards_vector_publisher:
   ros__parameters:
     # Hazard detection publisher topic
     publisher_topic: /hazard_detection

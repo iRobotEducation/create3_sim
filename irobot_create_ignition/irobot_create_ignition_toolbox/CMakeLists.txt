@@ -18,6 +18,7 @@ endif()
 # find dependencies
 find_package(ament_cmake REQUIRED)
 find_package(ament_cmake_python REQUIRED)
+find_package(control_msgs REQUIRED)
 find_package(geometry_msgs REQUIRED)
 find_package(sensor_msgs REQUIRED)
 find_package(nav_msgs REQUIRED)
@@ -40,6 +41,7 @@ endif()
 # Libraries
 
 set(dependencies
+  control_msgs
   geometry_msgs
   sensor_msgs
   nav_msgs

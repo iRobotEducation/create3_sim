@@ -8,7 +8,7 @@
 #include <vector>
 
 #include "irobot_create_ignition_toolbox/sensors/cliff.hpp"
-#include "irobot_create_toolbox/parameter_helper.hpp"
+#include "irobot_create_toolbox/math.hpp"
 
 using irobot_create_ignition_toolbox::Cliff;
 
@@ -21,13 +21,11 @@ Cliff::Cliff(std::shared_ptr<rclcpp::Node> & nh)
     "side_right"
   }
 {
-  auto cliff_sub_topics = irobot_create_toolbox::declare_and_get_parameter<
-    std::vector<std::string>>(
-    "cliff_subscription_topics", nh_.get());
+  auto cliff_sub_topics =
+    nh_->declare_parameter("cliff_subscription_topics", std::vector<std::string>());
 
-  auto cliff_pub_topics = irobot_create_toolbox::declare_and_get_parameter<
-    std::vector<std::string>>(
-    "cliff_publish_topics", nh_.get());
+  auto cliff_pub_topics =
+    nh_->declare_parameter("cliff_publish_topics", std::vector<std::string>());
 
   for (std::string topic : cliff_sub_topics) {
     cliff_sub_.push_back(
@@ -51,7 +49,10 @@ Cliff::Cliff(std::shared_ptr<rclcpp::Node> & nh)
 
 void Cliff::cliff_callback(const sensor_msgs::msg::LaserScan::SharedPtr cliff_msg)
 {
-  if (cliff_msg->ranges[0] > 0.03) {
+  constexpr double detection_threshold = 0.03;
+
+  const double range_detection = irobot_create_toolbox::FindMinimumRange(cliff_msg->ranges);
+  if (range_detection > detection_threshold) {
     auto hazard_msg = irobot_create_msgs::msg::HazardDetection();
     hazard_msg.type = irobot_create_msgs::msg::HazardDetection::CLIFF;
     hazard_msg.header.frame_id = "base_link";

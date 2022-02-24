@@ -6,6 +6,8 @@
 #include <memory>
 #include <string>
 
+#include "irobot_create_toolbox/polar_coordinates.hpp"
+
 namespace irobot_create_gazebo_plugins
 {
 GazeboRosDockingStatus::GazeboRosDockingStatus()
@@ -92,9 +94,9 @@ void GazeboRosDockingStatus::OnUpdate(const gazebo::common::UpdateInfo & info)
     }
 
     // Check if docked now
-    utils::PolarCoordinate receiver_wrt_emitter_polar =
+    irobot_create_toolbox::PolarCoordinate receiver_wrt_emitter_polar =
       dock_manager_->ReceiverCartesianPointToEmitterPolarPoint({0.0, 0.0});
-    utils::PolarCoordinate emitter_wrt_receiver_polar =
+    irobot_create_toolbox::PolarCoordinate emitter_wrt_receiver_polar =
       dock_manager_->EmitterCartesianPointToReceiverPolarPoint({0.0, 0.0});
 
     is_docked_ = receiver_wrt_emitter_polar.radius < DOCKED_DISTANCE &&

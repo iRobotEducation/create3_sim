@@ -8,6 +8,9 @@
 
 #include "irobot_create_ignition_toolbox/sensors/bumper.hpp"
 #include "irobot_create_ignition_toolbox/utils.hpp"
+#include "irobot_create_toolbox/math.hpp"
+#include "irobot_create_toolbox/polar_coordinates.hpp"
+#include "irobot_create_toolbox/sensors/bumpers.hpp"
 
 using irobot_create_ignition_toolbox::Bumper;
 
@@ -69,19 +72,19 @@ void Bumper::bumper_callback(const ros_ign_interfaces::msg::Contacts::SharedPtr 
         average_position.z));
 
     tf2::Vector3 contact_point = utils::object_wrt_frame(average_pose, robot_pose);
-
-    auto azimuth = utils::toPolar(contact_point).azimuth;
+    ignition::math::Vector2d cartesian_coord = {contact_point[0], contact_point[1]};
+    auto azimuth = irobot_create_toolbox::toPolar(cartesian_coord).azimuth;
 
     // Find contact zone
     const auto iter = std::find_if(
-      angles_map_.begin(), angles_map_.end(),
+      irobot_create_toolbox::sensors::BUMPER_ZONES_MAP.begin(),
+      irobot_create_toolbox::sensors::BUMPER_ZONES_MAP.end(),
       [this, azimuth](const auto & zone) -> bool {
-        return azimuth >= zone.second.left_limit && azimuth <= zone.second.right_limit;
+        return irobot_create_toolbox::IsAngleBetween(
+          zone.second.left_limit, zone.second.right_limit, azimuth);
       });
 
-    if (iter == angles_map_.end()) {
-      break;
-    } else {
+    if (iter != irobot_create_toolbox::sensors::BUMPER_ZONES_MAP.end()) {
       auto hazard_msg = irobot_create_msgs::msg::HazardDetection();
       hazard_msg.type = irobot_create_msgs::msg::HazardDetection::BUMP;
       hazard_msg.header.frame_id = iter->second.name;

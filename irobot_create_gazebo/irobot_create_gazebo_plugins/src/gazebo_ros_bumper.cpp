@@ -1,10 +1,15 @@
 // Copyright 2021 iRobot Corporation. All Rights Reserved.
 // @author Alexis Pojomovsky (apojomovsky@irobot.com)
 
-#include <irobot_create_gazebo_plugins/gazebo_ros_bumper.hpp>
+#include "irobot_create_gazebo_plugins/gazebo_ros_bumper.hpp"
+
+#include "irobot_create_toolbox/math.hpp"
+#include "irobot_create_toolbox/polar_coordinates.hpp"
+#include "irobot_create_toolbox/sensors/bumpers.hpp"
 
 namespace irobot_create_gazebo_plugins
 {
+
 void GazeboRosBumper::Load(gazebo::sensors::SensorPtr sensor, sdf::ElementPtr sdf)
 {
   bumper_ = std::dynamic_pointer_cast<gazebo::sensors::ContactSensor>(sensor);
@@ -31,6 +36,11 @@ void GazeboRosBumper::Load(gazebo::sensors::SensorPtr sensor, sdf::ElementPtr sd
 
 void GazeboRosBumper::OnUpdate()
 {
+  if (r_tf_w_ == ignition::math::Matrix4d::Zero) {
+    RCLCPP_WARN_STREAM(ros_node_->get_logger(), "Global pose callback is not being invoked");
+    return;
+  }
+
   // Get all contacts from bumper
   gazebo::msgs::Contacts contacts;
   contacts = bumper_->Contacts();
@@ -40,22 +50,19 @@ void GazeboRosBumper::OnUpdate()
     const ignition::math::Vector3d c_vec =
       gazebo::msgs::ConvertIgn(contacts.contact(i).position(0));
     // Get collision w.r.t. robot frame
-    if (r_tf_w_ == ignition::math::Matrix4d::Zero) {
-      RCLCPP_WARN_STREAM(ros_node_->get_logger(), "Global pose callback is not being invoked");
-      return;
-    }
     const ignition::math::Vector3d r_vec = r_tf_w_.Inverse() * c_vec;
     const double relative_contact_angle_xy = std::atan2(r_vec.Y(), r_vec.X());
     // Check what zone of the bumper has hit an object
     // Only publish if the bump event corresponds to one of the zones
     // "released" events are not published.
     const auto iter = std::find_if(
-      angles_map_.begin(), angles_map_.end(),
+      irobot_create_toolbox::sensors::BUMPER_ZONES_MAP.begin(),
+      irobot_create_toolbox::sensors::BUMPER_ZONES_MAP.end(),
       [relative_contact_angle_xy](const auto & zone) -> bool {
-        return utils::IsAngleBetween(
+        return irobot_create_toolbox::IsAngleBetween(
           zone.second.left_limit, zone.second.right_limit, relative_contact_angle_xy);
       });
-    if (iter == angles_map_.end()) {
+    if (iter == irobot_create_toolbox::sensors::BUMPER_ZONES_MAP.end()) {
       return;
     } else {
       msg_.header.frame_id = iter->second.name;

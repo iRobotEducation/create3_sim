@@ -1,3 +1,3 @@
-# iRobot® Create® 3 toolbox
+# iRobot Create3 Toolbox
 
-This package contains a set of libraries and executables used for simulating a iRobot® Create® 3 robot.
+Utilities and tools for building Create 3 nodes.

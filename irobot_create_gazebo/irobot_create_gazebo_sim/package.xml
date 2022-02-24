@@ -18,7 +18,7 @@
   <exec_depend>irobot_create_common_bringup</exec_depend>
   <exec_depend>irobot_create_control</exec_depend>
   <exec_depend>irobot_create_description</exec_depend>
-  <exec_depend>irobot_create_toolbox</exec_depend>
+  <exec_depend>irobot_create_nodes</exec_depend>
 
   <export>
     <build_type>ament_cmake</build_type>
