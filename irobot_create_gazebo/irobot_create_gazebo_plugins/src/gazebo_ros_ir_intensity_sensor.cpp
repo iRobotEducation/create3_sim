@@ -29,7 +29,7 @@ void GazeboRosIrIntensitySensor::Load(gazebo::sensors::SensorPtr sensor, sdf::El
 
   // Initialize ROS publishers
   pub_ = ros_node_->create_publisher<irobot_create_msgs::msg::IrIntensity>(
-    "~/out", rclcpp::SensorDataQoS());
+    "~/out", rclcpp::SensorDataQoS().reliable());
 
   // Configure our static message charasteristics
   msg_.header.frame_id = gazebo_ros::SensorFrameID(*sensor, *sdf);

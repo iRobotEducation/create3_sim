@@ -24,7 +24,7 @@ KidnapEstimator::KidnapEstimator(const rclcpp::NodeOptions & options)
 
   // Define kidnap status publisher
   kidnap_status_publisher_ = create_publisher<irobot_create_msgs::msg::KidnapStatus>(
-    kidnap_status_publisher_topic_, rclcpp::SensorDataQoS());
+    kidnap_status_publisher_topic_, rclcpp::SensorDataQoS().reliable());
   RCLCPP_INFO_STREAM(get_logger(), "Advertised topic: " << kidnap_status_publisher_topic_);
 
   // Subscription to the hazard detection vector

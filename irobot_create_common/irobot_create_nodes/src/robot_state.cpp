@@ -45,7 +45,7 @@ RobotState::RobotState(const rclcpp::NodeOptions & options)
 
   // Define battery state publisher
   battery_state_publisher_ = create_publisher<sensor_msgs::msg::BatteryState>(
-    battery_state_publisher_topic_, rclcpp::SensorDataQoS());
+    battery_state_publisher_topic_, rclcpp::SensorDataQoS().reliable());
   RCLCPP_INFO_STREAM(get_logger(), "Advertised topic: " << battery_state_publisher_topic_);
 
   // Define battery parameters
@@ -56,18 +56,18 @@ RobotState::RobotState(const rclcpp::NodeOptions & options)
 
   // Subscription to the hazard detection vector
   dock_subscription_ = create_subscription<irobot_create_msgs::msg::Dock>(
-    dock_subscription_topic_, rclcpp::SensorDataQoS(),
+    dock_subscription_topic_, rclcpp::SensorDataQoS().reliable(),
     std::bind(&RobotState::dock_callback, this, std::placeholders::_1));
   RCLCPP_INFO_STREAM(get_logger(), "Subscription to topic: " << dock_subscription_topic_);
 
   // Define stop status publisher
   stop_status_publisher_ = create_publisher<irobot_create_msgs::msg::StopStatus>(
-    stop_status_publisher_topic_, rclcpp::SensorDataQoS());
+    stop_status_publisher_topic_, rclcpp::SensorDataQoS().reliable());
   RCLCPP_INFO_STREAM(get_logger(), "Advertised topic: " << stop_status_publisher_topic_);
 
   // Subscription to the stop status
   stop_status_subscription_ = create_subscription<nav_msgs::msg::Odometry>(
-    wheel_vels_subscription_topic_, rclcpp::SensorDataQoS(),
+    wheel_vels_subscription_topic_, rclcpp::SensorDataQoS().reliable(),
     std::bind(&RobotState::stop_callback, this, std::placeholders::_1));
   RCLCPP_INFO_STREAM(get_logger(), "Subscription to topic: " << wheel_vels_subscription_topic_);
 
