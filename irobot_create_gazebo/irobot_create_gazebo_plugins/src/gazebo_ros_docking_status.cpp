@@ -41,7 +41,7 @@ void GazeboRosDockingStatus::Load(gazebo::physics::ModelPtr model, sdf::ElementP
 
   // Initialize ROS publisher
   pub_ =
-    ros_node_->create_publisher<irobot_create_msgs::msg::Dock>("~/out", rclcpp::SensorDataQoS());
+    ros_node_->create_publisher<irobot_create_msgs::msg::Dock>("~/out", rclcpp::SensorDataQoS().reliable());
 
   sub_ = ros_node_->create_subscription<irobot_create_msgs::msg::IrOpcode>(
     "/ir_opcode", rclcpp::SensorDataQoS(),

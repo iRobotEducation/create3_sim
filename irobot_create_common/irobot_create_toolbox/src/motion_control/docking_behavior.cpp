@@ -26,19 +26,19 @@ DockingBehavior::DockingBehavior(
   dock_status_sub_ = rclcpp::create_subscription<irobot_create_msgs::msg::Dock>(
     node_topics_interface,
     "dock",
-    rclcpp::SensorDataQoS(),
+    rclcpp::SensorDataQoS().reliable(),
     std::bind(&DockingBehavior::dock_status_callback, this, _1));
 
   robot_pose_sub_ = rclcpp::create_subscription<nav_msgs::msg::Odometry>(
     node_topics_interface,
     "sim_ground_truth_pose",
-    rclcpp::SensorDataQoS(),
+    rclcpp::SensorDataQoS().reliable(),
     std::bind(&DockingBehavior::robot_pose_callback, this, _1));
 
   dock_pose_sub_ = rclcpp::create_subscription<nav_msgs::msg::Odometry>(
     node_topics_interface,
     "sim_ground_truth_dock_pose",
-    rclcpp::SensorDataQoS(),
+    rclcpp::SensorDataQoS().reliable(),
     std::bind(&DockingBehavior::dock_pose_callback, this, _1));
 
   docking_action_server_ = rclcpp_action::create_server<irobot_create_msgs::action::DockServo>(

@@ -125,10 +125,10 @@ MotionControlNode::MotionControlNode()
     "diffdrive_controller/cmd_vel_unstamped", rclcpp::SystemDefaultsQoS());
 
   backup_limit_hazard_pub_ = this->create_publisher<irobot_create_msgs::msg::HazardDetection>(
-    "_internal/backup_limit", rclcpp::SensorDataQoS());
+    "_internal/backup_limit", rclcpp::SensorDataQoS().reliable());
 
   wheel_status_pub_ = this->create_publisher<irobot_create_msgs::msg::WheelStatus>(
-    "wheel_status", rclcpp::SensorDataQoS());
+    "wheel_status", rclcpp::SensorDataQoS().reliable());
   // Register a callback to handle parameter changes
   params_callback_handle_ = this->add_on_set_parameters_callback(
     std::bind(&MotionControlNode::set_parameters_callback, this, _1));

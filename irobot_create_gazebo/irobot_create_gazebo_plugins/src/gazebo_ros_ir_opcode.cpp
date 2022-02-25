@@ -54,7 +54,7 @@ void GazeboRosIrOpcode::Load(gazebo::physics::ModelPtr model, sdf::ElementPtr sd
 
   // Initialize ROS publisher
   pub_ = ros_node_->create_publisher<irobot_create_msgs::msg::IrOpcode>(
-    "~/out", rclcpp::SensorDataQoS());
+    "~/out", rclcpp::SensorDataQoS().reliable());
 
   // Set message frame_id
   msg_.header.frame_id = receiver_link_name;
