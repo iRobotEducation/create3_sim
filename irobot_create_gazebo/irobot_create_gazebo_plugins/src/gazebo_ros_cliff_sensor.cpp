@@ -34,7 +34,7 @@ void GazeboRosCliffSensor::Load(gazebo::sensors::SensorPtr parent, sdf::ElementP
 
   // Initialize ROS publisher
   pub_ = ros_node_->create_publisher<irobot_create_msgs::msg::HazardDetection>(
-    "~/out", rclcpp::SensorDataQoS());
+    "~/out", rclcpp::SensorDataQoS().reliable());
 
   new_laser_scans_connection_ = cliff_sensor_->LaserShape()->ConnectNewLaserScans(
     std::bind(&GazeboRosCliffSensor::OnNewLaserScans, this));

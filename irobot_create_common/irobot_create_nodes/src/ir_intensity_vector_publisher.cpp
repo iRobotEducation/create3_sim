@@ -27,7 +27,7 @@ IrIntensityVectorPublisher::IrIntensityVectorPublisher(const rclcpp::NodeOptions
     this->declare_parameter("publish_rate", 62.0);
 
   publisher_ = create_publisher<irobot_create_msgs::msg::IrIntensityVector>(
-    publisher_topic_, rclcpp::SensorDataQoS());
+    publisher_topic_, rclcpp::SensorDataQoS().reliable());
   RCLCPP_INFO_STREAM(get_logger(), "Advertised topic: " << publisher_topic_);
 
   timer_ = rclcpp::create_timer(

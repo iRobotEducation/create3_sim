@@ -16,7 +16,7 @@ void GazeboRosBumper::Load(gazebo::sensors::SensorPtr sensor, sdf::ElementPtr sd
   GZ_ASSERT(bumper_, "Bumper Contact Plugin requires a Contact Sensor");
   ros_node_ = gazebo_ros::Node::Get(sdf);
   bumper_pub_ = ros_node_->create_publisher<irobot_create_msgs::msg::HazardDetection>(
-    "~/out", rclcpp::SensorDataQoS());
+    "~/out", rclcpp::SensorDataQoS().reliable());
 
   // Listen to the update event.
   update_connection_ = bumper_->ConnectUpdated(boost::bind(&GazeboRosBumper::OnUpdate, this));

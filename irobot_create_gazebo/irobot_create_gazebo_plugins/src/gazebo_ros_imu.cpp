@@ -22,7 +22,8 @@ void GazeboRosImu::Load(gazebo::sensors::SensorPtr sensor, sdf::ElementPtr sdf)
 
   gravity_ = gazebo::physics::get_world(sensor_->WorldName())->Gravity();
 
-  pub_ = ros_node_->create_publisher<sensor_msgs::msg::Imu>("~/out", rclcpp::SensorDataQoS());
+  pub_ = ros_node_->create_publisher<sensor_msgs::msg::Imu>(
+    "~/out", rclcpp::SensorDataQoS().reliable());
 
   // Get frame for message
   msg_ = std::make_shared<sensor_msgs::msg::Imu>();
