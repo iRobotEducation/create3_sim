@@ -109,6 +109,8 @@ private:
   bool calibrated_offset_ {false};
   const double MAX_DOCK_INTERMEDIATE_GOAL_OFFSET {0.5};
   const double UNDOCK_GOAL_OFFSET {0.4};
+  rclcpp::Time last_feedback_time_;
+  const rclcpp::Duration report_feedback_interval_ {std::chrono::seconds(3)};
 };
 
 }  // namespace irobot_create_nodes
