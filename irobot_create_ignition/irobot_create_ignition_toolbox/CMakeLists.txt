@@ -44,7 +44,6 @@ set(dependencies
   control_msgs
   geometry_msgs
   sensor_msgs
-  nav_msgs
   irobot_create_msgs
   nav_msgs
   rclcpp
