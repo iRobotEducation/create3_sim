@@ -25,6 +25,7 @@ WallFollowBehavior::WallFollowBehavior(
 {
   wf_running_ = false;
   behavior_scheduler_ = behavior_scheduler;
+  last_feedback_time_ = clock_->now();
 
   wf_state_mgr_ = std::make_shared<WallFollowStateManager>(logger_.get_child("state_manager"));
 
@@ -129,6 +130,7 @@ void WallFollowBehavior::handle_wall_follow_accepted(
     RCLCPP_WARN(logger_, "goal_handle is null, don't execute");
     return;
   }
+  last_feedback_time_ = clock_->now();
 }
 
 BehaviorsScheduler::optional_output_t WallFollowBehavior::execute_wall_follow(
@@ -157,10 +159,15 @@ BehaviorsScheduler::optional_output_t WallFollowBehavior::execute_wall_follow(
   }
   // Get next servo command based on bump and IR sensors
   BehaviorsScheduler::optional_output_t next_cmd = get_next_servo_cmd(current_state);
-  // Publish feedback
-  auto feedback = std::make_shared<irobot_create_msgs::action::WallFollow::Feedback>();
-  feedback->engaged = wf_state_mgr_->is_engaged();
-  goal_handle->publish_feedback(feedback);
+  rclcpp::Time current_time = clock_->now();
+  auto time_since_feedback = current_time - last_feedback_time_;
+  if (time_since_feedback > report_feedback_interval_) {
+    // Publish feedback
+    auto feedback = std::make_shared<irobot_create_msgs::action::WallFollow::Feedback>();
+    feedback->engaged = wf_state_mgr_->is_engaged();
+    goal_handle->publish_feedback(feedback);
+    last_feedback_time_ = current_time;
+  }
 
   return next_cmd;
 }

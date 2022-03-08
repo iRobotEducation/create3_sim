@@ -10,6 +10,7 @@
 #include <vector>
 
 #include "irobot_create_msgs/action/led_animation.hpp"
+#include "irobot_create_msgs/msg/audio_note_vector.hpp"
 #include "irobot_create_msgs/msg/button.hpp"
 #include "irobot_create_msgs/msg/interface_buttons.hpp"
 #include "irobot_create_msgs/msg/led_color.hpp"
@@ -29,6 +30,7 @@ public:
 
   // Callback functions
   void lightring_callback(irobot_create_msgs::msg::LightringLeds::SharedPtr msg);
+  void audio_callback(irobot_create_msgs::msg::AudioNoteVector::SharedPtr msg);
 
 private:
   rclcpp_action::GoalResponse handle_led_animation_goal(
@@ -55,6 +57,7 @@ private:
 
   // Subscribers
   rclcpp::Subscription<irobot_create_msgs::msg::LightringLeds>::SharedPtr lightring_subscription_;
+  rclcpp::Subscription<irobot_create_msgs::msg::AudioNoteVector>::SharedPtr audio_subscription_;
 
   // Actions
   rclcpp_action::Server<irobot_create_msgs::action::LedAnimation>::SharedPtr
@@ -70,6 +73,8 @@ private:
 
   // Topic to subscribe to light ring vector
   std::string lightring_subscription_topic_;
+  // Topic to subscribe to audio note vector
+  std::string audio_subscription_topic_;
 
   // Message to store the interface buttons
   irobot_create_msgs::msg::InterfaceButtons buttons_msg_;
@@ -80,6 +85,8 @@ private:
   std::mutex led_animation_params_mutex_;
   rclcpp::Duration led_animation_end_duration_;
   rclcpp::Time led_animation_start_time_;
+  rclcpp::Time last_animation_feedback_time_;
+  const rclcpp::Duration report_animation_feedback_interval_ {std::chrono::seconds(3)};
 };
 
 }  // namespace irobot_create_nodes

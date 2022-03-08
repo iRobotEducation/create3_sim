@@ -22,6 +22,7 @@ DockingBehavior::DockingBehavior(
   max_action_runtime_(rclcpp::Duration(std::chrono::seconds(30)))
 {
   behavior_scheduler_ = behavior_scheduler;
+  last_feedback_time_ = clock_->now();
 
   dock_status_sub_ = rclcpp::create_subscription<irobot_create_msgs::msg::Dock>(
     node_topics_interface,
@@ -165,6 +166,7 @@ void DockingBehavior::handle_dock_servo_accepted(
     goal_handle->abort(result);
     running_dock_action_ = false;
   }
+  last_feedback_time_ = clock_->now();
 }
 
 BehaviorsScheduler::optional_output_t DockingBehavior::execute_dock_servo(
@@ -211,11 +213,15 @@ BehaviorsScheduler::optional_output_t DockingBehavior::execute_dock_servo(
     return servo_cmd;
   }
 
-  // Publish feedback
-  auto feedback = std::make_shared<irobot_create_msgs::action::DockServo::Feedback>();
-  feedback->sees_dock = sees_dock_;
-
-  goal_handle->publish_feedback(feedback);
+  rclcpp::Time current_time = clock_->now();
+  auto time_since_feedback = current_time - last_feedback_time_;
+  if (time_since_feedback > report_feedback_interval_) {
+    // Publish feedback
+    auto feedback = std::make_shared<irobot_create_msgs::action::DockServo::Feedback>();
+    feedback->sees_dock = sees_dock_;
+    goal_handle->publish_feedback(feedback);
+    last_feedback_time_ = current_time;
+  }
 
   return servo_cmd;
 }
@@ -298,6 +304,7 @@ void DockingBehavior::handle_undock_accepted(
     goal_controller_.reset();
     running_dock_action_ = false;
   }
+  last_feedback_time_ = clock_->now();
 }
 
 BehaviorsScheduler::optional_output_t DockingBehavior::execute_undock(

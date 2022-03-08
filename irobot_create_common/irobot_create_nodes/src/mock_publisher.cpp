@@ -18,6 +18,7 @@ MockPublisher::MockPublisher(const rclcpp::NodeOptions & options)
 : rclcpp::Node("mock_publisher_node", options),
   led_animation_end_duration_(rclcpp::Duration::from_nanoseconds(0))
 {
+  last_animation_feedback_time_ = this->now();
   // Gazebo simulator being used
   gazebo_ =
     this->declare_parameter("gazebo", "classic");
@@ -33,6 +34,8 @@ MockPublisher::MockPublisher(const rclcpp::NodeOptions & options)
   // Subscriber topics
   lightring_subscription_topic_ =
     this->declare_parameter("lightring_topic", "/cmd_lightring");
+  audio_subscription_topic_ =
+    this->declare_parameter("audio_topic", "/cmd_audio");
 
   // Publish rate parameters in Hz
   const double buttons_publish_rate =
@@ -57,6 +60,11 @@ MockPublisher::MockPublisher(const rclcpp::NodeOptions & options)
     lightring_subscription_topic_, rclcpp::SensorDataQoS(),
     std::bind(&MockPublisher::lightring_callback, this, std::placeholders::_1));
   RCLCPP_INFO_STREAM(get_logger(), "Subscription to topic: " << lightring_subscription_topic_);
+
+  audio_subscription_ = create_subscription<irobot_create_msgs::msg::AudioNoteVector>(
+    audio_subscription_topic_, rclcpp::SensorDataQoS(),
+    std::bind(&MockPublisher::audio_callback, this, std::placeholders::_1));
+  RCLCPP_INFO_STREAM(get_logger(), "Subscription to topic: " << audio_subscription_topic_);
 
   led_animation_action_server_ =
     rclcpp_action::create_server<irobot_create_msgs::action::LedAnimation>(
@@ -140,6 +148,7 @@ void MockPublisher::handle_led_animation_accepted(
       }
       std::thread{std::bind(&MockPublisher::execute_led_animation, this, _1), goal_handle}.detach();
     }
+    last_animation_feedback_time_ = this->now();
   }
 }
 
@@ -168,6 +177,15 @@ void MockPublisher::execute_led_animation(
       result->runtime = led_animation_runtime;
       goal_handle->canceled(result);
       working_on_goal = false;
+    } else {
+      rclcpp::Time current_time = this->now();
+      auto time_since_feedback = current_time - last_animation_feedback_time_;
+      if (time_since_feedback > report_animation_feedback_interval_) {
+        auto feedback = std::make_shared<irobot_create_msgs::action::LedAnimation::Feedback>();
+        feedback->remaining_runtime = led_animation_end_duration_ - led_animation_runtime;
+        goal_handle->publish_feedback(feedback);
+        last_animation_feedback_time_ = current_time;
+      }
     }
   }
 }
@@ -177,6 +195,13 @@ void MockPublisher::lightring_callback(irobot_create_msgs::msg::LightringLeds::S
   RCLCPP_INFO(
     get_logger(),
     "Lightring message received but it is not yet implemented in simulation");
+}
+
+void MockPublisher::audio_callback(irobot_create_msgs::msg::AudioNoteVector::SharedPtr /*msg*/)
+{
+  RCLCPP_INFO(
+    get_logger(),
+    "Audio command message received but it is not yet implemented in simulation");
 }
 
 }  // namespace irobot_create_nodes

@@ -83,6 +83,8 @@ private:
   std::mutex sensor_mutex_;
   irobot_create_msgs::msg::IrIntensityVector last_ir_intensity_;
   std::shared_ptr<WallFollowStateManager> wf_state_mgr_ {nullptr};
+  rclcpp::Time last_feedback_time_;
+  const rclcpp::Duration report_feedback_interval_ {std::chrono::seconds(3)};
 };
 
 }  // namespace irobot_create_nodes
