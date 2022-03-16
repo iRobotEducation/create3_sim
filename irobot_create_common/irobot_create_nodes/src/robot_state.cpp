@@ -56,7 +56,7 @@ RobotState::RobotState(const rclcpp::NodeOptions & options)
 
   // Subscription to the hazard detection vector
   dock_subscription_ = create_subscription<irobot_create_msgs::msg::Dock>(
-    dock_subscription_topic_, rclcpp::SensorDataQoS().reliable(),
+    dock_subscription_topic_, rclcpp::SensorDataQoS(),
     std::bind(&RobotState::dock_callback, this, std::placeholders::_1));
   RCLCPP_INFO_STREAM(get_logger(), "Subscription to topic: " << dock_subscription_topic_);
 
@@ -67,7 +67,7 @@ RobotState::RobotState(const rclcpp::NodeOptions & options)
 
   // Subscription to the stop status
   stop_status_subscription_ = create_subscription<nav_msgs::msg::Odometry>(
-    wheel_vels_subscription_topic_, rclcpp::SensorDataQoS().reliable(),
+    wheel_vels_subscription_topic_, rclcpp::SensorDataQoS(),
     std::bind(&RobotState::stop_callback, this, std::placeholders::_1));
   RCLCPP_INFO_STREAM(get_logger(), "Subscription to topic: " << wheel_vels_subscription_topic_);
 
