@@ -11,6 +11,9 @@ jobs:
     name: build_and_test
     runs-on: ubuntu-20.04
     steps:
+      - name: Set Ignition Version
+        run: |
+          echo "IGNITION_VERSION=edifice" >> $GITHUB_ENV
       - uses: actions/checkout@v2.3.4
       - uses: ros-tooling/setup-ros@0.2.1
         with:
