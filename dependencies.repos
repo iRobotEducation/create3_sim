@@ -6,4 +6,4 @@ repositories:
   ignition-ros2-control:
     type: git
     url: https://github.com/ignitionrobotics/ign_ros2_control.git
-    version: galactic
+    version: 0.3.0
