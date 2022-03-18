@@ -3,6 +3,8 @@
 
 import os
 
+from pathlib import Path
+
 from ament_index_python.packages import get_package_share_directory
 
 from launch import LaunchContext, LaunchDescription, SomeSubstitutionsType, Substitution
@@ -57,35 +59,46 @@ for pose_element in ['x', 'y', 'z', 'yaw']:
 def generate_launch_description():
 
     # Directories
-    pkg_create3_common_bringup = get_package_share_directory('irobot_create_common_bringup')
-    pkg_create3_ignition_bringup = get_package_share_directory('irobot_create_ignition_bringup')
-    pkg_create3_ignition_plugins = get_package_share_directory('irobot_create_ignition_plugins')
-    pkg_ros_ign_gazebo = get_package_share_directory('ros_ign_gazebo')
+    pkg_irobot_create_common_bringup = get_package_share_directory(
+        'irobot_create_common_bringup')
+    pkg_irobot_create_ignition_bringup = get_package_share_directory(
+        'irobot_create_ignition_bringup')
+    pkg_irobot_create_ignition_plugins = get_package_share_directory(
+        'irobot_create_ignition_plugins')
+    pkg_irobot_create_description = get_package_share_directory(
+        'irobot_create_description')
+    pkg_ros_ign_gazebo = get_package_share_directory(
+        'ros_ign_gazebo')
 
     # Set Ignition resource path
     ign_resource_path = SetEnvironmentVariable(name='IGN_GAZEBO_RESOURCE_PATH',
-                                               value=[os.path.join(pkg_create3_ignition_bringup,
-                                                      'worlds')])
+                                               value=[os.path.join(
+                                                      pkg_irobot_create_ignition_bringup,
+                                                      'worlds'), ':' +
+                                                      str(Path(
+                                                          pkg_irobot_create_description).
+                                                          parent.resolve())])
 
     ign_gui_plugin_path = SetEnvironmentVariable(name='IGN_GUI_PLUGIN_PATH',
-                                                 value=[os.path.join(pkg_create3_ignition_plugins,
+                                                 value=[os.path.join(
+                                                        pkg_irobot_create_ignition_plugins,
                                                         'lib')])
 
     # Paths
     ign_gazebo_launch = PathJoinSubstitution(
         [pkg_ros_ign_gazebo, 'launch', 'ign_gazebo.launch.py'])
     ros_ign_bridge_launch = PathJoinSubstitution(
-        [pkg_create3_ignition_bringup, 'launch', 'create3_ros_ignition_bridge.launch.py'])
+        [pkg_irobot_create_ignition_bringup, 'launch', 'create3_ros_ignition_bridge.launch.py'])
     create3_nodes_launch = PathJoinSubstitution(
-        [pkg_create3_common_bringup, 'launch', 'create3_nodes.launch.py'])
+        [pkg_irobot_create_common_bringup, 'launch', 'create3_nodes.launch.py'])
     create3_ignition_nodes_launch = PathJoinSubstitution(
-        [pkg_create3_ignition_bringup, 'launch', 'create3_ignition_nodes.launch.py'])
+        [pkg_irobot_create_ignition_bringup, 'launch', 'create3_ignition_nodes.launch.py'])
     robot_description_launch = PathJoinSubstitution(
-        [pkg_create3_common_bringup, 'launch', 'robot_description.launch.py'])
+        [pkg_irobot_create_common_bringup, 'launch', 'robot_description.launch.py'])
     dock_description_launch = PathJoinSubstitution(
-        [pkg_create3_common_bringup, 'launch', 'dock_description.launch.py'])
+        [pkg_irobot_create_common_bringup, 'launch', 'dock_description.launch.py'])
     rviz2_launch = PathJoinSubstitution(
-        [pkg_create3_common_bringup, 'launch', 'rviz2.launch.py'])
+        [pkg_irobot_create_common_bringup, 'launch', 'rviz2.launch.py'])
 
     # Launch configurations
     x, y, z = LaunchConfiguration('x'), LaunchConfiguration('y'), LaunchConfiguration('z')
@@ -99,7 +112,7 @@ def generate_launch_description():
                           '.sdf',
                           ' -v 4',
                           ' --gui-config ',
-                          PathJoinSubstitution([pkg_create3_ignition_bringup,
+                          PathJoinSubstitution([pkg_irobot_create_ignition_bringup,
                                                 'gui', 'create3', 'gui.config'])])
         ]
     )
