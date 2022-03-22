@@ -60,7 +60,7 @@
     <visual>
       <origin xyz="0 0 ${body_z_offset + base_link_z_offset}" rpy="0 0 ${pi/2}"/>
       <geometry>
-        <mesh filename="file://$(find irobot_create_description)/meshes/body_visual.dae" />
+        <mesh filename="package://irobot_create_description/meshes/body_visual.dae" />
       </geometry>
     </visual>
     <collision name="create3_base_collision">
@@ -83,8 +83,8 @@
   <!-- Bumper -->
   <xacro:bumper
       gazebo="$(arg gazebo)"
-      visual_mesh="file://$(find irobot_create_description)/meshes/bumper_visual.dae"
-      collision_mesh="file://$(find irobot_create_description)/meshes/bumper_collision.dae">
+      visual_mesh="package://irobot_create_description/meshes/bumper_visual.dae"
+      collision_mesh="package://irobot_create_description/meshes/bumper_collision.dae">
     <origin xyz="0 0 ${bumper_offset_z  + base_link_z_offset}"/>
     <inertial>
       <origin xyz="${bumper_inertial_x} 0 ${bumper_inertial_z}"/>

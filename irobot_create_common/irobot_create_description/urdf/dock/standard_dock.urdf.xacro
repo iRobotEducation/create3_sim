@@ -15,7 +15,7 @@
     <visual>
       <origin xyz="0 0 ${z_offset}"/>
       <geometry>
-        <mesh filename="file://$(find irobot_create_description)/meshes/dock/visual.dae"/>
+        <mesh filename="package://irobot_create_description/meshes/dock/visual.dae"/>
       </geometry>
     </visual>
     <collision>
