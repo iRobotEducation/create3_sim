@@ -14,7 +14,7 @@ from launch.actions import DeclareLaunchArgument, ExecuteProcess
 from launch.actions import IncludeLaunchDescription, SetEnvironmentVariable
 from launch.conditions import IfCondition
 from launch.launch_description_sources import PythonLaunchDescriptionSource
-from launch.substitutions import LaunchConfiguration, PathJoinSubstitution
+from launch.substitutions import EnvironmentVariable, LaunchConfiguration, PathJoinSubstitution
 from launch_ros.actions import Node
 
 
@@ -66,6 +66,7 @@ def generate_launch_description():
 
     # Set ignition resource path
     gz_resource_path = SetEnvironmentVariable(name='GAZEBO_MODEL_PATH', value=[
+                                                EnvironmentVariable('GAZEBO_MODEL_PATH', default_value=''),
                                                 '/usr/share/gazebo-11/models/:',
                                                 str(Path(pkg_irobot_create_description).
                                                     parent.resolve())])
