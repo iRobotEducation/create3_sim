@@ -1,13 +1,7 @@
 ---
 mock_publisher:
   ros__parameters:
-    # Mock buttons publisher topic
-    button_topic: /interface_buttons
     # Mock slip status publisher topic
     slip_status_topic: /slip_status
     # Publishers rate
-    buttons_publish_rate: 1.0
     slip_status_publish_rate: 62.0
-    # Subscription topics
-    lightring_topic: /cmd_lightring
-    audio_topic: /cmd_audio

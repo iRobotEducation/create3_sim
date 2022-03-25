@@ -129,6 +129,22 @@ rclcpp_components_register_node(robot_state_lib
   PLUGIN "irobot_create_nodes::RobotState"
   EXECUTABLE robot_state)
 
+# UI Mgr Node
+add_library(ui_mgr_lib SHARED)
+target_sources(
+  ui_mgr_lib
+  PRIVATE
+    src/ui_mgr.cpp
+)
+target_include_directories(ui_mgr_lib PUBLIC include)
+ament_target_dependencies(ui_mgr_lib
+  ${dependencies}
+)
+
+rclcpp_components_register_node(ui_mgr_lib
+  PLUGIN "irobot_create_nodes::UIMgr"
+  EXECUTABLE ui_mgr)
+
 # Mock publisher
 add_library(mock_publisher_lib SHARED)
 target_sources(
@@ -167,6 +183,7 @@ set(libraries_names
   motion_control_lib
   wheel_status_publisher_lib
   robot_state_lib
+  ui_mgr_lib
   mock_publisher_lib
   kidnap_estimator_publisher_lib
 )
