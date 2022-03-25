@@ -203,14 +203,17 @@ void UIMgr::handle_audio_note_sequence_accepted(
           goal->iterations);
         const std::lock_guard<std::mutex> lock(audio_note_sequence_params_mutex_);
         audio_notes_duration_ = rclcpp::Duration::from_nanoseconds(0);
-        for (auto itr{goal->note_sequence.notes.cbegin()}; itr != goal->note_sequence.notes.cend(); ++itr) {
-            rclcpp::Duration runtime(itr->max_runtime);
-            audio_notes_duration_ = audio_notes_duration_ + runtime;
+        for (auto itr{goal->note_sequence.notes.cbegin()}; itr != goal->note_sequence.notes.cend();
+          ++itr)
+        {
+          rclcpp::Duration runtime(itr->max_runtime);
+          audio_notes_duration_ = audio_notes_duration_ + runtime;
         }
         audio_iterations_ = goal->iterations;
         audio_note_sequence_end_duration_ = rclcpp::Duration::from_nanoseconds(0);
         for (int32_t iters = 0; iters < audio_iterations_; ++iters) {
-            audio_note_sequence_end_duration_ = audio_note_sequence_end_duration_ + audio_notes_duration_;
+          audio_note_sequence_end_duration_ = audio_note_sequence_end_duration_ +
+            audio_notes_duration_;
         }
         audio_note_sequence_start_time_ = this->now();
       }
@@ -233,7 +236,9 @@ void UIMgr::execute_audio_note_sequence(
       const std::lock_guard<std::mutex> lock(audio_note_sequence_params_mutex_);
       audio_note_sequence_runtime = this->now() - audio_note_sequence_start_time_;
     }
-    int32_t iters_played = static_cast<int32_t>(audio_note_sequence_runtime.nanoseconds() / audio_notes_duration_.nanoseconds());
+    int32_t iters_played =
+      static_cast<int32_t>(audio_note_sequence_runtime.nanoseconds() /
+      audio_notes_duration_.nanoseconds());
     if (audio_note_sequence_runtime >= audio_note_sequence_end_duration_) {
       RCLCPP_INFO(get_logger(), "Audio Note Sequence ran for note time, succeeded");
       auto result = std::make_shared<irobot_create_msgs::action::AudioNoteSequence::Result>();
