@@ -39,6 +39,8 @@ def generate_launch_description():
         [pkg_create3_common_bringup, 'config', 'robot_state_params.yaml'])
     kidnap_estimator_yaml_file = PathJoinSubstitution(
         [pkg_create3_common_bringup, 'config', 'kidnap_estimator_params.yaml'])
+    ui_mgr_params_yaml_file = PathJoinSubstitution(
+        [pkg_create3_common_bringup, 'config', 'ui_mgr_params.yaml'])
 
     # Includes
     diffdrive_controller = IncludeLaunchDescription(
@@ -90,8 +92,7 @@ def generate_launch_description():
         name='mock_publisher',
         executable='mock_publisher',
         parameters=[mock_params_yaml_file,
-                    {'use_sim_time': True},
-                    {'gazebo': LaunchConfiguration('gazebo')}],
+                    {'use_sim_time': True}],
         output='screen',
     )
 
@@ -115,6 +116,17 @@ def generate_launch_description():
         output='screen',
     )
 
+    # UI topics / actions
+    ui_mgr_node = Node(
+        package='irobot_create_nodes',
+        name='ui_mgr',
+        executable='ui_mgr',
+        parameters=[ui_mgr_params_yaml_file,
+                    {'use_sim_time': True},
+                    {'gazebo': LaunchConfiguration('gazebo')}],
+        output='screen',
+    )
+
     # Define LaunchDescription variable
     ld = LaunchDescription(ARGUMENTS)
     # Include robot description
@@ -127,5 +139,6 @@ def generate_launch_description():
     ld.add_action(mock_topics_node)
     ld.add_action(robot_state_node)
     ld.add_action(kidnap_estimator_node)
+    ld.add_action(ui_mgr_node)
 
     return ld
