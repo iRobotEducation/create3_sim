@@ -12,7 +12,7 @@
   <buildtool_depend>ament_cmake</buildtool_depend>
 
   <exec_depend>gazebo_ros2_control</exec_depend>
-  <exec_depend>ign_ros2_control</exec_depend>
+  <exec_depend version_gte="0.4.0">ign_ros2_control</exec_depend>
   <exec_depend>irobot_create_nodes</exec_depend>
   <exec_depend>joint_state_broadcaster</exec_depend>
   <exec_depend>ros2launch</exec_depend>

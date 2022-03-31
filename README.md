@@ -15,7 +15,6 @@ Required dependencies:
 2. ROS 2 dev tools:
     - [colcon-common-extensions](https://pypi.org/project/colcon-common-extensions/)
     - [rosdep](https://pypi.org/project/rosdep/): Used to install dependencies when building from sources
-    - [vcs](https://pypi.org/project/vcstool/): Automates cloning of git repositories declared on a YAML file.
 
 Besides the aforementioned dependencies you will also need at least one among Ignition Gazebo and Classic Gazebo
 
@@ -41,12 +40,6 @@ mkdir -p ~/create3_ws/src
 ```
 
 - Clone this repository into the src directory from above.
-
-- Use `vcs` to clone additional dependencies into the workspace:
-
-```bash
-vcs import ~/create3_ws/src/ < ~/create3_ws/src/create3_sim/dependencies.repos
-```
 
 - Navigate to the workspace and install ROS 2 dependencies with:
 
