@@ -2,8 +2,8 @@
 Changelog for package irobot_create_description
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+1.0.0 (2022-03-31)
+------------------
 * Added irobot_create_control dependency to irobot_create_description (`#171 <https://github.com/iRobotEducation/create3_sim/issues/171>`_)
 * Use package:// to reference meshes (`#168 <https://github.com/iRobotEducation/create3_sim/issues/168>`_)
   * Set GAZEBO_MODEL_URI to empty string to prevent model downloads.

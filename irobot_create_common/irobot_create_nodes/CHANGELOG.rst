@@ -2,8 +2,8 @@
 Changelog for package irobot_create_nodes
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+1.0.0 (2022-03-31)
+------------------
 * Add audio action and move UI elements to ui_mgr node (`#172 <https://github.com/iRobotEducation/create3_sim/issues/172>`_)
   * Add audio notes sequence action and move UI elements from mock to UI mgr node
   * fix linter error

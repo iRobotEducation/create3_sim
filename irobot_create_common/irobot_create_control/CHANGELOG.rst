@@ -2,8 +2,8 @@
 Changelog for package irobot_create_control
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+1.0.0 (2022-03-31)
+------------------
 * Split `irobot_create_toolbox` (`#153 <https://github.com/iRobotEducation/create3_sim/issues/153>`_)
   * rename irobot_create_toolbox into irobot_create_nodes
   * move common utilities to irobot_create_toolbox

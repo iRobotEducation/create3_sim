@@ -2,8 +2,8 @@
 Changelog for package irobot_create_ignition_bringup
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+1.0.0 (2022-03-31)
+------------------
 * Use package:// to reference meshes (`#168 <https://github.com/iRobotEducation/create3_sim/issues/168>`_)
   * Set GAZEBO_MODEL_URI to empty string to prevent model downloads.
   Added /usr/share/gazebo-11/models/ to GAZEBO_MODEL_PATH to use local ground plane and sun models.

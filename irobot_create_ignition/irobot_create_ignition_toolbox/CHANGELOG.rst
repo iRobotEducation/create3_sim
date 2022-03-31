@@ -2,8 +2,8 @@
 Changelog for package irobot_create_ignition_toolbox
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+1.0.0 (2022-03-31)
+------------------
 * Update dependencies for build from source, throttle action feedback, add stub for audio command (`#161 <https://github.com/iRobotEducation/create3_sim/issues/161>`_)
   * Update dependencies for build from source
   * Add stub for cmd_audio and throttle action feedback

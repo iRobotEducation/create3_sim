@@ -2,8 +2,8 @@
 Changelog for package irobot_create_gazebo_plugins
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+1.0.0 (2022-03-31)
+------------------
 * Reliable QoS for publishers (`#158 <https://github.com/iRobotEducation/create3_sim/issues/158>`_)
   * reliable QoS for publishers
   * reliable QoS for publishers
