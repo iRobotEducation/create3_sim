@@ -26,7 +26,7 @@ def generate_launch_description():
     create3_launch_file = PathJoinSubstitution(
         [irobot_create_gazebo_bringup_dir, 'launch', 'create3_gazebo.launch.py'])
     world_path = PathJoinSubstitution([aws_small_house_dir, 'worlds', 'small_house.world'])
-    aws_model_path = PathJoinSubstitution([aws_small_house_dir, 'models'])
+    aws_model_path = PathJoinSubstitution([aws_small_house_dir, 'models:'])
 
     # Includes
     world_spawn = IncludeLaunchDescription(
