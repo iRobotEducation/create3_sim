@@ -25,6 +25,7 @@ find_package(rclcpp_components REQUIRED)
 find_package(tf2 REQUIRED)
 find_package(tf2_geometry_msgs REQUIRED)
 find_package(tf2_ros REQUIRED)
+find_package(Boost REQUIRED)
 
 #### Libraries
 
@@ -42,6 +43,7 @@ set(dependencies
   tf2
   tf2_geometry_msgs
   tf2_ros
+  Boost
 )
 
 # Hazards vector publisher

@@ -19,7 +19,7 @@ void GazeboRosBumper::Load(gazebo::sensors::SensorPtr sensor, sdf::ElementPtr sd
     "~/out", rclcpp::SensorDataQoS().reliable());
 
   // Listen to the update event.
-  update_connection_ = bumper_->ConnectUpdated(boost::bind(&GazeboRosBumper::OnUpdate, this));
+  update_connection_ = bumper_->ConnectUpdated(std::bind(&GazeboRosBumper::OnUpdate, this));
 
   // Initialize gazebo node and subscribe to pose topic
   gz_node_.reset(new gazebo::transport::Node());
