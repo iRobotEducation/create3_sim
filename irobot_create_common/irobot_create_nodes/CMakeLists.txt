@@ -25,7 +25,7 @@ find_package(rclcpp_components REQUIRED)
 find_package(tf2 REQUIRED)
 find_package(tf2_geometry_msgs REQUIRED)
 find_package(tf2_ros REQUIRED)
-find_package(Boost COMPONENTS boost REQUIRED)
+find_package(Boost REQUIRED)
 
 #### Libraries
 
