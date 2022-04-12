@@ -2,6 +2,12 @@
 Changelog for package irobot_create_gazebo_bringup
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+------------------
+* add boost as explicit dependency and remove unnneded boost usage (`#175 <https://github.com/iRobotEducation/create3_sim/issues/175>`_)
+  * add boost as explicit dependency and remove unnneded boost usage
+  * do not search for boost component in Boost library
+
 1.0.0 (2022-03-31)
 ------------------
 * Add audio action and move UI elements to ui_mgr node (`#172 <https://github.com/iRobotEducation/create3_sim/issues/172>`_)

@@ -2,6 +2,12 @@
 Changelog for package irobot_create_ignition_bringup
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+------------------
+* add boost as explicit dependency and remove unnneded boost usage (`#175 <https://github.com/iRobotEducation/create3_sim/issues/175>`_)
+  * add boost as explicit dependency and remove unnneded boost usage
+  * do not search for boost component in Boost library
+
 1.0.0 (2022-03-31)
 ------------------
 * Use package:// to reference meshes (`#168 <https://github.com/iRobotEducation/create3_sim/issues/168>`_)

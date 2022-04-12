@@ -2,6 +2,12 @@
 Changelog for package irobot_create_description
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+------------------
+* add boost as explicit dependency and remove unnneded boost usage (`#175 <https://github.com/iRobotEducation/create3_sim/issues/175>`_)
+  * add boost as explicit dependency and remove unnneded boost usage
+  * do not search for boost component in Boost library
+
 1.0.0 (2022-03-31)
 ------------------
 * Added irobot_create_control dependency to irobot_create_description (`#171 <https://github.com/iRobotEducation/create3_sim/issues/171>`_)
