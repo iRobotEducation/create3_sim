@@ -1,5 +1,5 @@
 ---
-mock_publisher:
+/**:
   ros__parameters:
     # Mock slip status publisher topic
     slip_status_topic: /slip_status

@@ -9,31 +9,16 @@ import os
 from pathlib import Path
 
 from ament_index_python.packages import get_package_share_directory
-from launch import LaunchContext, LaunchDescription, SomeSubstitutionsType, Substitution
+
+from irobot_create_common_bringup.offset_parser import OffsetParser
+
+from launch import LaunchDescription
 from launch.actions import DeclareLaunchArgument, ExecuteProcess
 from launch.actions import IncludeLaunchDescription, SetEnvironmentVariable
 from launch.conditions import IfCondition
 from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch.substitutions import EnvironmentVariable, LaunchConfiguration, PathJoinSubstitution
 from launch_ros.actions import Node
-
-
-class OffsetParser(Substitution):
-    def __init__(
-            self,
-            number: SomeSubstitutionsType,
-            offset: float,
-    ) -> None:
-        self.__number = number
-        self.__offset = offset
-
-    def perform(
-            self,
-            context: LaunchContext = None,
-    ) -> str:
-        number = float(self.__number.perform(context))
-        return f'{number + self.__offset}'
-
 
 ARGUMENTS = [
     DeclareLaunchArgument('use_rviz', default_value='true',
@@ -47,7 +32,12 @@ ARGUMENTS = [
                           description='Spawn the standard dock model.'),
     DeclareLaunchArgument('world_path', default_value='',
                           description='Set world path, by default is empty.world'),
-]
+    DeclareLaunchArgument('robot_name', default_value='create3',
+                          description='Robot name'),
+    DeclareLaunchArgument('namespace', default_value='',
+                          description='robot namespace'),
+
+        ]
 
 for pose_element in ['x', 'y', 'z', 'yaw']:
     ARGUMENTS.append(DeclareLaunchArgument(pose_element, default_value='0.0',
@@ -76,12 +66,8 @@ def generate_launch_description():
     gz_model_uri = SetEnvironmentVariable(name='GAZEBO_MODEL_URI', value=[''])
 
     # Paths
-    create3_nodes_launch_file = PathJoinSubstitution(
-        [pkg_create3_common_bringup, 'launch', 'create3_nodes.launch.py'])
     dock_description_launch_file = PathJoinSubstitution(
         [pkg_create3_common_bringup, 'launch', 'dock_description.launch.py'])
-    robot_description_launch_file = PathJoinSubstitution(
-        [pkg_create3_common_bringup, 'launch', 'robot_description.launch.py'])
     rviz2_launch_file = PathJoinSubstitution(
         [pkg_create3_common_bringup, 'launch', 'rviz2.launch.py'])
 
@@ -95,6 +81,9 @@ def generate_launch_description():
     spawn_dock = LaunchConfiguration('spawn_dock')
     use_gazebo_gui = LaunchConfiguration('use_gazebo_gui')
     use_rviz = LaunchConfiguration('use_rviz')
+    robot_name = LaunchConfiguration('robot_name')
+    namespace = LaunchConfiguration('namespace')
+    namespaced_robot_description = [namespace, '/robot_description']
 
     # Gazebo server
     gzserver = ExecuteProcess(
@@ -141,29 +130,16 @@ def generate_launch_description():
     )
 
     # Create 3 robot model and description
-    robot_description = IncludeLaunchDescription(
-        PythonLaunchDescriptionSource([robot_description_launch_file])
-    )
-    spawn_robot = Node(
-        package='gazebo_ros',
-        executable='spawn_entity.py',
-        name='spawn_create3',
-        arguments=['-entity',
-                   'create3',
-                   '-topic',
-                   'robot_description',
-                   '-x', x,
-                   '-y', y,
-                   '-z', z,
-                   '-Y', yaw],
-        output='screen',
-    )
-
-    # Create 3 nodes
-    create3_nodes = IncludeLaunchDescription(
-        PythonLaunchDescriptionSource([create3_nodes_launch_file])
-    )
-
+    spawn_robot = IncludeLaunchDescription(
+        PythonLaunchDescriptionSource(os.path.join(pkg_create3_gazebo_bringup, 'launch',
+                                                   'create3_gazebo_spawn.launch.py')),
+        launch_arguments={'x': x,
+                          'y': y,
+                          'z': z,
+                          'robot_name': robot_name,
+                          'robot_description': namespaced_robot_description,
+                          'namespace': namespace,
+                          }.items())
     # RVIZ2
     rviz2 = IncludeLaunchDescription(
         PythonLaunchDescriptionSource([rviz2_launch_file]),
@@ -178,12 +154,10 @@ def generate_launch_description():
     ld.add_action(gzserver)
     ld.add_action(gzclient)
     # Include robot description
-    ld.add_action(robot_description)
+    # ld.add_action(robot_description)
     ld.add_action(spawn_robot)
     ld.add_action(spawn_dock)
     ld.add_action(dock_description)
-    # Include Create 3 nodes
-    ld.add_action(create3_nodes)
     # Rviz
     ld.add_action(rviz2)
 
