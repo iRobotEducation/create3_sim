@@ -1,5 +1,5 @@
 ---
-robot_state:
+/**:
   ros__parameters:
     # Stop status publisher topic
     stop_status_topic: /stop_status

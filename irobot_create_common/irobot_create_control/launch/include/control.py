@@ -5,13 +5,20 @@
 
 from ament_index_python.packages import get_package_share_directory
 from launch import LaunchDescription
-from launch.actions import RegisterEventHandler
+from launch.actions import DeclareLaunchArgument, RegisterEventHandler
 from launch.event_handlers import OnProcessExit
-from launch.substitutions import PathJoinSubstitution
+from launch.substitutions import LaunchConfiguration, PathJoinSubstitution
 from launch_ros.actions import Node
+
+ARGUMENTS = [
+    DeclareLaunchArgument('namespace', default_value='',
+                          description='Robot namespace')
+]
 
 
 def generate_launch_description():
+    namespace = LaunchConfiguration('namespace')
+    namespaced_node_name = [namespace, '/controller_manager']
     pkg_create3_control = get_package_share_directory('irobot_create_control')
 
     control_params_file = PathJoinSubstitution(
@@ -20,15 +27,17 @@ def generate_launch_description():
     diffdrive_controller_node = Node(
         package='controller_manager',
         executable='spawner',
+        namespace=namespace,
         parameters=[control_params_file],
-        arguments=['diffdrive_controller', '-c', '/controller_manager'],
+        arguments=['diffdrive_controller', '-c', namespaced_node_name],
         output='screen',
     )
 
     joint_state_broadcaster_spawner = Node(
         package='controller_manager',
         executable='spawner',
-        arguments=['joint_state_broadcaster', '-c', '/controller_manager'],
+        namespace=namespace,
+        arguments=['joint_state_broadcaster', '-c', namespaced_node_name],
         output='screen',
     )
 
@@ -40,8 +49,8 @@ def generate_launch_description():
         )
     )
 
-    ld = LaunchDescription()
-
+    # Define LaunchDescription variable
+    ld = LaunchDescription(ARGUMENTS)
     ld.add_action(joint_state_broadcaster_spawner)
     ld.add_action(diffdrive_controller_callback)
 

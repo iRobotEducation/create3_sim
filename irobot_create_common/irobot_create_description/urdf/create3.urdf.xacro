@@ -55,6 +55,7 @@
   <xacro:property name="dock_model_name" value="standard_dock"/>
   <xacro:property name="emitter_link_name" value="halo_link"/>
   <xacro:arg name="visualize_rays" default="false"/>
+  <xacro:arg name="namespace" default=""/>
   <!-- Create 3 base definition-->
   <link name="base_link">
     <visual>
@@ -117,6 +118,9 @@
     <gazebo>
       <plugin name="gazebo_ros2_control" filename="libgazebo_ros2_control.so">
         <parameters> $(find irobot_create_control)/config/control.yaml </parameters>
+        <ros>
+          <namespace>$(arg namespace)</namespace>
+        </ros>
       </plugin>
     </gazebo>
   </xacro:if>
@@ -125,6 +129,9 @@
     <gazebo>
       <plugin filename="ign_ros2_control-system" name="ign_ros2_control::IgnitionROS2ControlPlugin">
         <parameters> $(find irobot_create_control)/config/control.yaml </parameters>
+        <ros>
+          <namespace>$(arg namespace)</namespace>
+        </ros>
       </plugin>
     </gazebo>
   </xacro:if>
@@ -235,7 +242,7 @@
     <gazebo>
       <plugin name="gazebo_ros_p3d_robot" filename="libgazebo_ros_p3d.so">
         <ros>
-          <namespace>/</namespace>
+          <namespace>$(arg namespace)</namespace>
           <remapping>odom:=sim_ground_truth_pose</remapping>
         </ros>
         <body_name>base_link</body_name>
@@ -251,7 +258,7 @@
     <gazebo>
       <plugin name="dock_status_publisher" filename="libgazebo_ros_create_docking_status.so">
         <ros>
-          <namespace>/</namespace>
+          <namespace>$(arg namespace)</namespace>
           <remapping>~/out:=dock</remapping>
         </ros>
         <update_rate>1.0</update_rate>

@@ -1,5 +1,5 @@
 ---
-ui_mgr:
+/**:
   ros__parameters:
     # Buttons publisher topic
     button_topic: /interface_buttons
