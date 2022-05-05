@@ -2,6 +2,12 @@
 Changelog for package irobot_create_description
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* fix dependency tree of create3_sim packages (`#177 <https://github.com/iRobotEducation/create3_sim/issues/177>`_)
+* update changelog
+* Contributors: Alberto Soragna
+
 1.0.1 (2022-04-12)
 ------------------
 * add boost as explicit dependency and remove unnneded boost usage (`#175 <https://github.com/iRobotEducation/create3_sim/issues/175>`_)

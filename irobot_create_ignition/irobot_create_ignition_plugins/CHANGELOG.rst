@@ -8,6 +8,12 @@ Changelog for package irobot_create_ignition_plugins
   * add boost as explicit dependency and remove unnneded boost usage
   * do not search for boost component in Boost library
 
+Forthcoming
+-----------
+* 1.0.1
+* update changelog
+* Contributors: Alberto Soragna
+
 1.0.0 (2022-03-31)
 ------------------
 * Ignition Gazebo support (`#144 <https://github.com/iRobotEducation/create3_sim/issues/144>`_)

@@ -8,6 +8,13 @@ Changelog for package irobot_create_gazebo_sim
   * add boost as explicit dependency and remove unnneded boost usage
   * do not search for boost component in Boost library
 
+Forthcoming
+-----------
+* fix dependency tree of create3_sim packages (`#177 <https://github.com/iRobotEducation/create3_sim/issues/177>`_)
+* 1.0.1
+* update changelog
+* Contributors: Alberto Soragna
+
 1.0.0 (2022-03-31)
 ------------------
 * Split `irobot_create_toolbox` (`#153 <https://github.com/iRobotEducation/create3_sim/issues/153>`_)
