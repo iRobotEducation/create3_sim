@@ -8,7 +8,8 @@
   <license>BSD</license>
 
   <buildtool_depend>ament_cmake</buildtool_depend>
-  <buildtool_depend>ignition-gui5</buildtool_depend>
+
+  <depend>ignition-gui5</depend>
 
   <test_depend>ament_lint_auto</test_depend>
   <test_depend>ament_cmake_cppcheck</test_depend>
