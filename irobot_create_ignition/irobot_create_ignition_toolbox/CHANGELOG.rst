@@ -2,6 +2,9 @@
 Changelog for package irobot_create_ignition_toolbox
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+
 1.0.2 (2022-05-05)
 ------------------
 * Renamed Ignition Toolbox libraries (`#178 <https://github.com/iRobotEducation/create3_sim/issues/178>`_)

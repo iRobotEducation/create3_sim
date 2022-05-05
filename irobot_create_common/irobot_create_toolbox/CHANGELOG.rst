@@ -2,6 +2,9 @@
 Changelog for package irobot_create_toolbox
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+
 1.0.2 (2022-05-05)
 ------------------
 * update changelog
