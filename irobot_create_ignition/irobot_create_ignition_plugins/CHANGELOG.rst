@@ -8,8 +8,8 @@ Changelog for package irobot_create_ignition_plugins
   * add boost as explicit dependency and remove unnneded boost usage
   * do not search for boost component in Boost library
 
-Forthcoming
------------
+1.0.2 (2022-05-05)
+------------------
 * 1.0.1
 * update changelog
 * Contributors: Alberto Soragna
