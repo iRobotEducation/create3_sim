@@ -2,6 +2,11 @@
 Changelog for package irobot_create_ignition_bringup
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* make gazebo classic and ignition build time dependency if they are needed by CMakeLists.txt (`#179 <https://github.com/iRobotEducation/create3_sim/issues/179>`_)
+* Contributors: Alberto Soragna
+
 1.0.2 (2022-05-05)
 ------------------
 * fix dependency tree of create3_sim packages (`#177 <https://github.com/iRobotEducation/create3_sim/issues/177>`_)
