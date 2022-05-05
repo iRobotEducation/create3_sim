@@ -55,21 +55,21 @@ set(dependencies
 )
 
 # Pose republisher
-add_library(pose_republisher_lib SHARED)
+add_library(irobot_create_ignition_pose_republisher_lib SHARED)
 target_sources(
-  pose_republisher_lib
+  irobot_create_ignition_pose_republisher_lib
   PRIVATE
     src/pose_republisher/pose_republisher_node.cpp
 )
-target_include_directories(pose_republisher_lib PUBLIC include)
-ament_target_dependencies(pose_republisher_lib
+target_include_directories(irobot_create_ignition_pose_republisher_lib PUBLIC include)
+ament_target_dependencies(irobot_create_ignition_pose_republisher_lib
   ${dependencies}
 )
 
 # Sensors
-add_library(sensors_lib SHARED)
+add_library(irobot_create_ignition_sensors_lib SHARED)
 target_sources(
-  sensors_lib
+  irobot_create_ignition_sensors_lib
   PRIVATE
     src/sensors/sensors_node.cpp
     src/sensors/bumper.cpp
@@ -79,27 +79,27 @@ target_sources(
     src/sensors/mouse.cpp
     src/sensors/wheel_drop.cpp
 )
-target_include_directories(sensors_lib PUBLIC include)
-ament_target_dependencies(sensors_lib
+target_include_directories(irobot_create_ignition_sensors_lib PUBLIC include)
+ament_target_dependencies(irobot_create_ignition_sensors_lib
   ${dependencies}
 )
 
 # Interface buttons
-add_library(interface_buttons_lib SHARED)
+add_library(irobot_create_ignition_interface_buttons_lib SHARED)
 target_sources(
-  interface_buttons_lib
+  irobot_create_ignition_interface_buttons_lib
   PRIVATE
     src/interface_buttons/interface_buttons_node.cpp
 )
-target_include_directories(interface_buttons_lib PUBLIC include)
-ament_target_dependencies(interface_buttons_lib
+target_include_directories(irobot_create_ignition_interface_buttons_lib PUBLIC include)
+ament_target_dependencies(irobot_create_ignition_interface_buttons_lib
   ${dependencies}
 )
 
 set(libraries_names
-  pose_republisher_lib
-  sensors_lib
-  interface_buttons_lib
+  irobot_create_ignition_pose_republisher_lib
+  irobot_create_ignition_sensors_lib
+  irobot_create_ignition_interface_buttons_lib
 )
 
 # Executables
@@ -111,7 +111,7 @@ target_sources(
   PRIVATE
     src/pose_republisher/pose_republisher_main.cpp
 )
-target_link_libraries(pose_republisher_node pose_republisher_lib)
+target_link_libraries(pose_republisher_node irobot_create_ignition_pose_republisher_lib)
 
 # Sensors node
 add_executable(sensors_node)
@@ -120,7 +120,7 @@ target_sources(
   PRIVATE
     src/sensors/sensors_main.cpp
 )
-target_link_libraries(sensors_node sensors_lib)
+target_link_libraries(sensors_node irobot_create_ignition_sensors_lib)
 
 # Interface buttons node
 add_executable(interface_buttons_node)
@@ -129,7 +129,7 @@ target_sources(
   PRIVATE
     src/interface_buttons/interface_buttons_main.cpp
 )
-target_link_libraries(interface_buttons_node interface_buttons_lib)
+target_link_libraries(interface_buttons_node irobot_create_ignition_interface_buttons_lib)
 
 set(executables_names
   pose_republisher_node
