@@ -23,7 +23,6 @@ jobs:
         with:
           target-ros2-distro: galactic
           import-token: ${{ secrets.REPO_TOKEN }}
-          vcs-repo-file-url: dependencies.repos
           package-name:
             irobot_create_common_bringup
             irobot_create_control
