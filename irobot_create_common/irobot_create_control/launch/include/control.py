@@ -15,7 +15,6 @@ ARGUMENTS = [
                           description='Robot namespace')
 ]
 
-
 def generate_launch_description():
     namespace = LaunchConfiguration('namespace')
     namespaced_node_name = [namespace, '/controller_manager']

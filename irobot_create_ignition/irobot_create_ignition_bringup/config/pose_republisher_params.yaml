@@ -1,5 +1,5 @@
 ---
-pose_republisher_node:
+/**:
   ros__parameters:
     robot_publisher_topic: /sim_ground_truth_pose
     robot_subscriber_topic: /_internal/sim_ground_truth_pose

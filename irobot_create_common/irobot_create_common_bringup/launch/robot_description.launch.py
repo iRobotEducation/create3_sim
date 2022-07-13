@@ -42,7 +42,8 @@ def generate_launch_description():
                   ['xacro', ' ', xacro_file, ' ',
                    'gazebo:=', gazebo_simulator, ' ',
                    'visualize_rays:=', visualize_rays, ' ',
-                   'namespace:=', namespace, ' '])},
+                   'namespace:=', namespace, ' '
+                   ])},
         ],
     )
 

@@ -6,7 +6,7 @@
       type: joint_state_broadcaster/JointStateBroadcaster
 
     diffdrive_controller:
-      type: diff_drive_controller/DiffDriveController
+      type: diff_drive_controller/DiffDriveController   
 
 /**:
   ros__parameters:

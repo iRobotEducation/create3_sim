@@ -3,7 +3,7 @@
 
 from launch import LaunchDescription
 from launch.actions import DeclareLaunchArgument
-from launch.conditions import IfCondition
+from launch.conditions import IfCondition, LaunchConfigurationEquals, LaunchConfigurationNotEquals
 from launch.substitutions import LaunchConfiguration
 
 from launch_ros.actions import Node
@@ -53,23 +53,39 @@ def generate_launch_description():
                         condition=IfCondition(use_sim_time))
 
     # cmd_vel bridge
-    cmd_vel_bridge = Node(package='ros_ign_bridge', executable='parameter_bridge',
+    cmd_vel_bridge = Node(condition=LaunchConfigurationEquals('namespace', ''),
+                          package='ros_ign_bridge',
+                          executable='parameter_bridge',
                           name='cmd_vel_bridge',
-                          namespace=namespace,
                           output='screen',
                           parameters=[{
-                              'use_sim_time': use_sim_time
-                          }],
-                          arguments=[
-                              ['/',namespace, '/cmd_vel' + '@geometry_msgs/msg/Twist' + '[ignition.msgs.Twist'],
-                              ['/model/', LaunchConfiguration('robot_name'), 'cmd_vel'+
-                               '@geometry_msgs/msg/Twist' +
-                               ']ignition.msgs.Twist']
-                          ],
-                          remappings=[
-                              (['/model/', LaunchConfiguration('robot_name'), 'cmd_vel'],
-                               'diffdrive_controller/cmd_vel_unstamped')
-                          ])
+                              'use_sim_time': use_sim_time}],
+                          arguments=['/cmd_vel' + '@geometry_msgs/msg/Twist' +
+                                     '[ignition.msgs.Twist',
+                                     ['/model/', LaunchConfiguration('robot_name'), '/cmd_vel' +
+                                      '@geometry_msgs/msg/Twist' +
+                                      ']ignition.msgs.Twist']],
+                          remappings=[(['/model/', LaunchConfiguration('robot_name'), '/cmd_vel'],
+                                       'diffdrive_controller/cmd_vel_unstamped')])
+
+    cmd_vel_bridge_namespaced = Node(condition=LaunchConfigurationNotEquals('namespace', ''),
+                                     package='ros_ign_bridge',
+                                     executable='parameter_bridge',
+                                     name='cmd_vel_bridge',
+                                     namespace=namespace,
+                                     output='screen',
+                                     parameters=[{
+                                        'use_sim_time': use_sim_time}],
+                                     arguments=[['/', namespace, '/cmd_vel' +
+                                                 '@geometry_msgs/msg/Twist' +
+                                                 '[ignition.msgs.Twist'],
+                                                ['/model/',
+                                                 LaunchConfiguration('robot_name'), 'cmd_vel' +
+                                                 '@geometry_msgs/msg/Twist' +
+                                                 ']ignition.msgs.Twist']],
+                                     remappings=[(['/model/',
+                                                   LaunchConfiguration('robot_name'), 'cmd_vel'],
+                                                  'diffdrive_controller/cmd_vel_unstamped')])
 
     # Pose bridge
     pose_bridge = Node(package='ros_ign_bridge', executable='parameter_bridge',
@@ -193,6 +209,7 @@ def generate_launch_description():
     ld = LaunchDescription(ARGUMENTS)
     ld.add_action(clock_bridge)
     ld.add_action(cmd_vel_bridge)
+    ld.add_action(cmd_vel_bridge_namespaced)
     ld.add_action(pose_bridge)
     ld.add_action(odom_base_tf_bridge)
     ld.add_action(bumper_contact_bridge)
