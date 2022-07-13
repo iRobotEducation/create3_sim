@@ -82,6 +82,7 @@ def generate_launch_description():
         'y'), LaunchConfiguration('z')
     yaw = LaunchConfiguration('yaw')
     robot_name = LaunchConfiguration('robot_name')
+    world = LaunchConfiguration('world')
     namespace = LaunchConfiguration('namespace')
     namespaced_robot_description = [namespace, '/robot_description']
 
@@ -101,9 +102,7 @@ def generate_launch_description():
     rviz2 = IncludeLaunchDescription(
         PythonLaunchDescriptionSource([rviz2_launch]),
         condition=IfCondition(LaunchConfiguration('use_rviz')),
-        launch_arguments={  'namespace' : namespace,
-                            'use_namespace' : 'True',
-                        }.items(),
+        launch_arguments={'namespace': namespace}.items()
     )
 
     x_dock = OffsetParser(x, 0.157)
@@ -113,8 +112,8 @@ def generate_launch_description():
         condition=IfCondition(LaunchConfiguration('spawn_dock')),
         # The robot starts docked
         launch_arguments={'x': x_dock, 'y': y, 'z': z, 'yaw': yaw_dock,
-                          'namespace' : namespace,
-                          'gazebo': 'ignition'}.items(),
+                          'namespace': namespace,
+                          'gazebo': 'ignition'}.items()
     )
 
     # Create3
@@ -126,8 +125,10 @@ def generate_launch_description():
                           'z': z,
                           'robot_name': robot_name,
                           'robot_description': namespaced_robot_description,
+                          'world' : world,
                           'namespace': namespace,
-                          }.items())
+                          }.items()
+    )
 
     # Dock
     spawn_dock = Node(package='ros_ign_gazebo', executable='create',

@@ -36,7 +36,6 @@ ARGUMENTS = [
                           description='Robot name'),
     DeclareLaunchArgument('namespace', default_value='',
                           description='robot namespace'),
-
         ]
 
 for pose_element in ['x', 'y', 'z', 'yaw']:
@@ -113,6 +112,7 @@ def generate_launch_description():
         # The robot starts docked
         launch_arguments={'x': x_dock, 'y': y, 'z': z, 'yaw': yaw_dock}.items(),
     )
+
     spawn_dock = Node(
         package='gazebo_ros',
         executable='spawn_entity.py',
@@ -140,6 +140,7 @@ def generate_launch_description():
                           'robot_description': namespaced_robot_description,
                           'namespace': namespace,
                           }.items())
+
     # RVIZ2
     rviz2 = IncludeLaunchDescription(
         PythonLaunchDescriptionSource([rviz2_launch_file]),
@@ -154,7 +155,6 @@ def generate_launch_description():
     ld.add_action(gzserver)
     ld.add_action(gzclient)
     # Include robot description
-    # ld.add_action(robot_description)
     ld.add_action(spawn_robot)
     ld.add_action(spawn_dock)
     ld.add_action(dock_description)

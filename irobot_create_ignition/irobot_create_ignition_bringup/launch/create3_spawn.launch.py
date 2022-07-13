@@ -8,12 +8,14 @@ from launch.substitutions import LaunchConfiguration, PathJoinSubstitution
 from launch_ros.actions import Node
 
 ARGUMENTS = [
-    DeclareLaunchArgument('gazebo', default_value='classic',
+    DeclareLaunchArgument('gazebo', default_value='ignition',
                           choices=['classic', 'ignition'],
                           description='Which gazebo simulator to use'),
     DeclareLaunchArgument('visualize_rays', default_value='false',
                           choices=['true', 'false'],
                           description='Enable/disable ray visualization'),
+    DeclareLaunchArgument('world', default_value='depot',
+                          description='World name'),
     DeclareLaunchArgument('robot_name', default_value='create3',
                           description='Create3 robot name'),
     DeclareLaunchArgument('robot_description', default_value='robot_description',
@@ -44,16 +46,14 @@ def generate_launch_description():
         [pkg_irobot_create_common_bringup, 'launch', 'create3_nodes.launch.py'])
     create3_ignition_nodes_launch = PathJoinSubstitution(
         [pkg_irobot_create_ignition_bringup, 'launch', 'create3_ignition_nodes.launch.py'])
-    robot_description_launch = PathJoinSubstitution(
-        [pkg_irobot_create_common_bringup, 'launch', 'robot_description.launch.py'])
 
     # Launch configurations
     x, y, z = LaunchConfiguration('x'), LaunchConfiguration(
         'y'), LaunchConfiguration('z')
     yaw = LaunchConfiguration('yaw')
     robot_name = LaunchConfiguration('robot_name')
-    robot_description = LaunchConfiguration('robot_description')
     namespace = LaunchConfiguration('namespace')
+    namespaced_robot_description = [namespace, '/robot_description']
 
     # Spawn robot
     spawn_robot = Node(
@@ -62,7 +62,7 @@ def generate_launch_description():
             output='screen',
             arguments=[
                 '-name', robot_name,
-                '-topic', robot_description,
+                '-topic', namespaced_robot_description,
                 '-Y', yaw,
                 '-x', x,
                 '-y', y,
@@ -79,7 +79,6 @@ def generate_launch_description():
         launch_arguments=[('world', LaunchConfiguration('world')),
                           ('robot_name', robot_name),
                           ('namespace', namespace)]
-
     )
 
     # Create3 nodes

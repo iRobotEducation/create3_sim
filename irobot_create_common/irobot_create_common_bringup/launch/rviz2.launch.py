@@ -49,7 +49,7 @@ def generate_launch_description():
         ]
     )
 
-    rviz = Node(
+    rviz_namespaced = Node(
         condition=LaunchConfigurationNotEquals('namespace', ''),
         package='rviz2',
         executable='rviz2',
@@ -71,5 +71,6 @@ def generate_launch_description():
     ld = LaunchDescription()
     # Add nodes to LaunchDescription
     ld.add_action(rviz)
+    ld.add_action(rviz_namespaced)
 
     return ld
