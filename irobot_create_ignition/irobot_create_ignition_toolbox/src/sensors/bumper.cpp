@@ -46,7 +46,7 @@ void Bumper::bumper_callback(const ros_ign_interfaces::msg::Contacts::SharedPtr 
   robot_m.getRPY(robot_r, robot_p, robot_y);
 
   // The bumper may be in contact with multiple objects simultaneously
-  for (const auto contact : bumper_contact_msg->contacts) {
+  for (const auto & contact : bumper_contact_msg->contacts) {
     uint16_t count = 0;
     geometry_msgs::msg::Vector3 average_position;
 

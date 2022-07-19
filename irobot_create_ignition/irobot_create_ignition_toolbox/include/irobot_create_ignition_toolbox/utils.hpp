@@ -6,7 +6,7 @@
 #ifndef IROBOT_CREATE_IGNITION_TOOLBOX__UTILS_HPP_
 #define IROBOT_CREATE_IGNITION_TOOLBOX__UTILS_HPP_
 
-#include <tf2_geometry_msgs/tf2_geometry_msgs.h>
+#include <tf2_geometry_msgs/tf2_geometry_msgs.hpp>
 #include <tf2_msgs/msg/tf_message.hpp>
 #include <nav_msgs/msg/odometry.hpp>
 

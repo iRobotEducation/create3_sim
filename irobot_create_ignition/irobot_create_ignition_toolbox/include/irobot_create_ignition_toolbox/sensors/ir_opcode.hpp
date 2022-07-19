@@ -6,7 +6,7 @@
 #ifndef IROBOT_CREATE_IGNITION_TOOLBOX__SENSORS__IR_OPCODE_HPP_
 #define IROBOT_CREATE_IGNITION_TOOLBOX__SENSORS__IR_OPCODE_HPP_
 
-#include <tf2_geometry_msgs/tf2_geometry_msgs.h>
+#include <tf2_geometry_msgs/tf2_geometry_msgs.hpp>
 
 #include <rclcpp/rclcpp.hpp>
 
