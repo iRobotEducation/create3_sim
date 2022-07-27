@@ -1,5 +1,5 @@
 ---
-kidnap_estimator_publisher:
+/**:
   ros__parameters:
     # Kidnap status publisher topic
     kidnap_status_topic: /kidnap_status

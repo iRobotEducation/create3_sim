@@ -2,15 +2,19 @@
 # @author Roni Kreinin (rkreinin@clearpathrobotics.com)
 
 from ament_index_python.packages import get_package_share_directory
-
+from irobot_create_common_bringup.replace_string import ReplaceString
 from launch import LaunchDescription
 from launch.actions import DeclareLaunchArgument
+from launch.conditions import LaunchConfigurationEquals, LaunchConfigurationNotEquals
 from launch.substitutions import LaunchConfiguration, PathJoinSubstitution
 from launch_ros.actions import Node
 
+
 ARGUMENTS = [
     DeclareLaunchArgument('robot_name', default_value='create3',
-                          description='Robot name')
+                          description='Robot name'),
+    DeclareLaunchArgument('namespace', default_value='',
+                          description='Robot namespace')
 ]
 
 
@@ -24,12 +28,33 @@ def generate_launch_description():
     sensors_params_yaml_file = PathJoinSubstitution(
         [pkg_create3_ignition_bringup, 'config', 'sensors_params.yaml'])
 
+    namespace = LaunchConfiguration('namespace')
+
+    namespaced_pose_republisher_params_yaml_file = ReplaceString(
+        source_file=pose_republisher_params_yaml_file,
+        replacements={'/sim_ground_truth_pose': ('/', namespace, '/sim_ground_truth_pose')}
+    )
+
     # Pose republisher
     pose_republisher_node = Node(
+        condition=LaunchConfigurationEquals('namespace', ''),
         package='irobot_create_ignition_toolbox',
         name='pose_republisher_node',
+        namespace=namespace,
         executable='pose_republisher_node',
         parameters=[pose_republisher_params_yaml_file,
+                    {'robot_name': LaunchConfiguration('robot_name')},
+                    {'use_sim_time': True}],
+        output='screen',
+    )
+
+    pose_republisher_node_namespaced = Node(
+        condition=LaunchConfigurationNotEquals('namespace', ''),
+        package='irobot_create_ignition_toolbox',
+        name='pose_republisher_node',
+        namespace=namespace,
+        executable='pose_republisher_node',
+        parameters=[namespaced_pose_republisher_params_yaml_file,
                     {'robot_name': LaunchConfiguration('robot_name')},
                     {'use_sim_time': True}],
         output='screen',
@@ -39,6 +64,7 @@ def generate_launch_description():
     sensors_node = Node(
         package='irobot_create_ignition_toolbox',
         name='sensors_node',
+        namespace=namespace,
         executable='sensors_node',
         parameters=[sensors_params_yaml_file,
                     {'use_sim_time': True}],
@@ -49,6 +75,7 @@ def generate_launch_description():
     interface_buttons_node = Node(
         package='irobot_create_ignition_toolbox',
         name='interface_buttons_node',
+        namespace=namespace,
         executable='interface_buttons_node',
         parameters=[{'use_sim_time': True}],
         output='screen',
@@ -57,6 +84,7 @@ def generate_launch_description():
     # Create launch description and add actions
     ld = LaunchDescription(ARGUMENTS)
     ld.add_action(pose_republisher_node)
+    ld.add_action(pose_republisher_node_namespaced)
     ld.add_action(sensors_node)
     ld.add_action(interface_buttons_node)
     return ld

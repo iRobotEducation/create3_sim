@@ -5,6 +5,7 @@
 
   <!-- Gazebo version -->
   <xacro:arg name="gazebo"         default="classic" />
+  <xacro:arg name="namespace" default=""/>
 
   <xacro:property name="z_offset"  value="${4.6*mm2m}"/>
   <xacro:property name="link_name" value="std_dock_link"/>
@@ -88,7 +89,7 @@
       <!-- Ground truth pose-->
       <plugin name="gazebo_ros_p3d_dock" filename="libgazebo_ros_p3d.so">
         <ros>
-          <namespace>/</namespace>
+          <namespace>$(arg namespace)</namespace>
           <remapping>odom:=sim_ground_truth_dock_pose</remapping>
         </ros>
         <body_name>${link_name}</body_name>
@@ -106,6 +107,9 @@
       <static>true</static>
       <!-- Ground truth pose-->
       <plugin filename="libignition-gazebo-pose-publisher-system.so" name="ignition::gazebo::systems::PosePublisher">
+        <!-- <ros>
+          <namespace>$(arg namespace)</namespace>
+        </ros> -->
         <publish_link_pose>true</publish_link_pose>
         <publish_nested_model_pose>true</publish_nested_model_pose>   
         <use_pose_vector_msg>true</use_pose_vector_msg>   

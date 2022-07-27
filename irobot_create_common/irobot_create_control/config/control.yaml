@@ -1,4 +1,4 @@
-controller_manager:
+/**:
   ros__parameters:
     update_rate: 1000  # Hz
 
@@ -6,9 +6,9 @@ controller_manager:
       type: joint_state_broadcaster/JointStateBroadcaster
 
     diffdrive_controller:
-      type: diff_drive_controller/DiffDriveController
+      type: diff_drive_controller/DiffDriveController   
 
-diffdrive_controller:
+/**:
   ros__parameters:
     use_sim_time: True
     left_wheel_names: ["left_wheel_joint"]
