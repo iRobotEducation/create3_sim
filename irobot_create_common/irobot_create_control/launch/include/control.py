@@ -28,7 +28,7 @@ def generate_launch_description():
         executable='spawner',
         namespace=namespace,
         parameters=[control_params_file],
-        arguments=['diffdrive_controller', '-c', namespaced_node_name],
+        arguments=['robot_1_diffdrive_controller', '-c', namespaced_node_name],
         output='screen',
     )
 
@@ -36,7 +36,7 @@ def generate_launch_description():
         package='controller_manager',
         executable='spawner',
         namespace=namespace,
-        arguments=['joint_state_broadcaster', '-c', namespaced_node_name],
+        arguments=['robot_1_joint_state_broadcaster', '-c', namespaced_node_name],
         output='screen',
     )
 
