@@ -28,13 +28,13 @@ ARGUMENTS = [
                           description='Ignition World'),
     DeclareLaunchArgument('robot_name', default_value='create3',
                           description='Robot name'),
-    DeclareLaunchArgument('use_rviz', default_value='true',
+    DeclareLaunchArgument('use_rviz', default_value='false',
                           choices=['true', 'false'], description='Start rviz.'),
     DeclareLaunchArgument('spawn_dock', default_value='true',
                           choices=['true', 'false'],
                           description='Spawn the standard dock model.'),
     DeclareLaunchArgument('namespace', default_value='',
-                          description='robot namespace'),
+                          description='robot namespace'),                   
 ]
 for pose_element in ['x', 'y', 'z', 'yaw']:
     ARGUMENTS.append(DeclareLaunchArgument(pose_element, default_value='0.0',

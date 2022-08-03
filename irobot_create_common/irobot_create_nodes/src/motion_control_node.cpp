@@ -122,9 +122,17 @@ MotionControlNode::MotionControlNode(const rclcpp::NodeOptions & options)
   kidnap_sub_ = this->create_subscription<irobot_create_msgs::msg::KidnapStatus>(
     "kidnap_status", rclcpp::SensorDataQoS(),
     std::bind(&MotionControlNode::kidnap_callback, this, _1));
+  std::string ns_prefix = this->get_namespace();
+  
+  if(ns_prefix == "/") {
+    ns_prefix = "";
+  }
+  else {
+    ns_prefix += "_";
+  }
 
   cmd_vel_out_pub_ = this->create_publisher<geometry_msgs::msg::Twist>(
-    "diffdrive_controller/cmd_vel_unstamped", rclcpp::SystemDefaultsQoS());
+    ns_prefix + "diffdrive_controller/cmd_vel_unstamped", rclcpp::SystemDefaultsQoS());
 
   backup_limit_hazard_pub_ = this->create_publisher<irobot_create_msgs::msg::HazardDetection>(
     "_internal/backup_limit", rclcpp::SensorDataQoS().reliable());
@@ -136,7 +144,6 @@ MotionControlNode::MotionControlNode(const rclcpp::NodeOptions & options)
     std::bind(&MotionControlNode::set_parameters_callback, this, _1));
 
   auto_override_print_ts_ = this->now();
-
   current_state_.pose.setIdentity();
   last_backup_pose_.setIdentity();
   last_teleop_ts_ = this->now();
