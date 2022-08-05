@@ -7,6 +7,7 @@ from ament_index_python.packages import get_package_share_directory
 from launch import LaunchDescription
 from launch.actions import DeclareLaunchArgument
 from launch.substitutions import Command, LaunchConfiguration, PathJoinSubstitution
+from launch.conditions import LaunchConfigurationEquals, LaunchConfigurationNotEquals
 from launch_ros.actions import Node
 
 
@@ -21,7 +22,7 @@ for pose_element in ['x', 'y', 'z', 'yaw']:
     ARGUMENTS.append(DeclareLaunchArgument(f'{pose_element}', default_value='0.0',
                                            description=f'{pose_element} component of the dock pose.'))
 
-ARGUMENTS.append(DeclareLaunchArgument('visualize_rays', default_value='true',
+    ARGUMENTS.append(DeclareLaunchArgument('visualize_rays', default_value='true',
                                        choices=['true', 'false'],
                                        description='Enable/disable ray visualization'))
 
@@ -41,8 +42,10 @@ def generate_launch_description():
     visualize_rays = LaunchConfiguration('visualize_rays')
     namespace = LaunchConfiguration('namespace')
     gazebo_simulator = LaunchConfiguration('gazebo')
+    frame_prefix = [namespace,'/']
 
     state_publisher = Node(
+        condition=LaunchConfigurationEquals('namespace', ''),
         package='robot_state_publisher',
         executable='robot_state_publisher',
         name='dock_state_publisher',
@@ -55,6 +58,29 @@ def generate_launch_description():
                   'gazebo:=', gazebo_simulator, ' ',
                   'visualize_rays:=', visualize_rays, ' ',
                   'namespace:=', namespace, ' '])},
+            {'frame_prefix': frame_prefix},
+        ],
+        remappings=[
+            ('robot_description', ('/standard_dock_description')),
+        ],
+    )
+
+    state_publisher_namespaced = Node(
+        condition=LaunchConfigurationNotEquals('namespace', ''),
+        package='robot_state_publisher',
+        executable='robot_state_publisher',
+        name='dock_state_publisher',
+        output='screen',
+        namespace = namespace,
+        parameters=[
+            {'use_sim_time': True},
+            {'robot_description':
+             Command(
+                 ['xacro', ' ', dock_xacro_file, ' ',
+                  'gazebo:=', gazebo_simulator, ' ',
+                  'visualize_rays:=', visualize_rays, ' ',
+                  'namespace:=', namespace, ' '])},
+            {'frame_prefix': frame_prefix},
         ],
         remappings=[
             ('robot_description', (namespace, '/standard_dock_description')),
@@ -62,6 +88,7 @@ def generate_launch_description():
     )
 
     tf_odom_std_dock_link_publisher = Node(
+        condition=LaunchConfigurationEquals('namespace', ''),
         package='tf2_ros',
         executable='static_transform_publisher',
         name='tf_odom_std_dock_link_publisher',
@@ -73,10 +100,26 @@ def generate_launch_description():
         output='screen',
     )
 
+    tf_odom_std_dock_link_publisher_namespaced = Node(
+        condition=LaunchConfigurationNotEquals('namespace', ''),
+        package='tf2_ros',
+        executable='static_transform_publisher',
+        name='tf_odom_std_dock_link_publisher',
+        namespace = namespace,
+        arguments=[x, y, z,
+                   # According to documentation (http://wiki.ros.org/tf2_ros):
+                   # the order is yaw, pitch, roll
+                   yaw, '0', '0',
+                   [namespace,'/odom'], [namespace,'/std_dock_link']],
+        output='screen',
+    )
+
     # Define LaunchDescription variable
     ld = LaunchDescription(ARGUMENTS)
     # Add nodes to LaunchDescription
     ld.add_action(state_publisher)
     ld.add_action(tf_odom_std_dock_link_publisher)
+    ld.add_action(state_publisher_namespaced)
+    ld.add_action(tf_odom_std_dock_link_publisher_namespaced)
 
     return ld

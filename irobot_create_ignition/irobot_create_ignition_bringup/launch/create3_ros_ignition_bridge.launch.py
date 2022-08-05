@@ -53,8 +53,7 @@ def generate_launch_description():
                         condition=IfCondition(use_sim_time))
 
     # cmd_vel bridge
-    cmd_vel_bridge = Node(
-                          condition=LaunchConfigurationEquals('namespace', ''),
+    cmd_vel_bridge = Node(condition=LaunchConfigurationEquals('namespace', ''),
                           package='ros_ign_bridge',
                           executable='parameter_bridge',
                           name='cmd_vel_bridge',
@@ -89,11 +88,10 @@ def generate_launch_description():
                                                  ']ignition.msgs.Twist']],
                                      remappings=[(['/model/',
                                                    LaunchConfiguration('robot_name'), 'cmd_vel'],
-                                                  [namespace,'_diffdrive_controller/cmd_vel_unstamped'])])
+                                                  ['/', namespace,'_diffdrive_controller/cmd_vel_unstamped'])])
 
     # Pose bridge
-    pose_bridge = Node(package='ros_ign_bridge', 
-                       executable='parameter_bridge',
+    pose_bridge = Node(package='ros_ign_bridge', executable='parameter_bridge',
                        namespace=namespace,
                        name='pose_bridge',
                        output='screen',
@@ -171,7 +169,7 @@ def generate_launch_description():
                             (['/world/', LaunchConfiguration('world'),
                               '/model/', LaunchConfiguration('robot_name'),
                               '/link/base_link/sensor/' + cliff + '/scan'],
-                             '/_internal/' + cliff + '/scan')
+                              '/_internal/' + cliff + '/scan')
                             for cliff in cliff_sensors
                         ])
     # IR intensity bridge
@@ -205,7 +203,7 @@ def generate_launch_description():
                                    'use_sim_time': use_sim_time
                               }],
                               arguments=[
-                                  ['/create3/buttons' +
+                                  ['/', namespace, '/create3/buttons' +
                                    '@std_msgs/msg/Int32' +
                                    '[ignition.msgs.Int32']
                               ])

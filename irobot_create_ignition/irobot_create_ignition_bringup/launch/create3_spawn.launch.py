@@ -1,7 +1,9 @@
 from ament_index_python.packages import get_package_share_directory
+from irobot_create_common_bringup.offset_parser import OffsetParser
 
 from launch import LaunchDescription
 from launch.actions import DeclareLaunchArgument, IncludeLaunchDescription
+from launch.conditions import IfCondition
 from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch.substitutions import LaunchConfiguration, PathJoinSubstitution
 
@@ -21,13 +23,14 @@ ARGUMENTS = [
     DeclareLaunchArgument('robot_description', default_value='robot_description',
                           description='robot description topic name'),
     DeclareLaunchArgument('namespace', default_value='',
-                          description='Robot namespace')
+                          description='Robot namespace'),
+    DeclareLaunchArgument('use_rviz', default_value='false',
+                          choices=['true', 'false'], description='Start rviz.'),
 ]
 
 for pose_element in ['x', 'y', 'z', 'yaw']:
     ARGUMENTS.append(DeclareLaunchArgument(pose_element, default_value='0.0',
                      description=f'{pose_element} component of the robot pose.'))
-
 
 def generate_launch_description():
 
@@ -46,6 +49,10 @@ def generate_launch_description():
         [pkg_irobot_create_common_bringup, 'launch', 'create3_nodes.launch.py'])
     create3_ignition_nodes_launch = PathJoinSubstitution(
         [pkg_irobot_create_ignition_bringup, 'launch', 'create3_ignition_nodes.launch.py'])
+    rviz2_launch = PathJoinSubstitution(
+        [pkg_irobot_create_common_bringup, 'launch', 'rviz2.launch.py'])
+    dock_description_launch = PathJoinSubstitution(
+        [pkg_irobot_create_common_bringup, 'launch', 'dock_description.launch.py'])
 
     # Launch configurations
     x, y, z = LaunchConfiguration('x'), LaunchConfiguration(
@@ -54,6 +61,23 @@ def generate_launch_description():
     robot_name = LaunchConfiguration('robot_name')
     namespace = LaunchConfiguration('namespace')
     namespaced_robot_description = [namespace, '/robot_description']
+
+    x_dock = OffsetParser(x, 0.157)
+    yaw_dock = OffsetParser(yaw, 3.1416)
+    dock_description = IncludeLaunchDescription(
+        PythonLaunchDescriptionSource([dock_description_launch]),
+        condition=IfCondition(LaunchConfiguration('spawn_dock')),
+        # The robot starts docked
+        launch_arguments={'x': x_dock, 'y': y, 'z': z, 'yaw': yaw_dock,
+                          'namespace': namespace,
+                          'gazebo': 'ignition'}.items()
+    )
+
+    rviz2 = IncludeLaunchDescription(
+        PythonLaunchDescriptionSource([rviz2_launch]),
+        condition=IfCondition(LaunchConfiguration('use_rviz')),
+        launch_arguments={'namespace': namespace}.items()
+    )    
 
     # Spawn robot
     spawn_robot = Node(
@@ -67,6 +91,17 @@ def generate_launch_description():
                 '-x', x,
                 '-y', y,
                 '-z', z])
+
+    # Dock
+    spawn_dock = Node(package='ros_ign_gazebo', executable='create',
+                      namespace = namespace,
+                      arguments=['-name', 'standard_dock',
+                                 '-x', x_dock,
+                                 '-y', y,
+                                 '-z', z,
+                                 '-Y', '3.141592',
+                                 '-topic', (namespace, '/standard_dock_description')],
+                      output='screen')
 
     # Robot description
     robot_description_launch = IncludeLaunchDescription(
@@ -96,7 +131,10 @@ def generate_launch_description():
     # Create launch description and add actions
     ld = LaunchDescription(ARGUMENTS)
     ld.add_action(spawn_robot)
+    ld.add_action(spawn_dock)
+    ld.add_action(dock_description)
     ld.add_action(ros_ign_bridge)
+    ld.add_action(rviz2)
     ld.add_action(robot_description_launch)
     ld.add_action(create3_nodes)
     ld.add_action(create3_ignition_nodes)
