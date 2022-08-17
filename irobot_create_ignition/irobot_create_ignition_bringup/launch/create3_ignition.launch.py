@@ -102,6 +102,7 @@ def generate_launch_description():
                           'world' : world,
                           'use_rviz' : LaunchConfiguration('use_rviz'),
                           'namespace': namespace,
+                          'spawn_dock': LaunchConfiguration('spawn_dock'),
                           }.items()
     )
 
