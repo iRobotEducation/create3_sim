@@ -87,7 +87,6 @@
       # angular.z.max_jerk: 0.0
       # angular.z.min_jerk: 0.0
 
-
 # /robot_1:
 #   controller_manager:
 #     ros__parameters:
