@@ -122,14 +122,6 @@ MotionControlNode::MotionControlNode(const rclcpp::NodeOptions & options)
   kidnap_sub_ = this->create_subscription<irobot_create_msgs::msg::KidnapStatus>(
     "kidnap_status", rclcpp::SensorDataQoS(),
     std::bind(&MotionControlNode::kidnap_callback, this, _1));
-  std::string ns_prefix = this->get_namespace();
-  
-  if(ns_prefix == "/") {
-    ns_prefix = "";
-  }
-  else {
-    ns_prefix += "_";
-  }
 
   cmd_vel_out_pub_ = this->create_publisher<geometry_msgs::msg::Twist>(
     "diffdrive_controller/cmd_vel_unstamped", rclcpp::SystemDefaultsQoS());
