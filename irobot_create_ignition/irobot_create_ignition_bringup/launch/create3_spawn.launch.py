@@ -64,7 +64,15 @@ def generate_launch_description():
     robot_name = LaunchConfiguration('robot_name')
     namespace = LaunchConfiguration('namespace')
     namespaced_robot_description = [namespace, '/robot_description']
+    namespaced_dock_description = [namespace, '/standard_dock_description']
 
+
+    # Robot description
+    robot_description_launch = IncludeLaunchDescription(
+            PythonLaunchDescriptionSource([robot_description_launch]),
+            launch_arguments={'gazebo': 'ignition', 'namespace': namespace}.items())
+
+    # Dock description     
     x_dock = OffsetParser(x, 0.157)
     yaw_dock = OffsetParser(yaw, 3.1416)
     dock_description = IncludeLaunchDescription(
@@ -96,20 +104,16 @@ def generate_launch_description():
                 '-z', z])
 
     # Dock
-    spawn_dock = Node(package='ros_ign_gazebo', executable='create',
-                      namespace = namespace,
-                      arguments=['-name', 'standard_dock',
+    spawn_dock = Node(package='ros_ign_gazebo',
+                      executable='create',
+                      output='screen',
+                      arguments=['-name', (robot_name,'_standard_dock'),
                                  '-x', x_dock,
                                  '-y', y,
                                  '-z', z,
                                  '-Y', '3.141592',
-                                 '-topic', (namespace, '/standard_dock_description')],
-                      output='screen')
-
-    # Robot description
-    robot_description_launch = IncludeLaunchDescription(
-            PythonLaunchDescriptionSource([robot_description_launch]),
-            launch_arguments={'gazebo': 'ignition', 'namespace': namespace}.items())
+                                 '-topic', namespaced_dock_description],
+                      )
 
     # ROS Ign bridge
     ros_ign_bridge = IncludeLaunchDescription(

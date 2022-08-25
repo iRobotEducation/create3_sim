@@ -83,7 +83,7 @@ def generate_launch_description():
             {'frame_prefix': frame_prefix},
         ],
         remappings=[
-            ('robot_description', (namespace, '/standard_dock_description')),
+            ('robot_description', 'standard_dock_description'),
         ],
     )
 
