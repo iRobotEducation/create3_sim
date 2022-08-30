@@ -19,63 +19,61 @@ ARGUMENTS = [
 def generate_launch_description():
     namespace = LaunchConfiguration('namespace')
     namespaced_node_name = [namespace, '/controller_manager']
-    namespaced_diffdrive_controller = [namespace, '_diffdrive_controller']
-    namespaced_joint_state_broadcaster = [namespace, '_joint_state_broadcaster']
     pkg_create3_control = get_package_share_directory('irobot_create_control')
 
     control_params_file = PathJoinSubstitution(
         [pkg_create3_control, 'config', 'control.yaml'])
 
     diffdrive_controller_node = Node(
-        condition=LaunchConfigurationEquals('namespace', ''),
-        package='controller_manager',
-        executable='spawner',
-        parameters=[control_params_file],
-        arguments=['diffdrive_controller', '-c', namespaced_node_name],
-        output='screen',
+        condition = LaunchConfigurationEquals('namespace', ''),
+        package = 'controller_manager',
+        executable = 'spawner',
+        parameters = [control_params_file],
+        arguments = ['diffdrive_controller', '-c', namespaced_node_name],
+        output = 'screen',
     )
 
     joint_state_broadcaster_spawner = Node(
-        condition=LaunchConfigurationEquals('namespace', ''),
-        package='controller_manager',
-        executable='spawner',
-        arguments=['joint_state_broadcaster', '-c', namespaced_node_name],
-        output='screen',
+        condition = LaunchConfigurationEquals('namespace', ''),
+        package = 'controller_manager',
+        executable = 'spawner',
+        arguments = ['joint_state_broadcaster', '-c', namespaced_node_name],
+        output = 'screen',
     )
 
     # Ensure diffdrive_controller_node starts after joint_state_broadcaster_spawner
-    diffdrive_controller_callback= RegisterEventHandler(
-        event_handler=OnProcessExit(
-            target_action=joint_state_broadcaster_spawner,
-            on_exit=[diffdrive_controller_node],
+    diffdrive_controller_callback = RegisterEventHandler(
+        event_handler = OnProcessExit(
+            target_action = joint_state_broadcaster_spawner,
+            on_exit = [diffdrive_controller_node],
         )
     )
 
     # Launch with namespace
     diffdrive_controller_node_namespaced = Node(
-        condition=LaunchConfigurationNotEquals('namespace', ''),
-        package='controller_manager',
-        executable='spawner',
-        namespace=namespace,
-        parameters=[control_params_file],
-        arguments=['diffdrive_controller', '-c', namespaced_node_name, '-n', namespace],
-        output='screen',
+        condition = LaunchConfigurationNotEquals('namespace', ''),
+        package = 'controller_manager',
+        executable = 'spawner',
+        namespace = namespace,
+        parameters = [control_params_file],
+        arguments = ['diffdrive_controller', '-c', namespaced_node_name, '-n', namespace],
+        output = 'screen',
     )
 
     joint_state_broadcaster_spawner_namespaced = Node(
-        condition=LaunchConfigurationNotEquals('namespace', ''),
-        package='controller_manager',
-        executable='spawner',
-        namespace=namespace,
-        arguments=['joint_state_broadcaster', '-c', namespaced_node_name, '-n', namespace],
-        output='screen',
+        condition = LaunchConfigurationNotEquals('namespace', ''),
+        package = 'controller_manager',
+        executable = 'spawner',
+        namespace = namespace,
+        arguments = ['joint_state_broadcaster', '-c', namespaced_node_name, '-n', namespace],
+        output = 'screen',
     )
 
     # Ensure diffdrive_controller_node starts after joint_state_broadcaster_spawner
     diffdrive_controller_callback_namespaced = RegisterEventHandler(
-        event_handler=OnProcessExit(
-            target_action=joint_state_broadcaster_spawner_namespaced,
-            on_exit=[diffdrive_controller_node_namespaced],
+        event_handler = OnProcessExit(
+            target_action = joint_state_broadcaster_spawner_namespaced,
+            on_exit = [diffdrive_controller_node_namespaced],
         )
     )
 
