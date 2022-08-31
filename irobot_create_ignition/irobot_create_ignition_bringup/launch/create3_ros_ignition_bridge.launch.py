@@ -83,11 +83,11 @@ def generate_launch_description():
                                                  '@geometry_msgs/msg/Twist' +
                                                  '[ignition.msgs.Twist'],
                                                 ['/model/',
-                                                 LaunchConfiguration('robot_name'), 'cmd_vel' +
+                                                 LaunchConfiguration('robot_name'), '/cmd_vel' +
                                                  '@geometry_msgs/msg/Twist' +
                                                  ']ignition.msgs.Twist']],
                                      remappings=[(['/model/',
-                                                   LaunchConfiguration('robot_name'), 'cmd_vel'],
+                                                   LaunchConfiguration('robot_name'), '/cmd_vel'],
                                                   ['/', namespace,'/diffdrive_controller/cmd_vel_unstamped'])])
 
     # Pose bridge
