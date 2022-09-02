@@ -135,7 +135,7 @@ def generate_launch_description():
                             ['/', namespace, '/_internal/sim_ground_truth_pose']),
                            ('/model/standard_dock/pose',
                             ['/', namespace, '/_internal/sim_ground_truth_dock_pose'])
-                       ])                   
+                       ])
 
     # odom to base_link transform bridge
     odom_base_tf_bridge = Node(package='ros_ign_bridge', executable='parameter_bridge',
@@ -171,7 +171,7 @@ def generate_launch_description():
                                 remappings=[
                                     (['/model/', LaunchConfiguration('robot_name'),
                                     '/bumper_contact'],
-                                    'bumper_contact')
+                                    '/bumper_contact')
                                 ])
 
     bumper_contact_bridge_namespaced = Node(condition=LaunchConfigurationNotEquals('namespace', ''),
