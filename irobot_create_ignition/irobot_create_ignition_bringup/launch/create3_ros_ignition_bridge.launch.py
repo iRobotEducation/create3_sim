@@ -72,26 +72,27 @@ def generate_launch_description():
                         )
 
     cmd_vel_bridge_namespaced = Node(condition=LaunchConfigurationNotEquals('namespace', ''),
-                                     package='ros_ign_bridge',
-                                     executable='parameter_bridge',
-                                     name='cmd_vel_bridge',
-                                     namespace=namespace,
-                                     output='screen',
-                                     parameters=[{
-                                        'use_sim_time': use_sim_time}],
-                                     arguments=[['/', namespace, '/cmd_vel' +
-                                                 '@geometry_msgs/msg/Twist' +
-                                                 '[ignition.msgs.Twist'],
-                                                ['/model/',
-                                                 LaunchConfiguration('robot_name'), '/cmd_vel' +
-                                                 '@geometry_msgs/msg/Twist' +
-                                                 ']ignition.msgs.Twist']],
-                                     remappings=[(['/model/',
-                                                   LaunchConfiguration('robot_name'), '/cmd_vel'],
-                                                  ['/', namespace,'/diffdrive_controller/cmd_vel_unstamped'])])
+                                    package='ros_ign_bridge',
+                                    executable='parameter_bridge',
+                                    name='cmd_vel_bridge',
+                                    namespace=namespace,
+                                    output='screen',
+                                    parameters=[{
+                                    'use_sim_time': use_sim_time}],
+                                    arguments=[['/', namespace, '/cmd_vel' +
+                                                '@geometry_msgs/msg/Twist' +
+                                                '[ignition.msgs.Twist'],
+                                            ['/model/',
+                                                LaunchConfiguration('robot_name'), '/cmd_vel' +
+                                                '@geometry_msgs/msg/Twist' +
+                                                ']ignition.msgs.Twist']],
+                                    remappings=[(['/model/',
+                                                LaunchConfiguration('robot_name'), '/cmd_vel'],
+                                                ['/', namespace,'/diffdrive_controller/cmd_vel_unstamped'])])
 
     # Pose bridge
-    pose_bridge = Node(package='ros_ign_bridge', executable='parameter_bridge',
+    pose_bridge = Node(condition=LaunchConfigurationEquals('namespace', ''),
+                       package='ros_ign_bridge', executable='parameter_bridge',
                        namespace=namespace,
                        name='pose_bridge',
                        output='screen',
@@ -113,6 +114,29 @@ def generate_launch_description():
                             '/_internal/sim_ground_truth_dock_pose')
                        ])
 
+    pose_bridge_namespaced = Node(condition=LaunchConfigurationNotEquals('namespace', ''),
+                       package='ros_ign_bridge', executable='parameter_bridge',
+                       namespace=namespace,
+                       name='pose_bridge',
+                       output='screen',
+                       parameters=[{
+                            'use_sim_time': use_sim_time
+                       }],
+                       arguments=[
+                           ['/model/', LaunchConfiguration('robot_name'), '/pose' +
+                            '@tf2_msgs/msg/TFMessage' +
+                            '[ignition.msgs.Pose_V'],
+                           '/model/standard_dock/pose' +
+                           '@tf2_msgs/msg/TFMessage' +
+                           '[ignition.msgs.Pose_V'
+                       ],
+                       remappings=[
+                           (['/model/', LaunchConfiguration('robot_name'), '/pose'],
+                            ['/', namespace, '/_internal/sim_ground_truth_pose']),
+                           ('/model/standard_dock/pose',
+                            ['/', namespace, '/_internal/sim_ground_truth_dock_pose'])
+                       ])                   
+
     # odom to base_link transform bridge
     odom_base_tf_bridge = Node(package='ros_ign_bridge', executable='parameter_bridge',
                                namespace=namespace,
@@ -132,46 +156,46 @@ def generate_launch_description():
 
     # Bumper contact sensor bridge
     bumper_contact_bridge = Node(condition=LaunchConfigurationEquals('namespace', ''),
-                                 package='ros_ign_bridge', executable='parameter_bridge',
-                                 name='bumper_contact_bridge',
-                                 output='screen',
-                                 parameters=[{
-                                     'use_sim_time': use_sim_time
-                                 }],
-                                 arguments=[
-                                     ['/model/', LaunchConfiguration('robot_name'),
-                                      '/bumper_contact' +
-                                      '@ros_ign_interfaces/msg/Contacts' +
-                                      '[ignition.msgs.Contacts']
-                                 ],
-                                 remappings=[
-                                     (['/model/', LaunchConfiguration('robot_name'),
-                                      '/bumper_contact'],
-                                      'bumper_contact')
-                                 ])
+                                package='ros_ign_bridge', executable='parameter_bridge',
+                                name='bumper_contact_bridge',
+                                output='screen',
+                                parameters=[{
+                                    'use_sim_time': use_sim_time
+                                }],
+                                arguments=[
+                                    ['/model/', LaunchConfiguration('robot_name'),
+                                    '/bumper_contact' +
+                                    '@ros_ign_interfaces/msg/Contacts' +
+                                    '[ignition.msgs.Contacts']
+                                ],
+                                remappings=[
+                                    (['/model/', LaunchConfiguration('robot_name'),
+                                    '/bumper_contact'],
+                                    'bumper_contact')
+                                ])
 
     bumper_contact_bridge_namespaced = Node(condition=LaunchConfigurationNotEquals('namespace', ''),
-                                            package='ros_ign_bridge', executable='parameter_bridge',
-                                            namespace=namespace,
-                                            name='bumper_contact_bridge',
-                                            output='screen',
-                                            parameters=[{
-                                                'use_sim_time': use_sim_time
-                                            }],
-                                            arguments=[
-                                                ['/model/', LaunchConfiguration('robot_name'),
-                                                '/bumper_contact' +
-                                                '@ros_ign_interfaces/msg/Contacts' +
-                                                '[ignition.msgs.Contacts']
-                                            ],
-                                            remappings=[
-                                                (['/model/', LaunchConfiguration('robot_name'),
-                                                '/bumper_contact'],
-                                                ['/', namespace, '/bumper_contact'])
-                                            ])
+                                package='ros_ign_bridge', executable='parameter_bridge',
+                                name='bumper_contact_bridge',
+                                output='screen',
+                                parameters=[{
+                                    'use_sim_time': use_sim_time
+                                }],
+                                arguments=[
+                                    ['/model/', LaunchConfiguration('robot_name'),
+                                    '/bumper_contact' +
+                                    '@ros_ign_interfaces/msg/Contacts' +
+                                    '[ignition.msgs.Contacts']
+                                ],
+                                remappings=[
+                                    (['/model/', LaunchConfiguration('robot_name'),
+                                    '/bumper_contact'],
+                                    ['/', namespace, '/bumper_contact'])
+                                ])
 
     # Cliff bridge
-    cliff_bridge = Node(package='ros_ign_bridge', executable='parameter_bridge',
+    cliff_bridge = Node(condition=LaunchConfigurationEquals('namespace', ''),
+                        package='ros_ign_bridge', executable='parameter_bridge',
                         namespace=namespace,
                         name='cliff_bridge',
                         output='screen',
@@ -192,8 +216,33 @@ def generate_launch_description():
                               '/_internal/' + cliff + '/scan')
                             for cliff in cliff_sensors
                         ])
+
+    cliff_bridge_namespaced = Node(condition=LaunchConfigurationNotEquals('namespace', ''),
+                        package='ros_ign_bridge', executable='parameter_bridge',
+                        namespace=namespace,
+                        name='cliff_bridge',
+                        output='screen',
+                        parameters=[{
+                            'use_sim_time': use_sim_time
+                        }],
+                        arguments=[
+                            ['/world/', LaunchConfiguration('world'),
+                             '/model/', LaunchConfiguration('robot_name'),
+                             '/link/base_link/sensor/' + cliff + '/scan' +
+                             '@sensor_msgs/msg/LaserScan[ignition.msgs.LaserScan']
+                            for cliff in cliff_sensors
+                        ],
+                        remappings=[
+                            (['/world/', LaunchConfiguration('world'),
+                              '/model/', LaunchConfiguration('robot_name'),
+                              '/link/base_link/sensor/' + cliff + '/scan'],
+                              ['/', namespace,'/_internal/', cliff, '/scan'])
+                            for cliff in cliff_sensors
+                        ])
+
     # IR intensity bridge
-    ir_intensity_bridge = Node(package='ros_ign_bridge', executable='parameter_bridge',
+    ir_intensity_bridge = Node(condition=LaunchConfigurationEquals('namespace', ''),
+                                package='ros_ign_bridge', executable='parameter_bridge',
                                namespace=namespace,
                                name='ir_intensity_bridge',
                                output='screen',
@@ -214,19 +263,57 @@ def generate_launch_description():
                                     '/_internal/' + ir + '/scan') for ir in ir_intensity_sensors
                                ])
 
+
+    ir_intensity_bridge_namespaced = Node(condition=LaunchConfigurationNotEquals('namespace', ''),
+                                package='ros_ign_bridge', executable='parameter_bridge',
+                                namespace=namespace,
+                                name='ir_intensity_bridge',
+                                output='screen',
+                                parameters=[{
+                                    'use_sim_time': use_sim_time
+                                }],
+                                arguments=[
+                                    ['/world/', LaunchConfiguration('world'),
+                                    '/model/', LaunchConfiguration('robot_name'),
+                                    '/link/' + ir + '/sensor/' + ir + '/scan' +
+                                    '@sensor_msgs/msg/LaserScan[ignition.msgs.LaserScan']
+                                    for ir in ir_intensity_sensors
+                                ],
+                                remappings=[
+                                    (['/world/', LaunchConfiguration('world'),
+                                        '/model/', LaunchConfiguration('robot_name'),
+                                        '/link/' + ir + '/sensor/' + ir + '/scan'],
+                                    ['/', namespace, '/_internal/', ir, '/scan']) for ir in ir_intensity_sensors
+                                ])
+
     # Buttons message bridge
-    buttons_msg_bridge = Node(package='ros_ign_bridge', executable='parameter_bridge',
-                              namespace=namespace,
-                              name='buttons_msg_bridge',
-                              output='screen',
-                              parameters=[{
-                                   'use_sim_time': use_sim_time
-                              }],
-                              arguments=[
-                                  ['/', namespace, '/create3/buttons' +
+    buttons_msg_bridge = Node(condition=LaunchConfigurationEquals('namespace', ''),
+                                package='ros_ign_bridge', executable='parameter_bridge',
+                                namespace=namespace,
+                                name='buttons_msg_bridge',
+                                output='screen',
+                                parameters=[{
+                                    'use_sim_time': use_sim_time
+                                }],
+                                arguments=[
+                                    ['/create3/buttons' +
                                    '@std_msgs/msg/Int32' +
                                    '[ignition.msgs.Int32']
-                              ])
+                                ])
+
+    buttons_msg_bridge_namespaced = Node(condition=LaunchConfigurationNotEquals('namespace', ''),
+                                package='ros_ign_bridge', executable='parameter_bridge',
+                                namespace=namespace,
+                                name='buttons_msg_bridge',
+                                output='screen',
+                                parameters=[{
+                                    'use_sim_time': use_sim_time
+                                }],
+                                arguments=[
+                                    ['/', namespace, '/create3/buttons' +
+                                   '@std_msgs/msg/Int32' +
+                                   '[ignition.msgs.Int32']
+                                ])
 
     # Create launch description and add actions
     ld = LaunchDescription(ARGUMENTS)
@@ -234,10 +321,14 @@ def generate_launch_description():
     ld.add_action(cmd_vel_bridge)
     ld.add_action(cmd_vel_bridge_namespaced)
     ld.add_action(pose_bridge)
+    ld.add_action(pose_bridge_namespaced)
     ld.add_action(odom_base_tf_bridge)
     ld.add_action(bumper_contact_bridge)
     ld.add_action(bumper_contact_bridge_namespaced)
     ld.add_action(cliff_bridge)
+    ld.add_action(cliff_bridge_namespaced)
     ld.add_action(ir_intensity_bridge)
+    ld.add_action(ir_intensity_bridge_namespaced)
     ld.add_action(buttons_msg_bridge)
+    ld.add_action(buttons_msg_bridge_namespaced)
     return ld
