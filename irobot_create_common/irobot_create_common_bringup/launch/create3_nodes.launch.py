@@ -52,90 +52,13 @@ def generate_launch_description():
         launch_arguments=[('namespace', LaunchConfiguration('namespace'))]
     )
 
-    # hazard_vector_params
-    namespaced_hazards_params_yaml_file = ReplaceString(
-        source_file=hazards_params_yaml_file,
-        replacements={'/hazard_detection': ('/', namespace, '/hazard_detection')}
-    )
-
-    # wheel_status_publisher
-    namespaced_wheel_status_params_yaml_file = ReplaceString(
-        source_file=wheel_status_params_yaml_file,
-        replacements={'/wheel_vels': ('/', namespace, '/wheel_vels')}
-    )
-    namespaced_wheel_status_params_yaml_file = ReplaceString(
-        source_file=namespaced_wheel_status_params_yaml_file,
-        replacements={'/wheel_ticks': ('/', namespace, '/wheel_ticks')}
-    )
-
-    # mock
-    namespaced_mock_params_yaml_file = ReplaceString(
-        source_file=mock_params_yaml_file,
-        replacements={'/slip_status': ('/', namespace, '/slip_status')}
-    )
-
-    # robot_state
-    namespaced_robot_state_yaml_file = ReplaceString(
-        source_file=robot_state_yaml_file,
-        replacements={'/stop_status': ('/', namespace, '/stop_status')}
-    )
-    namespaced_robot_state_yaml_file = ReplaceString(
-        source_file=namespaced_robot_state_yaml_file,
-        replacements={'/battery_state': ('/', namespace, '/battery_state')}
-    )
-    namespaced_robot_state_yaml_file = ReplaceString(
-        source_file=namespaced_robot_state_yaml_file,
-        replacements={'/dock': ('/', namespace, '/dock')}
-    )
-    namespaced_robot_state_yaml_file = ReplaceString(
-        source_file=namespaced_robot_state_yaml_file,
-        replacements={'/odom': ('/', namespace, '/odom')}
-    )
-
-    # kidnap_estimator
-    namespaced_kidnap_estimator_yaml_file = ReplaceString(
-        source_file=kidnap_estimator_yaml_file,
-        replacements={'/kidnap_status': ('/', namespace, '/kidnap_status')}
-    )
-    namespaced_kidnap_estimator_yaml_file = ReplaceString(
-        source_file=namespaced_kidnap_estimator_yaml_file,
-        replacements={'/hazard_detection': ('/', namespace, '/hazard_detection')}
-    )
-
-    # ui_mgr_params
-    namespaced_ui_mgr_params_yaml_file = ReplaceString(
-        source_file=ui_mgr_params_yaml_file,
-        replacements={'interface_buttons': ('/', namespace, '/interface_buttons')}
-    )
-    namespaced_ui_mgr_params_yaml_file = ReplaceString(
-        source_file=namespaced_ui_mgr_params_yaml_file,
-        replacements={'cmd_lightring': ('/', namespace, '/cmd_lightring')}
-    )
-    namespaced_ui_mgr_params_yaml_file = ReplaceString(
-        source_file=namespaced_ui_mgr_params_yaml_file,
-        replacements={'cmd_audio': ('/', namespace, '/cmd_audio')}
-    )
-
-
     # Publish hazards vector
     hazards_vector_node = Node(
-        condition=LaunchConfigurationEquals('namespace', ''),
         package='irobot_create_nodes',
         name='hazards_vector_publisher',
         namespace=namespace,
         executable='hazards_vector_publisher',
         parameters=[hazards_params_yaml_file,
-                    {'use_sim_time': True}],
-        output='screen',
-    )
-
-    hazards_vector_node_namespaced = Node(
-        condition=LaunchConfigurationNotEquals('namespace', ''),
-        package='irobot_create_nodes',
-        name='hazards_vector_publisher',
-        namespace=namespace,
-        executable='hazards_vector_publisher',
-        parameters=[namespaced_hazards_params_yaml_file,
                     {'use_sim_time': True}],
         output='screen',
     )
@@ -163,7 +86,6 @@ def generate_launch_description():
 
     # Publish wheel status
     wheel_status_node = Node(
-        condition=LaunchConfigurationEquals('namespace', ''),
         package='irobot_create_nodes',
         name='wheel_status_publisher',
         namespace=namespace,
@@ -173,20 +95,8 @@ def generate_launch_description():
         output='screen',
     )
 
-    wheel_status_node_namespaced = Node(
-        condition=LaunchConfigurationNotEquals('namespace', ''),
-        package='irobot_create_nodes',
-        name='wheel_status_publisher',
-        namespace=namespace,
-        executable='wheel_status_publisher',
-        parameters=[namespaced_wheel_status_params_yaml_file,
-                    {'use_sim_time': True}],
-        output='screen',
-    )
-
     # Publish mock topics
     mock_topics_node = Node(
-        condition=LaunchConfigurationEquals('namespace', ''),
         package='irobot_create_nodes',
         name='mock_publisher',
         namespace=namespace,
@@ -196,20 +106,8 @@ def generate_launch_description():
         output='screen',
     )
 
-    mock_topics_node_namespaced = Node(
-        condition=LaunchConfigurationNotEquals('namespace', ''),
-        package='irobot_create_nodes',
-        name='mock_publisher',
-        namespace=namespace,
-        executable='mock_publisher',
-        parameters=[namespaced_mock_params_yaml_file,
-                    {'use_sim_time': True}],
-        output='screen',
-    )
-
     # Publish robot state
     robot_state_node = Node(
-        condition=LaunchConfigurationEquals('namespace', ''),
         package='irobot_create_nodes',
         name='robot_state',
         namespace=namespace,
@@ -219,36 +117,13 @@ def generate_launch_description():
         output='screen',
     )
 
-    robot_state_node_namespaced = Node(
-        condition=LaunchConfigurationNotEquals('namespace', ''),
-        package='irobot_create_nodes',
-        name='robot_state',
-        namespace=namespace,
-        executable='robot_state',
-        parameters=[namespaced_robot_state_yaml_file,
-                    {'use_sim_time': True}],
-        output='screen',
-    )
-
     # Publish kidnap estimator
     kidnap_estimator_node = Node(
-        condition=LaunchConfigurationEquals('namespace', ''),
         package='irobot_create_nodes',
         name='kidnap_estimator_publisher',
         namespace=namespace,
         executable='kidnap_estimator_publisher',
         parameters=[kidnap_estimator_yaml_file,
-                    {'use_sim_time': True}],
-        output='screen',
-    )
-
-    kidnap_estimator_node_namespaced = Node(
-        condition=LaunchConfigurationNotEquals('namespace', ''),
-        package='irobot_create_nodes',
-        name='kidnap_estimator_publisher',
-        namespace=namespace,
-        executable='kidnap_estimator_publisher',
-        parameters=[namespaced_kidnap_estimator_yaml_file,
                     {'use_sim_time': True}],
         output='screen',
     )
@@ -266,37 +141,19 @@ def generate_launch_description():
         output='screen',
     )
 
-    ui_mgr_node_namespaced = Node(
-        condition=LaunchConfigurationNotEquals('namespace', ''),
-        package='irobot_create_nodes',
-        name='ui_mgr',
-        namespace=namespace,
-        executable='ui_mgr',
-        parameters=[namespaced_ui_mgr_params_yaml_file,
-                    {'use_sim_time': True},
-                    {'gazebo': LaunchConfiguration('gazebo')}],
-        output='screen',
-    )
-
     # Define LaunchDescription variable
     ld = LaunchDescription(ARGUMENTS)
     # Include robot description
     ld.add_action(diffdrive_controller)
     # Add nodes to LaunchDescription
     ld.add_action(hazards_vector_node)
-    ld.add_action(hazards_vector_node_namespaced)
     ld.add_action(ir_intensity_vector_node)
     ld.add_action(motion_control_node)
     ld.add_action(wheel_status_node)
-    ld.add_action(wheel_status_node_namespaced)
     ld.add_action(mock_topics_node)
-    ld.add_action(mock_topics_node_namespaced)
     ld.add_action(robot_state_node)
-    ld.add_action(robot_state_node_namespaced)
     ld.add_action(kidnap_estimator_node)
-    ld.add_action(kidnap_estimator_node_namespaced)
     ld.add_action(ui_mgr_node)
-    ld.add_action(ui_mgr_node_namespaced)
 
     return ld
     

@@ -9,6 +9,6 @@
       # Wheel radius
       wheel_radius: 0.03575
       # Wheels angular velocity topic
-      velocity_topic: /wheel_vels
+      velocity_topic: wheel_vels
       # Wheels' net encoder ticks topic
-      ticks_topic: /wheel_ticks
+      ticks_topic: wheel_ticks
