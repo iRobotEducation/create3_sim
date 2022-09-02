@@ -58,12 +58,6 @@ def generate_launch_description():
         replacements={'/hazard_detection': ('/', namespace, '/hazard_detection')}
     )
 
-    # ir_intensity 
-    namespaced_ir_intensity_params_yaml_file = ReplaceString(
-        source_file=ir_intensity_params_yaml_file,
-        replacements={'/ir_intensity': ('/', namespace, '/ir_intensity')}
-    )
-
     # wheel_status_publisher
     namespaced_wheel_status_params_yaml_file = ReplaceString(
         source_file=wheel_status_params_yaml_file,
@@ -148,23 +142,11 @@ def generate_launch_description():
 
     # Publish IR intensity vector
     ir_intensity_vector_node = Node(
-        condition=LaunchConfigurationEquals('namespace', ''),
         package='irobot_create_nodes',
         name='ir_intensity_vector_publisher',
         namespace=namespace,
         executable='ir_intensity_vector_publisher',
         parameters=[ir_intensity_params_yaml_file,
-                    {'use_sim_time': True}],
-        output='screen',
-    )
-
-    ir_intensity_vector_node_namespaced = Node(
-        condition=LaunchConfigurationNotEquals('namespace', ''),
-        package='irobot_create_nodes',
-        name='ir_intensity_vector_publisher',
-        namespace=namespace,
-        executable='ir_intensity_vector_publisher',
-        parameters=[namespaced_ir_intensity_params_yaml_file,
                     {'use_sim_time': True}],
         output='screen',
     )
@@ -304,7 +286,6 @@ def generate_launch_description():
     ld.add_action(hazards_vector_node)
     ld.add_action(hazards_vector_node_namespaced)
     ld.add_action(ir_intensity_vector_node)
-    ld.add_action(ir_intensity_vector_node_namespaced)
     ld.add_action(motion_control_node)
     ld.add_action(wheel_status_node)
     ld.add_action(wheel_status_node_namespaced)
