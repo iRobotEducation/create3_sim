@@ -58,8 +58,7 @@ def generate_launch_description():
         [pkg_irobot_create_common_bringup, 'launch', 'dock_description.launch.py'])
 
     # Launch configurations
-    x, y, z = LaunchConfiguration('x'), LaunchConfiguration(
-        'y'), LaunchConfiguration('z')
+    x, y, z = LaunchConfiguration('x'), LaunchConfiguration('y'), LaunchConfiguration('z')
     yaw = LaunchConfiguration('yaw')
     robot_name = LaunchConfiguration('robot_name')
     namespace = LaunchConfiguration('namespace')
@@ -127,7 +126,7 @@ def generate_launch_description():
     create3_nodes = IncludeLaunchDescription(
         PythonLaunchDescriptionSource([create3_nodes_launch]),
         launch_arguments=[('namespace', namespace)]
-                )
+    )
 
     create3_ignition_nodes = IncludeLaunchDescription(
         PythonLaunchDescriptionSource([create3_ignition_nodes_launch]),

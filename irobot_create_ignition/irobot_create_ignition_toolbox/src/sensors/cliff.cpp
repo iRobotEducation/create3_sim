@@ -35,7 +35,6 @@ Cliff::Cliff(std::shared_ptr<rclcpp::Node> & nh)
         std::bind(&Cliff::cliff_callback, this, std::placeholders::_1)));
   }
 
-  // TODO(sophia) namespace
   for (std::string topic : cliff_pub_topics) {
     for (const std::string sensor : cliff_sensors_) {
       if (topic.find(sensor) != std::string::npos) {
