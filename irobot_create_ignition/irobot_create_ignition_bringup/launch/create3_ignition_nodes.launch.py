@@ -19,7 +19,8 @@ ARGUMENTS = [
 
 
 def generate_launch_description():
-
+    #TODO(sophia) investigate that this is redirected correctly with the namespacing
+    
     # Directories
     pkg_create3_ignition_bringup = get_package_share_directory('irobot_create_ignition_bringup')
 
