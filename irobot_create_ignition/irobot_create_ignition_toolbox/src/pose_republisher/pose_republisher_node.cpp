@@ -116,7 +116,7 @@ void PoseRepublisher::dock_subscriber_callback(const tf2_msgs::msg::TFMessage::S
 {
   for (uint16_t i = 0; i < msg->transforms.size(); i++) {
     // Child frame is model name
-    if (msg->transforms[i].child_frame_id == "standard_dock") {
+    if (msg->transforms[i].child_frame_id.find("standard_dock") != std::string::npos) {
       auto odom_msg = utils::tf_message_to_odom(msg, i);
       // Save dock pose
       tf2::convert(odom_msg->pose.pose, last_dock_pose_);
