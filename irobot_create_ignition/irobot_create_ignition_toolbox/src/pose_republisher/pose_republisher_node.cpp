@@ -116,12 +116,7 @@ void PoseRepublisher::dock_subscriber_callback(const tf2_msgs::msg::TFMessage::S
 {
   for (uint16_t i = 0; i < msg->transforms.size(); i++) {
     // Child frame is model name
-    if (msg->transforms[i].child_frame_id.find("standard_dock") != std::string::npos) {
-      auto odom_msg = utils::tf_message_to_odom(msg, i);
-      // Save dock pose
-      tf2::convert(odom_msg->pose.pose, last_dock_pose_);
-      dock_publisher_->publish(std::move(odom_msg));
-    } else if (msg->transforms[i].child_frame_id.find("halo_link") != std::string::npos) {
+    if (msg->transforms[i].child_frame_id.find("halo_link") != std::string::npos) {
       // Send IR Opcode Emitter transform
       auto emitter_msg = utils::tf_message_to_odom(msg, i);
       tf2::Transform emitter_pose;
@@ -134,6 +129,12 @@ void PoseRepublisher::dock_subscriber_callback(const tf2_msgs::msg::TFMessage::S
       utils::tf2_transform_to_pose(emitter_world_pose, emitter_msg->pose.pose);
       // Publish
       ir_opcode_emitter_publisher_->publish(std::move(emitter_msg));
+    } else if (msg->transforms[i].child_frame_id.find("standard_dock/") == std::string::npos &&
+               msg->transforms[i].child_frame_id.find("standard_dock") != std::string::npos) {
+      auto odom_msg = utils::tf_message_to_odom(msg, i);
+      // Save dock pose
+      tf2::convert(odom_msg->pose.pose, last_dock_pose_);
+      dock_publisher_->publish(std::move(odom_msg));
     }
   }
 }

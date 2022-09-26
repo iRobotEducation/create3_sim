@@ -1,6 +1,7 @@
 # Copyright 2021 Clearpath Robotics, Inc.
 # @author Roni Kreinin (rkreinin@clearpathrobotics.com)
 
+from argparse import Namespace
 from launch import LaunchDescription
 from launch.actions import DeclareLaunchArgument
 from launch.conditions import IfCondition, LaunchConfigurationEquals, LaunchConfigurationNotEquals
@@ -296,11 +297,13 @@ def generate_launch_description():
                                     'use_sim_time': use_sim_time
                                 }],
                                 arguments=[
-                                    ['/create3/buttons' +
+                                    ['/', LaunchConfiguration('robot_name'), '/buttons' +
                                    '@std_msgs/msg/Int32' +
                                    '[ignition.msgs.Int32']
                                 ])
 
+
+    # TODO(sophia) check if this is working properly, usefull?
     buttons_msg_bridge_namespaced = Node(condition=LaunchConfigurationNotEquals('namespace', ''),
                                 package='ros_ign_bridge', executable='parameter_bridge',
                                 namespace=namespace,
@@ -310,7 +313,7 @@ def generate_launch_description():
                                     'use_sim_time': use_sim_time
                                 }],
                                 arguments=[
-                                    ['/', namespace, '/create3/buttons' +
+                                    ['/', LaunchConfiguration('robot_name'), '/buttons' +
                                    '@std_msgs/msg/Int32' +
                                    '[ignition.msgs.Int32']
                                 ])
