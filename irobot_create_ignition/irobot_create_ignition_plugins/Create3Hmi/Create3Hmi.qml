@@ -41,6 +41,15 @@ Rectangle
       anchors.leftMargin: 10
     }
 
+    TextInput {
+      id: create3NamespaceInput
+      text: "/create3/buttons"
+      anchors.verticalCenter: create3ButtonPower.verticalCenter
+      anchors.right: create3ButtonPower.left
+      anchors.rightMargin: 15
+      onEditingFinished: { Create3Hmi.OnNamespaceChange(text); }
+    }
+
     ToolButton {
       id: create3Button1
       anchors.verticalCenter: create3ButtonPower.verticalCenter
