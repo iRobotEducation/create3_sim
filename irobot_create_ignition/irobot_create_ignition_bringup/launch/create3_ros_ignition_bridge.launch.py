@@ -264,7 +264,6 @@ def generate_launch_description():
                                     '/_internal/' + ir + '/scan') for ir in ir_intensity_sensors
                                ])
 
-
     ir_intensity_bridge_namespaced = Node(condition=LaunchConfigurationNotEquals('namespace', ''),
                                 package='ros_ign_bridge', executable='parameter_bridge',
                                 namespace=namespace,
@@ -297,13 +296,12 @@ def generate_launch_description():
                                     'use_sim_time': use_sim_time
                                 }],
                                 arguments=[
-                                    ['/', LaunchConfiguration('robot_name'), '/buttons' +
+                                    ['/buttons' +
                                    '@std_msgs/msg/Int32' +
                                    '[ignition.msgs.Int32']
                                 ])
 
 
-    # TODO(sophia) check if this is working properly, usefull?
     buttons_msg_bridge_namespaced = Node(condition=LaunchConfigurationNotEquals('namespace', ''),
                                 package='ros_ign_bridge', executable='parameter_bridge',
                                 namespace=namespace,
@@ -313,7 +311,7 @@ def generate_launch_description():
                                     'use_sim_time': use_sim_time
                                 }],
                                 arguments=[
-                                    ['/', LaunchConfiguration('robot_name'), '/buttons' +
+                                    ['/', namespace, '/buttons' +
                                    '@std_msgs/msg/Int32' +
                                    '[ignition.msgs.Int32']
                                 ])

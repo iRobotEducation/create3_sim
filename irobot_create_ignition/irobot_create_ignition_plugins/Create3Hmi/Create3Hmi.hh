@@ -62,7 +62,7 @@ protected slots:
 private:
   ignition::transport::Node node_;
   ignition::transport::Node::Publisher create3_button_pub_;
-  std::string create3_button_topic_ = "/create3/buttons";
+  std::string create3_button_topic_ = "/buttons";
 };
 
 }  // namespace gui

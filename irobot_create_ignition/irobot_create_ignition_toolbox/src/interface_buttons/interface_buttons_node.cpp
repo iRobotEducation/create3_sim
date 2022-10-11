@@ -12,6 +12,7 @@ using irobot_create_ignition_toolbox::InterfaceButtons;
 InterfaceButtons::InterfaceButtons()
 : rclcpp::Node("sensors_node")
 {
+  // TODO(sophia) get robot_name instead of unsing namespace by default
   interface_buttons_sub_ = this->create_subscription<std_msgs::msg::Int32>(
     "buttons",
     rclcpp::SensorDataQoS(),
