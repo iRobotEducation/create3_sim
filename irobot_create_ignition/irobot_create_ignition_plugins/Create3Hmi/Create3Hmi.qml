@@ -17,39 +17,47 @@ Rectangle
   anchors.fill: parent
   focus: true
   Layout.minimumWidth: 400
-  Layout.minimumHeight: 175
+  Layout.minimumHeight: 225
 
   Rectangle
   {
     id: create3ButtonsRectangle
-    border.color: "black"
     border.width: 2
     anchors.top: widgetRectangle.top
     anchors.left: widgetRectangle.left
     focus: true
-    height: 125
+    height: 175
     width: 400
 
-    // Buttons
+    // Topic input
     Label {
-      id: create3ButtonsLabel
-      text: "Create3"
-      font.pixelSize: 22
+      id: topicLabel
+      text: "Topic:"
+      Layout.fillWidth: true
+      Layout.margins: 10
       anchors.top: create3ButtonsRectangle.top
       anchors.topMargin: 10
-      anchors.left: parent.left
+      anchors.left: create3ButtonsRectangle.left
       anchors.leftMargin: 10
     }
 
-    TextInput {
-      id: create3NamespaceInput
-      text: "/create3/buttons"
-      anchors.verticalCenter: create3ButtonPower.verticalCenter
-      anchors.right: create3ButtonPower.left
-      anchors.rightMargin: 15
-      onEditingFinished: { Create3Hmi.OnNamespaceChange(text); }
+    TextField {
+      id: topicField
+      width: 175
+      Layout.fillWidth: true
+      Layout.margins: 10
+      text: Create3Hmi.topic
+      placeholderText: qsTr("Topic to publish...")
+      anchors.top: topicLabel.bottom
+      anchors.topMargin: 5
+      anchors.left: create3ButtonsRectangle.left
+      anchors.leftMargin: 10
+      onEditingFinished: {
+        Create3Hmi.SetTopic(text)
+      }
     }
 
+    // Button inputs
     ToolButton {
       id: create3Button1
       anchors.verticalCenter: create3ButtonPower.verticalCenter
@@ -71,8 +79,8 @@ Rectangle
 
     ToolButton {
       id: create3ButtonPower
-      anchors.top: create3ButtonsLabel.bottom
-      anchors.topMargin: 0
+      anchors.bottom: create3ButtonsRectangle.bottom
+      anchors.bottomMargin: 15
       anchors.horizontalCenter: create3ButtonsRectangle.horizontalCenter
       checkable: true
       checked: true
