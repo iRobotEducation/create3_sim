@@ -25,6 +25,8 @@ ARGUMENTS = [
 def generate_launch_description():
     namespace = LaunchConfiguration('namespace')
     use_sim_time = LaunchConfiguration('use_sim_time')
+    robot_name = LaunchConfiguration('robot_name')
+    world = LaunchConfiguration('world')
 
     cliff_sensors = [
         'cliff_front_left',
@@ -64,11 +66,11 @@ def generate_launch_description():
                           arguments=[['/cmd_vel' + 
                                       '@geometry_msgs/msg/Twist' +
                                       '[ignition.msgs.Twist'],
-                                     ['/model/', LaunchConfiguration('robot_name'), '/cmd_vel' +
+                                     ['/model/', robot_name, '/cmd_vel' +
                                       '@geometry_msgs/msg/Twist' +
                                       ']ignition.msgs.Twist']],
                           remappings=[(['/model/', 
-                                      LaunchConfiguration('robot_name'), '/cmd_vel'],
+                                      robot_name, '/cmd_vel'],
                                       ['/diffdrive_controller/cmd_vel_unstamped'])]
                         )
 
@@ -84,11 +86,11 @@ def generate_launch_description():
                                                 '@geometry_msgs/msg/Twist' +
                                                 '[ignition.msgs.Twist'],
                                             ['/model/',
-                                                LaunchConfiguration('robot_name'), '/cmd_vel' +
+                                                robot_name, '/cmd_vel' +
                                                 '@geometry_msgs/msg/Twist' +
                                                 ']ignition.msgs.Twist']],
                                     remappings=[(['/model/',
-                                                LaunchConfiguration('robot_name'), '/cmd_vel'],
+                                                robot_name, '/cmd_vel'],
                                                 ['/', namespace,'/diffdrive_controller/cmd_vel_unstamped'])])
 
     # Pose bridge
@@ -101,17 +103,17 @@ def generate_launch_description():
                             'use_sim_time': use_sim_time
                        }],
                        arguments=[
-                           ['/model/', LaunchConfiguration('robot_name'), '/pose' +
+                           ['/model/', robot_name, '/pose' +
                             '@tf2_msgs/msg/TFMessage' +
                             '[ignition.msgs.Pose_V'],
-                           ['/model/', LaunchConfiguration('robot_name'), '_standard_dock', '/pose' +
+                           ['/model/', robot_name, '_standard_dock', '/pose' +
                            '@tf2_msgs/msg/TFMessage' +
                            '[ignition.msgs.Pose_V']
                        ],
                        remappings=[
-                           (['/model/', LaunchConfiguration('robot_name'), '/pose'],
+                           (['/model/', robot_name, '/pose'],
                             '/_internal/sim_ground_truth_pose'),
-                           (['/model/', LaunchConfiguration('robot_name'), '_standard_dock', '/pose'],
+                           (['/model/', robot_name, '_standard_dock', '/pose'],
                             '/_internal/sim_ground_truth_dock_pose')
                        ])
 
@@ -124,17 +126,17 @@ def generate_launch_description():
                             'use_sim_time': use_sim_time
                        }],
                        arguments=[
-                           ['/model/', LaunchConfiguration('robot_name'), '/pose' +
+                           ['/model/', robot_name, '/pose' +
                             '@tf2_msgs/msg/TFMessage' +
                             '[ignition.msgs.Pose_V'],
-                           ['/model/', LaunchConfiguration('robot_name'), '_standard_dock', '/pose' +
+                           ['/model/', robot_name, '_standard_dock', '/pose' +
                            '@tf2_msgs/msg/TFMessage' +
                            '[ignition.msgs.Pose_V']
                        ],
                        remappings=[
-                           (['/model/', LaunchConfiguration('robot_name'), '/pose'],
+                           (['/model/', robot_name, '/pose'],
                             ['/', namespace, '/_internal/sim_ground_truth_pose']),
-                           (['/model/', LaunchConfiguration('robot_name'), '_standard_dock', '/pose'],
+                           (['/model/', robot_name, '_standard_dock', '/pose'],
                             ['/', namespace, '/_internal/sim_ground_truth_dock_pose'])
                        ])
 
@@ -147,12 +149,12 @@ def generate_launch_description():
                                    'use_sim_time': use_sim_time
                                }],
                                arguments=[
-                                   ['/model/', LaunchConfiguration('robot_name'), '/tf' +
+                                   ['/model/', robot_name, '/tf' +
                                     '@tf2_msgs/msg/TFMessage' +
                                     '[ignition.msgs.Pose_V']
                                ],
                                remappings=[
-                                   (['/model/', LaunchConfiguration('robot_name'), '/tf'], '/tf')
+                                   (['/model/', robot_name, '/tf'], '/tf')
                                ])
 
     # Bumper contact sensor bridge
@@ -164,13 +166,13 @@ def generate_launch_description():
                                     'use_sim_time': use_sim_time
                                 }],
                                 arguments=[
-                                    ['/model/', LaunchConfiguration('robot_name'),
+                                    ['/model/', robot_name,
                                     '/bumper_contact' +
                                     '@ros_ign_interfaces/msg/Contacts' +
                                     '[ignition.msgs.Contacts']
                                 ],
                                 remappings=[
-                                    (['/model/', LaunchConfiguration('robot_name'),
+                                    (['/model/', robot_name,
                                     '/bumper_contact'],
                                     '/bumper_contact')
                                 ])
@@ -183,13 +185,13 @@ def generate_launch_description():
                                     'use_sim_time': use_sim_time
                                 }],
                                 arguments=[
-                                    ['/model/', LaunchConfiguration('robot_name'),
+                                    ['/model/', robot_name,
                                     '/bumper_contact' +
                                     '@ros_ign_interfaces/msg/Contacts' +
                                     '[ignition.msgs.Contacts']
                                 ],
                                 remappings=[
-                                    (['/model/', LaunchConfiguration('robot_name'),
+                                    (['/model/', robot_name,
                                     '/bumper_contact'],
                                     ['/', namespace, '/bumper_contact'])
                                 ])
@@ -204,15 +206,15 @@ def generate_launch_description():
                             'use_sim_time': use_sim_time
                         }],
                         arguments=[
-                            ['/world/', LaunchConfiguration('world'),
-                             '/model/', LaunchConfiguration('robot_name'),
+                            ['/world/', world,
+                             '/model/', robot_name,
                              '/link/base_link/sensor/' + cliff + '/scan' +
                              '@sensor_msgs/msg/LaserScan[ignition.msgs.LaserScan']
                             for cliff in cliff_sensors
                         ],
                         remappings=[
-                            (['/world/', LaunchConfiguration('world'),
-                              '/model/', LaunchConfiguration('robot_name'),
+                            (['/world/', world,
+                              '/model/', robot_name,
                               '/link/base_link/sensor/' + cliff + '/scan'],
                               '/_internal/' + cliff + '/scan')
                             for cliff in cliff_sensors
@@ -227,15 +229,15 @@ def generate_launch_description():
                             'use_sim_time': use_sim_time
                         }],
                         arguments=[
-                            ['/world/', LaunchConfiguration('world'),
-                             '/model/', LaunchConfiguration('robot_name'),
+                            ['/world/', world,
+                             '/model/', robot_name,
                              '/link/base_link/sensor/' + cliff + '/scan' +
                              '@sensor_msgs/msg/LaserScan[ignition.msgs.LaserScan']
                             for cliff in cliff_sensors
                         ],
                         remappings=[
-                            (['/world/', LaunchConfiguration('world'),
-                              '/model/', LaunchConfiguration('robot_name'),
+                            (['/world/', world,
+                              '/model/', robot_name,
                               '/link/base_link/sensor/' + cliff + '/scan'],
                               ['/', namespace,'/_internal/', cliff, '/scan'])
                             for cliff in cliff_sensors
@@ -251,15 +253,15 @@ def generate_launch_description():
                                    'use_sim_time': use_sim_time
                                }],
                                arguments=[
-                                   ['/world/', LaunchConfiguration('world'),
-                                    '/model/', LaunchConfiguration('robot_name'),
+                                   ['/world/', world,
+                                    '/model/', robot_name,
                                     '/link/' + ir + '/sensor/' + ir + '/scan' +
                                     '@sensor_msgs/msg/LaserScan[ignition.msgs.LaserScan']
                                    for ir in ir_intensity_sensors
                                ],
                                remappings=[
-                                   (['/world/', LaunchConfiguration('world'),
-                                     '/model/', LaunchConfiguration('robot_name'),
+                                   (['/world/', world,
+                                     '/model/', robot_name,
                                      '/link/' + ir + '/sensor/' + ir + '/scan'],
                                     '/_internal/' + ir + '/scan') for ir in ir_intensity_sensors
                                ])
@@ -273,15 +275,15 @@ def generate_launch_description():
                                     'use_sim_time': use_sim_time
                                 }],
                                 arguments=[
-                                    ['/world/', LaunchConfiguration('world'),
-                                    '/model/', LaunchConfiguration('robot_name'),
+                                    ['/world/', world,
+                                    '/model/', robot_name,
                                     '/link/' + ir + '/sensor/' + ir + '/scan' +
                                     '@sensor_msgs/msg/LaserScan[ignition.msgs.LaserScan']
                                     for ir in ir_intensity_sensors
                                 ],
                                 remappings=[
-                                    (['/world/', LaunchConfiguration('world'),
-                                        '/model/', LaunchConfiguration('robot_name'),
+                                    (['/world/', world,
+                                        '/model/', robot_name,
                                         '/link/' + ir + '/sensor/' + ir + '/scan'],
                                     ['/', namespace, '/_internal/', ir, '/scan']) for ir in ir_intensity_sensors
                                 ])
@@ -296,9 +298,13 @@ def generate_launch_description():
                                     'use_sim_time': use_sim_time
                                 }],
                                 arguments=[
-                                    ['/buttons' +
+                                    ['/model/', robot_name, '/buttons' +
                                    '@std_msgs/msg/Int32' +
                                    '[ignition.msgs.Int32']
+                                ],
+                                remappings=[
+                                    (['/model/', robot_name, '/buttons'],
+                                    '/buttons')
                                 ])
 
 
@@ -311,9 +317,13 @@ def generate_launch_description():
                                     'use_sim_time': use_sim_time
                                 }],
                                 arguments=[
-                                    ['/', namespace, '/buttons' +
+                                    ['/model/', robot_name, '/buttons' +
                                    '@std_msgs/msg/Int32' +
                                    '[ignition.msgs.Int32']
+                                ],
+                                remappings=[
+                                    (['/model/', robot_name, '/buttons'],
+                                    ['/', namespace, '/buttons'])
                                 ])
 
     # Create launch description and add actions

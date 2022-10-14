@@ -23,12 +23,12 @@ class Create3Hmi : public Plugin
 {
   Q_OBJECT
 
-  // \brief Topic
+  // \brief Name
   Q_PROPERTY(
-    QString topic
-    READ Topic
-    WRITE SetTopic
-    NOTIFY TopicChanged
+    QString name
+    READ Name
+    WRITE SetName
+    NOTIFY NameChanged
   )
 
 public:
@@ -39,30 +39,30 @@ public:
   /// \brief Called by Ignition GUI when plugin is instantiated.
   /// \param[in] _pluginElem XML configuration for this plugin.
   void LoadConfig(const tinyxml2::XMLElement *_pluginElem) override;
-  // \brief Get the topic as a string, for example
+  // \brief Get the robot name as a string, for example
   /// '/echo'
-  /// \return Topic
-  Q_INVOKABLE QString Topic() const;
+  /// \return Name
+  Q_INVOKABLE QString Name() const;
 
 public slots: 
-  /// \brief Callback in Qt thread when the topic changes.
-  /// \param[in] _topic variable to indicate the topic to
+  /// \brief Callback in Qt thread when the robot name changes.
+  /// \param[in] _name variable to indicate the robot name to
   /// publish the Button commands.
-  void SetTopic(const QString &_topic);
+  void SetName(const QString &_name);
 
 signals:
-  /// \brief Notify that topic has changed
-  void TopicChanged();
+  /// \brief Notify that robot name has changed
+  void NameChanged();
 
 protected slots:
   /// \brief Callback trigged when the button is pressed.
   void OnCreate3Button(const int button);
-  void OnNamespaceChange(const char* text);
 
 private:
   ignition::transport::Node node_;
   ignition::transport::Node::Publisher create3_button_pub_;
-  std::string create3_button_topic_ = "/buttons";
+  std::string robot_name_ = "create3";
+  std::string create3_button_topic_ = "/model/create3/buttons";
 };
 
 }  // namespace gui

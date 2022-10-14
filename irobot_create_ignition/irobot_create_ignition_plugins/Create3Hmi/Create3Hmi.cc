@@ -38,9 +38,9 @@ void Create3Hmi::LoadConfig(const tinyxml2::XMLElement * _pluginElem)
 
   if (_pluginElem)
   {
-    auto topicElem = _pluginElem->FirstChildElement("topic");
-    if (nullptr != topicElem && nullptr != topicElem->GetText())
-      this->SetTopic(topicElem->GetText());
+    auto nameElem = _pluginElem->FirstChildElement("name");
+    if (nullptr != nameElem && nullptr != nameElem->GetText())
+      this->SetName(nameElem->GetText());
   }
 
   this->connect(
@@ -60,15 +60,16 @@ void Create3Hmi::OnCreate3Button(const int button)
   }
 }
 
-QString Create3Hmi::Topic() const
+QString Create3Hmi::Name() const
 {
-  return QString::fromStdString(this->create3_button_topic_);
+  return QString::fromStdString(this->robot_name_);
 }
 
-void Create3Hmi::SetTopic(const QString &_topic)
+void Create3Hmi::SetName(const QString &_name)
 {
-  this->create3_button_topic_ = _topic.toStdString();
-  ignmsg << "A new topic has been entered: '" <<
+  this->robot_name_ = _name.toStdString();
+  this->create3_button_topic_ = "/model/" + this->robot_name_ + "/buttons";
+  ignmsg << "A new robot name has been entered, publishing on topic: '" <<
       this->create3_button_topic_ << " ' " <<std::endl;
 
   // Update publisher with new topic.
@@ -90,7 +91,7 @@ void Create3Hmi::SetTopic(const QString &_topic)
       QString::fromStdString("Advertising topic: '<b>" +
         this->create3_button_topic_ + "</b>'"), 4000);
   }
-  this->TopicChanged();
+  this->NameChanged();
 }
 
 }  // namespace gui

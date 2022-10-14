@@ -29,10 +29,10 @@ Rectangle
     height: 175
     width: 400
 
-    // Topic input
+    // Robot Name input
     Label {
-      id: topicLabel
-      text: "Topic:"
+      id: nameLabel
+      text: "Robot Name:"
       Layout.fillWidth: true
       Layout.margins: 10
       anchors.top: create3ButtonsRectangle.top
@@ -42,18 +42,18 @@ Rectangle
     }
 
     TextField {
-      id: topicField
+      id: nameField
       width: 175
       Layout.fillWidth: true
       Layout.margins: 10
-      text: Create3Hmi.topic
-      placeholderText: qsTr("Topic to publish...")
-      anchors.top: topicLabel.bottom
+      text: Create3Hmi.name
+      placeholderText: qsTr("input robot name")
+      anchors.top: nameLabel.bottom
       anchors.topMargin: 5
       anchors.left: create3ButtonsRectangle.left
       anchors.leftMargin: 10
       onEditingFinished: {
-        Create3Hmi.SetTopic(text)
+        Create3Hmi.SetName(text)
       }
     }
 
