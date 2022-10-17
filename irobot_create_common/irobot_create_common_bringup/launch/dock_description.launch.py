@@ -36,8 +36,7 @@ def generate_launch_description():
         [pkg_create3_description, 'urdf', 'dock', 'standard_dock.urdf.xacro'])
 
     # Launch Configurations
-    x, y, z = LaunchConfiguration('x'), LaunchConfiguration(
-        'y'), LaunchConfiguration('z')
+    x, y, z = LaunchConfiguration('x'), LaunchConfiguration('y'), LaunchConfiguration('z')
     yaw = LaunchConfiguration('yaw')
     visualize_rays = LaunchConfiguration('visualize_rays')
     namespace = LaunchConfiguration('namespace')

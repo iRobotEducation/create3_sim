@@ -28,7 +28,7 @@ def generate_launch_description():
     gazebo_simulator = LaunchConfiguration('gazebo')
     visualize_rays = LaunchConfiguration('visualize_rays')
     namespace = LaunchConfiguration('namespace')
-    frame_prefix = [namespace,'/']
+    frame_prefix = [namespace, '/']
     
     robot_state_publisher = Node(
         package='robot_state_publisher',

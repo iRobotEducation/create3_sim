@@ -67,8 +67,7 @@ def generate_launch_description():
         [pkg_ros_ign_gazebo, 'launch', 'ign_gazebo.launch.py'])
 
     # Launch configurations
-    x, y, z = LaunchConfiguration('x'), LaunchConfiguration(
-        'y'), LaunchConfiguration('z')
+    x, y, z = LaunchConfiguration('x'), LaunchConfiguration('y'), LaunchConfiguration('z')
     yaw = LaunchConfiguration('yaw')
     robot_name = LaunchConfiguration('robot_name')
     world = LaunchConfiguration('world')
@@ -94,6 +93,7 @@ def generate_launch_description():
         launch_arguments={'x': x,
                           'y': y,
                           'z': z,
+                          'yaw': yaw,
                           'robot_name': robot_name,
                           'robot_description': '/robot_description',
                           'world' : world,

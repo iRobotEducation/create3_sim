@@ -1,13 +1,28 @@
 from ament_index_python.packages import get_package_share_directory
-from irobot_create_common_bringup.offset_parser import OffsetParser
 
-from launch import LaunchDescription
+from launch import LaunchContext, LaunchDescription, SomeSubstitutionsType, Substitution
 from launch.actions import DeclareLaunchArgument, IncludeLaunchDescription
 from launch.conditions import IfCondition
 from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch.substitutions import LaunchConfiguration, PathJoinSubstitution
 
 from launch_ros.actions import Node
+
+class OffsetParser(Substitution):
+    def __init__(
+            self,
+            number: SomeSubstitutionsType,
+            offset: float,
+    ) -> None:
+        self.__number = number
+        self.__offset = offset
+
+    def perform(
+            self,
+            context: LaunchContext = None,
+    ) -> str:
+        number = float(self.__number.perform(context))
+        return f'{number + self.__offset}'
 
 ARGUMENTS = [
     DeclareLaunchArgument('gazebo', default_value='ignition',
@@ -110,7 +125,7 @@ def generate_launch_description():
                                  '-x', x_dock,
                                  '-y', y,
                                  '-z', z,
-                                 '-Y', '3.141592',
+                                 '-Y', yaw_dock,
                                  '-topic', namespaced_dock_description],
                       )
 
