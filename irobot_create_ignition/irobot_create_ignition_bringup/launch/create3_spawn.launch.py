@@ -80,7 +80,6 @@ def generate_launch_description():
     namespaced_robot_description = [namespace, '/robot_description']
     namespaced_dock_description = [namespace, '/standard_dock_description']
 
-
     # Robot description
     robot_description_launch = IncludeLaunchDescription(
             PythonLaunchDescriptionSource([robot_description_launch]),
