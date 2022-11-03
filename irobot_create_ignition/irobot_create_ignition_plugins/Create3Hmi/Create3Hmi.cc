@@ -84,9 +84,7 @@ void Create3Hmi::SetName(const QString &_name)
         this->create3_button_topic_), 4000);
     ignerr << "Error when advertising topic: " <<
       this->create3_button_topic_ << std::endl;
-  }
-  else
-  {
+  }else {
     App()->findChild<MainWindow *>()->notifyWithDuration(
       QString::fromStdString("Advertising topic: '<b>" +
         this->create3_button_topic_ + "</b>'"), 4000);

@@ -30,11 +30,12 @@ ARGUMENTS = [
                           choices=['true', 'false'],
                           description='Spawn the standard dock model.'),
     DeclareLaunchArgument('namespace', default_value='',
-                          description='robot namespace'),                   
+                          description='robot namespace'),
 ]
 for pose_element in ['x', 'y', 'z', 'yaw']:
     ARGUMENTS.append(DeclareLaunchArgument(pose_element, default_value='0.0',
                      description=f'{pose_element} component of the robot pose.'))
+
 
 def generate_launch_description():
 
@@ -96,8 +97,8 @@ def generate_launch_description():
                           'yaw': yaw,
                           'robot_name': robot_name,
                           'robot_description': '/robot_description',
-                          'world' : world,
-                          'use_rviz' : LaunchConfiguration('use_rviz'),
+                          'world': world,
+                          'use_rviz': LaunchConfiguration('use_rviz'),
                           'namespace': namespace,
                           'spawn_dock': LaunchConfiguration('spawn_dock'),
                           }.items()

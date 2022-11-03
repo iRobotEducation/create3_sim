@@ -2,10 +2,8 @@
 # @author Roni Kreinin (rkreinin@clearpathrobotics.com)
 
 from ament_index_python.packages import get_package_share_directory
-from irobot_create_common_bringup.replace_string import ReplaceString
 from launch import LaunchDescription
 from launch.actions import DeclareLaunchArgument
-#from launch.conditions import LaunchConfigurationEquals, LaunchConfigurationNotEquals
 from launch.substitutions import LaunchConfiguration, PathJoinSubstitution
 from launch_ros.actions import Node
 
@@ -19,7 +17,7 @@ ARGUMENTS = [
 
 
 def generate_launch_description():
-    
+
     # Directories
     pkg_create3_ignition_bringup = get_package_share_directory('irobot_create_ignition_bringup')
 
@@ -34,7 +32,7 @@ def generate_launch_description():
     pose_republisher_node = Node(
         package='irobot_create_ignition_toolbox',
         name='pose_republisher_node',
-        namespace = namespace,
+        namespace=namespace,
         executable='pose_republisher_node',
         parameters=[pose_republisher_params_yaml_file,
                     {'robot_name': LaunchConfiguration('robot_name')},

@@ -5,10 +5,9 @@
 # Launch Create(R) 3 nodes
 
 from ament_index_python.packages import get_package_share_directory
-from irobot_create_common_bringup.replace_string import ReplaceString
 from launch import LaunchDescription
 from launch.actions import DeclareLaunchArgument, IncludeLaunchDescription
-from launch.conditions import LaunchConfigurationEquals, LaunchConfigurationNotEquals
+from launch.conditions import LaunchConfigurationEquals
 from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch.substitutions import LaunchConfiguration, PathJoinSubstitution
 from launch_ros.actions import Node
@@ -20,6 +19,7 @@ ARGUMENTS = [
     DeclareLaunchArgument('namespace', default_value='',
                           description='Robot namespace')
 ]
+
 
 def generate_launch_description():
 
@@ -156,4 +156,3 @@ def generate_launch_description():
     ld.add_action(ui_mgr_node)
 
     return ld
-    

@@ -257,7 +257,7 @@ void IrOpcode::PublishSensors(const std::array<int, 2> detected_opcodes)
   // First for sensor 0 then sensor 1
   for (size_t k = 0; k < detected_opcodes.size(); k++) {
     const int detected_opcode = detected_opcodes[k];
-    
+
     if (detected_opcode > 0) {
       // Fill msg for this iteration
       auto msg_ = irobot_create_msgs::msg::IrOpcode();

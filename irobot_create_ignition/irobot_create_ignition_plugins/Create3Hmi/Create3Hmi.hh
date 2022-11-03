@@ -44,7 +44,7 @@ public:
   /// \return Name
   Q_INVOKABLE QString Name() const;
 
-public slots: 
+public slots:
   /// \brief Callback in Qt thread when the robot name changes.
   /// \param[in] _name variable to indicate the robot name to
   /// publish the Button commands.

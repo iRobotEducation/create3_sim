@@ -20,11 +20,12 @@ ARGUMENTS = [
 ]
 for pose_element in ['x', 'y', 'z', 'yaw']:
     ARGUMENTS.append(DeclareLaunchArgument(f'{pose_element}', default_value='0.0',
-                                           description=f'{pose_element} component of the dock pose.'))
+                                           description=f'{pose_element} ' +
+                                           'component of the dock pose.'))
 
     ARGUMENTS.append(DeclareLaunchArgument('visualize_rays', default_value='true',
-                                       choices=['true', 'false'],
-                                       description='Enable/disable ray visualization'))
+                                           choices=['true', 'false'],
+                                           description='Enable/disable ray visualization'))
 
 
 def generate_launch_description():
@@ -41,7 +42,7 @@ def generate_launch_description():
     visualize_rays = LaunchConfiguration('visualize_rays')
     namespace = LaunchConfiguration('namespace')
     gazebo_simulator = LaunchConfiguration('gazebo')
-    frame_prefix = [namespace,'/']
+    frame_prefix = [namespace, '/']
 
     state_publisher = Node(
         condition=LaunchConfigurationEquals('namespace', ''),
@@ -70,7 +71,7 @@ def generate_launch_description():
         executable='robot_state_publisher',
         name='dock_state_publisher',
         output='screen',
-        namespace = namespace,
+        namespace=namespace,
         parameters=[
             {'use_sim_time': True},
             {'robot_description':
@@ -104,12 +105,12 @@ def generate_launch_description():
         package='tf2_ros',
         executable='static_transform_publisher',
         name='tf_odom_std_dock_link_publisher',
-        namespace = namespace,
+        namespace=namespace,
         arguments=[x, y, z,
                    # According to documentation (http://wiki.ros.org/tf2_ros):
                    # the order is yaw, pitch, roll
                    yaw, '0', '0',
-                   [namespace,'/odom'], [namespace,'/std_dock_link']],
+                   [namespace, '/odom'], [namespace, '/std_dock_link']],
         output='screen',
     )
 

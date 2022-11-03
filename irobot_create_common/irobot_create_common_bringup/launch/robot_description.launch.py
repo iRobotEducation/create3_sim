@@ -29,7 +29,7 @@ def generate_launch_description():
     visualize_rays = LaunchConfiguration('visualize_rays')
     namespace = LaunchConfiguration('namespace')
     frame_prefix = [namespace, '/']
-    
+
     robot_state_publisher = Node(
         package='robot_state_publisher',
         executable='robot_state_publisher',

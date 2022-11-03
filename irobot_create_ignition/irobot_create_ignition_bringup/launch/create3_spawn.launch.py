@@ -8,6 +8,7 @@ from launch.substitutions import LaunchConfiguration, PathJoinSubstitution
 
 from launch_ros.actions import Node
 
+
 class OffsetParser(Substitution):
     def __init__(
             self,
@@ -23,6 +24,7 @@ class OffsetParser(Substitution):
     ) -> str:
         number = float(self.__number.perform(context))
         return f'{number + self.__offset}'
+
 
 ARGUMENTS = [
     DeclareLaunchArgument('gazebo', default_value='ignition',
@@ -49,6 +51,7 @@ ARGUMENTS = [
 for pose_element in ['x', 'y', 'z', 'yaw']:
     ARGUMENTS.append(DeclareLaunchArgument(pose_element, default_value='0.0',
                      description=f'{pose_element} component of the robot pose.'))
+
 
 def generate_launch_description():
 
@@ -85,7 +88,7 @@ def generate_launch_description():
             PythonLaunchDescriptionSource([robot_description_launch]),
             launch_arguments={'gazebo': 'ignition', 'namespace': namespace}.items())
 
-    # Dock description     
+    # Dock description
     x_dock = OffsetParser(x, 0.157)
     yaw_dock = OffsetParser(yaw, 3.1416)
     dock_description = IncludeLaunchDescription(
@@ -101,7 +104,7 @@ def generate_launch_description():
         PythonLaunchDescriptionSource([rviz2_launch]),
         condition=IfCondition(LaunchConfiguration('use_rviz')),
         launch_arguments={'namespace': namespace}.items()
-    )    
+    )
 
     # Spawn robot
     spawn_robot = Node(
@@ -120,7 +123,7 @@ def generate_launch_description():
     spawn_dock = Node(package='ros_ign_gazebo',
                       executable='create',
                       output='screen',
-                      arguments=['-name', (robot_name,'_standard_dock'),
+                      arguments=['-name', (robot_name, '_standard_dock'),
                                  '-x', x_dock,
                                  '-y', y,
                                  '-z', z,
