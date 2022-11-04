@@ -7,7 +7,6 @@
 from ament_index_python.packages import get_package_share_directory
 from launch import LaunchDescription
 from launch.actions import DeclareLaunchArgument, IncludeLaunchDescription
-from launch.conditions import LaunchConfigurationEquals
 from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch.substitutions import LaunchConfiguration, PathJoinSubstitution
 from launch_ros.actions import Node
@@ -130,7 +129,6 @@ def generate_launch_description():
 
     # UI topics / actions
     ui_mgr_node = Node(
-        condition=LaunchConfigurationEquals('namespace', ''),
         package='irobot_create_nodes',
         name='ui_mgr',
         namespace=namespace,

@@ -18,14 +18,15 @@ ARGUMENTS = [
     DeclareLaunchArgument('namespace', default_value='',
                           description='Create3 namespace')
 ]
+
 for pose_element in ['x', 'y', 'z', 'yaw']:
     ARGUMENTS.append(DeclareLaunchArgument(f'{pose_element}', default_value='0.0',
                                            description=f'{pose_element} ' +
                                            'component of the dock pose.'))
 
-    ARGUMENTS.append(DeclareLaunchArgument('visualize_rays', default_value='true',
-                                           choices=['true', 'false'],
-                                           description='Enable/disable ray visualization'))
+ARGUMENTS.append(DeclareLaunchArgument('visualize_rays', default_value='true',
+                                       choices=['true', 'false'],
+                                       description='Enable/disable ray visualization'))
 
 
 def generate_launch_description():
