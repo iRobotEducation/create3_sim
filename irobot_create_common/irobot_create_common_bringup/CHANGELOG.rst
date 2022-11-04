@@ -2,14 +2,6 @@
 Changelog for package irobot_create_common_bringup
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-1.0.3 (2022-05-05)
-------------------
-
-1.0.2 (2022-05-05)
-------------------
-* update changelog
-* Contributors: Alberto Soragna
-
 1.0.1 (2022-04-12)
 ------------------
 * add boost as explicit dependency and remove unnneded boost usage (`#175 <https://github.com/iRobotEducation/create3_sim/issues/175>`_)

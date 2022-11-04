@@ -2,17 +2,6 @@
 Changelog for package irobot_create_ignition_plugins
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-1.0.3 (2022-05-05)
-------------------
-* make gazebo classic and ignition build time dependency if they are needed by CMakeLists.txt (`#179 <https://github.com/iRobotEducation/create3_sim/issues/179>`_)
-* Contributors: Alberto Soragna
-
-1.0.2 (2022-05-05)
-------------------
-* 1.0.1
-* update changelog
-* Contributors: Alberto Soragna
-
 1.0.1 (2022-04-12)
 ------------------
 * add boost as explicit dependency and remove unnneded boost usage (`#175 <https://github.com/iRobotEducation/create3_sim/issues/175>`_)

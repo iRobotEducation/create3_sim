@@ -2,17 +2,6 @@
 Changelog for package irobot_create_ignition_toolbox
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-1.0.3 (2022-05-05)
-------------------
-
-1.0.2 (2022-05-05)
-------------------
-* Renamed Ignition Toolbox libraries (`#178 <https://github.com/iRobotEducation/create3_sim/issues/178>`_)
-  * Renamed Ignition Toolbox libraries
-  * Pre-pend library names with irobot_create_ignition
-* update changelog
-* Contributors: Alberto Soragna, roni-kreinin
-
 1.0.1 (2022-04-12)
 ------------------
 * add boost as explicit dependency and remove unnneded boost usage (`#175 <https://github.com/iRobotEducation/create3_sim/issues/175>`_)
