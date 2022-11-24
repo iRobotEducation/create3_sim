@@ -13,6 +13,7 @@
 
   <!-- Gazebo version -->
   <xacro:arg name="gazebo"                       default="classic" />
+  <xacro:arg name="is_sim"                       default="true" />
 
   <!-- Mechanical properties -->
   <xacro:property name="body_z_offset"           value="${-2.5*cm2m}" />
@@ -113,22 +114,24 @@
     <origin xyz="0.050613 0.043673 ${0.0202 + base_link_z_offset}"/>
   </xacro:imu_sensor>
 
-  <xacro:if value="${'$(arg gazebo)' == 'classic'}">
-    <gazebo>
-      <plugin name="gazebo_ros2_control" filename="libgazebo_ros2_control.so">
-        <parameters> $(find irobot_create_control)/config/control.yaml </parameters>
-      </plugin>
-    </gazebo>
+  <xacro:if value="$(arg is_sim)">
+    <xacro:if value="${'$(arg gazebo)' == 'classic'}">
+      <gazebo>
+        <plugin name="gazebo_ros2_control" filename="libgazebo_ros2_control.so">
+          <parameters> $(find irobot_create_control)/config/control.yaml </parameters>
+        </plugin>
+      </gazebo>
+    </xacro:if>
+  
+    <xacro:if value="${'$(arg gazebo)' == 'ignition'}">
+      <gazebo>
+        <plugin filename="ign_ros2_control-system" name="ign_ros2_control::IgnitionROS2ControlPlugin">
+          <parameters> $(find irobot_create_control)/config/control.yaml </parameters>
+        </plugin>
+      </gazebo>
+    </xacro:if>
   </xacro:if>
-
-  <xacro:if value="${'$(arg gazebo)' == 'ignition'}">
-    <gazebo>
-      <plugin filename="ign_ros2_control-system" name="ign_ros2_control::IgnitionROS2ControlPlugin">
-        <parameters> $(find irobot_create_control)/config/control.yaml </parameters>
-      </plugin>
-    </gazebo>
-  </xacro:if>
-
+  
   <!-- Mouse -->
   <xacro:optical_mouse gazebo="$(arg gazebo)">
     <origin xyz="0.1015 0.087 ${-0.055 + base_link_z_offset}" rpy="0 0 ${-pi/4}"/>
@@ -230,58 +233,60 @@
   </xacro:ir_opcode_receivers>
 
   <!-- Plugins -->
-  <xacro:if value="${'$(arg gazebo)' == 'classic'}">
-    <!-- Ground truth pose -->
-    <gazebo>
-      <plugin name="gazebo_ros_p3d_robot" filename="libgazebo_ros_p3d.so">
-        <ros>
-          <namespace>/</namespace>
-          <remapping>odom:=sim_ground_truth_pose</remapping>
-        </ros>
-        <body_name>base_link</body_name>
-        <frame_name>world</frame_name>
-        <update_rate>62</update_rate>
-        <xyz_offset>0 0 0</xyz_offset>
-        <rpy_offset>0.0 0.0 0.0</rpy_offset>
-        <gaussian_noise>0.0</gaussian_noise>
-      </plugin>
-    </gazebo>
+  <xacro:if value="$(arg is_sim)">
+    <xacro:if value="${'$(arg gazebo)' == 'classic'}">
+      <!-- Ground truth pose -->
+      <gazebo>
+        <plugin name="gazebo_ros_p3d_robot" filename="libgazebo_ros_p3d.so">
+          <ros>
+            <namespace>/</namespace>
+            <remapping>odom:=sim_ground_truth_pose</remapping>
+          </ros>
+          <body_name>base_link</body_name>
+          <frame_name>world</frame_name>
+          <update_rate>62</update_rate>
+          <xyz_offset>0 0 0</xyz_offset>
+          <rpy_offset>0.0 0.0 0.0</rpy_offset>
+          <gaussian_noise>0.0</gaussian_noise>
+        </plugin>
+      </gazebo>
 
-    <!-- Dock status -->
-    <gazebo>
-      <plugin name="dock_status_publisher" filename="libgazebo_ros_create_docking_status.so">
-        <ros>
-          <namespace>/</namespace>
-          <remapping>~/out:=dock</remapping>
-        </ros>
-        <update_rate>1.0</update_rate>
-        <robot_model_name>${robot_model_name}</robot_model_name>
-        <receiver_link_name>${receiver_link_name}</receiver_link_name>
-        <dock_model_name>${dock_model_name}</dock_model_name>
-        <emitter_link_name>${emitter_link_name}</emitter_link_name>
-      </plugin>
-    </gazebo>
+      <!-- Dock status -->
+      <gazebo>
+        <plugin name="dock_status_publisher" filename="libgazebo_ros_create_docking_status.so">
+          <ros>
+            <namespace>/</namespace>
+            <remapping>~/out:=dock</remapping>
+          </ros>
+          <update_rate>1.0</update_rate>
+          <robot_model_name>${robot_model_name}</robot_model_name>
+          <receiver_link_name>${receiver_link_name}</receiver_link_name>
+          <dock_model_name>${dock_model_name}</dock_model_name>
+          <emitter_link_name>${emitter_link_name}</emitter_link_name>
+        </plugin>
+      </gazebo>
+    </xacro:if>
+
+    <xacro:if value="${'$(arg gazebo)' == 'ignition'}">
+      <gazebo>
+        <plugin filename="libignition-gazebo-pose-publisher-system.so" name="ignition::gazebo::systems::PosePublisher">
+          <publish_link_pose>true</publish_link_pose>
+          <publish_nested_model_pose>true</publish_nested_model_pose>
+          <use_pose_vector_msg>true</use_pose_vector_msg>
+          <update_frequency>62</update_frequency>
+        </plugin>
+      </gazebo>
+      
+      <gazebo>
+        <plugin filename="libignition-gazebo-contact-system.so" name="ignition::gazebo::systems::Contact"></plugin>
+      </gazebo>
+
+      <gazebo>
+        <plugin filename="libignition-gazebo-sensors-system.so" name="ignition::gazebo::systems::Sensors">
+          <render_engine>ogre</render_engine>
+        </plugin>
+      </gazebo>
+    </xacro:if>
   </xacro:if>
-
-  <xacro:if value="${'$(arg gazebo)' == 'ignition'}">
-    <gazebo>
-      <plugin filename="libignition-gazebo-pose-publisher-system.so" name="ignition::gazebo::systems::PosePublisher">
-        <publish_link_pose>true</publish_link_pose>
-        <publish_nested_model_pose>true</publish_nested_model_pose>
-        <use_pose_vector_msg>true</use_pose_vector_msg>
-        <update_frequency>62</update_frequency>
-      </plugin>
-    </gazebo>
-    
-    <gazebo>
-      <plugin filename="libignition-gazebo-contact-system.so" name="ignition::gazebo::systems::Contact"></plugin>
-    </gazebo>
-
-    <gazebo>
-      <plugin filename="libignition-gazebo-sensors-system.so" name="ignition::gazebo::systems::Sensors">
-        <render_engine>ogre</render_engine>
-      </plugin>
-    </gazebo>
-  </xacro:if>
-
+  
 </robot>
