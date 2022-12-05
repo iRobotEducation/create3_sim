@@ -145,6 +145,7 @@ def generate_launch_description():
 
     # odom to base_link transform bridge
     odom_base_tf_bridge = Node(
+                                condition=LaunchConfigurationEquals('namespace', ''),
                                package='ros_ign_bridge',
                                executable='parameter_bridge',
                                namespace=namespace,
@@ -160,6 +161,24 @@ def generate_launch_description():
                                ],
                                remappings=[
                                    (['/model/', robot_name, '/tf'], '/tf')])
+    
+    odom_base_tf_bridge_namespaced = Node(
+                                condition=LaunchConfigurationNotEquals('namespace', ''),
+                               package='ros_ign_bridge',
+                               executable='parameter_bridge',
+                               namespace=namespace,
+                               name='odom_base_tf_bridge',
+                               output='screen',
+                               parameters=[{
+                                   'use_sim_time': use_sim_time
+                               }],
+                               arguments=[
+                                   ['/model/', robot_name, '/tf' +
+                                    '@tf2_msgs/msg/TFMessage' +
+                                    '[ignition.msgs.Pose_V']
+                               ],
+                               remappings=[
+                                   (['/model/', robot_name, '/tf'], ['/', namespace, '/tf'])])
 
     # Bumper contact sensor bridge
     bumper_contact_bridge = Node(
@@ -342,6 +361,7 @@ def generate_launch_description():
     ld.add_action(pose_bridge)
     ld.add_action(pose_bridge_namespaced)
     ld.add_action(odom_base_tf_bridge)
+    ld.add_action(odom_base_tf_bridge_namespaced)
     ld.add_action(bumper_contact_bridge)
     ld.add_action(bumper_contact_bridge_namespaced)
     ld.add_action(cliff_bridge)

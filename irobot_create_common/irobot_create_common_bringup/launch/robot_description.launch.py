@@ -29,13 +29,16 @@ def generate_launch_description():
     visualize_rays = LaunchConfiguration('visualize_rays')
     namespace = LaunchConfiguration('namespace')
     frame_prefix = [namespace, '/']
+    remappings = [('/tf', 'tf'),
+                  ('/tf_static', 'tf_static')]
 
     robot_state_publisher = Node(
         package='robot_state_publisher',
         executable='robot_state_publisher',
         name='robot_state_publisher',
-        namespace=LaunchConfiguration('namespace'),
+        namespace=namespace,
         output='screen',
+        remappings=remappings,
         parameters=[
             {'use_sim_time': True},
             {'robot_description':
@@ -55,6 +58,7 @@ def generate_launch_description():
         name='joint_state_publisher',
         namespace=LaunchConfiguration('namespace'),
         output='screen',
+        remappings=remappings,
     )
 
     # Define LaunchDescription variable
