@@ -24,7 +24,7 @@ ARGUMENTS = [
                           description='Ignition World'),
     DeclareLaunchArgument('robot_name', default_value='create3',
                           description='Robot name'),
-    DeclareLaunchArgument('use_rviz', default_value='false',
+    DeclareLaunchArgument('use_rviz', default_value='true',
                           choices=['true', 'false'], description='Start rviz.'),
     DeclareLaunchArgument('spawn_dock', default_value='true',
                           choices=['true', 'false'],

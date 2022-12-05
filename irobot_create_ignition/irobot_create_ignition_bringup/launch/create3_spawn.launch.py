@@ -41,7 +41,7 @@ ARGUMENTS = [
                           description='robot description topic name'),
     DeclareLaunchArgument('namespace', default_value='',
                           description='Robot namespace'),
-    DeclareLaunchArgument('use_rviz', default_value='false',
+    DeclareLaunchArgument('use_rviz', default_value='true',
                           choices=['true', 'false'], description='Start rviz.'),
     DeclareLaunchArgument('spawn_dock', default_value='true',
                           choices=['true', 'false'],
