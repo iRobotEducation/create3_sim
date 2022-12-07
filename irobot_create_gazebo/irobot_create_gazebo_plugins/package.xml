@@ -2,7 +2,7 @@
 <?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
 <package format="3">
   <name>irobot_create_gazebo_plugins</name>
-  <version>1.0.1</version>
+  <version>1.0.3</version>
   <description>Provides the Gazebo plugins for the iRobot(R) Create(R) 3 Educational Robot.</description>
   <maintainer email="ekumen@irbt.onmicrosoft.com">Ekumen</maintainer>
   <license>BSD</license>

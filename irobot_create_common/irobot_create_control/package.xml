@@ -2,7 +2,7 @@
 <?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
 <package format="3">
   <name>irobot_create_control</name>
-  <version>1.0.1</version>
+  <version>1.0.3</version>
   <description>Provides the diff-drive controller for the iRobot(R) Create(R) 3 Educational Robot.</description>
   <maintainer email="ekumen@irbt.onmicrosoft.com">Ekumen</maintainer>
   <license>BSD</license>
@@ -11,6 +11,9 @@
 
   <buildtool_depend>ament_cmake</buildtool_depend>
 
+  <exec_depend>gazebo_ros2_control</exec_depend>
+  <exec_depend>ign_ros2_control</exec_depend>
+  <exec_depend>irobot_create_nodes</exec_depend>
   <exec_depend>joint_state_broadcaster</exec_depend>
   <exec_depend>ros2launch</exec_depend>
   <exec_depend>ros2_controllers</exec_depend>

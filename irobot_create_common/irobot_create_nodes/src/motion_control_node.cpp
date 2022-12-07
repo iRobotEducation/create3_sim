@@ -136,7 +136,6 @@ MotionControlNode::MotionControlNode(const rclcpp::NodeOptions & options)
     std::bind(&MotionControlNode::set_parameters_callback, this, _1));
 
   auto_override_print_ts_ = this->now();
-
   current_state_.pose.setIdentity();
   last_backup_pose_.setIdentity();
   last_teleop_ts_ = this->now();

@@ -5,30 +5,40 @@
 
 from ament_index_python.packages import get_package_share_directory
 from launch import LaunchDescription
-from launch.actions import RegisterEventHandler
+from launch.actions import DeclareLaunchArgument, RegisterEventHandler
+from launch.conditions import LaunchConfigurationEquals, LaunchConfigurationNotEquals
 from launch.event_handlers import OnProcessExit
-from launch.substitutions import PathJoinSubstitution
+from launch.substitutions import LaunchConfiguration, PathJoinSubstitution
 from launch_ros.actions import Node
+
+ARGUMENTS = [
+    DeclareLaunchArgument('namespace', default_value='',
+                          description='Robot namespace')
+]
 
 
 def generate_launch_description():
+    namespace = LaunchConfiguration('namespace')
+    namespaced_node_name = [namespace, '/controller_manager']
     pkg_create3_control = get_package_share_directory('irobot_create_control')
 
     control_params_file = PathJoinSubstitution(
         [pkg_create3_control, 'config', 'control.yaml'])
 
     diffdrive_controller_node = Node(
+        condition=LaunchConfigurationEquals('namespace', ''),
         package='controller_manager',
         executable='spawner',
         parameters=[control_params_file],
-        arguments=['diffdrive_controller', '-c', '/controller_manager'],
+        arguments=['diffdrive_controller', '-c', namespaced_node_name],
         output='screen',
     )
 
     joint_state_broadcaster_spawner = Node(
+        condition=LaunchConfigurationEquals('namespace', ''),
         package='controller_manager',
         executable='spawner',
-        arguments=['joint_state_broadcaster', '-c', '/controller_manager'],
+        arguments=['joint_state_broadcaster', '-c', namespaced_node_name],
         output='screen',
     )
 
@@ -40,9 +50,39 @@ def generate_launch_description():
         )
     )
 
-    ld = LaunchDescription()
+    # Launch with namespace
+    diffdrive_controller_node_namespaced = Node(
+        condition=LaunchConfigurationNotEquals('namespace', ''),
+        package='controller_manager',
+        executable='spawner',
+        namespace=namespace,
+        parameters=[control_params_file],
+        arguments=['diffdrive_controller', '-c', namespaced_node_name, '-n', namespace],
+        output='screen',
+    )
 
+    joint_state_broadcaster_spawner_namespaced = Node(
+        condition=LaunchConfigurationNotEquals('namespace', ''),
+        package='controller_manager',
+        executable='spawner',
+        namespace=namespace,
+        arguments=['joint_state_broadcaster', '-c', namespaced_node_name, '-n', namespace],
+        output='screen',
+    )
+
+    # Ensure diffdrive_controller_node starts after joint_state_broadcaster_spawner
+    diffdrive_controller_callback_namespaced = RegisterEventHandler(
+        event_handler=OnProcessExit(
+            target_action=joint_state_broadcaster_spawner_namespaced,
+            on_exit=[diffdrive_controller_node_namespaced],
+        )
+    )
+
+    # Define LaunchDescription variable
+    ld = LaunchDescription(ARGUMENTS)
     ld.add_action(joint_state_broadcaster_spawner)
     ld.add_action(diffdrive_controller_callback)
+    ld.add_action(joint_state_broadcaster_spawner_namespaced)
+    ld.add_action(diffdrive_controller_callback_namespaced)
 
     return ld
