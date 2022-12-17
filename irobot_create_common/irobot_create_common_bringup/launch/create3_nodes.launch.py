@@ -72,7 +72,9 @@ def generate_launch_description():
         package='irobot_create_nodes',
         name='motion_control',
         executable='motion_control',
-        parameters=[{'use_sim_time': True}],
+        parameters=[
+            {'safety_override': 'full'},
+            {'use_sim_time': True}],
         output='screen',
     )
 
