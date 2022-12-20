@@ -14,6 +14,7 @@
   <exec_depend>joint_state_broadcaster</exec_depend>
   <exec_depend>ros2launch</exec_depend>
   <exec_depend>ros2_controllers</exec_depend>
+  <exec_depend>rsl</exec_depend>
 
   <test_depend>ament_lint_auto</test_depend>
   <test_depend>ament_cmake_flake8</test_depend>
