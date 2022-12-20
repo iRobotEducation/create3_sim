@@ -10,7 +10,7 @@
 #include <vector>
 
 #include "geometry_msgs/msg/pose.hpp"
-#include "irobot_create_msgs/msg/dock.hpp"
+#include "irobot_create_msgs/msg/dock_status.hpp"
 #include "irobot_create_msgs/msg/hazard_detection.hpp"
 #include "irobot_create_msgs/msg/hazard_detection_vector.hpp"
 #include "irobot_create_msgs/msg/stop_status.hpp"
@@ -30,7 +30,7 @@ public:
 
 private:
   // Callback functions
-  void dock_callback(irobot_create_msgs::msg::Dock::SharedPtr msg);
+  void dock_callback(irobot_create_msgs::msg::DockStatus::SharedPtr msg);
   void stop_callback(nav_msgs::msg::Odometry::SharedPtr msg);
 
   double get_docked_charge_percentage(const rclcpp::Time & at_time);
@@ -45,7 +45,7 @@ private:
   rclcpp::Publisher<irobot_create_msgs::msg::StopStatus>::SharedPtr stop_status_publisher_{nullptr};
 
   // Subscribers
-  rclcpp::Subscription<irobot_create_msgs::msg::Dock>::SharedPtr dock_subscription_;
+  rclcpp::Subscription<irobot_create_msgs::msg::DockStatus>::SharedPtr dock_subscription_;
   rclcpp::Subscription<nav_msgs::msg::Odometry>::SharedPtr stop_status_subscription_;
 
   // Topic to publish battery state to

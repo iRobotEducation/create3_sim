@@ -6,9 +6,9 @@
 
 #include <stdint.h>
 
-#include <irobot_create_msgs/action/dock_servo.hpp>
+#include <irobot_create_msgs/action/dock.hpp>
 #include <irobot_create_msgs/action/undock.hpp>
-#include <irobot_create_msgs/msg/dock.hpp>
+#include <irobot_create_msgs/msg/dock_status.hpp>
 #include <irobot_create_nodes/motion_control/behaviors_scheduler.hpp>
 #include <irobot_create_nodes/motion_control/simple_goal_controller.hpp>
 #include <nav_msgs/msg/odometry.hpp>
@@ -45,7 +45,7 @@ private:
     const tf2::Transform & docked_robot_pose,
     const tf2::Transform & dock_pose);
 
-  void dock_status_callback(irobot_create_msgs::msg::Dock::ConstSharedPtr msg);
+  void dock_status_callback(irobot_create_msgs::msg::DockStatus::ConstSharedPtr msg);
 
   void robot_pose_callback(nav_msgs::msg::Odometry::ConstSharedPtr msg);
 
@@ -53,19 +53,19 @@ private:
 
   rclcpp_action::GoalResponse handle_dock_servo_goal(
     const rclcpp_action::GoalUUID & uuid,
-    std::shared_ptr<const irobot_create_msgs::action::DockServo::Goal> goal);
+    std::shared_ptr<const irobot_create_msgs::action::Dock::Goal> goal);
 
   rclcpp_action::CancelResponse handle_dock_servo_cancel(
     const std::shared_ptr<
-      rclcpp_action::ServerGoalHandle<irobot_create_msgs::action::DockServo>> goal_handle);
+      rclcpp_action::ServerGoalHandle<irobot_create_msgs::action::Dock>> goal_handle);
 
   void handle_dock_servo_accepted(
     const std::shared_ptr<
-      rclcpp_action::ServerGoalHandle<irobot_create_msgs::action::DockServo>> goal_handle);
+      rclcpp_action::ServerGoalHandle<irobot_create_msgs::action::Dock>> goal_handle);
 
   BehaviorsScheduler::optional_output_t execute_dock_servo(
     const std::shared_ptr<
-      rclcpp_action::ServerGoalHandle<irobot_create_msgs::action::DockServo>> goal_handle,
+      rclcpp_action::ServerGoalHandle<irobot_create_msgs::action::Dock>> goal_handle,
     const RobotState & current_state);
 
   rclcpp_action::GoalResponse handle_undock_goal(
@@ -85,10 +85,10 @@ private:
       rclcpp_action::ServerGoalHandle<irobot_create_msgs::action::Undock>> goal_handle,
     const RobotState & current_state);
 
-  rclcpp_action::Server<irobot_create_msgs::action::DockServo>::SharedPtr docking_action_server_;
+  rclcpp_action::Server<irobot_create_msgs::action::Dock>::SharedPtr docking_action_server_;
   rclcpp_action::Server<irobot_create_msgs::action::Undock>::SharedPtr undocking_action_server_;
 
-  rclcpp::Subscription<irobot_create_msgs::msg::Dock>::SharedPtr dock_status_sub_;
+  rclcpp::Subscription<irobot_create_msgs::msg::DockStatus>::SharedPtr dock_status_sub_;
   rclcpp::Subscription<nav_msgs::msg::Odometry>::SharedPtr robot_pose_sub_;
   rclcpp::Subscription<nav_msgs::msg::Odometry>::SharedPtr dock_pose_sub_;
 

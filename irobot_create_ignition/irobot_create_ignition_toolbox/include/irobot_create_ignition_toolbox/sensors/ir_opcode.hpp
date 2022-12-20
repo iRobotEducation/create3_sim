@@ -14,7 +14,7 @@
 #include <memory>
 
 #include "irobot_create_msgs/msg/ir_opcode.hpp"
-#include "irobot_create_msgs/msg/dock.hpp"
+#include "irobot_create_msgs/msg/dock_status.hpp"
 #include "nav_msgs/msg/odometry.hpp"
 #include "irobot_create_ignition_toolbox/utils.hpp"
 #include "irobot_create_toolbox/polar_coordinates.hpp"
@@ -75,7 +75,7 @@ private:
   rclcpp::TimerBase::SharedPtr dock_status_timer_;
 
   rclcpp::Publisher<irobot_create_msgs::msg::IrOpcode>::SharedPtr ir_opcode_pub_;
-  rclcpp::Publisher<irobot_create_msgs::msg::Dock>::SharedPtr dock_pub_;
+  rclcpp::Publisher<irobot_create_msgs::msg::DockStatus>::SharedPtr dock_pub_;
 
   rclcpp::Subscription<nav_msgs::msg::Odometry>::SharedPtr emitter_pose_sub_;
   rclcpp::Subscription<nav_msgs::msg::Odometry>::SharedPtr receiver_pose_sub_;

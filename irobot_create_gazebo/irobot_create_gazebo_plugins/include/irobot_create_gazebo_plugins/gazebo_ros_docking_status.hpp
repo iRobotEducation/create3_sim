@@ -12,7 +12,7 @@
 #include <gazebo_ros/node.hpp>
 #include <irobot_create_gazebo_plugins/docking_manager.hpp>
 #include <irobot_create_gazebo_plugins/gazebo_ros_helpers.hpp>
-#include <irobot_create_msgs/msg/dock.hpp>
+#include <irobot_create_msgs/msg/dock_status.hpp>
 #include <irobot_create_msgs/msg/ir_opcode.hpp>
 
 #include <cmath>
@@ -64,10 +64,10 @@ private:
   gazebo_ros::Node::SharedPtr ros_node_{nullptr};
 
   /// ROS Dock message
-  irobot_create_msgs::msg::Dock msg_;
+  irobot_create_msgs::msg::DockStatus msg_;
 
   /// ROS publisher
-  rclcpp::Publisher<irobot_create_msgs::msg::Dock>::SharedPtr pub_{nullptr};
+  rclcpp::Publisher<irobot_create_msgs::msg::DockStatus>::SharedPtr pub_{nullptr};
 
   /// ROS Subscription
   rclcpp::Subscription<irobot_create_msgs::msg::IrOpcode>::SharedPtr sub_{nullptr};

@@ -24,7 +24,7 @@ DockingBehavior::DockingBehavior(
   behavior_scheduler_ = behavior_scheduler;
   last_feedback_time_ = clock_->now();
 
-  dock_status_sub_ = rclcpp::create_subscription<irobot_create_msgs::msg::Dock>(
+  dock_status_sub_ = rclcpp::create_subscription<irobot_create_msgs::msg::DockStatus>(
     node_topics_interface,
     "dock",
     rclcpp::SensorDataQoS(),
@@ -42,7 +42,7 @@ DockingBehavior::DockingBehavior(
     rclcpp::SensorDataQoS(),
     std::bind(&DockingBehavior::dock_pose_callback, this, _1));
 
-  docking_action_server_ = rclcpp_action::create_server<irobot_create_msgs::action::DockServo>(
+  docking_action_server_ = rclcpp_action::create_server<irobot_create_msgs::action::Dock>(
     node_base_interface,
     node_clock_interface,
     node_logging_interface,
@@ -79,7 +79,7 @@ bool DockingBehavior::docking_behavior_is_done()
 
 rclcpp_action::GoalResponse DockingBehavior::handle_dock_servo_goal(
   const rclcpp_action::GoalUUID & /*uuid*/,
-  std::shared_ptr<const irobot_create_msgs::action::DockServo::Goal>/*goal*/)
+  std::shared_ptr<const irobot_create_msgs::action::Dock::Goal>/*goal*/)
 {
   RCLCPP_INFO(logger_, "Received new dock servo goal");
 
@@ -101,7 +101,7 @@ rclcpp_action::GoalResponse DockingBehavior::handle_dock_servo_goal(
 
 rclcpp_action::CancelResponse DockingBehavior::handle_dock_servo_cancel(
   const std::shared_ptr<
-    rclcpp_action::ServerGoalHandle<irobot_create_msgs::action::DockServo>>/*goal_handle*/)
+    rclcpp_action::ServerGoalHandle<irobot_create_msgs::action::Dock>>/*goal_handle*/)
 {
   RCLCPP_INFO(logger_, "Received request to cancel dock servo goal");
   return rclcpp_action::CancelResponse::ACCEPT;
@@ -109,7 +109,7 @@ rclcpp_action::CancelResponse DockingBehavior::handle_dock_servo_cancel(
 
 void DockingBehavior::handle_dock_servo_accepted(
   const std::shared_ptr<
-    rclcpp_action::ServerGoalHandle<irobot_create_msgs::action::DockServo>> goal_handle)
+    rclcpp_action::ServerGoalHandle<irobot_create_msgs::action::Dock>> goal_handle)
 {
   // Create new Docking state machine
   running_dock_action_ = true;
@@ -161,7 +161,7 @@ void DockingBehavior::handle_dock_servo_accepted(
   if (!ret) {
     // for some reason we couldn't set the new behavior, treat this as a goal being cancelled
     RCLCPP_WARN(logger_, "Dock Servo behavior failed to start");
-    auto result = std::make_shared<irobot_create_msgs::action::DockServo::Result>();
+    auto result = std::make_shared<irobot_create_msgs::action::Dock::Result>();
     result->is_docked = is_docked_;
     goal_handle->abort(result);
     running_dock_action_ = false;
@@ -171,13 +171,13 @@ void DockingBehavior::handle_dock_servo_accepted(
 
 BehaviorsScheduler::optional_output_t DockingBehavior::execute_dock_servo(
   const std::shared_ptr<
-    rclcpp_action::ServerGoalHandle<irobot_create_msgs::action::DockServo>> goal_handle,
+    rclcpp_action::ServerGoalHandle<irobot_create_msgs::action::Dock>> goal_handle,
   const RobotState & /*current_state*/)
 {
   BehaviorsScheduler::optional_output_t servo_cmd;
   // Handle if goal is cancelling
   if (goal_handle->is_canceling()) {
-    auto result = std::make_shared<irobot_create_msgs::action::DockServo::Result>();
+    auto result = std::make_shared<irobot_create_msgs::action::Dock::Result>();
     result->is_docked = is_docked_;
     goal_handle->canceled(result);
     goal_controller_.reset();
@@ -198,7 +198,7 @@ BehaviorsScheduler::optional_output_t DockingBehavior::execute_dock_servo(
   }
   servo_cmd = goal_controller_.get_velocity_for_position(robot_pose);
   if (!servo_cmd || exceeded_runtime) {
-    auto result = std::make_shared<irobot_create_msgs::action::DockServo::Result>();
+    auto result = std::make_shared<irobot_create_msgs::action::Dock::Result>();
     if (is_docked_) {
       result->is_docked = true;
       RCLCPP_INFO(logger_, "Dock Servo Goal Succeeded");
@@ -217,7 +217,7 @@ BehaviorsScheduler::optional_output_t DockingBehavior::execute_dock_servo(
   auto time_since_feedback = current_time - last_feedback_time_;
   if (time_since_feedback > report_feedback_interval_) {
     // Publish feedback
-    auto feedback = std::make_shared<irobot_create_msgs::action::DockServo::Feedback>();
+    auto feedback = std::make_shared<irobot_create_msgs::action::Dock::Feedback>();
     feedback->sees_dock = sees_dock_;
     goal_handle->publish_feedback(feedback);
     last_feedback_time_ = current_time;
@@ -354,7 +354,7 @@ BehaviorsScheduler::optional_output_t DockingBehavior::execute_undock(
   return servo_cmd;
 }
 
-void DockingBehavior::dock_status_callback(irobot_create_msgs::msg::Dock::ConstSharedPtr msg)
+void DockingBehavior::dock_status_callback(irobot_create_msgs::msg::DockStatus::ConstSharedPtr msg)
 {
   is_docked_ = msg->is_docked;
   sees_dock_ = msg->dock_visible;
