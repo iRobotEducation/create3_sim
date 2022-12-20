@@ -29,7 +29,7 @@ RobotState::RobotState(const rclcpp::NodeOptions & options)
 
   // Subscriber topics
   dock_subscription_topic_ =
-    this->declare_parameter("dock_topic", "/dock");
+    this->declare_parameter("dock_topic", "/dock_status");
   wheel_vels_subscription_topic_ =
     this->declare_parameter("wheel_vels_topic", "/odom");
 

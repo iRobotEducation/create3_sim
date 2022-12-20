@@ -29,7 +29,7 @@ IrOpcode::IrOpcode(std::shared_ptr<rclcpp::Node> & nh)
     rclcpp::SensorDataQoS());
 
   dock_pub_ = nh_->create_publisher<irobot_create_msgs::msg::DockStatus>(
-    "dock",
+    "dock_status",
     rclcpp::SensorDataQoS());
 
   auto sensor_0_fov =

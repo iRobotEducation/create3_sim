@@ -252,7 +252,7 @@
       <plugin name="dock_status_publisher" filename="libgazebo_ros_create_docking_status.so">
         <ros>
           <namespace>/</namespace>
-          <remapping>~/out:=dock</remapping>
+          <remapping>~/out:=dock_status</remapping>
         </ros>
         <update_rate>1.0</update_rate>
         <robot_model_name>${robot_model_name}</robot_model_name>

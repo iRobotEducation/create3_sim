@@ -26,7 +26,7 @@ DockingBehavior::DockingBehavior(
 
   dock_status_sub_ = rclcpp::create_subscription<irobot_create_msgs::msg::DockStatus>(
     node_topics_interface,
-    "dock",
+    "dock_status",
     rclcpp::SensorDataQoS(),
     std::bind(&DockingBehavior::dock_status_callback, this, _1));
 
