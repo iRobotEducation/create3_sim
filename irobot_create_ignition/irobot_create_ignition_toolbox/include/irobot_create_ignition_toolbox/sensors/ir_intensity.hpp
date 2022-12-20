@@ -6,16 +6,14 @@
 #ifndef IROBOT_CREATE_IGNITION_TOOLBOX__SENSORS__IR_INTENSITY_HPP_
 #define IROBOT_CREATE_IGNITION_TOOLBOX__SENSORS__IR_INTENSITY_HPP_
 
-#include <rclcpp/rclcpp.hpp>
-
-#include <memory>
-#include <vector>
-#include <string>
 #include <map>
+#include <memory>
+#include <string>
+#include <vector>
 
-#include "sensor_msgs/msg/laser_scan.hpp"
 #include "irobot_create_msgs/msg/ir_intensity.hpp"
-
+#include "rclcpp/rclcpp.hpp"
+#include "sensor_msgs/msg/laser_scan.hpp"
 
 namespace irobot_create_ignition_toolbox
 {

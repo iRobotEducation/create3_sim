@@ -6,15 +6,13 @@
 #ifndef IROBOT_CREATE_IGNITION_TOOLBOX__SENSORS__WHEEL_DROP_HPP_
 #define IROBOT_CREATE_IGNITION_TOOLBOX__SENSORS__WHEEL_DROP_HPP_
 
-#include <rclcpp/rclcpp.hpp>
-
 #include <map>
 #include <memory>
 #include <string>
 
-#include "sensor_msgs/msg/joint_state.hpp"
 #include "irobot_create_msgs/msg/hazard_detection.hpp"
-
+#include "rclcpp/rclcpp.hpp"
+#include "sensor_msgs/msg/joint_state.hpp"
 
 namespace irobot_create_ignition_toolbox
 {
