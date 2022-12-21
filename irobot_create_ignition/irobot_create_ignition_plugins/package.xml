@@ -9,7 +9,9 @@
 
   <buildtool_depend>ament_cmake</buildtool_depend>
 
-  <depend>ignition-gui6</depend>
+  <depend>ignition-common4</depend>
+  <depend>ignition-gazebo6</depend>
+  <depend>ignition-plugin</depend>
 
   <test_depend>ament_lint_auto</test_depend>
   <test_depend>ament_cmake_cppcheck</test_depend>
