@@ -18,7 +18,8 @@
   <exec_depend>irobot_create_ignition_plugins</exec_depend>
 
   <!-- ROS IGN -->
-  <exec_depend>gazebo_ros2_control</exec_depend>
+  <!-- ign_ros2_control is required, but it's commented out because not available in Humble-->
+  <!-- <exec_depend>ign_ros2_control</exec_depend> -->
   <exec_depend>ros_ign_gazebo</exec_depend>
   <exec_depend>ros_ign_bridge</exec_depend>
 

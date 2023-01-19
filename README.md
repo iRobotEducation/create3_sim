@@ -5,13 +5,15 @@
 This is a ROS 2 simulation stack for the [iRobot® Create® 3](https://edu.irobot.com/create3) robot.
 Both Ignition Gazebo and Classic Gazebo are supported.
 
+> :warning: **Running with Ignition Gazebo requires to first build and install the `gz_ros2_control` package master branch from sources!**
+
 Have a look at the [Create® 3 documentation](https://iroboteducation.github.io/create3_docs/) for more details on the ROS 2 interfaces exposed by the robot.
 
 ## Prerequisites
 
 Required dependencies:
 
-1. [ROS 2 galactic](https://docs.ros.org/en/galactic/Installation/Ubuntu-Install-Debians.html)
+1. [ROS 2 humble](https://docs.ros.org/en/humble/Installation/Ubuntu-Install-Debians.html)
 2. ROS 2 dev tools:
     - [colcon-common-extensions](https://pypi.org/project/colcon-common-extensions/)
     - [rosdep](https://pypi.org/project/rosdep/): Used to install dependencies when building from sources
