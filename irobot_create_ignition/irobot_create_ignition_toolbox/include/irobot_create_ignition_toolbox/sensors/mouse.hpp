@@ -6,17 +6,14 @@
 #ifndef IROBOT_CREATE_IGNITION_TOOLBOX__SENSORS__MOUSE_HPP_
 #define IROBOT_CREATE_IGNITION_TOOLBOX__SENSORS__MOUSE_HPP_
 
-#include <tf2_geometry_msgs/tf2_geometry_msgs.h>
-
-#include <rclcpp/rclcpp.hpp>
-
 #include <atomic>
 #include <chrono>
 #include <memory>
 
-#include "nav_msgs/msg/odometry.hpp"
 #include "irobot_create_msgs/msg/mouse.hpp"
-
+#include "nav_msgs/msg/odometry.hpp"
+#include "rclcpp/rclcpp.hpp"
+#include "tf2_geometry_msgs/tf2_geometry_msgs.hpp"
 
 namespace irobot_create_ignition_toolbox
 {

@@ -29,7 +29,7 @@ RobotState::RobotState(const rclcpp::NodeOptions & options)
 
   // Subscriber topics
   dock_subscription_topic_ =
-    this->declare_parameter("dock_topic", "/dock");
+    this->declare_parameter("dock_topic", "/dock_status");
   wheel_vels_subscription_topic_ =
     this->declare_parameter("wheel_vels_topic", "/odom");
 
@@ -55,7 +55,7 @@ RobotState::RobotState(const rclcpp::NodeOptions & options)
     this->declare_parameter("battery_high_percentage", 0.9);
 
   // Subscription to the hazard detection vector
-  dock_subscription_ = create_subscription<irobot_create_msgs::msg::Dock>(
+  dock_subscription_ = create_subscription<irobot_create_msgs::msg::DockStatus>(
     dock_subscription_topic_, rclcpp::SensorDataQoS(),
     std::bind(&RobotState::dock_callback, this, std::placeholders::_1));
   RCLCPP_INFO_STREAM(get_logger(), "Subscription to topic: " << dock_subscription_topic_);
@@ -155,7 +155,7 @@ double RobotState::get_undocked_charge_percentage(const rclcpp::Time & at_time)
   return undocked_charge;
 }
 
-void RobotState::dock_callback(irobot_create_msgs::msg::Dock::SharedPtr msg)
+void RobotState::dock_callback(irobot_create_msgs::msg::DockStatus::SharedPtr msg)
 {
   if (!is_docked_ && msg->is_docked) {
     rclcpp::Time current_time = this->now();

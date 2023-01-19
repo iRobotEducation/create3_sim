@@ -6,16 +6,14 @@
 #ifndef IROBOT_CREATE_IGNITION_TOOLBOX__SENSORS__CLIFF_HPP_
 #define IROBOT_CREATE_IGNITION_TOOLBOX__SENSORS__CLIFF_HPP_
 
-#include <rclcpp/rclcpp.hpp>
-
 #include <memory>
-#include <vector>
-#include <string>
 #include <map>
+#include <string>
+#include <vector>
 
-#include "sensor_msgs/msg/laser_scan.hpp"
 #include "irobot_create_msgs/msg/hazard_detection.hpp"
-
+#include "rclcpp/rclcpp.hpp"
+#include "sensor_msgs/msg/laser_scan.hpp"
 
 namespace irobot_create_ignition_toolbox
 {

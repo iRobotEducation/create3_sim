@@ -2,7 +2,7 @@
 <robot xmlns:xacro="http://ros.org/wiki/xacro">
   <xacro:macro name="ir_emitter" params="name parent:=base_link *origin
                                          gazebo
-                                         range
+                                         max_range
                                          aperture
                                          update_rate:=1.0
                                          min_range:=${7*cm2m}
@@ -31,7 +31,7 @@
         <xacro:ray_sensor sensor_name="${name}" gazebo="${gazebo}" 
                       update_rate="${update_rate}" visualize="${visualize}" 
                       h_samples="50" h_res="1.0" h_min_angle="-${aperture/2}" h_max_angle="${aperture/2}" 
-                      r_min="${min_range}" r_max="${range}" r_res="0.01">
+                      r_min="${min_range}" r_max="${max_range}" r_res="0.01">
                       <plugin name="dummy" filename="dummyfile"></plugin>
         </xacro:ray_sensor>
       </gazebo>

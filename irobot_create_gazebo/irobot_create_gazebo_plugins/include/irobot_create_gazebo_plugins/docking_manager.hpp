@@ -4,14 +4,14 @@
 #ifndef IROBOT_CREATE_GAZEBO_PLUGINS__DOCKING_MANAGER_HPP_
 #define IROBOT_CREATE_GAZEBO_PLUGINS__DOCKING_MANAGER_HPP_
 
+#include <cmath>
+#include <memory>
+#include <string>
+
 #include <gazebo/common/Plugin.hh>
 #include <gazebo/physics/Link.hh>
 #include <gazebo/physics/Model.hh>
 #include <gazebo/physics/World.hh>
-
-#include <cmath>
-#include <memory>
-#include <string>
 
 #include "irobot_create_gazebo_plugins/gazebo_ros_helpers.hpp"
 #include "irobot_create_toolbox/polar_coordinates.hpp"

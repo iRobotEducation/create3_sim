@@ -31,7 +31,7 @@ IrIntensity::IrIntensity(std::shared_ptr<rclcpp::Node> & nh)
   auto ir_intensity_pub_topics =
     nh_->declare_parameter("ir_intensity_publish_topics", std::vector<std::string>());
 
-  for (std::string topic : ir_scan_sub_topics) {
+  for (const std::string & topic : ir_scan_sub_topics) {
     ir_scan_sub_.push_back(
       nh_->create_subscription<sensor_msgs::msg::LaserScan>(
         topic,
@@ -39,8 +39,8 @@ IrIntensity::IrIntensity(std::shared_ptr<rclcpp::Node> & nh)
         std::bind(&IrIntensity::ir_scan_callback, this, std::placeholders::_1)));
   }
 
-  for (std::string topic : ir_intensity_pub_topics) {
-    for (const std::string sensor : ir_intensity_sensors_) {
+  for (const std::string & topic : ir_intensity_pub_topics) {
+    for (const std::string & sensor : ir_intensity_sensors_) {
       if (topic.find(sensor) != std::string::npos) {
         ir_intensity_pub_[sensor] = nh_->create_publisher<
           irobot_create_msgs::msg::IrIntensity>(
@@ -70,7 +70,7 @@ void IrIntensity::ir_scan_callback(const sensor_msgs::msg::LaserScan::SharedPtr 
     scaled_detection);
 
   // Publish to appropriate topic
-  for (const std::string sensor : ir_intensity_sensors_) {
+  for (const std::string & sensor : ir_intensity_sensors_) {
     if (ir_msg->header.frame_id.find(sensor) != std::string::npos) {
       ir_intensity_pub_[sensor]->publish(ir_intensity_msg);
     }

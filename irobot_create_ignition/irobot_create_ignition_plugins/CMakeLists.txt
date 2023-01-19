@@ -11,11 +11,12 @@ find_package(ament_cmake REQUIRED)
 set(OpenGL_GL_PREFERENCE LEGACY)
 
 # Find the Ignition gui library
-find_package(ignition-gui5 QUIET)
 find_package(ignition-common4 QUIET)
+find_package(ignition-gazebo6 QUIET)
+find_package(ignition-plugin1 QUIET)
 
-if(NOT ignition-gui5_FOUND OR NOT ignition-common4_FOUND)
-  message(WARNING "Ignition GUI not found. Skipping ${PROJECT_NAME} package.")
+if(NOT ignition-gazebo6_FOUND OR NOT ignition-common4_FOUND OR NOT ignition-plugin1_FOUND)
+  message(WARNING "Ignition not found. Skipping ${PROJECT_NAME} package.")
   ament_package()
   return()
 endif()

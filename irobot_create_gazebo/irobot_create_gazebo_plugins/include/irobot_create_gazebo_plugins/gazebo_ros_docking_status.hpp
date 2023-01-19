@@ -4,6 +4,9 @@
 #ifndef IROBOT_CREATE_GAZEBO_PLUGINS__GAZEBO_ROS_DOCKING_STATUS_HPP_
 #define IROBOT_CREATE_GAZEBO_PLUGINS__GAZEBO_ROS_DOCKING_STATUS_HPP_
 
+#include <cmath>
+#include <memory>
+
 #include <gazebo/common/Plugin.hh>
 #include <gazebo/physics/Link.hh>
 #include <gazebo/physics/Model.hh>
@@ -12,11 +15,8 @@
 #include <gazebo_ros/node.hpp>
 #include <irobot_create_gazebo_plugins/docking_manager.hpp>
 #include <irobot_create_gazebo_plugins/gazebo_ros_helpers.hpp>
-#include <irobot_create_msgs/msg/dock.hpp>
+#include <irobot_create_msgs/msg/dock_status.hpp>
 #include <irobot_create_msgs/msg/ir_opcode.hpp>
-
-#include <cmath>
-#include <memory>
 
 namespace irobot_create_gazebo_plugins
 {
@@ -64,10 +64,10 @@ private:
   gazebo_ros::Node::SharedPtr ros_node_{nullptr};
 
   /// ROS Dock message
-  irobot_create_msgs::msg::Dock msg_;
+  irobot_create_msgs::msg::DockStatus msg_;
 
   /// ROS publisher
-  rclcpp::Publisher<irobot_create_msgs::msg::Dock>::SharedPtr pub_{nullptr};
+  rclcpp::Publisher<irobot_create_msgs::msg::DockStatus>::SharedPtr pub_{nullptr};
 
   /// ROS Subscription
   rclcpp::Subscription<irobot_create_msgs::msg::IrOpcode>::SharedPtr sub_{nullptr};

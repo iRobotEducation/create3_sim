@@ -6,8 +6,6 @@
 #ifndef IROBOT_CREATE_IGNITION_TOOLBOX__SENSORS__SENSORS_NODE_HPP_
 #define IROBOT_CREATE_IGNITION_TOOLBOX__SENSORS__SENSORS_NODE_HPP_
 
-#include <rclcpp/rclcpp.hpp>
-
 #include <chrono>
 #include <memory>
 #include <string>
@@ -19,6 +17,7 @@
 #include "irobot_create_ignition_toolbox/sensors/mouse.hpp"
 #include "irobot_create_ignition_toolbox/sensors/wheel_drop.hpp"
 #include "irobot_create_ignition_toolbox/sensors/ir_opcode.hpp"
+#include "rclcpp/rclcpp.hpp"
 
 namespace irobot_create_ignition_toolbox
 {

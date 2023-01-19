@@ -40,6 +40,7 @@ set(dependencies
   nav_msgs
   rclcpp
   rclcpp_action
+  rclcpp_components
   tf2
   tf2_geometry_msgs
   tf2_ros

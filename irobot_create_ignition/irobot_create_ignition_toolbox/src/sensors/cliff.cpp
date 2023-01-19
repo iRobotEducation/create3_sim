@@ -35,8 +35,8 @@ Cliff::Cliff(std::shared_ptr<rclcpp::Node> & nh)
         std::bind(&Cliff::cliff_callback, this, std::placeholders::_1)));
   }
 
-  for (std::string topic : cliff_pub_topics) {
-    for (const std::string sensor : cliff_sensors_) {
+  for (const std::string & topic : cliff_pub_topics) {
+    for (const std::string & sensor : cliff_sensors_) {
       if (topic.find(sensor) != std::string::npos) {
         hazard_pub_[sensor] = nh_->create_publisher<
           irobot_create_msgs::msg::HazardDetection>(
@@ -58,7 +58,7 @@ void Cliff::cliff_callback(const sensor_msgs::msg::LaserScan::SharedPtr cliff_ms
     hazard_msg.header.frame_id = "base_link";
 
     // Publish to appropriate topic
-    for (const std::string sensor : cliff_sensors_) {
+    for (const std::string & sensor : cliff_sensors_) {
       if (cliff_msg->header.frame_id.find(sensor) != std::string::npos) {
         hazard_pub_[sensor]->publish(hazard_msg);
       }
