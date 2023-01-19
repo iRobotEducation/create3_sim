@@ -5,7 +5,7 @@
 This is a ROS 2 simulation stack for the [iRobot® Create® 3](https://edu.irobot.com/create3) robot.
 Both Ignition Gazebo and Classic Gazebo are supported.
 
-> :warning: **Running with Ignition Gazebo requires to first build and install the `gz_ros2_control` package master branch from sources!**
+> :warning: **To run with Ignition Gazebo you must first build and install the [`gz_ros2_control`](https://github.com/ros-controls/gz_ros2_control) package master branch from sources!**
 
 Have a look at the [Create® 3 documentation](https://iroboteducation.github.io/create3_docs/) for more details on the ROS 2 interfaces exposed by the robot.
 
