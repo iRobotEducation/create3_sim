@@ -2,6 +2,19 @@
 Changelog for package irobot_create_ignition_toolbox
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Update to ROS 2 Humble (`#197 <https://github.com/iRobotEducation/create3_sim/issues/197>`_)
+  * Update message names to https://github.com/iRobotEducation/irobot_create_msgs/pull/10
+  * rename dock topic into dock_status
+  * comment ign_ros2_control dependency as it must be built from sources
+  Co-authored-by: Francisco Martín Rico <fmrico@gmail.com>
+* add missing dependency to irobot-create-common-bringup (`#186 <https://github.com/iRobotEducation/create3_sim/issues/186>`_)
+* Renamed Ignition Toolbox libraries (`#178 <https://github.com/iRobotEducation/create3_sim/issues/178>`_)
+  * Renamed Ignition Toolbox libraries
+  * Pre-pend library names with irobot_create_ignition
+* Contributors: Alberto Soragna, Francisco Martín Rico, roni-kreinin
+
 1.0.1 (2022-04-12)
 ------------------
 * add boost as explicit dependency and remove unnneded boost usage (`#175 <https://github.com/iRobotEducation/create3_sim/issues/175>`_)
