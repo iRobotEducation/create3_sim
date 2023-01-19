@@ -13,7 +13,7 @@ Have a look at the [Create® 3 documentation](https://iroboteducation.github.io/
 
 Required dependencies:
 
-1. [ROS 2 humble](https://docs.ros.org/en/humble/Installation/Ubuntu-Install-Debians.html)
+1. [ROS 2 rolling](https://docs.ros.org/en/rolling/Installation/Ubuntu-Install-Debians.html)
 2. ROS 2 dev tools:
     - [colcon-common-extensions](https://pypi.org/project/colcon-common-extensions/)
     - [rosdep](https://pypi.org/project/rosdep/): Used to install dependencies when building from sources
