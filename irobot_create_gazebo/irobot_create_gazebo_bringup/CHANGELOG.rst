@@ -2,8 +2,8 @@
 Changelog for package irobot_create_gazebo_bringup
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+2.0.0 (2023-01-19)
+------------------
 * make gazebo classic and ignition build time dependency if they are needed by CMakeLists.txt (`#179 <https://github.com/iRobotEducation/create3_sim/issues/179>`_)
 * fix dependency tree of create3_sim packages (`#177 <https://github.com/iRobotEducation/create3_sim/issues/177>`_)
 * fix setting environment variable GAZEBO_MODEL_PATH for aws models (`#174 <https://github.com/iRobotEducation/create3_sim/issues/174>`_)

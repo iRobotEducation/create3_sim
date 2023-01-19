@@ -2,8 +2,8 @@
 Changelog for package irobot_create_ignition_bringup
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+2.0.0 (2023-01-19)
+------------------
 * Update to ROS 2 Humble (`#197 <https://github.com/iRobotEducation/create3_sim/issues/197>`_)
   * Update message names to https://github.com/iRobotEducation/irobot_create_msgs/pull/10
   * rename dock topic into dock_status

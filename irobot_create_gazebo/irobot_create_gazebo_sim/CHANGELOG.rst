@@ -2,8 +2,8 @@
 Changelog for package irobot_create_gazebo_sim
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+2.0.0 (2023-01-19)
+------------------
 * fix dependency tree of create3_sim packages (`#177 <https://github.com/iRobotEducation/create3_sim/issues/177>`_)
 * Contributors: Alberto Soragna
 
