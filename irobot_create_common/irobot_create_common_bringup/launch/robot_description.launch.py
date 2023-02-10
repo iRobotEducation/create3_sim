@@ -48,11 +48,47 @@ def generate_launch_description():
         output='screen',
     )
 
+    left_wheel_drop_stf = Node(
+            name='left_wheel_drop_stf',
+            package='tf2_ros',
+            executable='static_transform_publisher',
+            output='screen',
+            arguments=[
+                '--x', '0.0',
+                '--y', '0.1165',
+                '--z', '0.0402',
+                '--roll', '-1.5707',
+                '--pitch', '0.0',
+                '--yaw', '0.0',
+                '--frame-id', 'base_link',
+                '--child-frame-id', 'wheel_drop_left',
+            ]
+        )
+
+    right_wheel_drop_stf = Node(
+            name='right_wheel_drop_stf',
+            package='tf2_ros',
+            executable='static_transform_publisher',
+            output='screen',
+            arguments=[
+                '--x', '0.0',
+                '--y', '-0.1165',
+                '--z', '0.0402',
+                '--roll', '-1.5707',
+                '--pitch', '0.0',
+                '--yaw', '0.0',
+                '--frame-id', 'base_link',
+                '--child-frame-id', 'wheel_drop_right',
+            ]
+        )
+
     # Define LaunchDescription variable
     ld = LaunchDescription(ARGUMENTS)
 
     # Add nodes to LaunchDescription
     ld.add_action(joint_state_publisher)
     ld.add_action(robot_state_publisher)
+    ld.add_action(left_wheel_drop_stf)
+    ld.add_action(right_wheel_drop_stf)
 
     return ld
