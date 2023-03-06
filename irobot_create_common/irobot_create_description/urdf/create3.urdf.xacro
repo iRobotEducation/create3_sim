@@ -117,6 +117,9 @@
     <gazebo>
       <plugin name="gazebo_ros2_control" filename="libgazebo_ros2_control.so">
         <parameters> $(find irobot_create_control)/config/control.yaml </parameters>
+        <ros>
+          <remapping>~/odom:=odom</remapping>
+        </ros>
       </plugin>
     </gazebo>
   </xacro:if>
@@ -125,6 +128,9 @@
     <gazebo>
       <plugin filename="libign_ros2_control-system.so" name="ign_ros2_control::IgnitionROS2ControlPlugin">
         <parameters> $(find irobot_create_control)/config/control.yaml </parameters>
+        <ros>
+          <remapping>~/odom:=odom</remapping>
+        </ros>
       </plugin>
     </gazebo>
   </xacro:if>
