@@ -37,6 +37,7 @@ def generate_launch_description():
     visualize_rays = LaunchConfiguration('visualize_rays')
 
     gazebo_simulator = LaunchConfiguration('gazebo')
+    namespace = LaunchConfiguration('namespace', default='')
 
     state_publisher = Node(
         package='robot_state_publisher',
@@ -53,6 +54,8 @@ def generate_launch_description():
         ],
         remappings=[
             ('robot_description', 'standard_dock_description'),
+            ('/tf', 'tf'),
+            ('/tf_static', 'tf_static')
         ],
     )
 
@@ -64,7 +67,11 @@ def generate_launch_description():
                    # According to documentation (http://wiki.ros.org/tf2_ros):
                    # the order is yaw, pitch, roll
                    yaw, '0', '0',
-                   'odom', 'std_dock_link'],
+                   [namespace, '/odom'], [namespace, '/std_dock_link']],
+        remappings=[
+            ('/tf', 'tf'),
+            ('/tf_static', 'tf_static')
+        ],
         output='screen',
     )
 

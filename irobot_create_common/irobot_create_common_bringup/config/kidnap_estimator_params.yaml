@@ -2,6 +2,6 @@
 kidnap_estimator_publisher:
   ros__parameters:
     # Kidnap status publisher topic
-    kidnap_status_topic: /kidnap_status
+    kidnap_status_topic: kidnap_status
     # Subscription topics
-    hazard_topic: /hazard_detection
+    hazard_topic: hazard_detection

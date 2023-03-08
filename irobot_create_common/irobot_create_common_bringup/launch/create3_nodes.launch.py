@@ -44,7 +44,8 @@ def generate_launch_description():
 
     # Includes
     diffdrive_controller = IncludeLaunchDescription(
-        PythonLaunchDescriptionSource([control_launch_file])
+        PythonLaunchDescriptionSource([control_launch_file]),
+        launch_arguments=[('robot_name', LaunchConfiguration('robot_name'))]
     )
 
     # Publish hazards vector
@@ -74,6 +75,10 @@ def generate_launch_description():
         executable='motion_control',
         parameters=[{'use_sim_time': True}],
         output='screen',
+        remappings=[
+            ('/tf', 'tf'),
+            ('/tf_static', 'tf_static')
+        ]
     )
 
     # Publish wheel status

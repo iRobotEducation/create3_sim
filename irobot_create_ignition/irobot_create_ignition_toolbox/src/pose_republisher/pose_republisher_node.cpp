@@ -18,20 +18,20 @@ PoseRepublisher::PoseRepublisher()
   robot_name_ =
     this->declare_parameter("robot_name", "create3");
   std::string robot_pub_topic =
-    this->declare_parameter("robot_publisher_topic", "/sim_ground_truth_pose");
+    this->declare_parameter("robot_publisher_topic", "sim_ground_truth_pose");
   std::string robot_sub_topic =
-    this->declare_parameter("robot_subscriber_topic", "/sim_ground_truth_pose");
+    this->declare_parameter("robot_subscriber_topic", "sim_ground_truth_pose");
   std::string mouse_pub_topic =
-    this->declare_parameter("mouse_publisher_topic", "/sim_ground_truth_mouse_pose");
+    this->declare_parameter("mouse_publisher_topic", "sim_ground_truth_mouse_pose");
 
   std::string dock_pub_topic =
-    this->declare_parameter("dock_publisher_topic", "/sim_ground_truth_dock_pose");
+    this->declare_parameter("dock_publisher_topic", "sim_ground_truth_dock_pose");
   std::string dock_sub_topic =
-    this->declare_parameter("dock_subscriber_topic", "/sim_ground_truth_dock_pose");
+    this->declare_parameter("dock_subscriber_topic", "sim_ground_truth_dock_pose");
   std::string ir_emitter_pub_topic =
-    this->declare_parameter("ir_emitter_publisher_topic", "/sim_ground_truth_ir_emitter_pose");
+    this->declare_parameter("ir_emitter_publisher_topic", "sim_ground_truth_ir_emitter_pose");
   std::string ir_receiver_pub_topic =
-    this->declare_parameter("ir_receiver_publisher_topic", "/sim_ground_truth_ir_receiver_pose");
+    this->declare_parameter("ir_receiver_publisher_topic", "sim_ground_truth_ir_receiver_pose");
 
   robot_subscriber_ = create_subscription<tf2_msgs::msg::TFMessage>(
     robot_sub_topic,

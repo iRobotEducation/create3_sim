@@ -10,21 +10,36 @@ from launch.substitutions import Command, PathJoinSubstitution
 from launch.substitutions.launch_configuration import LaunchConfiguration
 from launch_ros.actions import Node
 
+from nav2_common.launch import RewrittenYaml
+
 ARGUMENTS = [
     DeclareLaunchArgument('gazebo', default_value='classic',
                           choices=['classic', 'ignition'],
                           description='Which gazebo simulator to use'),
     DeclareLaunchArgument('visualize_rays', default_value='false',
                           choices=['true', 'false'],
-                          description='Enable/disable ray visualization')
+                          description='Enable/disable ray visualization'),
+    DeclareLaunchArgument('robot_name', default_value='create3',
+                          description='Robot name'),
 ]
 
 
 def generate_launch_description():
     pkg_create3_description = get_package_share_directory('irobot_create_description')
+    pkg_create3_control = get_package_share_directory('irobot_create_control')
     xacro_file = PathJoinSubstitution([pkg_create3_description, 'urdf', 'create3.urdf.xacro'])
     gazebo_simulator = LaunchConfiguration('gazebo')
     visualize_rays = LaunchConfiguration('visualize_rays')
+    namespace = LaunchConfiguration('robot_name')
+
+    control_params_file = PathJoinSubstitution(
+        [pkg_create3_control, 'config', 'control.yaml'])
+
+    namespaced_control_params_file = RewrittenYaml(
+        source_file=control_params_file,
+        root_key=namespace,
+        param_rewrites={},
+    )
 
     robot_state_publisher = Node(
         package='robot_state_publisher',
@@ -37,8 +52,14 @@ def generate_launch_description():
              Command(
                   ['xacro', ' ', xacro_file, ' ',
                    'gazebo:=', gazebo_simulator, ' ',
-                   'visualize_rays:=', visualize_rays])},
+                   'visualize_rays:=', visualize_rays, ' ',
+                   'namespace:=', namespace, ' ',
+                   'control_params:=', control_params_file])},
         ],
+        remappings=[
+            ('/tf', 'tf'),
+            ('/tf_static', 'tf_static')
+        ]
     )
 
     joint_state_publisher = Node(
@@ -47,6 +68,10 @@ def generate_launch_description():
         name='joint_state_publisher',
         output='screen',
         parameters=[{'use_sim_time': True}],
+        remappings=[
+            ('/tf', 'tf'),
+            ('/tf_static', 'tf_static')
+        ]
     )
 
     # Define LaunchDescription variable

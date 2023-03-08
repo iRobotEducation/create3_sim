@@ -3,7 +3,6 @@
 
 from launch import LaunchDescription
 from launch.actions import DeclareLaunchArgument
-from launch.conditions import IfCondition
 from launch.substitutions import LaunchConfiguration
 
 from launch_ros.actions import Node
@@ -40,18 +39,8 @@ def generate_launch_description():
         'ir_intensity_side_left',
     ]
 
-    # clock bridge
-    clock_bridge = Node(package='ros_ign_bridge', executable='parameter_bridge',
-                        namespace=namespace,
-                        name='clock_bridge',
-                        output='screen',
-                        arguments=[
-                            '/clock' + '@rosgraph_msgs/msg/Clock' + '[ignition.msgs.Clock'
-                        ],
-                        condition=IfCondition(use_sim_time))
-
     # cmd_vel bridge
-    cmd_vel_bridge = Node(package='ros_ign_bridge', executable='parameter_bridge',
+    cmd_vel_bridge = Node(package='ros_gz_bridge', executable='parameter_bridge',
                           name='cmd_vel_bridge',
                           output='screen',
                           parameters=[{
@@ -64,13 +53,13 @@ def generate_launch_description():
                                ']ignition.msgs.Twist']
                           ],
                           remappings=[
+                              ('/cmd_vel', 'cmd_vel'),
                               (['/model/', LaunchConfiguration('robot_name'), '/cmd_vel'],
                                'diffdrive_controller/cmd_vel_unstamped')
                           ])
 
     # Pose bridge
-    pose_bridge = Node(package='ros_ign_bridge', executable='parameter_bridge',
-                       namespace=namespace,
+    pose_bridge = Node(package='ros_gz_bridge', executable='parameter_bridge',
                        name='pose_bridge',
                        output='screen',
                        parameters=[{
@@ -86,14 +75,13 @@ def generate_launch_description():
                        ],
                        remappings=[
                            (['/model/', LaunchConfiguration('robot_name'), '/pose'],
-                            '/_internal/sim_ground_truth_pose'),
+                            '_internal/sim_ground_truth_pose'),
                            ('/model/standard_dock/pose',
-                            '/_internal/sim_ground_truth_dock_pose')
+                            '_internal/sim_ground_truth_dock_pose')
                        ])
 
     # odom to base_link transform bridge
-    odom_base_tf_bridge = Node(package='ros_ign_bridge', executable='parameter_bridge',
-                               namespace=namespace,
+    odom_base_tf_bridge = Node(package='ros_gz_bridge', executable='parameter_bridge',
                                name='odom_base_tf_bridge',
                                output='screen',
                                parameters=[{
@@ -105,12 +93,11 @@ def generate_launch_description():
                                     '[ignition.msgs.Pose_V']
                                ],
                                remappings=[
-                                   (['/model/', LaunchConfiguration('robot_name'), '/tf'], '/tf')
+                                   (['/model/', LaunchConfiguration('robot_name'), '/tf'], 'tf')
                                ])
 
     # Bumper contact sensor bridge
-    bumper_contact_bridge = Node(package='ros_ign_bridge', executable='parameter_bridge',
-                                 namespace=namespace,
+    bumper_contact_bridge = Node(package='ros_gz_bridge', executable='parameter_bridge',
                                  name='bumper_contact_bridge',
                                  output='screen',
                                  parameters=[{
@@ -125,12 +112,11 @@ def generate_launch_description():
                                  remappings=[
                                      (['/model/', LaunchConfiguration('robot_name'),
                                       '/bumper_contact'],
-                                      '/bumper_contact')
+                                      'bumper_contact')
                                  ])
 
     # Cliff bridge
-    cliff_bridge = Node(package='ros_ign_bridge', executable='parameter_bridge',
-                        namespace=namespace,
+    cliff_bridge = Node(package='ros_gz_bridge', executable='parameter_bridge',
                         name='cliff_bridge',
                         output='screen',
                         parameters=[{
@@ -147,12 +133,12 @@ def generate_launch_description():
                             (['/world/', LaunchConfiguration('world'),
                               '/model/', LaunchConfiguration('robot_name'),
                               '/link/base_link/sensor/' + cliff + '/scan'],
-                             '/_internal/' + cliff + '/scan')
+                             '_internal/' + cliff + '/scan')
                             for cliff in cliff_sensors
                         ])
+
     # IR intensity bridge
-    ir_intensity_bridge = Node(package='ros_ign_bridge', executable='parameter_bridge',
-                               namespace=namespace,
+    ir_intensity_bridge = Node(package='ros_gz_bridge', executable='parameter_bridge',
                                name='ir_intensity_bridge',
                                output='screen',
                                parameters=[{
@@ -169,12 +155,11 @@ def generate_launch_description():
                                    (['/world/', LaunchConfiguration('world'),
                                      '/model/', LaunchConfiguration('robot_name'),
                                      '/link/' + ir + '/sensor/' + ir + '/scan'],
-                                    '/_internal/' + ir + '/scan') for ir in ir_intensity_sensors
+                                    '_internal/' + ir + '/scan') for ir in ir_intensity_sensors
                                ])
 
     # Buttons message bridge
-    buttons_msg_bridge = Node(package='ros_ign_bridge', executable='parameter_bridge',
-                              namespace=namespace,
+    buttons_msg_bridge = Node(package='ros_gz_bridge', executable='parameter_bridge',
                               name='buttons_msg_bridge',
                               output='screen',
                               parameters=[{
@@ -184,11 +169,13 @@ def generate_launch_description():
                                   ['/create3/buttons' +
                                    '@std_msgs/msg/Int32' +
                                    '[ignition.msgs.Int32']
+                              ],
+                              remappings=[
+                                ('/create3/buttons', 'create3_buttons')
                               ])
 
     # Create launch description and add actions
     ld = LaunchDescription(ARGUMENTS)
-    ld.add_action(clock_bridge)
     ld.add_action(cmd_vel_bridge)
     ld.add_action(pose_bridge)
     ld.add_action(odom_base_tf_bridge)

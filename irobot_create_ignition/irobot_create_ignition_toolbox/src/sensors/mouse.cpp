@@ -16,7 +16,7 @@ Mouse::Mouse(std::shared_ptr<rclcpp::Node> & nh)
   last_mouse_position_{0, 0, 0}
 {
   mouse_pose_sub_ = nh_->create_subscription<nav_msgs::msg::Odometry>(
-    "/_internal/sim_ground_truth_mouse_pose",
+    "_internal/sim_ground_truth_mouse_pose",
     rclcpp::SensorDataQoS(),
     std::bind(&Mouse::mouse_pose_callback, this, std::placeholders::_1));
 

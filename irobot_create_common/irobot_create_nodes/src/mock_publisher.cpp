@@ -19,7 +19,7 @@ MockPublisher::MockPublisher(const rclcpp::NodeOptions & options)
 {
   // Topic parameter to publish slip status to
   slip_status_publisher_topic_ =
-    this->declare_parameter("slip_status_topic", "/slip_status");
+    this->declare_parameter("slip_status_topic", "slip_status");
 
   // Publish rate parameters in Hz
   const double slip_status_publish_rate =

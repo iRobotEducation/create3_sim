@@ -14,6 +14,12 @@
   <!-- Gazebo version -->
   <xacro:arg name="gazebo"                       default="classic" />
 
+  <!-- Namespace -->
+  <xacro:arg name="namespace"                    default=""/>
+
+  <!-- Control -->
+  <xacro:arg name="control_params"               default="$(find irobot_create_control)/config/control.yaml"/>
+
   <!-- Mechanical properties -->
   <xacro:property name="body_z_offset"           value="${-2.5*cm2m}" />
   <xacro:property name="body_collision_z_offset" value="${1*cm2m}" />
@@ -119,6 +125,7 @@
         <parameters> $(find irobot_create_control)/config/control.yaml </parameters>
         <ros>
           <remapping>~/odom:=odom</remapping>
+          <namespace>$(arg namespace)</namespace>
         </ros>
       </plugin>
     </gazebo>
@@ -127,9 +134,13 @@
   <xacro:if value="${'$(arg gazebo)' == 'ignition'}">
     <gazebo>
       <plugin filename="libign_ros2_control-system.so" name="ign_ros2_control::IgnitionROS2ControlPlugin">
-        <parameters> $(find irobot_create_control)/config/control.yaml </parameters>
+        <parameters>$(find irobot_create_control)/config/control.yaml</parameters>
         <ros>
           <remapping>~/odom:=odom</remapping>
+          <remapping>/tf:=tf</remapping>
+          <remapping>/tf_static:=tf_static</remapping>
+          <remapping>/diagnostics:=diagnostics</remapping>
+          <namespace>$(arg namespace)</namespace>
         </ros>
       </plugin>
     </gazebo>
@@ -289,5 +300,4 @@
       </plugin>
     </gazebo>
   </xacro:if>
-
 </robot>

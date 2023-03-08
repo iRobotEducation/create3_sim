@@ -16,7 +16,7 @@ IrIntensityVectorPublisher::IrIntensityVectorPublisher(const rclcpp::NodeOptions
 {
   // Topic parameter to publish IR intensity vector to
   publisher_topic_ =
-    this->declare_parameter("publisher_topic", "/ir_intensity");
+    this->declare_parameter("publisher_topic", "ir_intensity");
 
   // Subscription topics parameter
   subscription_topics_ =

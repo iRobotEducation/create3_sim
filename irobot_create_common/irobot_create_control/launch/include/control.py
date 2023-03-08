@@ -7,12 +7,14 @@ from ament_index_python.packages import get_package_share_directory
 from launch import LaunchDescription
 from launch.actions import RegisterEventHandler
 from launch.event_handlers import OnProcessExit
-from launch.substitutions import PathJoinSubstitution
+from launch.substitutions import LaunchConfiguration, PathJoinSubstitution
 from launch_ros.actions import Node
 
 
 def generate_launch_description():
     pkg_create3_control = get_package_share_directory('irobot_create_control')
+
+    robot_name = LaunchConfiguration('robot_name')
 
     control_params_file = PathJoinSubstitution(
         [pkg_create3_control, 'config', 'control.yaml'])
@@ -20,15 +22,16 @@ def generate_launch_description():
     diffdrive_controller_node = Node(
         package='controller_manager',
         executable='spawner',
+        namespace=robot_name,  # Namespace is not pushed when used in EventHandler 
         parameters=[control_params_file],
-        arguments=['diffdrive_controller', '-c', '/controller_manager'],
+        arguments=['diffdrive_controller', '-c', 'controller_manager'],
         output='screen',
     )
 
     joint_state_broadcaster_spawner = Node(
         package='controller_manager',
         executable='spawner',
-        arguments=['joint_state_broadcaster', '-c', '/controller_manager'],
+        arguments=['joint_state_broadcaster', '-c', 'controller_manager'],
         output='screen',
     )
 
