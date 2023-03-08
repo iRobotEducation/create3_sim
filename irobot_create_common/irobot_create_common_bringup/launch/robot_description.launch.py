@@ -46,6 +46,7 @@ def generate_launch_description():
         executable='joint_state_publisher',
         name='joint_state_publisher',
         output='screen',
+        parameters=[{'use_sim_time': True}],
     )
 
     # Define LaunchDescription variable
