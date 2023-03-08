@@ -15,7 +15,7 @@ functional, while the 4 remaining ones are created as dummy links. -->
   <link name="${link_name}"/>
 </xacro:macro>
 
-<xacro:macro name="bumper" params="name:=bump_front_center parent_link:=base_link update_rate:=62.0 gazebo visual_mesh collision_mesh
+<xacro:macro name="bumper" params="name:=bumper parent_link:=base_link update_rate:=62.0 gazebo visual_mesh collision_mesh
   *origin *inertial">
   <xacro:property name="link_name" value="${name}"/>
   <xacro:property name="joint_name" value="${name}_joint"/>
@@ -66,6 +66,11 @@ functional, while the 4 remaining ones are created as dummy links. -->
   <gazebo reference="${joint_name}">
     <preserveFixedJoint>true</preserveFixedJoint>
   </gazebo>
+
+  <xacro:dummy_bumper_zone
+      name="bump_front_center">
+      <origin xyz="0.175 0 0.039" rpy="0 0 0"/>
+  </xacro:dummy_bumper_zone>
 
   <xacro:dummy_bumper_zone
       name="bump_front_left">
