@@ -27,7 +27,7 @@ def generate_launch_description():
     diffdrive_controller_node = Node(
         package='controller_manager',
         executable='spawner',
-        namespace=robot_name,  # Namespace is not pushed when used in EventHandler 
+        namespace=robot_name,  # Namespace is not pushed when used in EventHandler
         parameters=[control_params_file],
         arguments=['diffdrive_controller', '-c', 'controller_manager'],
         output='screen',

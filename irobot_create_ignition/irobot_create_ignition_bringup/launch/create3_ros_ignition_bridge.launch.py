@@ -72,8 +72,8 @@ def generate_launch_description():
                             '@tf2_msgs/msg/TFMessage' +
                             '[ignition.msgs.Pose_V'],
                            ['/model/', robot_name, '/standard_dock/pose' +
-                           '@tf2_msgs/msg/TFMessage' +
-                           '[ignition.msgs.Pose_V']
+                            '@tf2_msgs/msg/TFMessage' +
+                            '[ignition.msgs.Pose_V']
                        ],
                        remappings=[
                            (['/model/', robot_name, '/pose'],
@@ -149,15 +149,15 @@ def generate_launch_description():
              }],
              arguments=[
                  ['/world/', world,
-                 '/model/', robot_name,
-                 '/link/' + ir + '/sensor/' + ir + '/scan' +
-                 '@sensor_msgs/msg/LaserScan[ignition.msgs.LaserScan']
+                  '/model/', robot_name,
+                  '/link/' + ir + '/sensor/' + ir + '/scan' +
+                  '@sensor_msgs/msg/LaserScan[ignition.msgs.LaserScan']
              ],
              remappings=[
                  (['/world/', world,
                      '/model/', robot_name,
                      '/link/' + ir + '/sensor/' + ir + '/scan'],
-                 '_internal/' + ir + '/scan')
+                  '_internal/' + ir + '/scan')
              ]) for ir in ir_intensity_sensors
     ])
 

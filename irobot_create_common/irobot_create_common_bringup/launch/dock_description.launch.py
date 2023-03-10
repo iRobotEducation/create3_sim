@@ -14,8 +14,8 @@ ARGUMENTS = [
                           choices=['classic', 'ignition'],
                           description='Which gazebo simulation to use'),
     DeclareLaunchArgument('visualize_rays', default_value='true',
-                                       choices=['true', 'false'],
-                                       description='Enable/disable ray visualization')
+                          choices=['true', 'false'],
+                          description='Enable/disable ray visualization')
 ]
 
 

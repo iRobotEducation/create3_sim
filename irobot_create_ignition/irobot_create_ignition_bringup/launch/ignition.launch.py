@@ -7,7 +7,7 @@ from pathlib import Path
 
 from ament_index_python.packages import get_package_share_directory
 
-from launch import LaunchContext, LaunchDescription, SomeSubstitutionsType, Substitution
+from launch import LaunchDescription
 from launch.actions import DeclareLaunchArgument
 from launch.actions import IncludeLaunchDescription, SetEnvironmentVariable
 from launch.launch_description_sources import PythonLaunchDescriptionSource
@@ -22,10 +22,6 @@ ARGUMENTS = [
     DeclareLaunchArgument('world', default_value='depot',
                           description='Ignition World'),
 ]
-
-for pose_element in ['x', 'y', 'z', 'yaw']:
-    ARGUMENTS.append(DeclareLaunchArgument(pose_element, default_value='0.0',
-                     description=f'{pose_element} component of the robot pose.'))
 
 
 def generate_launch_description():

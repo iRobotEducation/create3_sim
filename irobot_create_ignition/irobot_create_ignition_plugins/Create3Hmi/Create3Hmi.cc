@@ -5,12 +5,14 @@
 
 #include "Create3Hmi.hh"
 
-#include <ignition/plugin/Register.hh>
-#include <ignition/gui/Application.hh>
-#include <ignition/gui/MainWindow.hh>
 #include <ignition/msgs/int32.pb.h>
 
 #include <iostream>
+
+#include <ignition/plugin/Register.hh>
+#include <ignition/gui/Application.hh>
+#include <ignition/gui/MainWindow.hh>
+
 
 namespace ignition
 {
