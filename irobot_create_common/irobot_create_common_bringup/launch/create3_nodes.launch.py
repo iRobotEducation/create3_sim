@@ -14,7 +14,9 @@ from launch_ros.actions import Node
 ARGUMENTS = [
     DeclareLaunchArgument('gazebo', default_value='classic',
                           choices=['classic', 'ignition'],
-                          description='Which gazebo simulator to use')
+                          description='Which gazebo simulator to use'),
+    DeclareLaunchArgument('robot_name', default_value='create3',
+                          description='Robot name'),
 ]
 
 

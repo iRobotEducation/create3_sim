@@ -93,7 +93,6 @@ def generate_launch_description():
             condition=IfCondition(LaunchConfiguration('spawn_dock')),
             # The robot starts docked
             launch_arguments={'x': x_dock, 'y': y, 'z': z, 'yaw': yaw_dock,
-                              'namespace': namespace,
                               'gazebo': 'ignition'}.items(),
         ),
 
@@ -121,7 +120,7 @@ def generate_launch_description():
         Node(
             package='ros_ign_gazebo',
             executable='create',
-            arguments=['-name', [LaunchConfiguration('robot_name'), '/standard_dock'],
+            arguments=['-name', [LaunchConfiguration('robot_name'), '_standard_dock'],
                        '-x', x_dock,
                        '-y', y,
                        '-z', z,

@@ -15,10 +15,7 @@
   <xacro:arg name="gazebo"                       default="classic" />
 
   <!-- Namespace -->
-  <xacro:arg name="namespace"                    default=""/>
-
-  <!-- Control -->
-  <xacro:arg name="control_params"               default="$(find irobot_create_control)/config/control.yaml"/>
+  <xacro:arg name="namespace"                    default="create3"/>
 
   <!-- Mechanical properties -->
   <xacro:property name="body_z_offset"           value="${-2.5*cm2m}" />

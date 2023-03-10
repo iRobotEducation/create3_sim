@@ -2,7 +2,7 @@
 # @author Roni Kreinin (rkreinin@clearpathrobotics.com)
 
 from launch import LaunchDescription
-from launch.actions import DeclareLaunchArgument
+from launch.actions import DeclareLaunchArgument, GroupAction
 from launch.substitutions import LaunchConfiguration
 
 from launch_ros.actions import Node
@@ -19,8 +19,9 @@ ARGUMENTS = [
 
 
 def generate_launch_description():
-    namespace = LaunchConfiguration('robot_name')
     use_sim_time = LaunchConfiguration('use_sim_time')
+    robot_name = LaunchConfiguration('robot_name')
+    world = LaunchConfiguration('world')
 
     cliff_sensors = [
         'cliff_front_left',
@@ -47,14 +48,15 @@ def generate_launch_description():
                               'use_sim_time': use_sim_time
                           }],
                           arguments=[
-                              '/cmd_vel' + '@geometry_msgs/msg/Twist' + '[ignition.msgs.Twist',
-                              ['/model/', LaunchConfiguration('robot_name'), '/cmd_vel' +
+                              [robot_name,
+                               '/cmd_vel' + '@geometry_msgs/msg/Twist' + '[ignition.msgs.Twist'],
+                              ['/model/', robot_name, '/cmd_vel' +
                                '@geometry_msgs/msg/Twist' +
                                ']ignition.msgs.Twist']
                           ],
                           remappings=[
-                              ('/cmd_vel', 'cmd_vel'),
-                              (['/model/', LaunchConfiguration('robot_name'), '/cmd_vel'],
+                              ([robot_name, '/cmd_vel'], 'cmd_vel'),
+                              (['/model/', robot_name, '/cmd_vel'],
                                'diffdrive_controller/cmd_vel_unstamped')
                           ])
 
@@ -66,7 +68,7 @@ def generate_launch_description():
                             'use_sim_time': use_sim_time
                        }],
                        arguments=[
-                           ['/model/', LaunchConfiguration('robot_name'), '/pose' +
+                           ['/model/', robot_name, '/pose' +
                             '@tf2_msgs/msg/TFMessage' +
                             '[ignition.msgs.Pose_V'],
                            '/model/standard_dock/pose' +
@@ -74,7 +76,7 @@ def generate_launch_description():
                            '[ignition.msgs.Pose_V'
                        ],
                        remappings=[
-                           (['/model/', LaunchConfiguration('robot_name'), '/pose'],
+                           (['/model/', robot_name, '/pose'],
                             '_internal/sim_ground_truth_pose'),
                            ('/model/standard_dock/pose',
                             '_internal/sim_ground_truth_dock_pose')
@@ -88,12 +90,12 @@ def generate_launch_description():
                                    'use_sim_time': use_sim_time
                                }],
                                arguments=[
-                                   ['/model/', LaunchConfiguration('robot_name'), '/tf' +
+                                   ['/model/', robot_name, '/tf' +
                                     '@tf2_msgs/msg/TFMessage' +
                                     '[ignition.msgs.Pose_V']
                                ],
                                remappings=[
-                                   (['/model/', LaunchConfiguration('robot_name'), '/tf'], 'tf')
+                                   (['/model/', robot_name, '/tf'], 'tf')
                                ])
 
     # Bumper contact sensor bridge
@@ -104,59 +106,60 @@ def generate_launch_description():
                                      'use_sim_time': use_sim_time
                                  }],
                                  arguments=[
-                                     ['/model/', LaunchConfiguration('robot_name'),
+                                     ['/model/', robot_name,
                                       '/bumper_contact' +
                                       '@ros_ign_interfaces/msg/Contacts' +
                                       '[ignition.msgs.Contacts']
                                  ],
                                  remappings=[
-                                     (['/model/', LaunchConfiguration('robot_name'),
+                                     (['/model/', robot_name,
                                       '/bumper_contact'],
                                       'bumper_contact')
                                  ])
 
     # Cliff bridge
-    cliff_bridge = Node(package='ros_gz_bridge', executable='parameter_bridge',
-                        name='cliff_bridge',
-                        output='screen',
-                        parameters=[{
-                            'use_sim_time': use_sim_time
-                        }],
-                        arguments=[
-                            ['/world/', LaunchConfiguration('world'),
-                             '/model/', LaunchConfiguration('robot_name'),
-                             '/link/base_link/sensor/' + cliff + '/scan' +
-                             '@sensor_msgs/msg/LaserScan[ignition.msgs.LaserScan']
-                            for cliff in cliff_sensors
-                        ],
-                        remappings=[
-                            (['/world/', LaunchConfiguration('world'),
-                              '/model/', LaunchConfiguration('robot_name'),
-                              '/link/base_link/sensor/' + cliff + '/scan'],
-                             '_internal/' + cliff + '/scan')
-                            for cliff in cliff_sensors
-                        ])
+    cliff_bridges = GroupAction([
+        Node(package='ros_gz_bridge', executable='parameter_bridge',
+             name=cliff + '_bridge',
+             output='screen',
+             parameters=[{
+                 'use_sim_time': use_sim_time
+             }],
+             arguments=[
+                 ['/world/', world,
+                     '/model/', robot_name,
+                     '/link/base_link/sensor/' + cliff + '/scan' +
+                     '@sensor_msgs/msg/LaserScan[ignition.msgs.LaserScan']
+             ],
+             remappings=[
+                 (['/world/', world,
+                     '/model/', robot_name,
+                     '/link/base_link/sensor/' + cliff + '/scan'],
+                     '_internal/' + cliff + '/scan')
+             ]) for cliff in cliff_sensors
+    ])
 
-    # IR intensity bridge
-    ir_intensity_bridge = Node(package='ros_gz_bridge', executable='parameter_bridge',
-                               name='ir_intensity_bridge',
-                               output='screen',
-                               parameters=[{
-                                   'use_sim_time': use_sim_time
-                               }],
-                               arguments=[
-                                   ['/world/', LaunchConfiguration('world'),
-                                    '/model/', LaunchConfiguration('robot_name'),
-                                    '/link/' + ir + '/sensor/' + ir + '/scan' +
-                                    '@sensor_msgs/msg/LaserScan[ignition.msgs.LaserScan']
-                                   for ir in ir_intensity_sensors
-                               ],
-                               remappings=[
-                                   (['/world/', LaunchConfiguration('world'),
-                                     '/model/', LaunchConfiguration('robot_name'),
-                                     '/link/' + ir + '/sensor/' + ir + '/scan'],
-                                    '_internal/' + ir + '/scan') for ir in ir_intensity_sensors
-                               ])
+    # IR intensity bridges
+    ir_bridges = GroupAction([
+        Node(package='ros_gz_bridge', executable='parameter_bridge',
+             name=ir + '_bridge',
+             output='screen',
+             parameters=[{
+                 'use_sim_time': use_sim_time
+             }],
+             arguments=[
+                 ['/world/', world,
+                 '/model/', robot_name,
+                 '/link/' + ir + '/sensor/' + ir + '/scan' +
+                 '@sensor_msgs/msg/LaserScan[ignition.msgs.LaserScan']
+             ],
+             remappings=[
+                 (['/world/', world,
+                     '/model/', robot_name,
+                     '/link/' + ir + '/sensor/' + ir + '/scan'],
+                 '_internal/' + ir + '/scan')
+             ]) for ir in ir_intensity_sensors
+    ])
 
     # Buttons message bridge
     buttons_msg_bridge = Node(package='ros_gz_bridge', executable='parameter_bridge',
@@ -166,12 +169,12 @@ def generate_launch_description():
                                    'use_sim_time': use_sim_time
                               }],
                               arguments=[
-                                  ['/create3/buttons' +
+                                  ['/model/', robot_name, '/create3_buttons' +
                                    '@std_msgs/msg/Int32' +
                                    '[ignition.msgs.Int32']
                               ],
                               remappings=[
-                                ('/create3/buttons', 'create3_buttons')
+                                (['/model/', robot_name, '/create3_buttons'], '_create3_buttons')
                               ])
 
     # Create launch description and add actions
@@ -180,7 +183,7 @@ def generate_launch_description():
     ld.add_action(pose_bridge)
     ld.add_action(odom_base_tf_bridge)
     ld.add_action(bumper_contact_bridge)
-    ld.add_action(cliff_bridge)
-    ld.add_action(ir_intensity_bridge)
+    ld.add_action(cliff_bridges)
+    ld.add_action(ir_bridges)
     ld.add_action(buttons_msg_bridge)
     return ld

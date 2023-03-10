@@ -10,7 +10,6 @@ from launch.substitutions import Command, PathJoinSubstitution
 from launch.substitutions.launch_configuration import LaunchConfiguration
 from launch_ros.actions import Node
 
-from nav2_common.launch import RewrittenYaml
 
 ARGUMENTS = [
     DeclareLaunchArgument('gazebo', default_value='classic',
@@ -26,20 +25,10 @@ ARGUMENTS = [
 
 def generate_launch_description():
     pkg_create3_description = get_package_share_directory('irobot_create_description')
-    pkg_create3_control = get_package_share_directory('irobot_create_control')
     xacro_file = PathJoinSubstitution([pkg_create3_description, 'urdf', 'create3.urdf.xacro'])
     gazebo_simulator = LaunchConfiguration('gazebo')
     visualize_rays = LaunchConfiguration('visualize_rays')
-    namespace = LaunchConfiguration('robot_name')
-
-    control_params_file = PathJoinSubstitution(
-        [pkg_create3_control, 'config', 'control.yaml'])
-
-    namespaced_control_params_file = RewrittenYaml(
-        source_file=control_params_file,
-        root_key=namespace,
-        param_rewrites={},
-    )
+    robot_name = LaunchConfiguration('robot_name')
 
     robot_state_publisher = Node(
         package='robot_state_publisher',
@@ -53,8 +42,7 @@ def generate_launch_description():
                   ['xacro', ' ', xacro_file, ' ',
                    'gazebo:=', gazebo_simulator, ' ',
                    'visualize_rays:=', visualize_rays, ' ',
-                   'namespace:=', namespace, ' ',
-                   'control_params:=', control_params_file])},
+                   'namespace:=', robot_name])},
         ],
         remappings=[
             ('/tf', 'tf'),

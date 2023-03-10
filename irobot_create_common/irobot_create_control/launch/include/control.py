@@ -5,10 +5,15 @@
 
 from ament_index_python.packages import get_package_share_directory
 from launch import LaunchDescription
-from launch.actions import RegisterEventHandler
+from launch.actions import DeclareLaunchArgument, RegisterEventHandler
 from launch.event_handlers import OnProcessExit
 from launch.substitutions import LaunchConfiguration, PathJoinSubstitution
 from launch_ros.actions import Node
+
+ARGUMENTS = [
+    DeclareLaunchArgument('robot_name', default_value='create3',
+                          description='Robot name'),
+]
 
 
 def generate_launch_description():
@@ -24,14 +29,14 @@ def generate_launch_description():
         executable='spawner',
         namespace=robot_name,  # Namespace is not pushed when used in EventHandler 
         parameters=[control_params_file],
-        arguments=['diffdrive_controller', '-c', 'controller_manager'],
+        arguments=['diffdrive_controller', '-c', 'controller_manager', '-n', robot_name],
         output='screen',
     )
 
     joint_state_broadcaster_spawner = Node(
         package='controller_manager',
         executable='spawner',
-        arguments=['joint_state_broadcaster', '-c', 'controller_manager'],
+        arguments=['joint_state_broadcaster', '-c', 'controller_manager', '-n', robot_name],
         output='screen',
     )
 
@@ -43,7 +48,7 @@ def generate_launch_description():
         )
     )
 
-    ld = LaunchDescription()
+    ld = LaunchDescription(ARGUMENTS)
 
     ld.add_action(joint_state_broadcaster_spawner)
     ld.add_action(diffdrive_controller_callback)
