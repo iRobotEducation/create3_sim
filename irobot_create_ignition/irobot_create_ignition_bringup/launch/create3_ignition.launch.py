@@ -6,7 +6,6 @@ from ament_index_python.packages import get_package_share_directory
 from launch import LaunchDescription
 from launch.actions import DeclareLaunchArgument
 from launch.actions import IncludeLaunchDescription
-from launch.conditions import IfCondition, LaunchConfigurationNotEquals
 from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch.substitutions import LaunchConfiguration, PathJoinSubstitution
 
@@ -14,7 +13,7 @@ from launch.substitutions import LaunchConfiguration, PathJoinSubstitution
 ARGUMENTS = [
     DeclareLaunchArgument('robot_name', default_value='create3',
                           description='Robot name'),
-    DeclareLaunchArgument('use_rviz', default_value='false',
+    DeclareLaunchArgument('use_rviz', default_value='true',
                           choices=['true', 'false'], description='Start rviz.'),
     DeclareLaunchArgument('world', default_value='depot',
                           description='Ignition World'),
@@ -30,14 +29,10 @@ def generate_launch_description():
     # Directories
     pkg_irobot_create_ignition_bringup = get_package_share_directory(
         'irobot_create_ignition_bringup')
-    pkg_irobot_create_common_bringup = get_package_share_directory(
-        'irobot_create_common_bringup')
 
     # Paths
     ignition_launch = PathJoinSubstitution(
         [pkg_irobot_create_ignition_bringup, 'launch', 'ignition.launch.py'])
-    rviz2_launch = PathJoinSubstitution(
-        [pkg_irobot_create_common_bringup, 'launch', 'rviz2.launch.py'])
     robot_spawn_launch = PathJoinSubstitution(
         [pkg_irobot_create_ignition_bringup, 'launch', 'create3_spawn.launch.py'])
 
@@ -48,24 +43,18 @@ def generate_launch_description():
         ]
     )
 
-    rviz2 = IncludeLaunchDescription(
-        PythonLaunchDescriptionSource([rviz2_launch]),
-        condition=IfCondition(LaunchConfiguration('use_rviz')),
-    )
-
     robot_spawn = IncludeLaunchDescription(
         PythonLaunchDescriptionSource([robot_spawn_launch]),
         launch_arguments=[
             ('robot_name', LaunchConfiguration('robot_name')),
+            ('use_rviz', LaunchConfiguration('use_rviz')),
             ('x', LaunchConfiguration('x')),
             ('y', LaunchConfiguration('y')),
             ('z', LaunchConfiguration('z')),
-            ('yaw', LaunchConfiguration('yaw'))],
-        condition=LaunchConfigurationNotEquals('robot_name', ''))
+            ('yaw', LaunchConfiguration('yaw'))])
 
     # Create launch description and add actions
     ld = LaunchDescription(ARGUMENTS)
     ld.add_action(ignition)
-    ld.add_action(rviz2)
     ld.add_action(robot_spawn)
     return ld

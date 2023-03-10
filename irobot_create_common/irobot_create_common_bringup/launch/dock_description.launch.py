@@ -9,19 +9,14 @@ from launch.actions import DeclareLaunchArgument
 from launch.substitutions import Command, LaunchConfiguration, PathJoinSubstitution
 from launch_ros.actions import Node
 
-
 ARGUMENTS = [
     DeclareLaunchArgument('gazebo', default_value='classic',
                           choices=['classic', 'ignition'],
-                          description='Which gazebo simulation to use')
-]
-for pose_element in ['x', 'y', 'z', 'yaw']:
-    ARGUMENTS.append(DeclareLaunchArgument(f'{pose_element}', default_value='0.0',
-                     description=f'{pose_element} component of the dock pose.'))
-
-ARGUMENTS.append(DeclareLaunchArgument('visualize_rays', default_value='true',
+                          description='Which gazebo simulation to use'),
+    DeclareLaunchArgument('visualize_rays', default_value='true',
                                        choices=['true', 'false'],
-                                       description='Enable/disable ray visualization'))
+                                       description='Enable/disable ray visualization')
+]
 
 
 def generate_launch_description():
@@ -32,8 +27,6 @@ def generate_launch_description():
         [pkg_create3_description, 'urdf', 'dock', 'standard_dock.urdf.xacro'])
 
     # Launch Configurations
-    x, y, z = LaunchConfiguration('x'), LaunchConfiguration('y'), LaunchConfiguration('z')
-    yaw = LaunchConfiguration('yaw')
     visualize_rays = LaunchConfiguration('visualize_rays')
 
     gazebo_simulator = LaunchConfiguration('gazebo')
@@ -62,10 +55,10 @@ def generate_launch_description():
         package='tf2_ros',
         executable='static_transform_publisher',
         name='tf_odom_std_dock_link_publisher',
-        arguments=[x, y, z,
+        arguments=['0.157', '0', '0',
                    # According to documentation (http://wiki.ros.org/tf2_ros):
                    # the order is yaw, pitch, roll
-                   yaw, '0', '0',
+                   '3.141592', '0', '0',
                    'odom', 'std_dock_link'],
         remappings=[
             ('/tf', 'tf'),

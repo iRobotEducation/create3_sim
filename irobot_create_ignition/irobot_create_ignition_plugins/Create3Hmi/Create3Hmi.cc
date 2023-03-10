@@ -73,7 +73,7 @@ void Create3Hmi::SetName(const QString &_name)
       this->create3_button_topic_ << " ' " <<std::endl;
 
   // Update publisher with new topic.
-  this->create3_button_pub_ = gz::transport::Node::Publisher();
+  this->create3_button_pub_ = ignition::transport::Node::Publisher();
   this->create3_button_pub_ =
       this->node_.Advertise< ignition::msgs::Int32 >
       (this->create3_button_topic_);

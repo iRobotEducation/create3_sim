@@ -1,36 +1,17 @@
 # Copyright 2021 Clearpath Robotics, Inc.
 # @author Roni Kreinin (rkreinin@clearpathrobotics.com)
 
-import os
-
-from pathlib import Path
-
 from ament_index_python.packages import get_package_share_directory
 
-from launch import LaunchContext, LaunchDescription, SomeSubstitutionsType, Substitution
+from irobot_create_common_bringup.offset import OffsetParser, RotationalOffsetX, RotationalOffsetY
+
+from launch import LaunchDescription
 from launch.actions import DeclareLaunchArgument, GroupAction
 from launch.actions import IncludeLaunchDescription
 from launch.conditions import IfCondition
 from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch.substitutions import LaunchConfiguration, PathJoinSubstitution
 from launch_ros.actions import Node, PushRosNamespace
-
-
-class OffsetParser(Substitution):
-    def __init__(
-            self,
-            number: SomeSubstitutionsType,
-            offset: float,
-    ) -> None:
-        self.__number = number
-        self.__offset = offset
-
-    def perform(
-            self,
-            context: LaunchContext = None,
-    ) -> str:
-        number = float(self.__number.perform(context))
-        return f'{number + self.__offset}'
 
 
 ARGUMENTS = [
@@ -75,13 +56,21 @@ def generate_launch_description():
         [pkg_irobot_create_common_bringup, 'launch', 'robot_description.launch.py'])
     dock_description_launch = PathJoinSubstitution(
         [pkg_irobot_create_common_bringup, 'launch', 'dock_description.launch.py'])
+    rviz2_launch = PathJoinSubstitution(
+        [pkg_irobot_create_common_bringup, 'launch', 'rviz2.launch.py'])
 
     # Launch configurations
     namespace = LaunchConfiguration('robot_name')
     x, y, z = LaunchConfiguration('x'), LaunchConfiguration('y'), LaunchConfiguration('z')
     yaw = LaunchConfiguration('yaw')
 
-    x_dock = OffsetParser(x, 0.157)
+    # Calculate dock offset due to yaw rotation
+    dock_offset_x = RotationalOffsetX(0.157, yaw)
+    dock_offset_y = RotationalOffsetY(0.157, yaw)
+    # Spawn dock at robot position + rotational offset
+    x_dock = OffsetParser(x, dock_offset_x)
+    y_dock = OffsetParser(y, dock_offset_y)
+    # Rotate dock towards robot
     yaw_dock = OffsetParser(yaw, 3.1416)
 
     spawn_robot_group_action = GroupAction([
@@ -92,8 +81,7 @@ def generate_launch_description():
             PythonLaunchDescriptionSource([dock_description_launch]),
             condition=IfCondition(LaunchConfiguration('spawn_dock')),
             # The robot starts docked
-            launch_arguments={'x': x_dock, 'y': y, 'z': z, 'yaw': yaw_dock,
-                              'gazebo': 'ignition'}.items(),
+            launch_arguments={'gazebo': 'ignition'}.items(),
         ),
 
         # Robot description
@@ -111,7 +99,7 @@ def generate_launch_description():
                        '-x', x,
                        '-y', y,
                        '-z', z,
-                       '-Y', '0.0',
+                       '-Y', yaw,
                        '-topic', 'robot_description'],
             output='screen'
         ),
@@ -122,11 +110,12 @@ def generate_launch_description():
             executable='create',
             arguments=['-name', [LaunchConfiguration('robot_name'), '/standard_dock'],
                        '-x', x_dock,
-                       '-y', y,
+                       '-y', y_dock,
                        '-z', z,
-                       '-Y', '3.141592',
+                       '-Y', yaw_dock,
                        '-topic', 'standard_dock_description'],
             output='screen',
+            condition=IfCondition(LaunchConfiguration('spawn_dock'))
         ),
 
         # ROS Ign Bridge
@@ -146,6 +135,12 @@ def generate_launch_description():
         IncludeLaunchDescription(
             PythonLaunchDescriptionSource([create3_ignition_nodes_launch]),
             launch_arguments=[('robot_name', LaunchConfiguration('robot_name'))]
+        ),
+
+        # Rviz
+        IncludeLaunchDescription(
+            PythonLaunchDescriptionSource([rviz2_launch]),
+            condition=IfCondition(LaunchConfiguration('use_rviz')),
         )
     ])
 

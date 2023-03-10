@@ -23,6 +23,10 @@ def generate_launch_description():
         arguments=[
             '--display-config', rviz_config,
             '--splash-screen', rviz_logo,
+        ],
+        remappings=[
+            ('/tf', 'tf'),
+            ('/tf_static', 'tf_static'),
         ]
     )
 
