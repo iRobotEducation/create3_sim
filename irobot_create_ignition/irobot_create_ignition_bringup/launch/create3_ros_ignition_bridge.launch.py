@@ -71,14 +71,14 @@ def generate_launch_description():
                            ['/model/', robot_name, '/pose' +
                             '@tf2_msgs/msg/TFMessage' +
                             '[ignition.msgs.Pose_V'],
-                           '/model/standard_dock/pose' +
+                           ['/model/', robot_name, '/standard_dock/pose' +
                            '@tf2_msgs/msg/TFMessage' +
-                           '[ignition.msgs.Pose_V'
+                           '[ignition.msgs.Pose_V']
                        ],
                        remappings=[
                            (['/model/', robot_name, '/pose'],
                             '_internal/sim_ground_truth_pose'),
-                           ('/model/standard_dock/pose',
+                           (['/model/', robot_name, '/standard_dock/pose'],
                             '_internal/sim_ground_truth_dock_pose')
                        ])
 

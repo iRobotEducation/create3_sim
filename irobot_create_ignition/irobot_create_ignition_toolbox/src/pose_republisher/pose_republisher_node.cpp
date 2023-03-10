@@ -71,6 +71,11 @@ PoseRepublisher::PoseRepublisher()
   dynamic_joint_state_publisher_ = create_publisher<control_msgs::msg::DynamicJointState>(
     "dynamic_joint_states",
     rclcpp::SystemDefaultsQoS());
+
+  // Standard dock frame id is namespaced
+  standard_dock_frame_id_ = get_effective_namespace() + "/standard_dock";
+  // Remove leading '/'
+  standard_dock_frame_id_.erase(0, 1); 
 }
 
 void PoseRepublisher::robot_subscriber_callback(const tf2_msgs::msg::TFMessage::SharedPtr msg)
@@ -116,7 +121,7 @@ void PoseRepublisher::dock_subscriber_callback(const tf2_msgs::msg::TFMessage::S
 {
   for (uint16_t i = 0; i < msg->transforms.size(); i++) {
     // Child frame is model name
-    if (msg->transforms[i].child_frame_id == "standard_dock") {
+    if (msg->transforms[i].child_frame_id == standard_dock_frame_id_) {
       auto odom_msg = utils::tf_message_to_odom(msg, i);
       // Save dock pose
       tf2::convert(odom_msg->pose.pose, last_dock_pose_);
