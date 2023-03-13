@@ -72,10 +72,8 @@ PoseRepublisher::PoseRepublisher()
     "dynamic_joint_states",
     rclcpp::SystemDefaultsQoS());
 
-  // Standard dock frame id is namespaced
-  standard_dock_frame_id_ = get_effective_namespace() + "/standard_dock";
-  // Remove leading '/'
-  standard_dock_frame_id_.erase(0, 1);
+  // Standard dock frame id
+  standard_dock_frame_id_ = robot_name_ + "/standard_dock";
 }
 
 void PoseRepublisher::robot_subscriber_callback(const tf2_msgs::msg::TFMessage::SharedPtr msg)

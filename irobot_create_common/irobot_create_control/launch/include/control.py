@@ -6,6 +6,7 @@
 from ament_index_python.packages import get_package_share_directory
 from launch import LaunchDescription
 from launch.actions import DeclareLaunchArgument, RegisterEventHandler
+from launch.conditions import LaunchConfigurationNotEquals
 from launch.event_handlers import OnProcessExit
 from launch.substitutions import LaunchConfiguration, PathJoinSubstitution
 from launch_ros.actions import Node
@@ -58,12 +59,13 @@ def generate_launch_description():
         name='tf_namespaced_odom_publisher',
         arguments=['0', '0', '0',
                    '0', '0', '0',
-                   [LaunchConfiguration('namespace'), '/odom'], 'odom'],
+                   'odom', [LaunchConfiguration('namespace'), '/odom']],
         remappings=[
             ('/tf', 'tf'),
             ('/tf_static', 'tf_static')
         ],
         output='screen',
+        condition=LaunchConfigurationNotEquals('namespace', '')
     )
 
     # Static transform from <namespace>/base_link to base_link
@@ -79,6 +81,7 @@ def generate_launch_description():
             ('/tf_static', 'tf_static')
         ],
         output='screen',
+        condition=LaunchConfigurationNotEquals('namespace', '')
     )
 
     ld = LaunchDescription(ARGUMENTS)
