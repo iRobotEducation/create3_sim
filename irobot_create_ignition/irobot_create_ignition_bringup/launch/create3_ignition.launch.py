@@ -13,6 +13,8 @@ from launch.substitutions import LaunchConfiguration, PathJoinSubstitution
 ARGUMENTS = [
     DeclareLaunchArgument('robot_name', default_value='create3',
                           description='Robot name'),
+    DeclareLaunchArgument('namespace', default_value='',
+                          description='Robot namespace'),
     DeclareLaunchArgument('use_rviz', default_value='true',
                           choices=['true', 'false'], description='Start rviz.'),
     DeclareLaunchArgument('world', default_value='depot',
@@ -47,6 +49,7 @@ def generate_launch_description():
         PythonLaunchDescriptionSource([robot_spawn_launch]),
         launch_arguments=[
             ('robot_name', LaunchConfiguration('robot_name')),
+            ('namespace', LaunchConfiguration('namespace')),
             ('use_rviz', LaunchConfiguration('use_rviz')),
             ('x', LaunchConfiguration('x')),
             ('y', LaunchConfiguration('y')),

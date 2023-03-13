@@ -13,13 +13,15 @@ from launch_ros.actions import Node
 ARGUMENTS = [
     DeclareLaunchArgument('robot_name', default_value='create3',
                           description='Robot name'),
+    DeclareLaunchArgument('namespace', default_value=LaunchConfiguration('robot_name'),
+                          description='Robot namespace'),
 ]
 
 
 def generate_launch_description():
     pkg_create3_control = get_package_share_directory('irobot_create_control')
 
-    robot_name = LaunchConfiguration('robot_name')
+    namespace = LaunchConfiguration('namespace')
 
     control_params_file = PathJoinSubstitution(
         [pkg_create3_control, 'config', 'control.yaml'])
@@ -27,7 +29,7 @@ def generate_launch_description():
     diffdrive_controller_node = Node(
         package='controller_manager',
         executable='spawner',
-        namespace=robot_name,  # Namespace is not pushed when used in EventHandler
+        namespace=namespace,  # Namespace is not pushed when used in EventHandler
         parameters=[control_params_file],
         arguments=['diffdrive_controller', '-c', 'controller_manager'],
         output='screen',
@@ -48,7 +50,7 @@ def generate_launch_description():
         )
     )
 
-    # Static transform from <robot_name>/odom to odom
+    # Static transform from <namespace>/odom to odom
     # See https://github.com/ros-controls/ros2_controllers/pull/533
     tf_namespaced_odom_publisher = Node(
         package='tf2_ros',
@@ -56,7 +58,7 @@ def generate_launch_description():
         name='tf_namespaced_odom_publisher',
         arguments=['0', '0', '0',
                    '0', '0', '0',
-                   [LaunchConfiguration('robot_name'), '/odom'], 'odom'],
+                   [LaunchConfiguration('namespace'), '/odom'], 'odom'],
         remappings=[
             ('/tf', 'tf'),
             ('/tf_static', 'tf_static')
@@ -64,14 +66,14 @@ def generate_launch_description():
         output='screen',
     )
 
-    # Static transform from <robot_name>/base_link to base_link
+    # Static transform from <namespace>/base_link to base_link
     tf_namespaced_base_link_publisher = Node(
         package='tf2_ros',
         executable='static_transform_publisher',
         name='tf_namespaced_base_link_publisher',
         arguments=['0', '0', '0',
                    '0', '0', '0',
-                   [LaunchConfiguration('robot_name'), '/base_link'], 'base_link'],
+                   [LaunchConfiguration('namespace'), '/base_link'], 'base_link'],
         remappings=[
             ('/tf', 'tf'),
             ('/tf_static', 'tf_static')

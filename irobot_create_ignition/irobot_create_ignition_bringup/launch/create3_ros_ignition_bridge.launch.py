@@ -13,6 +13,8 @@ ARGUMENTS = [
                           description='Use sim time'),
     DeclareLaunchArgument('robot_name', default_value='create3',
                           description='Ignition model name'),
+    DeclareLaunchArgument('namespace', default_value=LaunchConfiguration('robot_name'),
+                          description='Robot namespace'),
     DeclareLaunchArgument('world', default_value='depot',
                           description='World name')
 ]
@@ -21,6 +23,7 @@ ARGUMENTS = [
 def generate_launch_description():
     use_sim_time = LaunchConfiguration('use_sim_time')
     robot_name = LaunchConfiguration('robot_name')
+    namespace = LaunchConfiguration('namespace')
     world = LaunchConfiguration('world')
 
     cliff_sensors = [
@@ -41,24 +44,26 @@ def generate_launch_description():
     ]
 
     # cmd_vel bridge
-    cmd_vel_bridge = Node(package='ros_gz_bridge', executable='parameter_bridge',
-                          name='cmd_vel_bridge',
-                          output='screen',
-                          parameters=[{
-                              'use_sim_time': use_sim_time
-                          }],
-                          arguments=[
-                              [robot_name,
-                               '/cmd_vel' + '@geometry_msgs/msg/Twist' + '[ignition.msgs.Twist'],
-                              ['/model/', robot_name, '/cmd_vel' +
-                               '@geometry_msgs/msg/Twist' +
-                               ']ignition.msgs.Twist']
-                          ],
-                          remappings=[
-                              ([robot_name, '/cmd_vel'], 'cmd_vel'),
-                              (['/model/', robot_name, '/cmd_vel'],
-                               'diffdrive_controller/cmd_vel_unstamped')
-                          ])
+    cmd_vel_bridge = Node(
+        package='ros_gz_bridge',
+        executable='parameter_bridge',
+        name='cmd_vel_bridge',
+        output='screen',
+        parameters=[{
+            'use_sim_time': use_sim_time
+        }],
+        arguments=[
+            [namespace,
+            '/cmd_vel' + '@geometry_msgs/msg/Twist' + '[ignition.msgs.Twist'],
+            ['/model/', robot_name, '/cmd_vel' +
+            '@geometry_msgs/msg/Twist' +
+            ']ignition.msgs.Twist']
+        ],
+        remappings=[
+            ([namespace, '/cmd_vel'], 'cmd_vel'),
+            (['/model/', robot_name, '/cmd_vel'],
+            'diffdrive_controller/cmd_vel_unstamped')
+        ])
 
     # Pose bridge
     pose_bridge = Node(package='ros_gz_bridge', executable='parameter_bridge',
@@ -127,9 +132,9 @@ def generate_launch_description():
              }],
              arguments=[
                  ['/world/', world,
-                     '/model/', robot_name,
-                     '/link/base_link/sensor/' + cliff + '/scan' +
-                     '@sensor_msgs/msg/LaserScan[ignition.msgs.LaserScan']
+                  '/model/', robot_name,
+                  '/link/base_link/sensor/' + cliff + '/scan' +
+                  '@sensor_msgs/msg/LaserScan[ignition.msgs.LaserScan']
              ],
              remappings=[
                  (['/world/', world,
@@ -162,20 +167,23 @@ def generate_launch_description():
     ])
 
     # Buttons message bridge
-    buttons_msg_bridge = Node(package='ros_gz_bridge', executable='parameter_bridge',
-                              name='buttons_msg_bridge',
-                              output='screen',
-                              parameters=[{
-                                   'use_sim_time': use_sim_time
-                              }],
-                              arguments=[
-                                  ['/model/', robot_name, '/create3_buttons' +
-                                   '@std_msgs/msg/Int32' +
-                                   '[ignition.msgs.Int32']
-                              ],
-                              remappings=[
-                                (['/model/', robot_name, '/create3_buttons'], '_create3_buttons')
-                              ])
+    buttons_msg_bridge = Node(
+        package='ros_gz_bridge',
+        executable='parameter_bridge',
+        name='buttons_msg_bridge',
+        output='screen',
+        parameters=[{
+            'use_sim_time': use_sim_time
+        }],
+        arguments=[
+            [namespace, '/create3_buttons' +
+            '@std_msgs/msg/Int32' +
+            '[ignition.msgs.Int32'],
+        ],
+        remappings=[
+            ([namespace, '/create3_buttons'], '_internal/create3_buttons'),
+        ]
+    )
 
     # Create launch description and add actions
     ld = LaunchDescription(ARGUMENTS)

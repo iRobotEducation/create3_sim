@@ -40,9 +40,9 @@ void Create3Hmi::LoadConfig(const tinyxml2::XMLElement * _pluginElem)
 
   if (_pluginElem)
   {
-    auto nameElem = _pluginElem->FirstChildElement("name");
-    if (nullptr != nameElem && nullptr != nameElem->GetText())
-      this->SetName(nameElem->GetText());
+    auto namespaceElem = _pluginElem->FirstChildElement("namespace");
+    if (nullptr != namespaceElem && nullptr != namespaceElem->GetText())
+      this->SetNamespace(namespaceElem->GetText());
   }
 
   this->connect(
@@ -62,15 +62,16 @@ void Create3Hmi::OnCreate3Button(const int button)
   }
 }
 
-QString Create3Hmi::Name() const
+QString Create3Hmi::Namespace() const
 {
-  return QString::fromStdString(this->robot_name_);
+  return QString::fromStdString(this->namespace_);
 }
 
-void Create3Hmi::SetName(const QString &_name)
+void Create3Hmi::SetNamespace(const QString &_name)
 {
-  this->robot_name_ = _name.toStdString();
-  this->create3_button_topic_ = "/model/" + this->robot_name_ + "/create3_buttons";
+  this->namespace_ = _name.toStdString();
+  this->create3_button_topic_ = this->namespace_ + "/create3_buttons";
+  
   ignmsg << "A new robot name has been entered, publishing on topic: '" <<
       this->create3_button_topic_ << " ' " <<std::endl;
 
@@ -91,7 +92,7 @@ void Create3Hmi::SetName(const QString &_name)
       QString::fromStdString("Advertising topic: '<b>" +
         this->create3_button_topic_ + "</b>'"), 4000);
   }
-  this->NameChanged();
+  this->NamespaceChanged();
 }
 
 }  // namespace gui

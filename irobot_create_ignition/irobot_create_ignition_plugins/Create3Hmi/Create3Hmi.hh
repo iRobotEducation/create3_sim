@@ -27,9 +27,9 @@ class Create3Hmi : public Plugin
   // \brief Name
   Q_PROPERTY(
     QString name
-    READ Name
-    WRITE SetName
-    NOTIFY NameChanged
+    READ Namespace
+    WRITE SetNamespace
+    NOTIFY NamespaceChanged
   )
 
 public:
@@ -43,17 +43,17 @@ public:
   // \brief Get the robot name as a string, for example
   /// '/echo'
   /// \return Name
-  Q_INVOKABLE QString Name() const;
+  Q_INVOKABLE QString Namespace() const;
 
 public slots:
   /// \brief Callback in Qt thread when the robot name changes.
   /// \param[in] _name variable to indicate the robot name to
   /// publish the Button commands.
-  void SetName(const QString &_name);
+  void SetNamespace(const QString &_name);
 
 signals:
   /// \brief Notify that robot name has changed
-  void NameChanged();
+  void NamespaceChanged();
 
 protected slots:
   /// \brief Callback trigged when the button is pressed.
@@ -62,8 +62,8 @@ protected slots:
 private:
   ignition::transport::Node node_;
   ignition::transport::Node::Publisher create3_button_pub_;
-  std::string robot_name_ = "create3";
-  std::string create3_button_topic_ = "/model/create3/create3_buttons";
+  std::string namespace_ = "";
+  std::string create3_button_topic_ = "/create3_buttons";
 };
 
 }  // namespace gui

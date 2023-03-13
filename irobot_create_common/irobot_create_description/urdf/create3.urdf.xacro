@@ -15,7 +15,7 @@
   <xacro:arg name="gazebo"                       default="classic" />
 
   <!-- Namespace -->
-  <xacro:arg name="namespace"                    default="create3"/>
+  <xacro:arg name="namespace"                    default=""/>
 
   <!-- Mechanical properties -->
   <xacro:property name="body_z_offset"           value="${-2.5*cm2m}" />

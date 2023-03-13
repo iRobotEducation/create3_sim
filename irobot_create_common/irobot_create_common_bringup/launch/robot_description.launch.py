@@ -20,6 +20,8 @@ ARGUMENTS = [
                           description='Enable/disable ray visualization'),
     DeclareLaunchArgument('robot_name', default_value='create3',
                           description='Robot name'),
+    DeclareLaunchArgument('namespace', default_value=LaunchConfiguration('robot_name'),
+                          description='Robot namespace'),
 ]
 
 
@@ -28,7 +30,7 @@ def generate_launch_description():
     xacro_file = PathJoinSubstitution([pkg_create3_description, 'urdf', 'create3.urdf.xacro'])
     gazebo_simulator = LaunchConfiguration('gazebo')
     visualize_rays = LaunchConfiguration('visualize_rays')
-    robot_name = LaunchConfiguration('robot_name')
+    namespace = LaunchConfiguration('namespace')
 
     robot_state_publisher = Node(
         package='robot_state_publisher',
@@ -42,7 +44,7 @@ def generate_launch_description():
                   ['xacro', ' ', xacro_file, ' ',
                    'gazebo:=', gazebo_simulator, ' ',
                    'visualize_rays:=', visualize_rays, ' ',
-                   'namespace:=', robot_name])},
+                   'namespace:=', namespace])},
         ],
         remappings=[
             ('/tf', 'tf'),

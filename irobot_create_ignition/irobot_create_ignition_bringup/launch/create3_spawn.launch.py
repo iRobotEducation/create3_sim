@@ -25,6 +25,8 @@ ARGUMENTS = [
                           description='Ignition World'),
     DeclareLaunchArgument('robot_name', default_value='create3',
                           description='Robot name'),
+    DeclareLaunchArgument('namespace', default_value=LaunchConfiguration('robot_name'),
+                          description='Robot namespace'),
     DeclareLaunchArgument('use_rviz', default_value='true',
                           choices=['true', 'false'], description='Start rviz.'),
     DeclareLaunchArgument('spawn_dock', default_value='true',
@@ -60,7 +62,7 @@ def generate_launch_description():
         [pkg_irobot_create_common_bringup, 'launch', 'rviz2.launch.py'])
 
     # Launch configurations
-    namespace = LaunchConfiguration('robot_name')
+    namespace = LaunchConfiguration('namespace')
     x, y, z = LaunchConfiguration('x'), LaunchConfiguration('y'), LaunchConfiguration('z')
     yaw = LaunchConfiguration('yaw')
 
@@ -87,8 +89,7 @@ def generate_launch_description():
         # Robot description
         IncludeLaunchDescription(
             PythonLaunchDescriptionSource([robot_description_launch]),
-            launch_arguments={'gazebo': 'ignition',
-                              'robot_name': LaunchConfiguration('robot_name')}.items()
+            launch_arguments={'gazebo': 'ignition'}.items()
         ),
 
         # Spawn Create 3
@@ -121,20 +122,17 @@ def generate_launch_description():
         # ROS Ign Bridge
         IncludeLaunchDescription(
             PythonLaunchDescriptionSource([ros_ign_bridge_launch]),
-            launch_arguments=[('world', LaunchConfiguration('world')),
-                              ('robot_name', LaunchConfiguration('robot_name'))]
+            launch_arguments=[('world', LaunchConfiguration('world'))]
         ),
 
         # Create 3 nodes
         IncludeLaunchDescription(
-            PythonLaunchDescriptionSource([create3_nodes_launch]),
-            launch_arguments=[('robot_name', LaunchConfiguration('robot_name'))]
+            PythonLaunchDescriptionSource([create3_nodes_launch])
         ),
 
         # Create 3 Ignition nodes
         IncludeLaunchDescription(
-            PythonLaunchDescriptionSource([create3_ignition_nodes_launch]),
-            launch_arguments=[('robot_name', LaunchConfiguration('robot_name'))]
+            PythonLaunchDescriptionSource([create3_ignition_nodes_launch])
         ),
 
         # Rviz

@@ -29,10 +29,10 @@ Rectangle
     height: 175
     width: 400
 
-    // Robot Name input
+    // Robot namespace input
     Label {
-      id: nameLabel
-      text: "Robot Name:"
+      id: namespaceLabel
+      text: "Namespace:"
       Layout.fillWidth: true
       Layout.margins: 10
       anchors.top: create3ButtonsRectangle.top
@@ -46,14 +46,14 @@ Rectangle
       width: 175
       Layout.fillWidth: true
       Layout.margins: 10
-      text: Create3Hmi.name
-      placeholderText: qsTr("input robot name")
-      anchors.top: nameLabel.bottom
+      text: Create3Hmi.namespace
+      placeholderText: qsTr("Robot namespace")
+      anchors.top: namespaceLabel.bottom
       anchors.topMargin: 5
       anchors.left: create3ButtonsRectangle.left
       anchors.leftMargin: 10
       onEditingFinished: {
-        Create3Hmi.SetName(text)
+        Create3Hmi.SetNamespace(text)
       }
     }
 
