@@ -12,9 +12,7 @@ from launch.substitutions import LaunchConfiguration, PathJoinSubstitution
 from launch_ros.actions import Node
 
 ARGUMENTS = [
-    DeclareLaunchArgument('robot_name', default_value='create3',
-                          description='Robot name'),
-    DeclareLaunchArgument('namespace', default_value=LaunchConfiguration('robot_name'),
+    DeclareLaunchArgument('namespace', default_value='',
                           description='Robot namespace'),
 ]
 
@@ -59,7 +57,7 @@ def generate_launch_description():
         name='tf_namespaced_odom_publisher',
         arguments=['0', '0', '0',
                    '0', '0', '0',
-                   'odom', [LaunchConfiguration('namespace'), '/odom']],
+                   'odom', [namespace, '/odom']],
         remappings=[
             ('/tf', 'tf'),
             ('/tf_static', 'tf_static')
@@ -75,7 +73,7 @@ def generate_launch_description():
         name='tf_namespaced_base_link_publisher',
         arguments=['0', '0', '0',
                    '0', '0', '0',
-                   [LaunchConfiguration('namespace'), '/base_link'], 'base_link'],
+                   [namespace, '/base_link'], 'base_link'],
         remappings=[
             ('/tf', 'tf'),
             ('/tf_static', 'tf_static')

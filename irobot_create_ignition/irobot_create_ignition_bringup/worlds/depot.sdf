@@ -5,7 +5,7 @@
       <grid>false</grid>
     </scene>
     <physics name="1ms" type="ignored">
-      <max_step_size>0.002</max_step_size>
+      <max_step_size>0.01</max_step_size>
       <real_time_factor>1.0</real_time_factor>
     </physics>
     <plugin filename="ignition-gazebo-physics-system" name="ignition::gazebo::systems::Physics"></plugin>

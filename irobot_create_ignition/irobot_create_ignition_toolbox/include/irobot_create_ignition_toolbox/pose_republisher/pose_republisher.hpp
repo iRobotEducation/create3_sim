@@ -46,8 +46,8 @@ private:
   tf2::Transform last_dock_pose_;
 
   std::string robot_name_;
+  std::string dock_name_;
   std::string wheel_joints_[2];
-  std::string standard_dock_frame_id_;
 };
 
 }  // namespace irobot_create_ignition_toolbox

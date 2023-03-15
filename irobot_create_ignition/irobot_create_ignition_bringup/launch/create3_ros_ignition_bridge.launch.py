@@ -13,7 +13,9 @@ ARGUMENTS = [
                           description='Use sim time'),
     DeclareLaunchArgument('robot_name', default_value='create3',
                           description='Ignition model name'),
-    DeclareLaunchArgument('namespace', default_value=LaunchConfiguration('robot_name'),
+    DeclareLaunchArgument('dock_name', default_value='standard_dock',
+                          description='Ignition model name'),
+    DeclareLaunchArgument('namespace', default_value='',
                           description='Robot namespace'),
     DeclareLaunchArgument('world', default_value='depot',
                           description='World name')
@@ -23,6 +25,7 @@ ARGUMENTS = [
 def generate_launch_description():
     use_sim_time = LaunchConfiguration('use_sim_time')
     robot_name = LaunchConfiguration('robot_name')
+    dock_name = LaunchConfiguration('dock_name')
     namespace = LaunchConfiguration('namespace')
     world = LaunchConfiguration('world')
 
@@ -76,14 +79,14 @@ def generate_launch_description():
                            ['/model/', robot_name, '/pose' +
                             '@tf2_msgs/msg/TFMessage' +
                             '[ignition.msgs.Pose_V'],
-                           ['/model/', robot_name, '/standard_dock/pose' +
+                           ['/model/', dock_name, '/pose' +
                             '@tf2_msgs/msg/TFMessage' +
                             '[ignition.msgs.Pose_V']
                        ],
                        remappings=[
                            (['/model/', robot_name, '/pose'],
                             '_internal/sim_ground_truth_pose'),
-                           (['/model/', robot_name, '/standard_dock/pose'],
+                           (['/model/', dock_name, '/pose'],
                             '_internal/sim_ground_truth_dock_pose')
                        ])
 

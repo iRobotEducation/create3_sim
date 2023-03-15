@@ -15,8 +15,8 @@ ARGUMENTS = [
     DeclareLaunchArgument('gazebo', default_value='classic',
                           choices=['classic', 'ignition'],
                           description='Which gazebo simulator to use'),
-    DeclareLaunchArgument('robot_name', default_value='create3',
-                          description='Robot name'),
+    DeclareLaunchArgument('namespace', default_value='',
+                          description='Robot namespace'),
 ]
 
 
@@ -47,7 +47,7 @@ def generate_launch_description():
     # Includes
     diffdrive_controller = IncludeLaunchDescription(
         PythonLaunchDescriptionSource([control_launch_file]),
-        launch_arguments=[('robot_name', LaunchConfiguration('robot_name'))]
+        launch_arguments=[('namespace', LaunchConfiguration('namespace'))]
     )
 
     # Publish hazards vector

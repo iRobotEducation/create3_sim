@@ -4,6 +4,7 @@
 from ament_index_python.packages import get_package_share_directory
 
 from irobot_create_common_bringup.offset import OffsetParser, RotationalOffsetX, RotationalOffsetY
+from irobot_create_common_bringup.namespace import GetNamespacedName
 
 from launch import LaunchDescription
 from launch.actions import DeclareLaunchArgument, GroupAction
@@ -23,9 +24,7 @@ ARGUMENTS = [
                           description='use_sim_time'),
     DeclareLaunchArgument('world', default_value='depot',
                           description='Ignition World'),
-    DeclareLaunchArgument('robot_name', default_value='create3',
-                          description='Robot name'),
-    DeclareLaunchArgument('namespace', default_value=LaunchConfiguration('robot_name'),
+    DeclareLaunchArgument('namespace', default_value='',
                           description='Robot namespace'),
     DeclareLaunchArgument('use_rviz', default_value='true',
                           choices=['true', 'false'], description='Start rviz.'),
@@ -66,6 +65,9 @@ def generate_launch_description():
     x, y, z = LaunchConfiguration('x'), LaunchConfiguration('y'), LaunchConfiguration('z')
     yaw = LaunchConfiguration('yaw')
 
+    robot_name = GetNamespacedName(namespace, 'create3')
+    dock_name = GetNamespacedName(namespace, 'standard_dock')
+
     # Calculate dock offset due to yaw rotation
     dock_offset_x = RotationalOffsetX(0.157, yaw)
     dock_offset_y = RotationalOffsetY(0.157, yaw)
@@ -96,20 +98,20 @@ def generate_launch_description():
         Node(
             package='ros_ign_gazebo',
             executable='create',
-            arguments=['-name', LaunchConfiguration('robot_name'),
+            arguments=['-name', robot_name,
                        '-x', x,
                        '-y', y,
                        '-z', z,
                        '-Y', yaw,
                        '-topic', 'robot_description'],
-            output='screen'
+            output='screen',
         ),
 
         # Spawn dock
         Node(
             package='ros_ign_gazebo',
             executable='create',
-            arguments=['-name', [LaunchConfiguration('robot_name'), '/standard_dock'],
+            arguments=['-name', dock_name,
                        '-x', x_dock,
                        '-y', y_dock,
                        '-z', z,
@@ -122,17 +124,28 @@ def generate_launch_description():
         # ROS Ign Bridge
         IncludeLaunchDescription(
             PythonLaunchDescriptionSource([ros_ign_bridge_launch]),
-            launch_arguments=[('world', LaunchConfiguration('world'))]
+            launch_arguments=[
+                ('world', LaunchConfiguration('world')),
+                ('robot_name', robot_name),
+                ('dock_name', dock_name),
+            ]
         ),
 
         # Create 3 nodes
         IncludeLaunchDescription(
-            PythonLaunchDescriptionSource([create3_nodes_launch])
+            PythonLaunchDescriptionSource([create3_nodes_launch]),
+            launch_arguments=[
+                ('robot_name', robot_name)
+            ]
         ),
 
         # Create 3 Ignition nodes
         IncludeLaunchDescription(
-            PythonLaunchDescriptionSource([create3_ignition_nodes_launch])
+            PythonLaunchDescriptionSource([create3_ignition_nodes_launch]),
+            launch_arguments=[
+                ('robot_name', robot_name),
+                ('dock_name', dock_name),
+            ]
         ),
 
         # Rviz

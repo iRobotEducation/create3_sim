@@ -18,9 +18,7 @@ ARGUMENTS = [
     DeclareLaunchArgument('visualize_rays', default_value='false',
                           choices=['true', 'false'],
                           description='Enable/disable ray visualization'),
-    DeclareLaunchArgument('robot_name', default_value='create3',
-                          description='Robot name'),
-    DeclareLaunchArgument('namespace', default_value=LaunchConfiguration('robot_name'),
+    DeclareLaunchArgument('namespace', default_value='',
                           description='Robot namespace'),
 ]
 
