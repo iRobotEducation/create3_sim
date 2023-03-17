@@ -25,13 +25,13 @@ Besides the aforementioned dependencies you will also need at least one among Ig
 
 Install [Gazebo 11](http://gazebosim.org/tutorials?tut=install_ubuntu)
 
-#### Ignition Edifice
+#### Ignition Fortress
 
 ```bash
 sudo apt-get update && sudo apt-get install wget
 sudo sh -c 'echo "deb http://packages.osrfoundation.org/gazebo/ubuntu-stable `lsb_release -cs` main" > /etc/apt/sources.list.d/gazebo-stable.list'
 wget http://packages.osrfoundation.org/gazebo.key -O - | sudo apt-key add -
-sudo apt-get update && sudo apt-get install ignition-edifice
+sudo apt-get update && sudo apt-get install ignition-fortress
 ```
 
 ## Build
@@ -55,7 +55,7 @@ rosdep install --from-path src -yi
 - Build the workspace with:
 
 ```bash
-export IGNITION_VERSION=edifice
+export IGNITION_VERSION=fortress
 colcon build --symlink-install
 source install/local_setup.bash
 ```

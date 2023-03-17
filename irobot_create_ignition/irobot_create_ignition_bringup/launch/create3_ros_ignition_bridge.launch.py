@@ -114,13 +114,13 @@ def generate_launch_description():
                                      'use_sim_time': use_sim_time
                                  }],
                                  arguments=[
-                                     ['/model/', robot_name,
+                                     [namespace,
                                       '/bumper_contact' +
-                                      '@ros_ign_interfaces/msg/Contacts' +
+                                      '@ros_gz_interfaces/msg/Contacts' +
                                       '[ignition.msgs.Contacts']
                                  ],
                                  remappings=[
-                                     (['/model/', robot_name,
+                                     ([namespace,
                                       '/bumper_contact'],
                                       'bumper_contact')
                                  ])
@@ -131,7 +131,8 @@ def generate_launch_description():
              name=cliff + '_bridge',
              output='screen',
              parameters=[{
-                 'use_sim_time': use_sim_time
+                 'use_sim_time': use_sim_time,
+                 'lazy': True
              }],
              arguments=[
                  ['/world/', world,
@@ -153,7 +154,8 @@ def generate_launch_description():
              name=ir + '_bridge',
              output='screen',
              parameters=[{
-                 'use_sim_time': use_sim_time
+                 'use_sim_time': use_sim_time,
+                 'lazy': True
              }],
              arguments=[
                  ['/world/', world,

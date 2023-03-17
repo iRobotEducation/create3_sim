@@ -14,7 +14,7 @@
 #include "irobot_create_msgs/msg/hazard_detection.hpp"
 #include "nav_msgs/msg/odometry.hpp"
 #include "rclcpp/rclcpp.hpp"
-#include "ros_ign_interfaces/msg/contacts.hpp"
+#include "ros_gz_interfaces/msg/contacts.hpp"
 #include "tf2_geometry_msgs/tf2_geometry_msgs.hpp"
 
 namespace irobot_create_ignition_toolbox
@@ -27,12 +27,12 @@ public:
   virtual ~Bumper() {}
 
 private:
-  void bumper_callback(const ros_ign_interfaces::msg::Contacts::SharedPtr bumper_contact_msg);
+  void bumper_callback(const ros_gz_interfaces::msg::Contacts::SharedPtr bumper_contact_msg);
   void robot_pose_callback(nav_msgs::msg::Odometry::ConstSharedPtr msg);
 
   std::shared_ptr<rclcpp::Node> nh_;
 
-  rclcpp::Subscription<ros_ign_interfaces::msg::Contacts>::SharedPtr bumper_sub_;
+  rclcpp::Subscription<ros_gz_interfaces::msg::Contacts>::SharedPtr bumper_sub_;
   rclcpp::Subscription<nav_msgs::msg::Odometry>::SharedPtr robot_pose_sub_;
   rclcpp::Publisher<irobot_create_msgs::msg::HazardDetection>::SharedPtr hazard_pub_;
 

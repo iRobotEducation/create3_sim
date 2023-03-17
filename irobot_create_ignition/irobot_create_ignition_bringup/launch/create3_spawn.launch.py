@@ -135,7 +135,7 @@ def generate_launch_description():
         IncludeLaunchDescription(
             PythonLaunchDescriptionSource([create3_nodes_launch]),
             launch_arguments=[
-                ('robot_name', robot_name)
+                ('namespace', namespace)
             ]
         ),
 

@@ -86,6 +86,7 @@
   <!-- Bumper -->
   <xacro:bumper
       gazebo="$(arg gazebo)"
+      namespace="$(arg namespace)"
       visual_mesh="package://irobot_create_description/meshes/bumper_visual.dae"
       collision_mesh="package://irobot_create_description/meshes/bumper_collision.dae">
     <origin xyz="0 0 ${bumper_offset_z  + base_link_z_offset}"/>
@@ -293,7 +294,7 @@
 
     <gazebo>
       <plugin filename="libignition-gazebo-sensors-system.so" name="ignition::gazebo::systems::Sensors">
-        <render_engine>ogre</render_engine>
+        <render_engine>ogre2</render_engine>
       </plugin>
     </gazebo>
   </xacro:if>
