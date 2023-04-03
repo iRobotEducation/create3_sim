@@ -57,15 +57,15 @@ def generate_launch_description():
         }],
         arguments=[
             [namespace,
-            '/cmd_vel' + '@geometry_msgs/msg/Twist' + '[ignition.msgs.Twist'],
+             '/cmd_vel' + '@geometry_msgs/msg/Twist' + '[ignition.msgs.Twist'],
             ['/model/', robot_name, '/cmd_vel' +
-            '@geometry_msgs/msg/Twist' +
-            ']ignition.msgs.Twist']
+             '@geometry_msgs/msg/Twist' +
+             ']ignition.msgs.Twist']
         ],
         remappings=[
             ([namespace, '/cmd_vel'], 'cmd_vel'),
             (['/model/', robot_name, '/cmd_vel'],
-            'diffdrive_controller/cmd_vel_unstamped')
+             'diffdrive_controller/cmd_vel_unstamped')
         ])
 
     # Pose bridge
@@ -182,8 +182,8 @@ def generate_launch_description():
         }],
         arguments=[
             [namespace, '/create3_buttons' +
-            '@std_msgs/msg/Int32' +
-            '[ignition.msgs.Int32'],
+             '@std_msgs/msg/Int32' +
+             '[ignition.msgs.Int32'],
         ],
         remappings=[
             ([namespace, '/create3_buttons'], '_internal/create3_buttons'),

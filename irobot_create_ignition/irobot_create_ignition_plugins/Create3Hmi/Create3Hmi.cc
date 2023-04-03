@@ -71,7 +71,7 @@ void Create3Hmi::SetNamespace(const QString &_name)
 {
   this->namespace_ = _name.toStdString();
   this->create3_button_topic_ = this->namespace_ + "/create3_buttons";
-  
+
   ignmsg << "A new robot name has been entered, publishing on topic: '" <<
       this->create3_button_topic_ << " ' " <<std::endl;
 
