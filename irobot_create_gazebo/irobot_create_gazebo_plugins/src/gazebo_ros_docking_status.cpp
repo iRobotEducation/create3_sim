@@ -46,7 +46,7 @@ void GazeboRosDockingStatus::Load(gazebo::physics::ModelPtr model, sdf::ElementP
     "~/out", rclcpp::SensorDataQoS().reliable());
 
   sub_ = ros_node_->create_subscription<irobot_create_msgs::msg::IrOpcode>(
-    "/ir_opcode", rclcpp::SensorDataQoS(),
+    "ir_opcode", rclcpp::SensorDataQoS(),
     std::bind(&GazeboRosDockingStatus::IrOpcodeCb, this, std::placeholders::_1));
 
   // Set message frame_id

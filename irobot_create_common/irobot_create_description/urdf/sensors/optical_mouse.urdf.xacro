@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <robot xmlns:xacro="http://ros.org/wiki/xacro">
 
-  <xacro:macro name="optical_mouse" params="name:=mouse gazebo parent_link:=base_link update_rate:=62 *origin" >
+  <xacro:macro name="optical_mouse" params="name:=mouse gazebo namespace parent_link:=base_link update_rate:=62 *origin" >
 
     <joint name="${name}_joint" type="fixed">
       <xacro:insert_block name="origin"/>
@@ -17,7 +17,7 @@
       <gazebo>
         <plugin name="${name}_plugin" filename="libgazebo_ros_create_optical_mouse.so">
             <ros>
-              <namespace>/</namespace>
+              <namespace>${namespace}</namespace>
               <remapping>~/out:=${name}</remapping>
             </ros>
           <update_rate>${update_rate}</update_rate>

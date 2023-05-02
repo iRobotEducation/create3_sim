@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <robot xmlns:xacro="http://ros.org/wiki/xacro">
 
-<xacro:macro name="cliff_sensor" params="name gazebo parent:=base_link
+<xacro:macro name="cliff_sensor" params="name gazebo namespace parent:=base_link
                                          visualize:=false *origin">
   <!-- Sensor settings -->
   <xacro:property name="update_rate"         value="62"/>
@@ -31,7 +31,7 @@
                       r_min="${min_range}" r_max="${max_range}" r_res="1.0">
       <plugin name="${sensor_name}" filename="libgazebo_ros_create_cliff_sensor.so">
         <ros>
-          <namespace>/</namespace>
+          <namespace>${namespace}</namespace>
           <remapping>~/out:=_internal/${sensor_name}/event</remapping>
         </ros>
         <detection_threshold>${detection_threshold}</detection_threshold>

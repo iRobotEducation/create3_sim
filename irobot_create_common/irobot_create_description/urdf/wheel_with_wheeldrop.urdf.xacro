@@ -1,12 +1,12 @@
 <?xml version="1.0"?>
 <robot xmlns:xacro="http://ros.org/wiki/xacro">
 
-<xacro:macro name="wheel_with_wheeldrop" params="name gazebo parent_link:=base_link *origin">
+<xacro:macro name="wheel_with_wheeldrop" params="name gazebo namespace parent_link:=base_link *origin">
   <xacro:include filename="$(find irobot_create_description)/urdf/wheel.urdf.xacro" />
   <xacro:include filename="$(find irobot_create_description)/urdf/wheel_drop.urdf.xacro" />
 
   <!-- Wheel Drop definition -->
-  <xacro:wheel_drop name="${name}" gazebo="${gazebo}" parent_link="${parent_link}">
+  <xacro:wheel_drop name="${name}" gazebo="${gazebo}" parent_link="${parent_link}" namespace="${namespace}">
     <xacro:insert_block name="origin"/>
   </xacro:wheel_drop>
 

@@ -63,7 +63,7 @@ functional, while the 4 remaining ones are created as dummy links. -->
       <xacro:if value="${gazebo == 'classic'}">
         <plugin name="${name}_plugin" filename="libgazebo_ros_create_bumper.so">
           <ros>
-            <namespace>/</namespace>
+            <namespace>${namespace}</namespace>
             <remapping>~/out:=_internal/bumper/event</remapping>
           </ros>
         </plugin>

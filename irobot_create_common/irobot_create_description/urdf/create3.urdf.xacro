@@ -99,11 +99,11 @@
   </xacro:bumper>
 
   <!-- Wheels with mechanical wheel drop -->
-  <xacro:wheel_with_wheeldrop name="left" gazebo="$(arg gazebo)">
+  <xacro:wheel_with_wheeldrop name="left" gazebo="$(arg gazebo)" namespace="$(arg namespace)">
     <origin xyz="0 ${distance_between_wheels/2} ${wheel_drop_z  + base_link_z_offset}" rpy="${-pi/2} 0 0"/>
   </xacro:wheel_with_wheeldrop>
 
-  <xacro:wheel_with_wheeldrop name="right" gazebo="$(arg gazebo)">
+  <xacro:wheel_with_wheeldrop name="right" gazebo="$(arg gazebo)" namespace="$(arg namespace)">
     <origin xyz="0 ${-distance_between_wheels/2} ${wheel_drop_z  + base_link_z_offset}" rpy="${-pi/2} 0 0"/>
   </xacro:wheel_with_wheeldrop>
 
@@ -113,16 +113,19 @@
   </xacro:caster>
 
   <!-- IMU -->
-  <xacro:imu_sensor gazebo="$(arg gazebo)">
+  <xacro:imu_sensor gazebo="$(arg gazebo)" namespace="$(arg namespace)">
     <origin xyz="0.050613 0.043673 ${0.0202 + base_link_z_offset}"/>
   </xacro:imu_sensor>
 
   <xacro:if value="${'$(arg gazebo)' == 'classic'}">
     <gazebo>
       <plugin name="gazebo_ros2_control" filename="libgazebo_ros2_control.so">
-        <parameters> $(find irobot_create_control)/config/control.yaml </parameters>
+        <parameters>$(find irobot_create_control)/config/control.yaml</parameters>
         <ros>
           <remapping>~/odom:=odom</remapping>
+          <remapping>/tf:=tf</remapping>
+          <remapping>/tf_static:=tf_static</remapping>
+          <remapping>/diagnostics:=diagnostics</remapping>
           <namespace>$(arg namespace)</namespace>
         </ros>
       </plugin>
@@ -145,7 +148,7 @@
   </xacro:if>
 
   <!-- Mouse -->
-  <xacro:optical_mouse gazebo="$(arg gazebo)">
+  <xacro:optical_mouse gazebo="$(arg gazebo)" namespace="$(arg namespace)">
     <origin xyz="0.1015 0.087 ${-0.055 + base_link_z_offset}" rpy="0 0 ${-pi/4}"/>
   </xacro:optical_mouse>
 
@@ -162,22 +165,22 @@
   <xacro:property name="cliff_back_pitch" value="${80*deg2rad}"/>
   <xacro:property name="cliff_back_yaw" value="${167.4*deg2rad}"/>
 
-  <xacro:cliff_sensor name="side_left" gazebo="$(arg gazebo)" visualize="$(arg visualize_rays)">
+  <xacro:cliff_sensor name="side_left" gazebo="$(arg gazebo)" visualize="$(arg visualize_rays)" namespace="$(arg namespace)">
     <origin xyz="${cliff_back_x} ${cliff_back_y} ${cliff_z + base_link_z_offset}"
             rpy="0 ${cliff_back_pitch} ${cliff_back_yaw}"/>
   </xacro:cliff_sensor>
 
-  <xacro:cliff_sensor name="side_right" gazebo="$(arg gazebo)" visualize="$(arg visualize_rays)">
+  <xacro:cliff_sensor name="side_right" gazebo="$(arg gazebo)" visualize="$(arg visualize_rays)" namespace="$(arg namespace)">
     <origin xyz="${cliff_back_x} ${- cliff_back_y} ${cliff_z + base_link_z_offset}"
             rpy="0 ${cliff_back_pitch} ${- cliff_back_yaw}"/>
   </xacro:cliff_sensor>
 
-  <xacro:cliff_sensor name="front_left" gazebo="$(arg gazebo)" visualize="$(arg visualize_rays)">
+  <xacro:cliff_sensor name="front_left" gazebo="$(arg gazebo)" visualize="$(arg visualize_rays)" namespace="$(arg namespace)">
     <origin xyz="${cliff_center_x} ${cliff_center_y} ${cliff_z + base_link_z_offset}"
             rpy="0 ${cliff_center_pitch} ${cliff_center_yaw}"/>
   </xacro:cliff_sensor>
 
-  <xacro:cliff_sensor name="front_right" gazebo="$(arg gazebo)" visualize="$(arg visualize_rays)">
+  <xacro:cliff_sensor name="front_right" gazebo="$(arg gazebo)" visualize="$(arg visualize_rays)" namespace="$(arg namespace)">
     <origin xyz="${cliff_center_x} ${- cliff_center_y} ${cliff_z + base_link_z_offset}"
             rpy="0 ${cliff_center_pitch} ${- cliff_center_yaw}"/>
   </xacro:cliff_sensor>
@@ -199,25 +202,25 @@
             left                                    front_right
   side_left                                                   right
   -->
-  <xacro:ir_intensity name="front_center_left" gazebo="$(arg gazebo)">
+  <xacro:ir_intensity name="front_center_left" gazebo="$(arg gazebo)" namespace="$(arg namespace)">
     <origin xyz="0.1540 0 ${ir_intensity_z_pos + base_link_z_offset}"/>
   </xacro:ir_intensity>
-  <xacro:ir_intensity name="front_center_right" gazebo="$(arg gazebo)">
+  <xacro:ir_intensity name="front_center_right" gazebo="$(arg gazebo)" namespace="$(arg namespace)">
     <origin xyz="0.1396 -0.0651 ${ir_intensity_z_pos + base_link_z_offset}" rpy="0 0 -0.436"/>
   </xacro:ir_intensity>
-  <xacro:ir_intensity name="front_left" gazebo="$(arg gazebo)">
+  <xacro:ir_intensity name="front_left" gazebo="$(arg gazebo)" namespace="$(arg namespace)">
     <origin xyz="0.1396 0.0651 ${ir_intensity_z_pos + base_link_z_offset}" rpy="0 0 0.436"/>
   </xacro:ir_intensity>
-  <xacro:ir_intensity name="front_right" gazebo="$(arg gazebo)">
+  <xacro:ir_intensity name="front_right" gazebo="$(arg gazebo)" namespace="$(arg namespace)">
     <origin xyz="0.0990 -0.1180 ${ir_intensity_z_pos + base_link_z_offset}" rpy="0 0 -0.873"/>
   </xacro:ir_intensity>
-  <xacro:ir_intensity name="left" gazebo="$(arg gazebo)">
+  <xacro:ir_intensity name="left" gazebo="$(arg gazebo)" namespace="$(arg namespace)">
     <origin xyz="0.0990 0.1180 ${ir_intensity_z_pos + base_link_z_offset}" rpy="0 0 0.873"/>
   </xacro:ir_intensity>
-  <xacro:ir_intensity name="right" gazebo="$(arg gazebo)">
+  <xacro:ir_intensity name="right" gazebo="$(arg gazebo)" namespace="$(arg namespace)">
     <origin xyz="0.0399 -0.1488 ${ir_intensity_z_pos + base_link_z_offset}" rpy="0 0 -1.309"/>
   </xacro:ir_intensity>
-  <xacro:ir_intensity name="side_left" gazebo="$(arg gazebo)">
+  <xacro:ir_intensity name="side_left" gazebo="$(arg gazebo)" namespace="$(arg namespace)">
     <origin xyz="0.0399 0.1488 ${ir_intensity_z_pos + base_link_z_offset}" rpy="0 0 1.309"/>
   </xacro:ir_intensity>
 
@@ -238,7 +241,8 @@
   <!-- Omni IR receiver (sensor 0) parameters and Front-facing IR receiver (sensor 1) parameters -->
   <xacro:property name="ir_omni_fov_rad" value="${220.0*deg2rad}"/>
   <xacro:property name="ir_front_facing_fov_rad" value="${pi/2}"/>
-  <xacro:ir_opcode_receivers gazebo="$(arg gazebo)" robot_model_name="${robot_model_name}" dock_model_name="${dock_model_name}"
+  <xacro:ir_opcode_receivers gazebo="$(arg gazebo)" namespace="$(arg namespace)"
+    robot_model_name="${robot_model_name}" dock_model_name="${dock_model_name}"
     emitter_link_name="${emitter_link_name}" sensor_0_range="0.01" sensor_0_fov="${ir_omni_fov_rad}"
     sensor_1_range="0.5" sensor_1_fov="${ir_front_facing_fov_rad}" >
     <origin xyz="0.153 0 ${0.035 + base_link_z_offset}"/>
@@ -250,7 +254,7 @@
     <gazebo>
       <plugin name="gazebo_ros_p3d_robot" filename="libgazebo_ros_p3d.so">
         <ros>
-          <namespace>/</namespace>
+          <namespace>$(arg namespace)</namespace>
           <remapping>odom:=sim_ground_truth_pose</remapping>
         </ros>
         <body_name>base_link</body_name>
@@ -266,7 +270,7 @@
     <gazebo>
       <plugin name="dock_status_publisher" filename="libgazebo_ros_create_docking_status.so">
         <ros>
-          <namespace>/</namespace>
+          <namespace>$(arg namespace)</namespace>
           <remapping>~/out:=dock_status</remapping>
         </ros>
         <update_rate>1.0</update_rate>

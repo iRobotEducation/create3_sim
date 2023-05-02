@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <robot xmlns:xacro="http://ros.org/wiki/xacro">
 
-<xacro:macro name="imu_sensor" params="name:=imu gazebo parent:=base_link update_rate:=62 *origin">
+<xacro:macro name="imu_sensor" params="name:=imu gazebo namespace parent:=base_link update_rate:=62 *origin">
 
   <joint name="${name}_joint" type="fixed">
     <xacro:insert_block name="origin"/>
@@ -62,7 +62,7 @@
       <xacro:if value="${gazebo == 'classic'}">
         <plugin name="${name}_plugin" filename="libgazebo_ros_create_imu.so">
           <ros>
-            <namespace>/</namespace>
+            <namespace>${namespace}</namespace>
             <remapping>~/out:=imu</remapping>
           </ros>
         </plugin>

@@ -15,7 +15,9 @@ ARGUMENTS = [
                           description='Which gazebo simulation to use'),
     DeclareLaunchArgument('visualize_rays', default_value='true',
                           choices=['true', 'false'],
-                          description='Enable/disable ray visualization')
+                          description='Enable/disable ray visualization'),
+    DeclareLaunchArgument('namespace', default_value='',
+                          description='Robot namespace'),
 ]
 
 
@@ -28,8 +30,8 @@ def generate_launch_description():
 
     # Launch Configurations
     visualize_rays = LaunchConfiguration('visualize_rays')
-
     gazebo_simulator = LaunchConfiguration('gazebo')
+    namespace = LaunchConfiguration('namespace')
 
     state_publisher = Node(
         package='robot_state_publisher',
@@ -42,6 +44,7 @@ def generate_launch_description():
              Command(
                 ['xacro', ' ', dock_xacro_file, ' ',
                  'gazebo:=', gazebo_simulator, ' ',
+                 'namespace:=', namespace, ' ',
                  'visualize_rays:=', visualize_rays])},
         ],
         remappings=[

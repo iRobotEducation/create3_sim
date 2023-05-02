@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <robot xmlns:xacro="http://ros.org/wiki/xacro">
-<xacro:macro name="wheel_drop" params="name gazebo parent_link *origin" >
+<xacro:macro name="wheel_drop" params="name gazebo parent_link namespace *origin" >
   <xacro:include filename="$(find irobot_create_description)/urdf/common_properties.urdf.xacro"/>
 
   <xacro:property name="detection_threshold" value="${3*cm2m}"/>
@@ -52,7 +52,7 @@
     <gazebo>
       <plugin name="${wd_link_name}_plugin" filename="libgazebo_ros_create_wheel_drop.so">
         <ros>
-          <namespace>/</namespace>
+          <namespace>$(arg namespace)</namespace>
           <remapping>~/out:=_internal/wheel_drop/${name}_wheel/event</remapping>
         </ros>
         <update_rate>${update_rate}</update_rate>
