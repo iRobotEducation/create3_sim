@@ -17,21 +17,23 @@ PoseRepublisher::PoseRepublisher()
 {
   robot_name_ =
     this->declare_parameter("robot_name", "create3");
+  dock_name_ =
+    this->declare_parameter("dock_name", "standard_dock");
   std::string robot_pub_topic =
-    this->declare_parameter("robot_publisher_topic", "/sim_ground_truth_pose");
+    this->declare_parameter("robot_publisher_topic", "sim_ground_truth_pose");
   std::string robot_sub_topic =
-    this->declare_parameter("robot_subscriber_topic", "/sim_ground_truth_pose");
+    this->declare_parameter("robot_subscriber_topic", "sim_ground_truth_pose");
   std::string mouse_pub_topic =
-    this->declare_parameter("mouse_publisher_topic", "/sim_ground_truth_mouse_pose");
+    this->declare_parameter("mouse_publisher_topic", "sim_ground_truth_mouse_pose");
 
   std::string dock_pub_topic =
-    this->declare_parameter("dock_publisher_topic", "/sim_ground_truth_dock_pose");
+    this->declare_parameter("dock_publisher_topic", "sim_ground_truth_dock_pose");
   std::string dock_sub_topic =
-    this->declare_parameter("dock_subscriber_topic", "/sim_ground_truth_dock_pose");
+    this->declare_parameter("dock_subscriber_topic", "sim_ground_truth_dock_pose");
   std::string ir_emitter_pub_topic =
-    this->declare_parameter("ir_emitter_publisher_topic", "/sim_ground_truth_ir_emitter_pose");
+    this->declare_parameter("ir_emitter_publisher_topic", "sim_ground_truth_ir_emitter_pose");
   std::string ir_receiver_pub_topic =
-    this->declare_parameter("ir_receiver_publisher_topic", "/sim_ground_truth_ir_receiver_pose");
+    this->declare_parameter("ir_receiver_publisher_topic", "sim_ground_truth_ir_receiver_pose");
 
   robot_subscriber_ = create_subscription<tf2_msgs::msg::TFMessage>(
     robot_sub_topic,
@@ -116,7 +118,7 @@ void PoseRepublisher::dock_subscriber_callback(const tf2_msgs::msg::TFMessage::S
 {
   for (uint16_t i = 0; i < msg->transforms.size(); i++) {
     // Child frame is model name
-    if (msg->transforms[i].child_frame_id == "standard_dock") {
+    if (msg->transforms[i].child_frame_id == dock_name_) {
       auto odom_msg = utils::tf_message_to_odom(msg, i);
       // Save dock pose
       tf2::convert(odom_msg->pose.pose, last_dock_pose_);

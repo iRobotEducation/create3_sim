@@ -14,7 +14,9 @@ from launch_ros.actions import Node
 ARGUMENTS = [
     DeclareLaunchArgument('gazebo', default_value='classic',
                           choices=['classic', 'ignition'],
-                          description='Which gazebo simulator to use')
+                          description='Which gazebo simulator to use'),
+    DeclareLaunchArgument('namespace', default_value='',
+                          description='Robot namespace'),
 ]
 
 
@@ -44,7 +46,8 @@ def generate_launch_description():
 
     # Includes
     diffdrive_controller = IncludeLaunchDescription(
-        PythonLaunchDescriptionSource([control_launch_file])
+        PythonLaunchDescriptionSource([control_launch_file]),
+        launch_arguments=[('namespace', LaunchConfiguration('namespace'))]
     )
 
     # Publish hazards vector
@@ -74,6 +77,10 @@ def generate_launch_description():
         executable='motion_control',
         parameters=[{'use_sim_time': True}],
         output='screen',
+        remappings=[
+            ('/tf', 'tf'),
+            ('/tf_static', 'tf_static')
+        ]
     )
 
     # Publish wheel status

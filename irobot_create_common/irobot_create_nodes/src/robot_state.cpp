@@ -22,16 +22,16 @@ RobotState::RobotState(const rclcpp::NodeOptions & options)
 
   // Topic parameter to publish battery state to
   battery_state_publisher_topic_ =
-    this->declare_parameter("battery_state_topic", "/battery_state");
+    this->declare_parameter("battery_state_topic", "battery_state");
   // Topic parameter to publish stop status to
   stop_status_publisher_topic_ =
-    this->declare_parameter("stop_status_topic", "/stop_status");
+    this->declare_parameter("stop_status_topic", "stop_status");
 
   // Subscriber topics
   dock_subscription_topic_ =
-    this->declare_parameter("dock_topic", "/dock_status");
+    this->declare_parameter("dock_topic", "dock_status");
   wheel_vels_subscription_topic_ =
-    this->declare_parameter("wheel_vels_topic", "/odom");
+    this->declare_parameter("wheel_vels_topic", "odom");
 
   // Publish rate parameters in Hz
   const double battery_state_publish_rate =

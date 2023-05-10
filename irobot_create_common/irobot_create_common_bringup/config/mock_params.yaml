@@ -1,7 +1,8 @@
 ---
-mock_publisher:
-  ros__parameters:
-    # Mock slip status publisher topic
-    slip_status_topic: /slip_status
-    # Publishers rate
-    slip_status_publish_rate: 62.0
+/**:
+  mock_publisher:
+    ros__parameters:
+      # Mock slip status publisher topic
+      slip_status_topic: slip_status
+      # Publishers rate
+      slip_status_publish_rate: 62.0

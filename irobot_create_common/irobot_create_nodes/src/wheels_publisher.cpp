@@ -16,11 +16,11 @@ WheelsPublisher::WheelsPublisher(const rclcpp::NodeOptions & options)
 {
   // Topic parameter to publish angular velocity to
   const std::string velocity_topic =
-    this->declare_parameter("velocity_topic", "/wheel_vels");
+    this->declare_parameter("velocity_topic", "wheel_vels");
 
   // Topic parameter to publish wheel ticks to
   const std::string ticks_topic =
-    this->declare_parameter("ticks_topic", "/wheel_ticks");
+    this->declare_parameter("ticks_topic", "wheel_ticks");
 
   // Publish rate parameter in Hz
   const double publish_rate =

@@ -12,7 +12,7 @@ InterfaceButtons::InterfaceButtons()
 : rclcpp::Node("sensors_node")
 {
   interface_buttons_sub_ = this->create_subscription<std_msgs::msg::Int32>(
-    "create3/buttons",
+    "_internal/create3_buttons",
     rclcpp::SensorDataQoS(),
     std::bind(&InterfaceButtons::create3_buttons_callback, this, std::placeholders::_1));
 

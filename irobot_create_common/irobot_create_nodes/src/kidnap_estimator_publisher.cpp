@@ -16,11 +16,11 @@ KidnapEstimator::KidnapEstimator(const rclcpp::NodeOptions & options)
 {
   // Topic parameter to publish kidnap status to
   kidnap_status_publisher_topic_ =
-    this->declare_parameter("kidnap_status_topic", "/kidnap_status");
+    this->declare_parameter("kidnap_status_topic", "kidnap_status");
 
   // Subscriber topics
   hazard_subscription_topic_ =
-    this->declare_parameter("hazard_topic", "/hazard_detection");
+    this->declare_parameter("hazard_topic", "hazard_detection");
 
   // Define kidnap status publisher
   kidnap_status_publisher_ = create_publisher<irobot_create_msgs::msg::KidnapStatus>(

@@ -3,7 +3,7 @@
   <xacro:include filename="$(find irobot_create_description)/urdf/common_properties.urdf.xacro"/>
 
   <xacro:macro name="ir_intensity"
-               params="name gazebo parent:=base_link
+               params="name gazebo namespace parent:=base_link
                        update_rate:=62.0 fov:=${10*deg2rad}
                        min_range:=${25*mm2m} max_range:=${200*mm2m}
                        visualize:=false *origin" >
@@ -32,7 +32,7 @@
                       r_min="${min_range}" r_max="${max_range}" r_res="1.0">
           <plugin filename="libgazebo_ros_create_ir_intensity_sensor.so" name="${link_name}">
             <ros>
-              <namespace>/</namespace>
+              <namespace>${namespace}</namespace>
               <remapping>~/out:=_internal/${link_name}</remapping>
             </ros>
           </plugin>

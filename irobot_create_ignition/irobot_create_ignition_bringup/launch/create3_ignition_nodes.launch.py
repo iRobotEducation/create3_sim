@@ -10,7 +10,9 @@ from launch_ros.actions import Node
 
 ARGUMENTS = [
     DeclareLaunchArgument('robot_name', default_value='create3',
-                          description='Robot name')
+                          description='Robot name'),
+    DeclareLaunchArgument('dock_name', default_value='standard_dock',
+                          description='Dock name')
 ]
 
 
@@ -31,6 +33,7 @@ def generate_launch_description():
         executable='pose_republisher_node',
         parameters=[pose_republisher_params_yaml_file,
                     {'robot_name': LaunchConfiguration('robot_name')},
+                    {'dock_name': LaunchConfiguration('dock_name')},
                     {'use_sim_time': True}],
         output='screen',
     )
