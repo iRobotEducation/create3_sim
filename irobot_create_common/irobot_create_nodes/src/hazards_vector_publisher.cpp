@@ -16,7 +16,7 @@ HazardsVectorPublisher::HazardsVectorPublisher(const rclcpp::NodeOptions & optio
 {
   // Topic parameter to publish hazards vector to
   publisher_topic_ =
-    this->declare_parameter("publisher_topic", "/hazard_detection");
+    this->declare_parameter("publisher_topic", "hazard_detection");
 
   // Subscription topics parameter
   subscription_topics_ =

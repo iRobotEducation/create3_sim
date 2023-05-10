@@ -4,6 +4,7 @@
 
   <xacro:macro name="ir_opcode_receivers" params="name:=ir_omni
                                                   gazebo
+                                                  namespace
                                                   robot_model_name
                                                   dock_model_name
                                                   emitter_link_name
@@ -14,7 +15,7 @@
                                                   sensor_1_range
                                                   samples:=50
                                                   min_range:=0.015
-                                                  update_rate:=31
+                                                  update_rate:=62
                                                   visualize:=false
                                                   *origin" >
 
@@ -59,7 +60,7 @@
       <gazebo>
         <plugin name="${name}_plugin" filename="libgazebo_ros_create_ir_opcode.so">
           <ros>
-            <namespace>/</namespace>
+            <namespace>${namespace}</namespace>
             <remapping>~/out:=ir_opcode</remapping>
           </ros>
           <update_rate>${update_rate}</update_rate>

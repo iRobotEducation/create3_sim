@@ -81,7 +81,11 @@ void GazeboRosBumper::GzPoseCallback(ConstPosesStampedPtr & msg)
   // Find in the message's vector a pose element corresponding to the mobile base's absolute pose
   // identified under the "create3" name.
   const auto i = std::find_if(
-    poses.begin(), poses.end(), [](const auto & pose) -> bool {return pose.name() == "create3";});
+    poses.begin(), poses.end(), [](const auto & pose) -> bool {
+      std::string frame("create3");
+      // Compare end of name to "create3". This works with namespaced frames.
+      return std::equal(frame.rbegin(), frame.rend(), pose.name().rbegin());
+    });
   // If not matches are found, return immediately.
   if (i == poses.end()) {
     return;

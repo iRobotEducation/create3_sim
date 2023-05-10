@@ -46,6 +46,7 @@ private:
   tf2::Transform last_dock_pose_;
 
   std::string robot_name_;
+  std::string dock_name_;
   std::string wheel_joints_[2];
 };
 

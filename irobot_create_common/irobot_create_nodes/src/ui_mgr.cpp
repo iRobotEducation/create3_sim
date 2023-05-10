@@ -28,13 +28,13 @@ UIMgr::UIMgr(const rclcpp::NodeOptions & options)
 
   // Topic parameter to publish buttons to
   buttons_publisher_topic_ =
-    this->declare_parameter("button_topic", "/interface_buttons");
+    this->declare_parameter("button_topic", "interface_buttons");
 
   // Subscriber topics
   lightring_subscription_topic_ =
-    this->declare_parameter("lightring_topic", "/cmd_lightring");
+    this->declare_parameter("lightring_topic", "cmd_lightring");
   audio_subscription_topic_ =
-    this->declare_parameter("audio_topic", "/cmd_audio");
+    this->declare_parameter("audio_topic", "cmd_audio");
 
   // Publish rate parameters in Hz
   const double buttons_publish_rate =

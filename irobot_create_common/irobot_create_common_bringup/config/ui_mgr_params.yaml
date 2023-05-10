@@ -1,10 +1,11 @@
 ---
-ui_mgr:
-  ros__parameters:
-    # Buttons publisher topic
-    button_topic: /interface_buttons
-    # Publishers rate
-    buttons_publish_rate: 1.0
-    # Subscription topics
-    lightring_topic: /cmd_lightring
-    audio_topic: /cmd_audio
+/**:
+  ui_mgr:
+    ros__parameters:
+      # Buttons publisher topic
+      button_topic: interface_buttons
+      # Publishers rate
+      buttons_publish_rate: 1.0
+      # Subscription topics
+      lightring_topic: cmd_lightring
+      audio_topic: cmd_audio

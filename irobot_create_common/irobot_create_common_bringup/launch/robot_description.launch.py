@@ -10,13 +10,16 @@ from launch.substitutions import Command, PathJoinSubstitution
 from launch.substitutions.launch_configuration import LaunchConfiguration
 from launch_ros.actions import Node
 
+
 ARGUMENTS = [
     DeclareLaunchArgument('gazebo', default_value='classic',
                           choices=['classic', 'ignition'],
                           description='Which gazebo simulator to use'),
     DeclareLaunchArgument('visualize_rays', default_value='false',
                           choices=['true', 'false'],
-                          description='Enable/disable ray visualization')
+                          description='Enable/disable ray visualization'),
+    DeclareLaunchArgument('namespace', default_value='',
+                          description='Robot namespace'),
 ]
 
 
@@ -25,6 +28,7 @@ def generate_launch_description():
     xacro_file = PathJoinSubstitution([pkg_create3_description, 'urdf', 'create3.urdf.xacro'])
     gazebo_simulator = LaunchConfiguration('gazebo')
     visualize_rays = LaunchConfiguration('visualize_rays')
+    namespace = LaunchConfiguration('namespace')
 
     robot_state_publisher = Node(
         package='robot_state_publisher',
@@ -37,8 +41,13 @@ def generate_launch_description():
              Command(
                   ['xacro', ' ', xacro_file, ' ',
                    'gazebo:=', gazebo_simulator, ' ',
-                   'visualize_rays:=', visualize_rays])},
+                   'visualize_rays:=', visualize_rays, ' ',
+                   'namespace:=', namespace])},
         ],
+        remappings=[
+            ('/tf', 'tf'),
+            ('/tf_static', 'tf_static')
+        ]
     )
 
     joint_state_publisher = Node(
@@ -47,6 +56,10 @@ def generate_launch_description():
         name='joint_state_publisher',
         output='screen',
         parameters=[{'use_sim_time': True}],
+        remappings=[
+            ('/tf', 'tf'),
+            ('/tf_static', 'tf_static')
+        ]
     )
 
     # Define LaunchDescription variable
