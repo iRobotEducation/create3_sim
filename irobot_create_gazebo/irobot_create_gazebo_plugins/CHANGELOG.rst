@@ -2,6 +2,11 @@
 Changelog for package irobot_create_gazebo_plugins
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Multi robot support (`#207 <https://github.com/iRobotEducation/create3_sim/issues/207>`_)
+* Contributors: Roni Kreinin
+
 2.0.0 (2023-01-19)
 ------------------
 * Update to ROS 2 Humble (`#197 <https://github.com/iRobotEducation/create3_sim/issues/197>`_)

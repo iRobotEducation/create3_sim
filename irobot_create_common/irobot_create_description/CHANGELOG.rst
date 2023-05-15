@@ -2,6 +2,13 @@
 Changelog for package irobot_create_description
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Multi robot support (`#207 <https://github.com/iRobotEducation/create3_sim/issues/207>`_)
+* Description fixes (`#200 <https://github.com/iRobotEducation/create3_sim/issues/200>`_)
+* Remapped odom topic (`#206 <https://github.com/iRobotEducation/create3_sim/issues/206>`_)
+* Contributors: Roni Kreinin, roni-kreinin
+
 2.0.0 (2023-01-19)
 ------------------
 * Update to ROS 2 Humble (`#197 <https://github.com/iRobotEducation/create3_sim/issues/197>`_)
