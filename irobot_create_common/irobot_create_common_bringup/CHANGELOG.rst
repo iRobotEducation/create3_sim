@@ -2,8 +2,8 @@
 Changelog for package irobot_create_common_bringup
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+2.1.0 (2023-05-15)
+------------------
 * Multi robot support (`#207 <https://github.com/iRobotEducation/create3_sim/issues/207>`_)
 * Description fixes (`#200 <https://github.com/iRobotEducation/create3_sim/issues/200>`_)
 * Contributors: Roni Kreinin, roni-kreinin

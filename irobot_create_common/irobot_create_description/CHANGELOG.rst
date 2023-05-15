@@ -2,8 +2,8 @@
 Changelog for package irobot_create_description
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+2.1.0 (2023-05-15)
+------------------
 * Multi robot support (`#207 <https://github.com/iRobotEducation/create3_sim/issues/207>`_)
 * Description fixes (`#200 <https://github.com/iRobotEducation/create3_sim/issues/200>`_)
 * Remapped odom topic (`#206 <https://github.com/iRobotEducation/create3_sim/issues/206>`_)
