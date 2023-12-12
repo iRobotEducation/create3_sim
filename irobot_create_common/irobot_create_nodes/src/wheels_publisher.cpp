@@ -30,12 +30,6 @@ WheelsPublisher::WheelsPublisher(const rclcpp::NodeOptions & options)
   encoder_resolution_ =
     this->declare_parameter("encoder_resolution", 508.8);
 
-  // wheel radius in meters
-  const double wheel_radius =
-    this->declare_parameter("wheel_radius", 0.03575);
-  // Set wheel circumference from wheel radius parameter
-  wheel_circumference_ = 2 * M_PI * wheel_radius;
-
   angular_vels_publisher_ = create_publisher<irobot_create_msgs::msg::WheelVels>(
     velocity_topic, rclcpp::SystemDefaultsQoS());
   RCLCPP_INFO_STREAM(get_logger(), "Advertised topic: " << velocity_topic);
