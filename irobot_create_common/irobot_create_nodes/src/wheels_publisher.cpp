@@ -76,10 +76,10 @@ void WheelsPublisher::publisher_callback()
 
     // Calculate and write WheelTicks msg
     const double left_ticks =
-      (get_dynamic_state_value("left_wheel_joint", "position") / wheel_circumference_) *
+      (get_dynamic_state_value("left_wheel_joint", "position") / (2 * M_PI)) *
       encoder_resolution_;
     const double right_ticks =
-      (get_dynamic_state_value("right_wheel_joint", "position") / wheel_circumference_) *
+      (get_dynamic_state_value("right_wheel_joint", "position") / (2 * M_PI)) *
       encoder_resolution_;
 
     wheel_ticks_msg_.ticks_left = std::round(left_ticks);
