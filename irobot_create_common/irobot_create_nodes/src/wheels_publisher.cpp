@@ -30,12 +30,6 @@ WheelsPublisher::WheelsPublisher(const rclcpp::NodeOptions & options)
   encoder_resolution_ =
     this->declare_parameter("encoder_resolution", 508.8);
 
-  // wheel radius in meters
-  const double wheel_radius =
-    this->declare_parameter("wheel_radius", 0.03575);
-  // Set wheel circumference from wheel radius parameter
-  wheel_circumference_ = 2 * M_PI * wheel_radius;
-
   angular_vels_publisher_ = create_publisher<irobot_create_msgs::msg::WheelVels>(
     velocity_topic, rclcpp::SystemDefaultsQoS());
   RCLCPP_INFO_STREAM(get_logger(), "Advertised topic: " << velocity_topic);
@@ -76,10 +70,10 @@ void WheelsPublisher::publisher_callback()
 
     // Calculate and write WheelTicks msg
     const double left_ticks =
-      (get_dynamic_state_value("left_wheel_joint", "position") / wheel_circumference_) *
+      (get_dynamic_state_value("left_wheel_joint", "position") / (2 * M_PI)) *
       encoder_resolution_;
     const double right_ticks =
-      (get_dynamic_state_value("right_wheel_joint", "position") / wheel_circumference_) *
+      (get_dynamic_state_value("right_wheel_joint", "position") / (2 * M_PI)) *
       encoder_resolution_;
 
     wheel_ticks_msg_.ticks_left = std::round(left_ticks);
