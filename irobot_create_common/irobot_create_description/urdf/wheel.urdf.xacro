@@ -60,7 +60,7 @@
   <xacro:if value="${gazebo == 'ignition'}">
     <ros2_control name="${wheel_link_name}_controller" type="system">
       <hardware>
-        <plugin>gz_ros2_control/IgnitionSystem</plugin>
+        <plugin>gz_ros2_control/GazeboSimSystem</plugin>
       </hardware>
       <joint name="${wheel_joint_name}">
         <state_interface name="velocity" />

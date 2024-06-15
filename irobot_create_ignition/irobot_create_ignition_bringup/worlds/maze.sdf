@@ -5,10 +5,10 @@
             <real_time_factor>1</real_time_factor>
             <real_time_update_rate>1000</real_time_update_rate>
         </physics>
-        <plugin name='ignition::gazebo::systems::Physics' filename='ignition-gazebo-physics-system' />
-        <plugin name='ignition::gazebo::systems::UserCommands' filename='ignition-gazebo-user-commands-system' />
-        <plugin name='ignition::gazebo::systems::SceneBroadcaster' filename='ignition-gazebo-scene-broadcaster-system' />
-        <plugin name='ignition::gazebo::systems::Contact' filename='ignition-gazebo-contact-system' />
+        <plugin name='gz::sim::systems::Physics' filename='gz-sim-physics-system' />
+        <plugin name='gz::sim::systems::UserCommands' filename='gz-sim-user-commands-system' />
+        <plugin name='gz::sim::systems::SceneBroadcaster' filename='gz-sim-scene-broadcaster-system' />
+        <plugin name='gz::sim::systems::Contact' filename='gz-sim-contact-system' />
         <light name='sun' type='directional'>
             <cast_shadows>1</cast_shadows>
             <pose>0 0 10 0 -0 0</pose>

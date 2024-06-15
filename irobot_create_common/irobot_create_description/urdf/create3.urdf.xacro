@@ -134,7 +134,7 @@
 
   <xacro:if value="${'$(arg gazebo)' == 'ignition'}">
     <gazebo>
-      <plugin filename="libgz_ros2_control-system.so" name="gz_ros2_control::IgnitionROS2ControlPlugin">
+      <plugin filename="libgz_ros2_control-system.so" name="gz_ros2_control::GazeboSimROS2ControlPlugin">
         <parameters>$(find irobot_create_control)/config/control.yaml</parameters>
         <ros>
           <remapping>~/odom:=odom</remapping>
@@ -284,7 +284,7 @@
 
   <xacro:if value="${'$(arg gazebo)' == 'ignition'}">
     <gazebo>
-      <plugin filename="libignition-gazebo-pose-publisher-system.so" name="ignition::gazebo::systems::PosePublisher">
+      <plugin filename="libgz-sim-pose-publisher-system.so" name="gz::sim::systems::PosePublisher">
         <publish_link_pose>true</publish_link_pose>
         <publish_nested_model_pose>true</publish_nested_model_pose>
         <use_pose_vector_msg>true</use_pose_vector_msg>
@@ -293,11 +293,11 @@
     </gazebo>
     
     <gazebo>
-      <plugin filename="libignition-gazebo-contact-system.so" name="ignition::gazebo::systems::Contact"></plugin>
+      <plugin filename="libgz-sim-contact-system.so" name="gz::sim::systems::Contact"></plugin>
     </gazebo>
 
     <gazebo>
-      <plugin filename="libignition-gazebo-sensors-system.so" name="ignition::gazebo::systems::Sensors">
+      <plugin filename="libgz-sim-sensors-system.so" name="gz::sim::systems::Sensors">
         <render_engine>ogre</render_engine>
       </plugin>
     </gazebo>
