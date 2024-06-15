@@ -10,7 +10,6 @@
   <buildtool_depend>ament_cmake</buildtool_depend>
 
   <depend>rclcpp</depend>
-  <depend>ignition-math6</depend>
 
   <test_depend>ament_lint_auto</test_depend>
   <test_depend>ament_cmake_cppcheck</test_depend>

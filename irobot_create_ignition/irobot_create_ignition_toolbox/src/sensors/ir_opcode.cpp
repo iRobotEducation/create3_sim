@@ -124,7 +124,7 @@ IrOpcode::EmitterCartesianPointToReceiverPolarPoint(const tf2::Vector3 & emitter
   tf2::Vector3 emitter_wrt_receiver_pose = irobot_create_ignition_toolbox::utils::object_wrt_frame(
     emitter_pose, receiver_pose);
   tf2::Vector3 emitter_wrt_receiver_point = emitter_wrt_receiver_pose + emitter_point;
-  ignition::math::Vector2d cartesian_coord =
+  gz::math::Vector2d cartesian_coord =
   {emitter_wrt_receiver_point[0], emitter_wrt_receiver_point[1]};
   return irobot_create_toolbox::toPolar(cartesian_coord);
 }
@@ -147,7 +147,7 @@ IrOpcode::ReceiverCartesianPointToEmitterPolarPoint(const tf2::Vector3 & receive
   tf2::Vector3 receiver_wrt_emitter_pose = irobot_create_ignition_toolbox::utils::object_wrt_frame(
     receiver_pose, emitter_pose);
   tf2::Vector3 receiver_wrt_emitter_point = receiver_wrt_emitter_pose + receiver_point;
-  ignition::math::Vector2d cartesian_coord =
+  gz::math::Vector2d cartesian_coord =
   {receiver_wrt_emitter_point[0], receiver_wrt_emitter_point[1]};
   return irobot_create_toolbox::toPolar(cartesian_coord);
 }

@@ -6,15 +6,15 @@
 #ifndef IROBOT_CREATE_IGNITION__IROBOT_CREATE_IGNITION_PLUGINS__CREATE3HMI__CREATE3HMI_HH_
 #define IROBOT_CREATE_IGNITION__IROBOT_CREATE_IGNITION_PLUGINS__CREATE3HMI__CREATE3HMI_HH_
 
-#include <ignition/gui/qt.h>
+#include <gz/gui/qt.h>
 
 #include <string>
 
-#include <ignition/gui/Plugin.hh>
-#include <ignition/transport/Node.hh>
+#include <gz/gui/Plugin.hh>
+#include <gz/transport/Node.hh>
 
 
-namespace ignition
+namespace gz
 {
 
 namespace gui

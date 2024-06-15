@@ -11,13 +11,13 @@ if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
 endif()
 
 find_package(ament_cmake REQUIRED)
-find_package(ignition-math6 REQUIRED)
+find_package(gz-math7 REQUIRED)
 find_package(rclcpp REQUIRED)
 
 #### Libraries
 
 set(dependencies
-  ignition-math6
+  gz-math7
   rclcpp
 )
 

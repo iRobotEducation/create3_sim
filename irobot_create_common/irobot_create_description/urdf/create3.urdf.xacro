@@ -134,7 +134,7 @@
 
   <xacro:if value="${'$(arg gazebo)' == 'ignition'}">
     <gazebo>
-      <plugin filename="libign_ros2_control-system.so" name="ign_ros2_control::IgnitionROS2ControlPlugin">
+      <plugin filename="libgz_ros2_control-system.so" name="gz_ros2_control::IgnitionROS2ControlPlugin">
         <parameters>$(find irobot_create_control)/config/control.yaml</parameters>
         <ros>
           <remapping>~/odom:=odom</remapping>

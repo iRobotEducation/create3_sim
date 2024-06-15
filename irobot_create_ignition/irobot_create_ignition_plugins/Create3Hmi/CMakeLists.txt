@@ -39,9 +39,7 @@ target_link_libraries(
 )
 ament_target_dependencies(
   Create3Hmi
-    ignition-common4
-    ignition-gazebo6
-    ignition-plugin1
+    gz-gui8
 )
 
 install(

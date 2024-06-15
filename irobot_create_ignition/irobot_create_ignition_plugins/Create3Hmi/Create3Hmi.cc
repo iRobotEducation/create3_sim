@@ -5,16 +5,16 @@
 
 #include "Create3Hmi.hh"
 
-#include <ignition/msgs/int32.pb.h>
+#include <gz/msgs/int32.pb.h>
 
 #include <iostream>
 
-#include <ignition/plugin/Register.hh>
-#include <ignition/gui/Application.hh>
-#include <ignition/gui/MainWindow.hh>
+#include <gz/plugin/Register.hh>
+#include <gz/gui/Application.hh>
+#include <gz/gui/MainWindow.hh>
 
 
-namespace ignition
+namespace gz
 {
 
 namespace gui
@@ -23,9 +23,9 @@ namespace gui
 Create3Hmi::Create3Hmi()
   : Plugin()
 {
-  this->create3_button_pub_ = ignition::transport::Node::Publisher();
+  this->create3_button_pub_ = gz::transport::Node::Publisher();
   this->create3_button_pub_ =
-    this->node_.Advertise < ignition::msgs::Int32 > (this->create3_button_topic_);
+    this->node_.Advertise < gz::msgs::Int32 > (this->create3_button_topic_);
 }
 
 Create3Hmi::~Create3Hmi()
@@ -52,12 +52,12 @@ void Create3Hmi::LoadConfig(const tinyxml2::XMLElement * _pluginElem)
 
 void Create3Hmi::OnCreate3Button(const int button)
 {
-  ignition::msgs::Int32 button_msg;
+  gz::msgs::Int32 button_msg;
 
   button_msg.set_data(button);
 
   if (!this->create3_button_pub_.Publish(button_msg)) {
-    ignerr << "ignition::msgs::Int32 message couldn't be published at topic: " <<
+    ignerr << "gz::msgs::Int32 message couldn't be published at topic: " <<
       this->create3_button_topic_ << std::endl;
   }
 }
@@ -76,9 +76,9 @@ void Create3Hmi::SetNamespace(const QString &_name)
       this->create3_button_topic_ << " ' " <<std::endl;
 
   // Update publisher with new topic.
-  this->create3_button_pub_ = ignition::transport::Node::Publisher();
+  this->create3_button_pub_ = gz::transport::Node::Publisher();
   this->create3_button_pub_ =
-      this->node_.Advertise< ignition::msgs::Int32 >
+      this->node_.Advertise< gz::msgs::Int32 >
       (this->create3_button_topic_);
   if (!this->create3_button_pub_)
   {
@@ -97,9 +97,9 @@ void Create3Hmi::SetNamespace(const QString &_name)
 
 }  // namespace gui
 
-}  // namespace ignition
+}  // namespace gz
 
 // Register this plugin
-IGNITION_ADD_PLUGIN(
-  ignition::gui::Create3Hmi,
-  ignition::gui::Plugin)
+GZ_ADD_PLUGIN(
+  gz::gui::Create3Hmi,
+  gz::gui::Plugin)

@@ -18,7 +18,7 @@ from launch_ros.actions import Node, PushRosNamespace
 ARGUMENTS = [
     DeclareLaunchArgument('bridge', default_value='true',
                           choices=['true', 'false'],
-                          description='Use ros_ign_bridge'),
+                          description='Use ros_gz_bridge'),
     DeclareLaunchArgument('use_sim_time', default_value='true',
                           choices=['true', 'false'],
                           description='use_sim_time'),
@@ -47,7 +47,7 @@ def generate_launch_description():
         'irobot_create_ignition_bringup')
 
     # Paths
-    ros_ign_bridge_launch = PathJoinSubstitution(
+    ros_gz_bridge_launch = PathJoinSubstitution(
         [pkg_irobot_create_ignition_bringup, 'launch', 'create3_ros_ignition_bridge.launch.py'])
     create3_nodes_launch = PathJoinSubstitution(
         [pkg_irobot_create_common_bringup, 'launch', 'create3_nodes.launch.py'])
@@ -96,7 +96,7 @@ def generate_launch_description():
 
         # Spawn Create 3
         Node(
-            package='ros_ign_gazebo',
+            package='ros_gz_sim',
             executable='create',
             arguments=['-name', robot_name,
                        '-x', x,
@@ -109,7 +109,7 @@ def generate_launch_description():
 
         # Spawn dock
         Node(
-            package='ros_ign_gazebo',
+            package='ros_gz_sim',
             executable='create',
             arguments=['-name', dock_name,
                        '-x', x_dock,
@@ -123,7 +123,7 @@ def generate_launch_description():
 
         # ROS Ign Bridge
         IncludeLaunchDescription(
-            PythonLaunchDescriptionSource([ros_ign_bridge_launch]),
+            PythonLaunchDescriptionSource([ros_gz_bridge_launch]),
             launch_arguments=[
                 ('world', LaunchConfiguration('world')),
                 ('robot_name', robot_name),

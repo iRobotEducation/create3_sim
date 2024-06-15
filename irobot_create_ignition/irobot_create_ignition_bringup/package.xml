@@ -9,7 +9,7 @@
 
   <buildtool_depend>ament_cmake</buildtool_depend>
 
-  <depend>ros_ign_interfaces</depend>
+  <depend>ros_gz_interfaces</depend>
 
   <!-- Create3 -->
   <exec_depend>irobot_create_description</exec_depend>
@@ -18,9 +18,9 @@
   <exec_depend>irobot_create_ignition_plugins</exec_depend>
 
   <!-- ROS IGN -->
-  <exec_depend>ign_ros2_control</exec_depend>
-  <exec_depend>ros_ign_gazebo</exec_depend>
-  <exec_depend>ros_ign_bridge</exec_depend>
+  <exec_depend>gz_ros2_control</exec_depend>
+  <exec_depend>ros_gz_sim</exec_depend>
+  <exec_depend>ros_gz_bridge</exec_depend>
 
   <!-- Messages -->
   <exec_depend>std_msgs</exec_depend>

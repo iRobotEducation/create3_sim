@@ -72,7 +72,7 @@ void Bumper::bumper_callback(const ros_gz_interfaces::msg::Contacts::SharedPtr b
         average_position.z));
 
     tf2::Vector3 contact_point = utils::object_wrt_frame(average_pose, robot_pose);
-    ignition::math::Vector2d cartesian_coord = {contact_point[0], contact_point[1]};
+    gz::math::Vector2d cartesian_coord = {contact_point[0], contact_point[1]};
     auto azimuth = irobot_create_toolbox::toPolar(cartesian_coord).azimuth;
 
     // Find contact zone

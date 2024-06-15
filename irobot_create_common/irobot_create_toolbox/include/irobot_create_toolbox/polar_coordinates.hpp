@@ -4,7 +4,7 @@
 #ifndef IROBOT_CREATE_TOOLBOX__POLAR_COORDINATES_HPP_
 #define IROBOT_CREATE_TOOLBOX__POLAR_COORDINATES_HPP_
 
-#include "ignition/math/Vector2.hh"
+#include "gz/math/Vector2.hh"
 
 namespace irobot_create_toolbox
 {
@@ -16,9 +16,9 @@ struct PolarCoordinate
   double azimuth;
 };
 
-PolarCoordinate toPolar(const ignition::math::Vector2d & cartesian);
+PolarCoordinate toPolar(const gz::math::Vector2d & cartesian);
 
-ignition::math::Vector2d fromPolar(const PolarCoordinate & polar);
+gz::math::Vector2d fromPolar(const PolarCoordinate & polar);
 
 }  // namespace irobot_create_toolbox
 
