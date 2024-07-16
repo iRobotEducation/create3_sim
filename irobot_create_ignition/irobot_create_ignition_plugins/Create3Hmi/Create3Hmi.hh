@@ -60,8 +60,8 @@ protected slots:
   void OnCreate3Button(const int button);
 
 private:
-  ignition::transport::Node node_;
-  ignition::transport::Node::Publisher create3_button_pub_;
+  gz::transport::Node node_;
+  gz::transport::Node::Publisher create3_button_pub_;
   std::string namespace_ = "";
   std::string create3_button_topic_ = "/create3_buttons";
 };
