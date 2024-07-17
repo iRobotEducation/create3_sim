@@ -62,7 +62,7 @@ def generate_launch_description():
             ('/tf_static', 'tf_static')
         ],
         output='screen',
-        condition=NotEqualsSubstitution(LaunchConfiguration('namespace'), '')
+        condition=IfCondition(NotEqualsSubstitution(LaunchConfiguration('namespace'), ''))
     )
 
     # Static transform from <namespace>/base_link to base_link
@@ -78,7 +78,7 @@ def generate_launch_description():
             ('/tf_static', 'tf_static')
         ],
         output='screen',
-        condition=NotEqualsSubstitution(LaunchConfiguration('namespace'), '')
+        condition=IfCondition(NotEqualsSubstitution(LaunchConfiguration('namespace'), ''))
     )
 
     ld = LaunchDescription(ARGUMENTS)
