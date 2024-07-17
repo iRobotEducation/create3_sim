@@ -3,7 +3,7 @@ import os
 
 from setuptools import find_packages, setup
 
-package_name = 'axis_camera'
+package_name = 'irobot_create_common_bringup'
 
 setup(
     name=package_name,
