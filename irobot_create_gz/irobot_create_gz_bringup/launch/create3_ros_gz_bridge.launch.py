@@ -57,15 +57,15 @@ def generate_launch_description():
         }],
         arguments=[
             [namespace,
-             '/cmd_vel' + '@geometry_msgs/msg/Twist' + '[ignition.msgs.Twist'],
+             '/cmd_vel' + '@geometry_msgs/msg/TwistStamped' + '[ignition.msgs.Twist'],
             ['/model/', robot_name, '/cmd_vel' +
-             '@geometry_msgs/msg/Twist' +
+             '@geometry_msgs/msg/TwistStamped' +
              ']ignition.msgs.Twist']
         ],
         remappings=[
             ([namespace, '/cmd_vel'], 'cmd_vel'),
             (['/model/', robot_name, '/cmd_vel'],
-             'diffdrive_controller/cmd_vel_unstamped')
+             'diffdrive_controller/cmd_vel')
         ])
 
     # Pose bridge
