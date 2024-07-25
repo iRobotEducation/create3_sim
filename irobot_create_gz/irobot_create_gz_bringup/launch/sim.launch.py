@@ -29,33 +29,35 @@ def generate_launch_description():
     # Directories
     pkg_irobot_create_gz_bringup = get_package_share_directory(
         'irobot_create_gz_bringup')
-    #pkg_irobot_create_gz_plugins = get_package_share_directory(
-    #    'irobot_create_gz_plugins')
+    pkg_irobot_create_gz_plugins = get_package_share_directory(
+        'irobot_create_gz_plugins')
     pkg_irobot_create_description = get_package_share_directory(
         'irobot_create_description')
     pkg_ros_gz_sim = get_package_share_directory(
         'ros_gz_sim')
 
     # Set Ignition resource path
-    gz_resource_path = SetEnvironmentVariable(name='GZ_SIM_RESOURCE_PATH',
-                                               value=[os.path.join(
-                                                      pkg_irobot_create_gz_bringup,
-                                                      'worlds'), ':' +
-                                                      str(Path(
-                                                          pkg_irobot_create_description).
-                                                          parent.resolve())])
+    gz_resource_path = SetEnvironmentVariable(
+        name='GZ_SIM_RESOURCE_PATH',
+        value=':'.join([
+            os.path.join(pkg_irobot_create_gz_bringup, 'worlds'),
+            str(Path(pkg_irobot_create_description).parent.resolve())
+        ])
+    )
 
-    #gz_gui_plugin_path = SetEnvironmentVariable(name='GZ_GUI_PLUGIN_PATH',
-    #                                             value=[os.path.join(
-    #                                                    pkg_irobot_create_gz_plugins,
-    #                                                    'lib')])
+    gz_gui_plugin_path = SetEnvironmentVariable(
+        name='GZ_GUI_PLUGIN_PATH',
+        value=":".join([
+            os.path.join(pkg_irobot_create_gz_plugins, 'lib')
+        ])
+    )
 
     # Paths
     gz_sim_launch = PathJoinSubstitution(
         [pkg_ros_gz_sim, 'launch', 'gz_sim.launch.py'])
 
     # Ignition gazebo
-    ignition_gazebo = IncludeLaunchDescription(
+    gz_sim = IncludeLaunchDescription(
         PythonLaunchDescriptionSource([gz_sim_launch]),
         launch_arguments=[
             ('gz_args', [LaunchConfiguration('world'),
@@ -63,7 +65,8 @@ def generate_launch_description():
                           ' -v 4',
                           ' --gui-config ',
                           PathJoinSubstitution([pkg_irobot_create_gz_bringup,
-                                                'gui', 'create3', 'gui.config'])])
+                                                'gui', 'create3', 'gui.config'])
+            ])
         ]
     )
 
@@ -78,7 +81,7 @@ def generate_launch_description():
     # Create launch description and add actions
     ld = LaunchDescription(ARGUMENTS)
     ld.add_action(gz_resource_path)
-    #ld.add_action(gz_gui_plugin_path)
-    ld.add_action(ignition_gazebo)
+    ld.add_action(gz_gui_plugin_path)
+    ld.add_action(gz_sim)
     ld.add_action(clock_bridge)
     return ld

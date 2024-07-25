@@ -35,6 +35,8 @@ def generate_launch_description():
         [pkg_irobot_create_gz_bringup, 'launch', 'sim.launch.py'])
     robot_spawn_launch = PathJoinSubstitution(
         [pkg_irobot_create_gz_bringup, 'launch', 'create3_spawn.launch.py'])
+    create3_nodes_launch = PathJoinSubstitution(
+        [pkg_irobot_create_gz_bringup, 'launch', 'create3_gz_nodes.launch.py'])
 
     ignition = IncludeLaunchDescription(
         PythonLaunchDescriptionSource([ignition_launch]),
@@ -53,8 +55,13 @@ def generate_launch_description():
             ('z', LaunchConfiguration('z')),
             ('yaw', LaunchConfiguration('yaw'))])
 
+    create3_nodes = IncludeLaunchDescription(
+        PythonLaunchDescriptionSource([create3_nodes_launch]),
+        launch_arguments=[])
+
     # Create launch description and add actions
     ld = LaunchDescription(ARGUMENTS)
     ld.add_action(ignition)
     ld.add_action(robot_spawn)
+    ld.add_action(create3_nodes)
     return ld
