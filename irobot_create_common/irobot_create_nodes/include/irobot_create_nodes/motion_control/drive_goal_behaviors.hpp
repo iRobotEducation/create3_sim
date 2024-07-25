@@ -10,7 +10,7 @@
 #include <memory>
 #include <string>
 
-#include "geometry_msgs/msg/twist.hpp"
+#include "geometry_msgs/msg/twist_stamped.hpp"
 #include "irobot_create_nodes/motion_control/behaviors_scheduler.hpp"
 #include "irobot_create_msgs/action/drive_arc.hpp"
 #include "irobot_create_msgs/action/drive_distance.hpp"
@@ -23,7 +23,7 @@
 namespace irobot_create_nodes
 {
 
-geometry_msgs::msg::Twist get_default_velocity_cmd();
+geometry_msgs::msg::TwistStamped get_default_velocity_cmd();
 geometry_msgs::msg::PoseStamped get_current_pose_stamped(
   const rclcpp::Time & current_time,
   const tf2::Transform & pose);
@@ -253,7 +253,7 @@ private:
   float remain_angle_travel_;
   int8_t start_sign_;
   std::atomic<bool> first_iter_;
-  geometry_msgs::msg::Twist arc_velocity_cmd_;
+  geometry_msgs::msg::TwistStamped arc_velocity_cmd_;
   float translate_speed_;
   const float slow_angle_dist_ {0.4};
   const float converge_angle_dist_ {M_PI / 360.0f};
@@ -292,7 +292,7 @@ private:
   float goal_travel_;
   tf2::Vector3 start_position_;
   std::atomic<bool> first_iter_;
-  geometry_msgs::msg::Twist drive_velocity_cmd_;
+  geometry_msgs::msg::TwistStamped drive_velocity_cmd_;
   float translate_speed_;
   const float slow_translate_dist_ {0.1};
   const float converge_translate_dist_ {0.005};
@@ -328,7 +328,7 @@ private:
   float remain_angle_travel_;
   int8_t start_sign_;
   std::atomic<bool> first_iter_;
-  geometry_msgs::msg::Twist rotate_velocity_cmd_;
+  geometry_msgs::msg::TwistStamped rotate_velocity_cmd_;
   float servo_speed_;
   float max_rot_speed_radps_;
   const float slow_angle_dist_ {0.6};
@@ -369,7 +369,7 @@ private:
   float remain_angle_travel_;
   int8_t start_sign_;
   std::atomic<bool> first_iter_;
-  geometry_msgs::msg::Twist rotate_velocity_cmd_;
+  geometry_msgs::msg::TwistStamped rotate_velocity_cmd_;
   float servo_speed_;
   float max_rot_speed_radps_;
   const float apply_ang_correction_thresh_ {0.05};

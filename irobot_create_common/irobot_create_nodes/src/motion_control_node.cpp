@@ -111,7 +111,7 @@ MotionControlNode::MotionControlNode(const rclcpp::NodeOptions & options)
     std::bind(&MotionControlNode::hazard_vector_callback, this, _1));
 
   // Create subscription to let other applications drive the robot
-  teleop_subscription_ = this->create_subscription<geometry_msgs::msg::Twist>(
+  teleop_subscription_ = this->create_subscription<geometry_msgs::msg::TwistStamped>(
     "cmd_vel", rclcpp::SensorDataQoS(),
     std::bind(&MotionControlNode::commanded_velocity_callback, this, _1));
 
@@ -123,8 +123,8 @@ MotionControlNode::MotionControlNode(const rclcpp::NodeOptions & options)
     "kidnap_status", rclcpp::SensorDataQoS(),
     std::bind(&MotionControlNode::kidnap_callback, this, _1));
 
-  cmd_vel_out_pub_ = this->create_publisher<geometry_msgs::msg::Twist>(
-    "diffdrive_controller/cmd_vel_unstamped", rclcpp::SystemDefaultsQoS());
+  cmd_vel_out_pub_ = this->create_publisher<geometry_msgs::msg::TwistStamped>(
+    "diffdrive_controller/cmd_vel", rclcpp::SystemDefaultsQoS());
 
   backup_limit_hazard_pub_ = this->create_publisher<irobot_create_msgs::msg::HazardDetection>(
     "_internal/backup_limit", rclcpp::SensorDataQoS().reliable());
@@ -257,7 +257,7 @@ void MotionControlNode::control_robot()
   // Create a null command if we don't have anything.
   // We also disable reflexes because the robot is in an idle state.
   if (!command) {
-    command = geometry_msgs::msg::Twist();
+    command = geometry_msgs::msg::TwistStamped();
   } else if (apply_backup_limits) {
     bound_command_by_limits(*command);
   }
@@ -274,7 +274,7 @@ void MotionControlNode::control_robot()
   if (backup_printed_ && !backup_buffer_low_) {
     backup_printed_ = false;
   }
-  auto cmd_out_msg = std::make_unique<geometry_msgs::msg::Twist>();
+  auto cmd_out_msg = std::make_unique<geometry_msgs::msg::TwistStamped>();
   if (!e_stop_engaged_) {
     *cmd_out_msg = *command;
   }
@@ -330,7 +330,7 @@ void MotionControlNode::hazard_vector_callback(
   reflex_behavior_->update_hazards(current_state_);
 }
 
-void MotionControlNode::commanded_velocity_callback(geometry_msgs::msg::Twist::ConstSharedPtr msg)
+void MotionControlNode::commanded_velocity_callback(geometry_msgs::msg::TwistStamped::ConstSharedPtr msg)
 {
   if (scheduler_->has_behavior()) {
     const auto time_now = this->now();
@@ -371,18 +371,18 @@ void MotionControlNode::reset_last_teleop_cmd()
   last_teleop_ts_ = this->now();
 }
 
-void MotionControlNode::bound_command_by_limits(geometry_msgs::msg::Twist & cmd)
+void MotionControlNode::bound_command_by_limits(geometry_msgs::msg::TwistStamped & cmd)
 {
-  if (std::abs(cmd.angular.z) > GYRO_MAX_ROTATE_SPEED_RAD_S) {
-    cmd.angular.z = std::copysign(GYRO_MAX_ROTATE_SPEED_RAD_S, cmd.angular.z);
+  if (std::abs(cmd.twist.angular.z) > GYRO_MAX_ROTATE_SPEED_RAD_S) {
+    cmd.twist.angular.z = std::copysign(GYRO_MAX_ROTATE_SPEED_RAD_S, cmd.twist.angular.z);
   }
   if (safety_override_mode_ == SafetyOverrideMode::NONE &&
     backup_buffer_ <= 0.0 &&
-    cmd.linear.x < 0.0)
+    cmd.twist.linear.x < 0.0)
   {
     // Robot has run out of room to backup
-    cmd.linear.x = 0.0;
-    cmd.angular.z = 0.0;
+    cmd.twist.linear.x = 0.0;
+    cmd.twist.angular.z = 0.0;
     const auto time_now = this->now();
     if (!backup_printed_) {
       backup_printed_ = true;
@@ -392,8 +392,8 @@ void MotionControlNode::bound_command_by_limits(geometry_msgs::msg::Twist & cmd)
         safety_override_param_name_.c_str());
     }
   } else {
-    double left_vel = cmd.linear.x - cmd.angular.z * wheel_base_ / 2.0;
-    double right_vel = cmd.angular.z * wheel_base_ + left_vel;
+    double left_vel = cmd.twist.linear.x - cmd.twist.angular.z * wheel_base_ / 2.0;
+    double right_vel = cmd.twist.angular.z * wheel_base_ + left_vel;
     const double max_vel = std::max(std::abs(left_vel), std::abs(right_vel));
     if (max_vel > 0 && max_vel > max_speed_) {
       const double scale = max_speed_ / max_vel;
@@ -401,8 +401,8 @@ void MotionControlNode::bound_command_by_limits(geometry_msgs::msg::Twist & cmd)
       left_vel *= scale;
       right_vel *= scale;
       // Convert back to cartesian
-      cmd.linear.x = (left_vel + right_vel) / 2.0;
-      cmd.angular.z = (right_vel - left_vel) / wheel_base_;
+      cmd.twist.linear.x = (left_vel + right_vel) / 2.0;
+      cmd.twist.angular.z = (right_vel - left_vel) / wheel_base_;
     }
   }
 }

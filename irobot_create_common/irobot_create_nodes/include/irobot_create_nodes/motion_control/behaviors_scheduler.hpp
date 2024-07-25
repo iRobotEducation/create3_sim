@@ -9,7 +9,7 @@
 #include <mutex>
 
 #include "boost/optional.hpp"
-#include "geometry_msgs/msg/twist.hpp"
+#include "geometry_msgs/msg/twist_stamped.hpp"
 #include "irobot_create_msgs/msg/hazard_detection_vector.hpp"
 #include "tf2/LinearMath/Transform.h"
 
@@ -28,7 +28,7 @@ struct RobotState
 class BehaviorsScheduler
 {
 public:
-  using optional_output_t = boost::optional<geometry_msgs::msg::Twist>;
+  using optional_output_t = boost::optional<geometry_msgs::msg::TwistStamped>;
   using run_behavior_func_t = std::function<optional_output_t(const RobotState &)>;
   using is_done_func_t = std::function<bool ()>;
   using cleanup_func_t = std::function<void ()>;

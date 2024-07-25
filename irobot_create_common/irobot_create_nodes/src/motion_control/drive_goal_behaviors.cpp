@@ -14,15 +14,15 @@
 namespace irobot_create_nodes
 {
 //// Helper functions ////
-geometry_msgs::msg::Twist get_default_velocity_cmd()
+geometry_msgs::msg::TwistStamped get_default_velocity_cmd()
 {
-  geometry_msgs::msg::Twist default_cmd;
-  default_cmd.linear.x = 0;
-  default_cmd.linear.y = 0;
-  default_cmd.linear.z = 0;
-  default_cmd.angular.x = 0;
-  default_cmd.angular.y = 0;
-  default_cmd.angular.z = 0;
+  geometry_msgs::msg::TwistStamped default_cmd;
+  default_cmd.twist.linear.x = 0;
+  default_cmd.twist.linear.y = 0;
+  default_cmd.twist.linear.z = 0;
+  default_cmd.twist.angular.x = 0;
+  default_cmd.twist.angular.y = 0;
+  default_cmd.twist.angular.z = 0;
   return default_cmd;
 }
 geometry_msgs::msg::PoseStamped get_current_pose_stamped(
@@ -74,10 +74,10 @@ void DriveArcBehavior::initialize_goal(const irobot_create_msgs::action::DriveAr
 
   const std::lock_guard<std::mutex> lock(drive_arc_params_mutex_);
   arc_velocity_cmd_ = get_default_velocity_cmd();
-  arc_velocity_cmd_.linear.x = max_speed;
-  arc_velocity_cmd_.angular.z = std::copysign(max_speed / std::abs(goal.radius), goal.angle);
+  arc_velocity_cmd_.twist.linear.x = max_speed;
+  arc_velocity_cmd_.twist.angular.z = std::copysign(max_speed / std::abs(goal.radius), goal.angle);
   if (goal.translate_direction == irobot_create_msgs::action::DriveArc::Goal::TRANSLATE_BACKWARD) {
-    arc_velocity_cmd_.linear.x *= -1.0f;
+    arc_velocity_cmd_.twist.linear.x *= -1.0f;
   }
   remain_angle_travel_ = goal.angle;
   start_sign_ = std::copysign(1, remain_angle_travel_);
@@ -114,13 +114,13 @@ bool DriveArcBehavior::iterate_on_goal(
         }
         float scale = abs_remain_angle_travel / slow_angle_dist_;
         scale = std::max(scale, min_percent_);
-        output->linear.x = arc_velocity_cmd_.linear.x * scale;
-        output->angular.z = arc_velocity_cmd_.angular.z * scale;
-        float abs_linear = std::abs(output->linear.x);
+        output->twist.linear.x = arc_velocity_cmd_.twist.linear.x * scale;
+        output->twist.angular.z = arc_velocity_cmd_.twist.angular.z * scale;
+        float abs_linear = std::abs(output->twist.linear.x);
         if (abs_linear < min_controllable_) {
           float up_scale = min_controllable_ / abs_linear;
-          output->linear.x *= up_scale;
-          output->angular.z *= up_scale;
+          output->twist.linear.x *= up_scale;
+          output->twist.angular.z *= up_scale;
         }
       }
     }
@@ -172,7 +172,7 @@ void DriveDistanceBehavior::initialize_goal(
   remaining_travel_ = goal_travel_;
   float max_speed = std::min(translate_speed_, goal.max_translation_speed);
   RCLCPP_INFO(logger_, "DriveDistance with distance %f, max_speed %f", goal.distance, max_speed);
-  drive_velocity_cmd_.linear.x = std::copysign(max_speed, goal_travel_);
+  drive_velocity_cmd_.twist.linear.x = std::copysign(max_speed, goal_travel_);
 }
 
 bool DriveDistanceBehavior::iterate_on_goal(
@@ -204,8 +204,8 @@ bool DriveDistanceBehavior::iterate_on_goal(
         }
         abs_remaining = std::max(abs_remaining, min_translate_vel_);
         float remain_vel = std::copysign(abs_remaining, goal_travel_);
-        if (std::abs(remain_vel) < std::abs(output->linear.x)) {
-          output->linear.x = remain_vel;
+        if (std::abs(remain_vel) < std::abs(output->twist.linear.x)) {
+          output->twist.linear.x = remain_vel;
         }
       }
     }
@@ -256,7 +256,7 @@ void RotateAngleBehavior::initialize_goal(
   start_sign_ = std::copysign(1, remain_angle_travel_);
   float max_speed = std::min(max_rot_speed_radps_, goal.max_rotation_speed);
   RCLCPP_INFO(logger_, "RotateAngle with angle %f, max_speed %f", goal.angle, max_speed);
-  rotate_velocity_cmd_.angular.z = std::copysign(max_speed, remain_angle_travel_);
+  rotate_velocity_cmd_.twist.angular.z = std::copysign(max_speed, remain_angle_travel_);
 }
 
 bool RotateAngleBehavior::iterate_on_goal(
@@ -287,8 +287,8 @@ bool RotateAngleBehavior::iterate_on_goal(
         return true;
       }
       double slow_speed = std::max(abs_remain_angle_travel, min_angular_vel_);
-      if (slow_speed < std::abs(output->angular.z)) {
-        output->angular.z = std::copysign(slow_speed, remain_angle_travel_);
+      if (slow_speed < std::abs(output->twist.angular.z)) {
+        output->twist.angular.z = std::copysign(slow_speed, remain_angle_travel_);
       }
     }
   }
@@ -428,7 +428,7 @@ bool NavigateToPositionBehavior::iterate_on_goal(
       // Look for deviation from goal while driving straight and apply small correction
       float goal_ang_diff = angle_to_goal(current_pose, goal_pose_);
       if (std::abs(goal_ang_diff) > apply_ang_correction_thresh_) {
-        output->angular.z += goal_ang_diff;
+        output->twist.angular.z += goal_ang_diff;
       }
     }
   }
