@@ -75,7 +75,10 @@ def generate_launch_description():
         package='irobot_create_nodes',
         name='motion_control',
         executable='motion_control',
-        parameters=[{'use_sim_time': True}],
+        parameters=[{
+            'use_sim_time': True,
+            'safety_override': 'backup_only'
+        }],
         output='screen',
         remappings=[
             ('/tf', 'tf'),
