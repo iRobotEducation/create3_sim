@@ -362,19 +362,19 @@
             </link>
 
             <link name='wall12'>
-                <pose>0 5 0 0 0 0</pose>
+                <pose>0 5.5 0 0 0 0</pose>
                 <static>true</static>
                 <collision name='wall12_collision'>
                     <geometry>
                         <box>
-                            <size>2 10 1</size>
+                            <size>2 9 1</size>
                         </box>
                     </geometry>
                 </collision>
                 <visual name='wall12_visual'>
                     <geometry>
                         <box>
-                            <size>2 10 1</size>
+                            <size>2 9 1</size>
                         </box>
                     </geometry>
                 </visual>
