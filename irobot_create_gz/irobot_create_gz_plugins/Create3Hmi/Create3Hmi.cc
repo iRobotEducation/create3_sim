@@ -57,7 +57,7 @@ void Create3Hmi::OnCreate3Button(const int button)
   button_msg.set_data(button);
 
   if (!this->create3_button_pub_.Publish(button_msg)) {
-    ignerr << "gz::msgs::Int32 message couldn't be published at topic: " <<
+    gzerr << "gz::msgs::Int32 message couldn't be published at topic: " <<
       this->create3_button_topic_ << std::endl;
   }
 }
@@ -72,7 +72,7 @@ void Create3Hmi::SetNamespace(const QString &_name)
   this->namespace_ = _name.toStdString();
   this->create3_button_topic_ = this->namespace_ + "/create3_buttons";
 
-  ignmsg << "A new robot name has been entered, publishing on topic: '" <<
+  gzlog << "A new robot name has been entered, publishing on topic: '" <<
       this->create3_button_topic_ << " ' " <<std::endl;
 
   // Update publisher with new topic.
@@ -85,7 +85,7 @@ void Create3Hmi::SetNamespace(const QString &_name)
     App()->findChild<MainWindow *>()->notifyWithDuration(
       QString::fromStdString("Error when advertising topic: " +
         this->create3_button_topic_), 4000);
-    ignerr << "Error when advertising topic: " <<
+    gzerr << "Error when advertising topic: " <<
       this->create3_button_topic_ << std::endl;
   }else {
     App()->findChild<MainWindow *>()->notifyWithDuration(
