@@ -13,6 +13,7 @@
 #include "tf2_ros/transform_listener.h"
 
 #include "geometry_msgs/msg/twist.hpp"
+#include "geometry_msgs/msg/twist_stamped.hpp"
 #include "irobot_create_msgs/msg/kidnap_status.hpp"
 #include "irobot_create_msgs/msg/hazard_detection.hpp"
 #include "irobot_create_msgs/msg/wheel_status.hpp"
@@ -83,6 +84,7 @@ private:
 
   /// \brief Callback for new velocity commands
   void commanded_velocity_callback(geometry_msgs::msg::TwistStamped::ConstSharedPtr msg);
+  void commanded_velocity_unstamped_callback(geometry_msgs::msg::Twist::ConstSharedPtr msg);
 
   /// \brief Callback for robot odometry
   void robot_pose_callback(nav_msgs::msg::Odometry::ConstSharedPtr msg);
@@ -107,6 +109,7 @@ private:
   rclcpp::Subscription<irobot_create_msgs::msg::HazardDetectionVector>::SharedPtr
     hazard_detection_sub_;
   rclcpp::Subscription<geometry_msgs::msg::TwistStamped>::SharedPtr teleop_subscription_;
+  rclcpp::Subscription<geometry_msgs::msg::Twist>::SharedPtr teleop_unstamped_subscription_;
   rclcpp::Subscription<nav_msgs::msg::Odometry>::SharedPtr odom_pose_sub_;
   rclcpp::Subscription<irobot_create_msgs::msg::KidnapStatus>::SharedPtr kidnap_sub_;
   rclcpp::Publisher<geometry_msgs::msg::TwistStamped>::SharedPtr cmd_vel_out_pub_;

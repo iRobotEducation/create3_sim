@@ -114,6 +114,9 @@ MotionControlNode::MotionControlNode(const rclcpp::NodeOptions & options)
   teleop_subscription_ = this->create_subscription<geometry_msgs::msg::TwistStamped>(
     "cmd_vel", rclcpp::SensorDataQoS(),
     std::bind(&MotionControlNode::commanded_velocity_callback, this, _1));
+  teleop_unstamped_subscription_ = this->create_subscription<geometry_msgs::msg::Twist>(
+    "cmd_vel_unstamped", rclcpp::SensorDataQoS(),
+    std::bind(&MotionControlNode::commanded_velocity_unstamped_callback, this, _1));
 
   odom_pose_sub_ = this->create_subscription<nav_msgs::msg::Odometry>(
     "odom", rclcpp::SensorDataQoS(),
@@ -349,6 +352,30 @@ void MotionControlNode::commanded_velocity_callback(geometry_msgs::msg::TwistSta
   last_teleop_ts_ = this->now();
 }
 
+
+void MotionControlNode::commanded_velocity_unstamped_callback(geometry_msgs::msg::Twist::ConstSharedPtr msg)
+{
+  geometry_msgs::msg::TwistStamped stamped_msg;
+  stamped_msg.twist = *msg;
+  stamped_msg.header.stamp = this->get_clock()->now();
+
+  if (scheduler_->has_behavior()) {
+    const auto time_now = this->now();
+    if (time_now - auto_override_print_ts_ > repeat_print_) {
+      auto_override_print_ts_ = time_now;
+      RCLCPP_WARN(
+        this->get_logger(),
+        "Ignoring velocities commanded while an autonomous behavior is running!");
+    }
+    return;
+  }
+
+  const std::lock_guard<std::mutex> lock(mutex_);
+
+  last_teleop_cmd_ = stamped_msg;
+  last_teleop_ts_ = this->now();
+}
+
 void MotionControlNode::robot_pose_callback(nav_msgs::msg::Odometry::ConstSharedPtr msg)
 {
   const std::lock_guard<std::mutex> lock(current_state_mutex_);
@@ -368,6 +395,7 @@ void MotionControlNode::reset_last_teleop_cmd()
   const std::lock_guard<std::mutex> lock(mutex_);
 
   last_teleop_cmd_ = get_default_velocity_cmd();
+  last_teleop_cmd_.header.stamp = this->get_clock()->now();
   last_teleop_ts_ = this->now();
 }
 
