@@ -5,7 +5,7 @@ Changelog for package irobot_create_gz_bringup
 2.1.0 (2023-05-15)
 ------------------
 * Multi robot support (`#207 <https://github.com/iRobotEducation/create3_sim/issues/207>`_)
-* Added gz_ros2_control dependency as it is released now. (`#204 <https://github.com/iRobotEducation/create3_sim/issues/204>`_)
+* Added ign_ros2_control dependency as it is released now. (`#204 <https://github.com/iRobotEducation/create3_sim/issues/204>`_)
 * Contributors: Roni Kreinin, roni-kreinin
 
 2.0.0 (2023-01-19)
