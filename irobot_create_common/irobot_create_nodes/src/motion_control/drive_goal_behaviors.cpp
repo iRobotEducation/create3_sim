@@ -14,7 +14,9 @@
 namespace irobot_create_nodes
 {
 //// Helper functions ////
-geometry_msgs::msg::TwistStamped get_default_velocity_cmd()
+geometry_msgs::msg::TwistStamped get_default_velocity_cmd(
+  const rclcpp::Time & current_time
+)
 {
   geometry_msgs::msg::TwistStamped default_cmd;
   default_cmd.twist.linear.x = 0;
@@ -23,6 +25,7 @@ geometry_msgs::msg::TwistStamped get_default_velocity_cmd()
   default_cmd.twist.angular.x = 0;
   default_cmd.twist.angular.y = 0;
   default_cmd.twist.angular.z = 0;
+  default_cmd.header.stamp = current_time;
   return default_cmd;
 }
 geometry_msgs::msg::PoseStamped get_current_pose_stamped(
@@ -73,7 +76,8 @@ void DriveArcBehavior::initialize_goal(const irobot_create_msgs::action::DriveAr
     goal.radius, goal.angle, max_speed);
 
   const std::lock_guard<std::mutex> lock(drive_arc_params_mutex_);
-  arc_velocity_cmd_ = get_default_velocity_cmd();
+  rclcpp::Time current_time = clock_->now();
+  arc_velocity_cmd_ = get_default_velocity_cmd(current_time);
   arc_velocity_cmd_.twist.linear.x = max_speed;
   arc_velocity_cmd_.twist.angular.z = std::copysign(max_speed / std::abs(goal.radius), goal.angle);
   if (goal.translate_direction == irobot_create_msgs::action::DriveArc::Goal::TRANSLATE_BACKWARD) {
@@ -166,7 +170,8 @@ void DriveDistanceBehavior::initialize_goal(
 {
   first_iter_ = true;
   const std::lock_guard<std::mutex> lock(drive_distance_params_mutex_);
-  drive_velocity_cmd_ = get_default_velocity_cmd();
+  rclcpp::Time current_time = clock_->now();
+  drive_velocity_cmd_ = get_default_velocity_cmd(current_time);
   goal_travel_ = goal.distance;
   travel_distance_sq_ = goal_travel_ * goal_travel_;
   remaining_travel_ = goal_travel_;
@@ -251,7 +256,8 @@ void RotateAngleBehavior::initialize_goal(
 {
   first_iter_ = true;
   const std::lock_guard<std::mutex> lock(rotate_angle_params_mutex_);
-  rotate_velocity_cmd_ = get_default_velocity_cmd();
+  rclcpp::Time current_time = clock_->now();
+  rotate_velocity_cmd_ = get_default_velocity_cmd(current_time);
   remain_angle_travel_ = goal.angle;
   start_sign_ = std::copysign(1, remain_angle_travel_);
   float max_speed = std::min(max_rot_speed_radps_, goal.max_rotation_speed);
