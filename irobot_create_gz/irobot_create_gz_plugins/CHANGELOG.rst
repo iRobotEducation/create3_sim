@@ -1,5 +1,5 @@
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-Changelog for package irobot_create_gz_plugins
+Changelog for package irobot_create_ignition_plugins
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 2.1.0 (2023-05-15)
@@ -12,7 +12,7 @@ Changelog for package irobot_create_gz_plugins
 * Update to ROS 2 Humble (`#197 <https://github.com/iRobotEducation/create3_sim/issues/197>`_)
   * Update message names to https://github.com/iRobotEducation/irobot_create_msgs/pull/10
   * rename dock topic into dock_status
-  * comment gz_ros2_control dependency as it must be built from sources
+  * comment ign_ros2_control dependency as it must be built from sources
   Co-authored-by: Francisco Martín Rico <fmrico@gmail.com>
 * add missing dependency to irobot-create-common-bringup (`#186 <https://github.com/iRobotEducation/create3_sim/issues/186>`_)
 * Contributors: Alberto Soragna, Francisco Martín Rico
@@ -37,14 +37,14 @@ Changelog for package irobot_create_gz_plugins
   Cleaned up gazebo launch arg
   Adjusted front caster position
   * Simulation -> simulator
-  * Added irobot_create_gz packages
+  * Added irobot_create_ignition packages
   * Fixed some linter warnings
-  * Removed joint state publisher from ros_gz_bridge
+  * Removed joint state publisher from ros_ign_bridge
   * - Reorganized packages
   - Shifted center of gravity of create3 forwards by 22.8 mm
   - Added min/max velocity and acceleration to diff drive plugin
   * Moved README.md to irobot_create_gazebo
-  Created new README.md for irobot_create_gz
+  Created new README.md for irobot_create_ignition
   * Update README.md
   * Added ignition edifice repos for source installation
   * Create README.md
@@ -55,7 +55,7 @@ Changelog for package irobot_create_gz_plugins
   * Updated README to have installation and example instructions for both Ignition and Classic
   Moved .repos files to the root of the repository
   * Ignition and Gazebo packages are now optional and only built if the required dependencies are installed
-  * Made ros_gz_interfaces optional in irobot_create_gz_bringup
+  * Made ros_ign_interfaces optional in irobot_create_ignition_bringup
   * fix license and minor changes to CMake and README
   * Interface buttons mock publisher not used in Ignition sim
   * Fixed linter errors

@@ -1,5 +1,5 @@
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-Changelog for package irobot_create_gz_sim
+Changelog for package irobot_create_ignition_sim
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 2.1.0 (2023-05-15)
@@ -37,14 +37,14 @@ Changelog for package irobot_create_gz_sim
   Cleaned up gazebo launch arg
   Adjusted front caster position
   * Simulation -> simulator
-  * Added irobot_create_gz packages
+  * Added irobot_create_ignition packages
   * Fixed some linter warnings
-  * Removed joint state publisher from ros_gz_bridge
+  * Removed joint state publisher from ros_ign_bridge
   * - Reorganized packages
   - Shifted center of gravity of create3 forwards by 22.8 mm
   - Added min/max velocity and acceleration to diff drive plugin
   * Moved README.md to irobot_create_gazebo
-  Created new README.md for irobot_create_gz
+  Created new README.md for irobot_create_ignition
   * Update README.md
   * Added ignition edifice repos for source installation
   * Create README.md
@@ -55,7 +55,7 @@ Changelog for package irobot_create_gz_sim
   * Updated README to have installation and example instructions for both Ignition and Classic
   Moved .repos files to the root of the repository
   * Ignition and Gazebo packages are now optional and only built if the required dependencies are installed
-  * Made ros_gz_interfaces optional in irobot_create_gz_bringup
+  * Made ros_ign_interfaces optional in irobot_create_ignition_bringup
   * fix license and minor changes to CMake and README
   * Interface buttons mock publisher not used in Ignition sim
   * Fixed linter errors
