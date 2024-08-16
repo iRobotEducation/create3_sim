@@ -15,6 +15,8 @@ find_package(Qt5
   REQUIRED
 )
 
+find_package(gz-gui8 REQUIRED)
+
 qt5_add_resources(resources_rcc Create3Hmi.qrc)
 
 add_library(
