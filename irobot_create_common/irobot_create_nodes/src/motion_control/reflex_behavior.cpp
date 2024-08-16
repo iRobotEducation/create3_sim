@@ -254,23 +254,23 @@ BehaviorsScheduler::optional_output_t ReflexBehavior::execute_reflex(
     running_reflex_ = false;
   } else if (drive_dir != DriveAwayDirection::NO_HAZARD_TO_ESCAPE) {
     // Pick velocity to escape hazards based on hazard types and locations
-    servo_cmd = geometry_msgs::msg::Twist();
+    servo_cmd = geometry_msgs::msg::TwistStamped();
     switch (drive_dir) {
       case DriveAwayDirection::PURE_BACKUP:
         {
-          servo_cmd->linear.x = BACKUP_X_VELOCITY;
+          servo_cmd->twist.linear.x = BACKUP_X_VELOCITY;
           break;
         }
       case DriveAwayDirection::ARC_CLOCKWISE:
         {
-          servo_cmd->linear.x = ARC_X_VELOCITY;
-          servo_cmd->angular.z = -ARC_ANGULAR_VELOCITY;
+          servo_cmd->twist.linear.x = ARC_X_VELOCITY;
+          servo_cmd->twist.angular.z = -ARC_ANGULAR_VELOCITY;
           break;
         }
       case DriveAwayDirection::ARC_COUNTER_CLOCKWISE:
         {
-          servo_cmd->linear.x = ARC_X_VELOCITY;
-          servo_cmd->angular.z = ARC_ANGULAR_VELOCITY;
+          servo_cmd->twist.linear.x = ARC_X_VELOCITY;
+          servo_cmd->twist.angular.z = ARC_ANGULAR_VELOCITY;
           break;
         }
       case DriveAwayDirection::NO_HAZARD_TO_ESCAPE:  // this code path is covered above

@@ -13,6 +13,7 @@
 #include "tf2_ros/transform_listener.h"
 
 #include "geometry_msgs/msg/twist.hpp"
+#include "geometry_msgs/msg/twist_stamped.hpp"
 #include "irobot_create_msgs/msg/kidnap_status.hpp"
 #include "irobot_create_msgs/msg/hazard_detection.hpp"
 #include "irobot_create_msgs/msg/wheel_status.hpp"
@@ -82,7 +83,8 @@ private:
   void hazard_vector_callback(irobot_create_msgs::msg::HazardDetectionVector::ConstSharedPtr msg);
 
   /// \brief Callback for new velocity commands
-  void commanded_velocity_callback(geometry_msgs::msg::Twist::ConstSharedPtr msg);
+  void commanded_velocity_callback(geometry_msgs::msg::TwistStamped::ConstSharedPtr msg);
+  void commanded_velocity_unstamped_callback(geometry_msgs::msg::Twist::ConstSharedPtr msg);
 
   /// \brief Callback for robot odometry
   void robot_pose_callback(nav_msgs::msg::Odometry::ConstSharedPtr msg);
@@ -91,7 +93,7 @@ private:
   void kidnap_callback(irobot_create_msgs::msg::KidnapStatus::ConstSharedPtr msg);
 
   /// \brief Given command, bound by max speed, checking each wheel
-  void bound_command_by_limits(geometry_msgs::msg::Twist & cmd);
+  void bound_command_by_limits(geometry_msgs::msg::TwistStamped & cmd);
 
   /// These robot services live in ui-mgr node on robot, but here for convenience
   enum ResponseStatus : bool
@@ -106,10 +108,11 @@ private:
 
   rclcpp::Subscription<irobot_create_msgs::msg::HazardDetectionVector>::SharedPtr
     hazard_detection_sub_;
-  rclcpp::Subscription<geometry_msgs::msg::Twist>::SharedPtr teleop_subscription_;
+  rclcpp::Subscription<geometry_msgs::msg::TwistStamped>::SharedPtr teleop_subscription_;
+  rclcpp::Subscription<geometry_msgs::msg::Twist>::SharedPtr teleop_unstamped_subscription_;
   rclcpp::Subscription<nav_msgs::msg::Odometry>::SharedPtr odom_pose_sub_;
   rclcpp::Subscription<irobot_create_msgs::msg::KidnapStatus>::SharedPtr kidnap_sub_;
-  rclcpp::Publisher<geometry_msgs::msg::Twist>::SharedPtr cmd_vel_out_pub_;
+  rclcpp::Publisher<geometry_msgs::msg::TwistStamped>::SharedPtr cmd_vel_out_pub_;
   rclcpp::Publisher<irobot_create_msgs::msg::HazardDetection>::SharedPtr backup_limit_hazard_pub_;
   rclcpp::Publisher<irobot_create_msgs::msg::WheelStatus>::SharedPtr wheel_status_pub_;
   rclcpp::TimerBase::SharedPtr control_timer_ {nullptr};
@@ -128,7 +131,7 @@ private:
   std::shared_ptr<WallFollowBehavior> wall_follow_behavior_ {nullptr};
 
   std::mutex mutex_;
-  geometry_msgs::msg::Twist last_teleop_cmd_;
+  geometry_msgs::msg::TwistStamped last_teleop_cmd_;
   rclcpp::Time last_teleop_ts_;
   rclcpp::Duration wheels_stop_threshold_;
   std::atomic<bool> allow_speed_param_change_ {false};

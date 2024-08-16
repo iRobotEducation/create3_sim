@@ -208,9 +208,9 @@ BehaviorsScheduler::optional_output_t WallFollowBehavior::get_next_servo_cmd(
       current_state.pose, last_ir_intensity_,
       active_hazard_frames, wf_vel_cmd);
   }
-  BehaviorsScheduler::optional_output_t servo_cmd = geometry_msgs::msg::Twist();
-  servo_cmd->linear.x = wf_vel_cmd.translate;
-  servo_cmd->angular.z = wf_vel_cmd.rotate;
+  BehaviorsScheduler::optional_output_t servo_cmd = geometry_msgs::msg::TwistStamped();
+  servo_cmd->twist.linear.x = wf_vel_cmd.translate;
+  servo_cmd->twist.angular.z = wf_vel_cmd.rotate;
   return servo_cmd;
 }
 

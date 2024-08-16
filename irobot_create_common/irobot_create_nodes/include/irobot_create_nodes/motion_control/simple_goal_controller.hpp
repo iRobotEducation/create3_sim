@@ -94,7 +94,7 @@ public:
             gp.x - current_position.getX(),
             gp.y - current_position.getY());
           if (dist_to_goal <= gp.radius) {
-            servo_vel = geometry_msgs::msg::Twist();
+            servo_vel = geometry_msgs::msg::TwistStamped();
             navigate_state_ = NavigateStates::GO_TO_GOAL_POSITION;
           } else {
             double ang = diff_angle(gp, current_position, current_angle);
@@ -103,11 +103,11 @@ public:
               ang = angles::normalize_angle(ang + M_PI);
             }
             bound_rotation(ang);
-            servo_vel = geometry_msgs::msg::Twist();
+            servo_vel = geometry_msgs::msg::TwistStamped();
             if (std::abs(ang) < TO_GOAL_ANGLE_CONVERGED) {
               navigate_state_ = NavigateStates::GO_TO_GOAL_POSITION;
             } else {
-              servo_vel->angular.z = ang;
+              servo_vel->twist.angular.z = ang;
             }
           }
           break;
@@ -124,7 +124,7 @@ public:
             // Angle is 180 from travel direction
             abs_ang = angles::normalize_angle(abs_ang + M_PI);
           }
-          servo_vel = geometry_msgs::msg::Twist();
+          servo_vel = geometry_msgs::msg::TwistStamped();
           // If robot is close enough to goal, move to final stage
           if (dist_to_goal < goal_points_.front().radius) {
             navigate_state_ = NavigateStates::GOAL_ANGLE;
@@ -140,9 +140,9 @@ public:
             if (gp.drive_backwards) {
               translate_velocity *= -1;
             }
-            servo_vel->linear.x = translate_velocity;
+            servo_vel->twist.linear.x = translate_velocity;
             if (abs_ang > GO_TO_GOAL_APPLY_ROTATION_ANGLE) {
-              servo_vel->angular.z = ang;
+              servo_vel->twist.angular.z = ang;
             }
           }
           break;
@@ -153,12 +153,12 @@ public:
             angles::shortest_angular_distance(current_angle, goal_points_.front().theta);
           bound_rotation(ang);
           if (std::abs(ang) > GOAL_ANGLE_CONVERGED) {
-            servo_vel = geometry_msgs::msg::Twist();
-            servo_vel->angular.z = ang;
+            servo_vel = geometry_msgs::msg::TwistStamped();
+            servo_vel->twist.angular.z = ang;
           } else {
             goal_points_.pop_front();
             if (goal_points_.size() > 0) {
-              servo_vel = geometry_msgs::msg::Twist();
+              servo_vel = geometry_msgs::msg::TwistStamped();
               navigate_state_ = NavigateStates::ANGLE_TO_GOAL;
             }
           }

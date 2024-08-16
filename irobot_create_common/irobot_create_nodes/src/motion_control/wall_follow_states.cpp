@@ -166,8 +166,8 @@ bool ObstacleInFront::get_next_velocity(
 {
   // Summarize IR sensors
   auto obstacle_in_sensors = [this](const std::vector<std::string> & sensors,
-      const irobot_create_msgs::msg::IrIntensityVector & ir_intensity,
-      int16_t min_obs_threshold, int16_t & obs_val) -> bool {
+    const irobot_create_msgs::msg::IrIntensityVector & ir_intensity,
+    int16_t min_obs_threshold, int16_t & obs_val) -> bool {
       for (const auto & frame : sensors) {
         auto frame_it = std::find_if(
           ir_intensity.readings.begin(),
