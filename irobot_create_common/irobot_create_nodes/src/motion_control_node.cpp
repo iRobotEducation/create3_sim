@@ -333,7 +333,8 @@ void MotionControlNode::hazard_vector_callback(
   reflex_behavior_->update_hazards(current_state_);
 }
 
-void MotionControlNode::commanded_velocity_callback(geometry_msgs::msg::TwistStamped::ConstSharedPtr msg)
+void MotionControlNode::commanded_velocity_callback(
+  geometry_msgs::msg::TwistStamped::ConstSharedPtr msg)
 {
   if (scheduler_->has_behavior()) {
     const auto time_now = this->now();
@@ -353,7 +354,8 @@ void MotionControlNode::commanded_velocity_callback(geometry_msgs::msg::TwistSta
 }
 
 
-void MotionControlNode::commanded_velocity_unstamped_callback(geometry_msgs::msg::Twist::ConstSharedPtr msg)
+void MotionControlNode::commanded_velocity_unstamped_callback(
+  geometry_msgs::msg::Twist::ConstSharedPtr msg)
 {
   geometry_msgs::msg::TwistStamped stamped_msg;
   stamped_msg.twist = *msg;

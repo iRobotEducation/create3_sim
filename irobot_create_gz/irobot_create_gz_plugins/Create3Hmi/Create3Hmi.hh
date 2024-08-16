@@ -68,6 +68,6 @@ private:
 
 }  // namespace gui
 
-}  // namespace ignition
+}  // namespace gz
 
 #endif  // IROBOT_CREATE_GZ__IROBOT_CREATE_GZ_PLUGINS__CREATE3HMI__CREATE3HMI_HH_

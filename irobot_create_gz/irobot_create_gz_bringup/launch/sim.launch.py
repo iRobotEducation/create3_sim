@@ -47,7 +47,7 @@ def generate_launch_description():
 
     gz_gui_plugin_path = SetEnvironmentVariable(
         name='GZ_GUI_PLUGIN_PATH',
-        value=":".join([
+        value=':'.join([
             os.path.join(pkg_irobot_create_gz_plugins, 'lib')
         ])
     )
@@ -59,15 +59,17 @@ def generate_launch_description():
     # Ignition gazebo
     gz_sim = IncludeLaunchDescription(
         PythonLaunchDescriptionSource([gz_sim_launch]),
-        launch_arguments=[
-            ('gz_args', [LaunchConfiguration('world'),
-                          '.sdf',
-                          ' -v 4',
-                          ' --gui-config ',
-                          PathJoinSubstitution([pkg_irobot_create_gz_bringup,
-                                                'gui', 'create3', 'gui.config'])
-            ])
-        ]
+        launch_arguments=[(
+            'gz_args', [
+                LaunchConfiguration('world'),
+                '.sdf',
+                ' -v 4',
+                ' --gui-config ',
+                PathJoinSubstitution(
+                    [pkg_irobot_create_gz_bringup, 'gui', 'create3', 'gui.config']
+                )
+            ]
+        )]
     )
 
     # clock bridge
