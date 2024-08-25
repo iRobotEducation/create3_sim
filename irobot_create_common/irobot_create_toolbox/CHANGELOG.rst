@@ -2,6 +2,11 @@
 Changelog for package irobot_create_toolbox
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Jazzy updates (`#229 <https://github.com/iRobotEducation/create3_sim/issues/229>`_)
+* Contributors: Alberto Soragna, Chris Iverach-Brereton
+
 2.1.0 (2023-05-15)
 ------------------
 

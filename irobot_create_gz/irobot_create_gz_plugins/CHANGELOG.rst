@@ -2,6 +2,11 @@
 Changelog for package irobot_create_ignition_plugins
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Jazzy updates (`#229 <https://github.com/iRobotEducation/create3_sim/issues/229>`_)
+* Contributors: Chris Iverach-Brereton
+
 2.1.0 (2023-05-15)
 ------------------
 * Multi robot support (`#207 <https://github.com/iRobotEducation/create3_sim/issues/207>`_)
