@@ -2,8 +2,8 @@
 Changelog for package irobot_create_description
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+3.0.0 (2024-08-25)
+------------------
 * Add dependencies to irobot_create_description (`#219 <https://github.com/iRobotEducation/create3_sim/issues/219>`_)
 * Contributors: Alberto Soragna, Gaël Écorchard
 

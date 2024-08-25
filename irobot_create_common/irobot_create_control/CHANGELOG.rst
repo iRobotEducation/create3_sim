@@ -2,8 +2,8 @@
 Changelog for package irobot_create_control
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+3.0.0 (2024-08-25)
+------------------
 * Jazzy updates (`#229 <https://github.com/iRobotEducation/create3_sim/issues/229>`_)
 * Contributors: Alberto Soragna, Chris Iverach-Brereton
 

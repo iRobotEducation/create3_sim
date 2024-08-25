@@ -2,8 +2,8 @@
 Changelog for package irobot_create_nodes
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+3.0.0 (2024-08-25)
+------------------
 * Jazzy updates (`#229 <https://github.com/iRobotEducation/create3_sim/issues/229>`_)
 * Wheel Ticks calculation code equation correction (`#222 <https://github.com/iRobotEducation/create3_sim/issues/222>`_)
 * Contributors: Adnan Saood, Alberto Soragna, Chris Iverach-Brereton
