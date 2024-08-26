@@ -2,8 +2,8 @@
 Changelog for package irobot_create_ignition_plugins
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+3.0.2 (2024-08-26)
+------------------
 * replace gz-gui8 with gz_gui_vendor
   back to what was used before, but as depend rather than buildtool_depend
 * Contributors: Alberto Soragna
