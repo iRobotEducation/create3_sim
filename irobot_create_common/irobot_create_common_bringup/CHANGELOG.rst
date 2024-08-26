@@ -2,6 +2,9 @@
 Changelog for package irobot_create_common_bringup
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+
 3.0.1 (2024-08-25)
 ------------------
 
