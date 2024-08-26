@@ -9,7 +9,7 @@
 
   <buildtool_depend>ament_cmake</buildtool_depend>
 
-  <depend>gz-gui8</depend>
+  <depend>gz_gui_vendor</depend>
   <depend>ros_gz</depend>
 
   <test_depend>ament_lint_auto</test_depend>
