@@ -6,7 +6,8 @@ endif()
 
 set(CMAKE_AUTOMOC ON)
 
-# Find Qt5
+find_package(gz_gui_vendor REQUIRED)
+find_package(gz-gui REQUIRED)
 find_package(Qt5
   COMPONENTS
     Core
@@ -14,8 +15,6 @@ find_package(Qt5
     QuickControls2
   REQUIRED
 )
-
-find_package(gz-gui8 REQUIRED)
 
 qt5_add_resources(resources_rcc Create3Hmi.qrc)
 
@@ -32,16 +31,17 @@ include_directories(
     ${Qt5Quick_INCLUDE_DIRS}
     ${Qt5QuickControls2_INCLUDE_DIRS}
 )
-target_link_libraries(
-  Create3Hmi
+target_link_libraries(Create3Hmi
+  PUBLIC
+    gz-gui::gz-gui
     ${Qt5Core_LIBRARIES}
     ${Qt5Qml_LIBRARIES}
     ${Qt5Quick_LIBRARIES}
     ${Qt5QuickControls2_LIBRARIES}
 )
-ament_target_dependencies(
-  Create3Hmi
-    gz-gui8
+ament_target_dependencies(Create3Hmi
+  gz_gui_vendor
+  gz-gui::gz-gui
 )
 
 install(

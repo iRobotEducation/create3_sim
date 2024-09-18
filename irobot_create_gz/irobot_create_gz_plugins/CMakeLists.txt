@@ -11,7 +11,7 @@ find_package(ament_cmake REQUIRED)
 set(OpenGL_GL_PREFERENCE LEGACY)
 
 # Find the Ignition gui library
-find_package(gz-gui8 REQUIRED)
+find_package(gz_gui_vendor REQUIRED)
 add_subdirectory(Create3Hmi)
 
 if(BUILD_TESTING)
