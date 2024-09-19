@@ -30,7 +30,7 @@ def generate_launch_description():
         executable='spawner',
         namespace=namespace,  # Namespace is not pushed when used in EventHandler
         parameters=[control_params_file],
-        arguments=arguments=[
+        arguments=[
             'diffdrive_controller',
             '-c',
             'controller_manager',
