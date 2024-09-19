@@ -41,7 +41,7 @@ target_link_libraries(Create3Hmi
 )
 ament_target_dependencies(Create3Hmi
   gz_gui_vendor
-  gz-gui::gz-gui
+  gz-gui
 )
 
 install(
