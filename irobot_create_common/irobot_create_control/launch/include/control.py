@@ -30,14 +30,26 @@ def generate_launch_description():
         executable='spawner',
         namespace=namespace,  # Namespace is not pushed when used in EventHandler
         parameters=[control_params_file],
-        arguments=['diffdrive_controller', '-c', 'controller_manager'],
+        arguments=[
+            'diffdrive_controller',
+            '-c',
+            'controller_manager',
+            '--controller-manager-timeout',
+            '30'
+        ],
         output='screen',
     )
 
     joint_state_broadcaster_spawner = Node(
         package='controller_manager',
         executable='spawner',
-        arguments=['joint_state_broadcaster', '-c', 'controller_manager'],
+        arguments=[
+            'joint_state_broadcaster',
+            '-c',
+            'controller_manager',
+            '--controller-manager-timeout',
+            '30'
+        ],
         output='screen',
     )
 
