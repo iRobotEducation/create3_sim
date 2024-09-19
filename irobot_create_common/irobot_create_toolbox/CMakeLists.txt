@@ -11,15 +11,11 @@ if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
 endif()
 
 find_package(ament_cmake REQUIRED)
-find_package(gz-math7 REQUIRED)
+find_package(gz_math_vendor REQUIRED)
+find_package(gz-math REQUIRED)
 find_package(rclcpp REQUIRED)
 
 #### Libraries
-
-set(dependencies
-  gz-math7
-  rclcpp
-)
 
 add_library(irobot_create_toolbox SHARED)
 target_sources(
@@ -27,26 +23,34 @@ target_sources(
   PRIVATE
     src/polar_coordinates.cpp
 )
-target_include_directories(irobot_create_toolbox PUBLIC include)
-ament_target_dependencies(irobot_create_toolbox
-  ${dependencies}
+target_include_directories(irobot_create_toolbox PUBLIC
+  "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>"
+  "$<INSTALL_INTERFACE:include/${PROJECT_NAME}>")
+
+target_link_libraries(irobot_create_toolbox
+  PUBLIC
+    gz-math::gz-math
+    ${rclcpp_TARGETS}
 )
 
 #### Install
 
-install(TARGETS irobot_create_toolbox
+install(TARGETS
+  ${PROJECT_NAME} EXPORT export_${PROJECT_NAME}
   ARCHIVE DESTINATION lib
   LIBRARY DESTINATION lib
   RUNTIME DESTINATION bin
 )
 
 install(DIRECTORY include/
-  DESTINATION include
+  DESTINATION include/${PROJECT_NAME}
 )
-
-ament_export_include_directories(include)
-ament_export_libraries(irobot_create_toolbox)
-ament_export_dependencies(${dependencies})
+ament_export_targets(export_${PROJECT_NAME})
+ament_export_dependencies(
+  gz_math_vendor
+  gz-math
+  rclcpp
+)
 
 if(BUILD_TESTING)
   find_package(ament_lint_auto REQUIRED)
