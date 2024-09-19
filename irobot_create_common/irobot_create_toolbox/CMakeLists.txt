@@ -24,8 +24,8 @@ target_sources(
     src/polar_coordinates.cpp
 )
 target_include_directories(irobot_create_toolbox PUBLIC
- "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>"
- "$<INSTALL_INTERFACE:include/${PROJECT_NAME}>")
+  "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>"
+  "$<INSTALL_INTERFACE:include/${PROJECT_NAME}>")
 
 target_link_libraries(irobot_create_toolbox
   PUBLIC
