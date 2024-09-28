@@ -2,8 +2,8 @@
 Changelog for package irobot_create_control
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+3.0.3 (2024-09-28)
+------------------
 * Add 30s timeout for controller spawners (`#233 <https://github.com/iRobotEducation/create3_sim/issues/233>`_)
   It looks like the latest ros_controllers release has a default timeout that's too short to allow Gazebo to properly start up, resulting in the diff drive controller & joint state broadcaster to time-out rather than starting up.  Adding an explicit timeout appears to work around this issue.
 * Contributors: Chris Iverach-Brereton

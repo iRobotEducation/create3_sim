@@ -2,7 +2,7 @@
 <?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
 <package format="3">
   <name>irobot_create_gz_sim</name>
-  <version>3.0.2</version>
+  <version>3.0.3</version>
   <description>Metapackage for the iRobot(R) Create(R) 3 robot Ignition simulator</description>
 
   <maintainer email="rkreinin@clearpathrobotics.com">rkreinin</maintainer>

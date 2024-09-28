@@ -2,7 +2,7 @@
 <?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
 <package format="3">
   <name>irobot_create_gz_bringup</name>
-  <version>3.0.2</version>
+  <version>3.0.3</version>
   <description>Provides launch and configuration scripts for a Ignition simulated iRobot(R) Create(R) 3 Educational Robot.</description>
   <maintainer email="rkreinin@clearpathrobotics.com">rkreinin</maintainer>
   <license>BSD</license>
