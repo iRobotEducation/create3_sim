@@ -2,6 +2,9 @@
 Changelog for package irobot_create_ignition_toolbox
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+
 3.0.2 (2024-08-26)
 ------------------
 

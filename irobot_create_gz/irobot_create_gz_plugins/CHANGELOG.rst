@@ -2,6 +2,11 @@
 Changelog for package irobot_create_ignition_plugins
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Generalize gz vendor use and modernize CMake (`#232 <https://github.com/iRobotEducation/create3_sim/issues/232>`_)
+* Contributors: Jose Luis Rivero
+
 3.0.2 (2024-08-26)
 ------------------
 * replace gz-gui8 with gz_gui_vendor
