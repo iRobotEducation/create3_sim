@@ -104,8 +104,7 @@ void PoseRepublisher::robot_subscriber_callback(const tf2_msgs::msg::TFMessage::
       // Convert pose to tf2 transform
       tf2::convert(receiver_msg->pose.pose, receiver_pose);
       // Get receiver pose with respect to world frame
-      tf2::Transform receiver_world_pose = utils::static_link_wrt_global_frame(
-        receiver_pose, last_robot_pose_);
+      tf2::Transform receiver_world_pose = last_robot_pose_ * receiver_pose;
       // Convert tf2 transform back to pose
       utils::tf2_transform_to_pose(receiver_world_pose, receiver_msg->pose.pose);
       // Publish
@@ -130,8 +129,7 @@ void PoseRepublisher::dock_subscriber_callback(const tf2_msgs::msg::TFMessage::S
       // Convert pose to tf2 transform
       tf2::convert(emitter_msg->pose.pose, emitter_pose);
       // Get emitter pose with respect to world frame
-      tf2::Transform emitter_world_pose = utils::static_link_wrt_global_frame(
-        emitter_pose, last_dock_pose_);
+      tf2::Transform emitter_world_pose last_dock_pose_ * emitter_pose;
       // Convert tf2 transform back to pose
       utils::tf2_transform_to_pose(emitter_world_pose, emitter_msg->pose.pose);
       // Publish
