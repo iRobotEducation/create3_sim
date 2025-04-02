@@ -11,7 +11,7 @@ Have a look at the [Create® 3 documentation](https://iroboteducation.github.io/
 
 Required dependencies:
 
-1. [ROS 2 humble](https://docs.ros.org/en/humble/Installation/Ubuntu-Install-Debians.html)
+1. [ROS 2 Jazzy](https://docs.ros.org/en/jazzy/Installation/Ubuntu-Install-Debs.html)
 2. ROS 2 dev tools:
     - [colcon-common-extensions](https://pypi.org/project/colcon-common-extensions/)
     - [rosdep](https://pypi.org/project/rosdep/): Used to install dependencies when building from sources
@@ -37,7 +37,7 @@ mkdir -p ~/create3_ws/src
 ```
 
 - Clone this repository into the src directory from above.
-- Clone the []`irobot_create_msgs` repository](https://github.com/iRobotEducation/irobot_create_msgs) into the workspace
+- Clone the [`irobot_create_msgs` repository](https://github.com/iRobotEducation/irobot_create_msgs) into the workspace
 
 - Navigate to the workspace and install ROS 2 dependencies with:
 
