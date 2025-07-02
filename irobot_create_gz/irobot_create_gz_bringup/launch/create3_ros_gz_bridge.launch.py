@@ -57,10 +57,10 @@ def generate_launch_description():
         }],
         arguments=[
             [namespace,
-             '/cmd_vel' + '@geometry_msgs/msg/TwistStamped' + '[ignition.msgs.Twist'],
+             '/cmd_vel' + '@geometry_msgs/msg/TwistStamped' + '[gz.msgs.Twist'],
             ['/model/', robot_name, '/cmd_vel' +
              '@geometry_msgs/msg/TwistStamped' +
-             ']ignition.msgs.Twist']
+             ']gz.msgs.Twist']
         ],
         remappings=[
             ([namespace, '/cmd_vel'], 'cmd_vel'),
@@ -78,10 +78,10 @@ def generate_launch_description():
                        arguments=[
                            ['/model/', robot_name, '/pose' +
                             '@tf2_msgs/msg/TFMessage' +
-                            '[ignition.msgs.Pose_V'],
+                            '[gz.msgs.Pose_V'],
                            ['/model/', dock_name, '/pose' +
                             '@tf2_msgs/msg/TFMessage' +
-                            '[ignition.msgs.Pose_V']
+                            '[gz.msgs.Pose_V']
                        ],
                        remappings=[
                            (['/model/', robot_name, '/pose'],
@@ -100,7 +100,7 @@ def generate_launch_description():
                                arguments=[
                                    ['/model/', robot_name, '/tf' +
                                     '@tf2_msgs/msg/TFMessage' +
-                                    '[ignition.msgs.Pose_V']
+                                    '[gz.msgs.Pose_V']
                                ],
                                remappings=[
                                    (['/model/', robot_name, '/tf'], 'tf')
@@ -117,7 +117,7 @@ def generate_launch_description():
                                      [namespace,
                                       '/bumper_contact' +
                                       '@ros_gz_interfaces/msg/Contacts' +
-                                      '[ignition.msgs.Contacts']
+                                      '[gz.msgs.Contacts']
                                  ],
                                  remappings=[
                                      ([namespace,
@@ -138,7 +138,7 @@ def generate_launch_description():
                  ['/world/', world,
                   '/model/', robot_name,
                   '/link/base_link/sensor/' + cliff + '/scan' +
-                  '@sensor_msgs/msg/LaserScan[ignition.msgs.LaserScan']
+                  '@sensor_msgs/msg/LaserScan[gz.msgs.LaserScan']
              ],
              remappings=[
                  (['/world/', world,
@@ -161,7 +161,7 @@ def generate_launch_description():
                  ['/world/', world,
                   '/model/', robot_name,
                   '/link/' + ir + '/sensor/' + ir + '/scan' +
-                  '@sensor_msgs/msg/LaserScan[ignition.msgs.LaserScan']
+                  '@sensor_msgs/msg/LaserScan[gz.msgs.LaserScan']
              ],
              remappings=[
                  (['/world/', world,
@@ -183,7 +183,7 @@ def generate_launch_description():
         arguments=[
             [namespace, '/create3_buttons' +
              '@std_msgs/msg/Int32' +
-             '[ignition.msgs.Int32'],
+             '[gz.msgs.Int32'],
         ],
         remappings=[
             ([namespace, '/create3_buttons'], '_internal/create3_buttons'),
