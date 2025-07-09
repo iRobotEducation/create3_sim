@@ -77,7 +77,7 @@ def generate_launch_description():
                         name='clock_bridge',
                         output='screen',
                         arguments=[
-                            '/clock' + '@rosgraph_msgs/msg/Clock' + '[ignition.msgs.Clock'
+                            '/clock' + '@rosgraph_msgs/msg/Clock' + '[gz.msgs.Clock'
                         ])
 
     # Create launch description and add actions
