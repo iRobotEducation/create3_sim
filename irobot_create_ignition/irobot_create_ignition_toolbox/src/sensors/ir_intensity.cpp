@@ -71,8 +71,12 @@ void IrIntensity::ir_scan_callback(const sensor_msgs::msg::LaserScan::SharedPtr 
 
   // Publish to appropriate topic
   for (const std::string & sensor : ir_intensity_sensors_) {
-    if (ir_msg->header.frame_id.find(sensor) != std::string::npos) {
+    std::string expected_frame = "ir_intensity_" + sensor;
+    if (ir_msg->header.frame_id.rfind(expected_frame) != std::string::npos) {
+      ir_intensity_msg.header.frame_id = std::move(expected_frame);
+      ir_intensity_msg.header.stamp = ir_msg->header.stamp;
       ir_intensity_pub_[sensor]->publish(ir_intensity_msg);
+      break;
     }
   }
 }
